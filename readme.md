@@ -6,5 +6,5 @@
 >   - A.應用型題目,Ex:洗牌,計算...
 >   - B.基本型題目,Ex:氣泡排序,Fisher-Yates Shuffle...
 ##### Ref
->[Rosetta Code](https://www.rosettacode.org)
+>[Rosetta Code](https://www.rosettacode.org)<BR>
 >[Codility](https://www.codility.com/)
