@@ -1,9 +1,3 @@
-
-![downloads](https://img.shields.io/github/downloads/atom/atom/total.svg)
-![build](https://img.shields.io/appveyor/ci/:user/:repo.svg)
-![chat](https://img.shields.io/discord/:serverId.svg)
-
-[TOC]
 ## Simple Factory 
 #### Memo
 1. 將物件功能 規劃出通用,一致的 abstract class
