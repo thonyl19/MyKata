@@ -12,7 +12,7 @@ namespace CSharp_2019
             Console.WriteLine(x);
         }
 
-        static int fn(int val)
+        public static int fn(int val)
         {
             if (val == 0) return 0;
             return (val % 2 == 0 ? val * -1 : val) + fn(val - 1);

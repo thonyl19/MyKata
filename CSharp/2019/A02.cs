@@ -1,22 +1,25 @@
 /*
 https://www.rosettacode.org/wiki/Knuth_shuffle#C.23
  */
+using System.Collections.Generic;
+
 namespace CSharp_2019
 {
     public class A02
     {
-        public static void KnuthShuffle<T>(T[] array)
-        {
-            System.Random random = new System.Random();
-            for (int i = 0; i < array.Length; i++)
-            {
-                int j = random.Next(i, array.Length); 
-                // Don't select from the entire array on subsequent loops
-                T temp 
-                    = array[i]; array[i] 
-                    = array[j]; array[j] 
-                    = temp;
+        public static string[] GenArray(){
+            List<string> arr = new List<string>();
+            foreach(char el in "ABCD".ToCharArray()){
+                for(int i = 1 ;i<14 ;i++){
+                    arr.Add($"{el+i.ToString()}");
+                }
             }
+            return arr.ToArray();
         }
+        public static T[] Shuffle<T>(T[] list){
+            return B01.KnuthShuffle(list);
+        }
+
+        
     }
 }
