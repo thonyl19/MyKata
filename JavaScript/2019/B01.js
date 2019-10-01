@@ -5,6 +5,7 @@ function shuffle(array) {
         //console.log(i,j);
         [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
 //順向,實作效果不好 
 function shuffle1(array) {
@@ -14,6 +15,7 @@ function shuffle1(array) {
         console.log(i,j);
         [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
 
 let count = {
@@ -25,9 +27,8 @@ let count = {
     '312':0,
 }
 for (var i = 0 ; i < 600; i++){
-    var arr = [1,2,3];
-    shuffle(arr);
-    count[arr.join('')]++;
+    let key = shuffle([1,2,3]).join('');
+    count[key]++;
 }
 
 for (let k in count){
