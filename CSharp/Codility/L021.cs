@@ -12,8 +12,15 @@
         Ex:[1,7,7,7,9,9,9]
     即便數組總長度為奇數,得到的值一樣是錯誤
 
-    所謂古早味版本,是對自己解題技法老舊的自嘲,
-        但可以有效解決 XOR 的 Bug , 故特為留做記念
+    所謂古早味版本,是對自己Old Scholl 式解題技法的自嘲,
+        但在 local UT 時,確實可以有效解決 前述的 issue , 
+    只是上 Codility 實測時發現, 平行運算版會出現 以下的錯誤而無法運行
+        [MONITOR] syscall clock_nanosleep was blocked!
+    而 linq 版的則怎麼改,都一定會出現 3 個測試不通過..... ,
+        我懷疑可能是 前述 XOR issuse 惹的禍,
+        但在沒辦法拿到測試樣本的情形下,
+        只能是猜測而無法證實.....
+ 
  */
 
 using System.Collections.Concurrent;
@@ -38,7 +45,7 @@ namespace CSharp.Codility
         /// <param name="isDebug"></param>
         /// <returns></returns>
         public static dynamic solution_0(int[] A,bool isDebug = false){
-            int len = A.Length;
+            
             var DC = new ConcurrentDictionary<int, int>();
             Parallel.ForEach(A,(int el)=>{
                 DC.GetOrAdd(el, 0);
@@ -106,6 +113,13 @@ namespace CSharp.Codility
             }
             return Ans;
         }
+
+    //     public int solution(int[] A) {
+    //     // write your code in C# 6.0 with .NET 4.5 (Mono)
+    //     IEnumerable N = Enumerable.Range(1, A.Length + 1);
+    //     int missingNumber = N.Except(A).FirstOrDefault();
+    //     return missingNumber;
+    // }
 
         /// <summary>
         /// 使用 linq 的解決方案,速度最快的解法
