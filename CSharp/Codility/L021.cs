@@ -11,11 +11,15 @@
     但 XOR 解法有個問題點,如果 數字 的重覆數為奇數 
         Ex:[1,7,7,7,9,9,9]
     即便數組總長度為奇數,得到的值一樣是錯誤
+
+    所謂古早味版本,是對自己解題技法老舊的自嘲,
+        但可以有效解決 XOR 的 Bug , 故特為留做記念
  */
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CSharp_2019;
 
@@ -25,9 +29,10 @@ namespace CSharp.Codility
     {
         static System.Random rnd = new System.Random();
         static object _lock = new object();
+        static int x = 0 ;
         
         /// <summary>
-        /// 傳統的解決,利用平行運算
+        /// 古早味解法,利用平行運算
         /// </summary>
         /// <param name="A"></param>
         /// <param name="isDebug"></param>
@@ -37,9 +42,15 @@ namespace CSharp.Codility
             var DC = new ConcurrentDictionary<int, int>();
             Parallel.ForEach(A,(int el)=>{
                 DC.GetOrAdd(el, 0);
-                lock(_lock){
-                    DC[el]++;
-                }
+                // [Ref]https://chrisstclair.co.uk/multithreading-made-easy-parallel-foreach/
+                // 新式 用法,經測試效率最高
+                Interlocked.Increment(ref x);
+                DC[el]++;
+
+                // 舊式 用法,經測試較為耗時,
+                // lock(_lock){
+                //     DC[el]++;
+                // }
             });
             var _DC = DC.OrderBy(e=>e.Value)
                 .ToList();
@@ -50,6 +61,13 @@ namespace CSharp.Codility
             }
             return Ans;
         }
+
+        /// <summary>
+        /// 古早味解法,使用 linq 解法
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="isDebug"></param>
+        /// <returns></returns>
         public static dynamic solution_0_linq(int[] A,bool isDebug = false){
             int len = A.Length;
             var DC = A.GroupBy(e=>e)
@@ -97,33 +115,16 @@ namespace CSharp.Codility
         /// <returns></returns>
         public static dynamic solution_A_linq(int[] A,bool isDebug = false){
             int Ans = A.Aggregate((x, y) => x ^ y);;
-            //List<dynamic> DC = new System.Collections.Generic.List<dynamic>();
             if (isDebug){
                 return new {Ans
-                //DC
                 };
             }
             return Ans;
         }
 
- 
-
-
-        // public static dynamic solution_A3(int[] A,bool isDebug = false){
-        //     // write your code in C# 6.0 with .NET 4.5 (Mono)
-        //     IEnumerable N = Enumerable.Range(1, A.Length + 1);
-        //     int Ans = N.Except(A).FirstOrDefault();
-        //     if (isDebug){
-        //         return new {Ans};
-        //     }
-        //     return Ans;
-        // }
-
- 
-     
         
         /// <summary>
-        /// 
+        /// 測試資料生成程序
         /// </summary>
         /// <param name="oddNum"></param>
         /// <returns></returns>
