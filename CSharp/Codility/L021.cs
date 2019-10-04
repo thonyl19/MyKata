@@ -13,13 +13,15 @@
     即便數組總長度為奇數,得到的值一樣是錯誤
 
     所謂古早味版本,是對自己Old Scholl 式解題技法的自嘲,
-        但在 local UT 時,確實可以有效解決 前述的 issue , 
+        但在 local UT 時,確實可以有效解決 前述的 issue 
+        執行效能實測  Parallel(2x) < linq (4x) < foreach (12x)
     只是上 Codility 實測時發現, 平行運算版會出現 以下的錯誤而無法運行
         [MONITOR] syscall clock_nanosleep was blocked!
     而 linq 版的則怎麼改,都一定會出現 3 個測試不通過..... ,
         我懷疑可能是 前述 XOR issuse 惹的禍,
         但在沒辦法拿到測試樣本的情形下,
         只能是猜測而無法證實.....
+
  
  */
 
@@ -44,7 +46,7 @@ namespace CSharp.Codility
         /// <param name="A"></param>
         /// <param name="isDebug"></param>
         /// <returns></returns>
-        public static dynamic solution_0(int[] A,bool isDebug = false){
+        public static dynamic solution_0_Parallel(int[] A,bool isDebug = false){
             
             var DC = new ConcurrentDictionary<int, int>();
             Parallel.ForEach(A,(int el)=>{
@@ -68,6 +70,31 @@ namespace CSharp.Codility
             }
             return Ans;
         }
+
+        /// <summary>
+        /// 古早味解法
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="isDebug"></param>
+        /// <returns></returns>
+        public static dynamic solution_0(int[] A,bool isDebug = false){
+            
+            var DC = new SortedDictionary<int, int>();
+            foreach(int el in A){
+                if (DC.ContainsKey(el)==false) DC.Add(el,0);
+                DC[el]++;
+            };
+            var _DC = DC.OrderBy(e=>e.Value)
+                .ToList();
+            var Ans = _DC[0].Key;
+            
+            if (isDebug){
+                return new {DC=_DC,Ans};
+            }
+            return Ans;
+        }
+
+        
 
         /// <summary>
         /// 古早味解法,使用 linq 解法
