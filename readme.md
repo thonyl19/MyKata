@@ -9,6 +9,6 @@
 >   - \Codility
 >   - \Linq
 ##### Ref
->[Rosetta Code](https://www.rosettacode.org)<BR>
->[Codility](https://www.codility.com/)
->[CodeSays](https://codesays.com/unofficial-solutions-to-cracking-the-coding-interview/)
+>[Rosetta Code](https://www.rosettacode.org)<br>
+>[Codility](https://www.codility.com/)<br>
+>[CodeSays](https://codesays.com/unofficial-solutions-to-cracking-the-coding-interview/)<br>
