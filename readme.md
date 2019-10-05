@@ -11,5 +11,5 @@
 >   - \Linq
 ##### Ref
 >[Rosetta Code](https://www.rosettacode.org)<BR>
->[Codility](https://www.codility.com/)
->[CodeSays](https://codesays.com/unofficial-solutions-to-cracking-the-coding-interview/)
+>[Codility](https://www.codility.com/)<BR>
+>[CodeSays](https://codesays.com/unofficial-solutions-to-cracking-the-coding-interview/)<BR>
