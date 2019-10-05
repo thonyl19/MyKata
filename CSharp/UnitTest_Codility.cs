@@ -20,13 +20,13 @@ namespace CSharp
         [TestMethod]
         public void t_L021()
         {
-            Func<int[] ,bool,dynamic> fn =  L021.solution_0_linq;
+            Func<int[] ,bool,dynamic> fn =  L021.solution_A;
             for (var i=0 ; i < 100 ;i++){
-                var r =  L021.GenTest(100003,false,100003);
-                    // new {
-                    //     one =1 ,
-                    //     list =  new int[]{1,7,7,7,9,9,9}
-                    // };
+                var r =  //L021.GenTest(100003,false,100003);
+                    new {
+                        one =1 ,
+                        list =  new int[]{1,7,7,7,9,9,9}
+                    };
                 var t1_A = UT.Timer(()=>{return  fn(r.list,true);});
                 Assert.AreEqual(t1_A.Ans,r.one);
             }
@@ -54,7 +54,12 @@ namespace CSharp
         }
 
         
- 
+        [TestMethod]
+        public void t_L032()
+        {
+            Func<int,int,int,int> fn = L031.solution_0;
+            Assert.AreEqual(3,fn(10,85,30));
+        }
  
     }
 }
