@@ -5,6 +5,7 @@
 >題目目前規劃以年度為主要劃分單位,細分類則為 
 >   - A.應用型題目,Ex:洗牌,計算...
 >   - B.基本型題目,Ex:氣泡排序,Fisher-Yates Shuffle...
+>
 >而另外從 Codility 或比較專題式的練習,則另立資料夾存置,Ex
 >   - \Codility
 >   - \Linq
