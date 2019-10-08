@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace CSharp_2019
 {
+    /// <summary>
+    /// 亂數洗牌
+    /// </summary>
     public class A02
     {
         public static string[] GenArray(){

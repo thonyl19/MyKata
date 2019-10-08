@@ -8,6 +8,7 @@
     摘錄：因為x + a – a = x。在這裡，我使用了XOR操作，
     其中x XOR a XOR a = x。
     XOR優於加法和減法的一大優勢是，XOR不會導致溢出.
+    
     但 XOR 解法有個問題點,如果 數字 的重覆數為奇數 
         Ex:[1,7,7,7,9,9,9]
     即便數組總長度為奇數,得到的值一樣是錯誤
@@ -18,11 +19,16 @@
     只是上 Codility 實測時發現, 平行運算版會出現 以下的錯誤而無法運行
         [MONITOR] syscall clock_nanosleep was blocked!
     而 linq 版的則怎麼改,都一定會出現 3 個測試不通過..... ,
-        我懷疑可能是 前述 XOR issuse 惹的禍,
-        但在沒辦法拿到測試樣本的情形下,
+        但我懷疑可能是 前述 XOR issuse 惹的禍,
+        雖然沒辦法拿到測試樣本的情形下,
         只能是猜測而無法證實.....
-
- 
+    本來,我也是一度懷疑,如果前述推論為真,那是不是題目有註明,
+        例如：成對的數組,其總數一定為偶數,
+        反覆檢查確認過,並沒有疑似的條件.
+        但是 ,用 可以跑 100 %的 solution_A ,
+        在 local 執行前述簡單的測例 , 其結果就是錯的 ,
+        由此,我合理的推論,網站上的測試,其實是會故意跑出 XOR issue 的案例,
+        以此來驗証程式是不是用 XOR 來做解題方法.
  */
 
 using System.Collections.Concurrent;
@@ -141,12 +147,7 @@ namespace CSharp.Codility
             return Ans;
         }
 
-    //     public int solution(int[] A) {
-    //     // write your code in C# 6.0 with .NET 4.5 (Mono)
-    //     IEnumerable N = Enumerable.Range(1, A.Length + 1);
-    //     int missingNumber = N.Except(A).FirstOrDefault();
-    //     return missingNumber;
-    // }
+ 
 
         /// <summary>
         /// 使用 linq 的解決方案,速度最快的解法
