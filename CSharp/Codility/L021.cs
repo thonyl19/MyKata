@@ -123,6 +123,7 @@ namespace CSharp.Codility
 
         /// <summary>
         /// 100 分的解法
+        /// 參考自 [https://codesays.com/2014/solution-to-perm-missing-elem-by-codility/#comment-199]
         /// </summary>
         /// <param name="A"></param>
         /// <returns></returns>
@@ -151,6 +152,7 @@ namespace CSharp.Codility
 
         /// <summary>
         /// 使用 linq 的解決方案,速度最快的解法
+        /// 參考自 [https://codesays.com/2014/solution-to-perm-missing-elem-by-codility/#comment-199]
         /// </summary>
         /// <param name="A"></param>
         /// <param name="isDebug"></param>
