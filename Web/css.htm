@@ -290,6 +290,51 @@ https://codepen.io/GhostRider/pen/GHaFw
             };
             return {_vue};
         },
+        'text-shadow'(){
+            /* 用例說明
+            1.主要是動態呈現  text-shadow 的效果.
+            2.應用 html5 input.type="range" 做數字控制
+            3.應用 Vue :style 的動態樣式控制
+            4.應用 Vue 的 dom style.cssText 處理
+            5.應用 watch 機制
+            */
+            var _vue={
+                template:`
+                <div>
+                    {{range}}<input type="range" min="1" max="10" v-model="range" class="slider" id="myRange">
+                    <div ref="styObj" :style="styleObject">text-shadow</div>
+                    <div>{{styleObject}}</div>
+                    <div>cssText:{{sty}}</div>
+                </div>`,
+                data(){
+                    return {
+                        range:10,
+                        sty:'',
+                    }
+                },
+                computed:{
+                    styleObject(){
+                        return {
+                                'font-size':'30px',
+                                color:'rgba(0,0,0,0)',
+                                'text-shadow':`0 0 ${this.range}px rgba(255,0,0,1)`
+                        }
+                    },
+                     
+                },
+                watch: {
+                    styleObject(){
+                        let {styObj} = this.$refs;
+                        if (styObj != null){
+                            this.sty = styObj.style.cssText;
+                        }
+                    }
+                },
+                
+
+            };
+            return {_vue};
+        },
         std(){
             var _vue={
                 template:`
@@ -320,7 +365,7 @@ https://codepen.io/GhostRider/pen/GHaFw
                 var _obj = views[this.currentTab];
                 this.Code = _obj; 
                 var {_css} = _obj();
-                //if (_css !=null) styled.injectGlobal`${_css}`;
+                if (_css !=null) styled.injectGlobal`${_css}`;
                 return `x-${this.currentTab}`;
             }
         },
@@ -343,4 +388,4 @@ https://codepen.io/GhostRider/pen/GHaFw
         
     </script>
 </body>
-</html
+</html>
