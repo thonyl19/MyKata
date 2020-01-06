@@ -29,12 +29,7 @@ namespace CSharp.Codility
             return 0;
         }
 
-        // public int solution(int[] A) {
-        //     // write your code in C# 6.0 with .NET 4.5 (Mono)
-        //     IEnumerable N = Enumerable.Range(1, A.Length + 1);
-        //     int missingNumber = N.Except(A).FirstOrDefault();
-        //     return missingNumber;
-        // }
+
 
         public static int solution_A(int[] A)
         {

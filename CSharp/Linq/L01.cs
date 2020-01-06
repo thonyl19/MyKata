@@ -65,19 +65,46 @@ namespace CSharp.Linq
                 new { ID = 3, Name = "Smith" },
             };
              
-            var A = from first in firstNames
-                    join last in lastNames
-                    on first.ID equals last.ID
+            var A = from A0 in firstNames
+                    join A1 in lastNames
+                    on A0.ID equals A1.ID
                     into temp
-                    from x in temp.DefaultIfEmpty( new { first.ID, Name = default( string ) } )
+                    from A2 in temp.DefaultIfEmpty( new { A0.ID, Name = default( string ) } )
                     select new
                     {
-                        first.ID,
-                        FirstName = first.Name,
-                        LastName = x.Name,
+                        A0.ID,
+                        FirstName = A0.Name,
+                        LastName = A2.Name,
                     };
         }
         
+    }
+
+    public class Employese
+    {
+        public string DepID { get; set; }
+        public string UserID { get; set; }
+        public string Name { get; set; }
+        public string SubDepID { get; set; }
+        public string SubUserID { get; set; }
+    }
+
+    public class L02
+    {
+        Employese[] emps = new Employese[5];
+        public void fn(){
+            var r = from A0 in emps
+                join A1 in emps
+                on new {DepID = A0.SubDepID,UserID = A0.SubUserID} 
+                    equals new {A1.DepID,A1.UserID}
+                into tmp 
+                from A3 in tmp.DefaultIfEmpty()
+                select new {
+                    A0.DepID,A0.UserID,A0.Name,
+                    SubName = A3.Name ?? ""
+                };
+
+        }
     }
 
 

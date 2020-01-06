@@ -21,6 +21,8 @@ namespace CSharp_2019
             return array;
         }
 
+
+
         public static Dictionary<string, int>  Test(int count = 6){
             Dictionary<string, int> DC = 
                 new Dictionary<string, int>()
