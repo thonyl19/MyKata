@@ -173,63 +173,6 @@
             };
             return {_vue,_css};
         },
-        'dy-filter'(){
-            var _css = `
-            .dy-filter{
-                position: relative;
-                /* display:  block; */
-                display: flex;
-                color  : red;
-            }
-            
-
-            .dy-filter input[type="search"]  { 
-                border       : 1px solid #ccc;
-                border-radius: 10em;
-                padding      : 0px 2.3em;
-                transition   : all 0.5s ease 0s;
-                width        : 100% !important;
-                background   : #fcfcfc;
-                line-height  : 2em;
-                margin: .35em;
-            }
-            
-            .dy-filter i.fa {
-                display     : flex;
-                position    : absolute;
-                height      : 100%;
-                align-items : center;
-                width       : 1em;
-                padding-left: .9em;
-            }
-            
-            .dy-filter .fa-times-circle { 
-                right: 1em;
-            }
-
-            .dy-filter .fa-times-circle:hover{
-                color: #1ab394;
-            }
-                `;
-            var _vue={
-                template:`
-                <div class='dy-filter'>
-                    <i class="fa fa-search"></i>
-                    <i class="fa fa-times-circle"   ></i>
-                    <input type="search" :placeholder="Placeholder"   />
-                    <i class="clearfix"></i> 
-                </div>`,
-                props:{
-                    Placeholder:{
-                        type:String,
-                        default:"Please Input"
-                    },
-                }
-
-            };
-            return {_vue,_css};
-        },
-        
         FontAwesome(){
             var _vue={
                 template:`
@@ -335,11 +278,55 @@ https://codepen.io/GhostRider/pen/GHaFw
             };
             return {_vue};
         },
+        'dl-flex'(){
+            /* 用例說明
+            1.dl 套用 flex 的呈現
+            2.input.radio 的使用
+            3.v-for 無法直接在 input 內使用,估計是因為 input 沒有 end tag ,
+                所以只能利用 li 再隔一層   
+ 
+            */
+            var _css = `
+                .case-dl-flex dt ,
+                .case-dl-flex dd
+                {
+                    border:ridge red 1px;
+                }
+                `;
+            var _vue={
+                
+                template:`
+                <div class="case-dl-flex">
+                    <ul>
+                       <li v-for="(item, idx) in list"><input type="radio" v-model="group" :value=idx />{{item}}</li>
+                    </ul>
+                    <dl :class="sty">
+                        <dt>dt</dt>
+                        <dt>dt</dt>
+                        <dd><BR /><BR /><BR /><BR /><BR /></dd>
+                    </dl>
+                </div>`,
+                data(){
+                    return {
+                        list:['原始','f-col','f-row'],
+                        group:0
+                    }
+                },
+                computed:{
+                    sty(){
+                        if (this.group == 0) return '';
+                        return `flex ${this.list[this.group]}`;
+                    }
+                }
+            };
+            return {_vue,_css};
+        },
         std(){
             var _vue={
                 template:`
                 <div>
                 </div>`
+                
 
             };
             return {_vue};
