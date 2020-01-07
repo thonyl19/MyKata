@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title></title>
+    <script src="https://unpkg.com/lodash@4.17.11/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
+    <script src="https://unpkg.com/element-ui@2.13.0/lib/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css">
+    
+    <style>
+        .flex, .flex dt, .flex dd {
+            width:100%;
+            display: block;
+            padding:0px;
+            margin:0px;
+        }
+        .flex.f-col{
+            flex-flow: column;
+        }
+        .flex.f-row{
+            flex-flow: row;
+        }
+    
+        dl.flex {
+            display: flex;
+        }
+        
+        .flex dt 
+        {
+            flex:0;
+        }
+        
+        .flex dd
+        {
+            flex:1;
+        }
+        textarea{
+            width:100%;
+            height:15em;
+        }
+        pre{
+            width:100%;
+            height:100%;
+            background:yellow;
+            margin-top:.5em;
+            overflow-y:auto;
+        }
+        ul {
+            list-style-type:none;
+            margin:0;
+            padding:.3em;
+        }
+        li {
+            min-width:5em;
+            line-height:1.3em;
+            white-space:nowrap;
+        }
+        li:hover{
+            color:blue;
+            font-weight:400;
+            cursor:pointer;
+        }
+        li.active {
+            background-color:#20FFA6;
+        }
+     
+        
+.i-el-aside
+{
+  overflow-y: auto;
+}
+.el-form-item {
+  margin-bottom:3px !important;
+}
+.el-textarea__inner{
+  padding:3px !important;
+}
+li div > .form-area{
+  display:none;
+  background:rgb(214, 229, 253);
+  padding:5em 1em;
+}
+
+li > a:hover .form-area{
+  display:block;
+}
+
+.main{
+  margin:.5em;
+}
+textarea {
+  width : 100% ;
+  min-height : 15em;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  /* opacity: 1; default already is 1 */
+  transition: opacity 1s;
+}
+.fade-leave {
+  /* opacity: 1; default already is 1 */
+}
+.fade-leave-active {
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+.slide-enter {
+  opacity: 0;
+  /* transform: translate(20px); */
+}
+.slide-enter-active {
+  animation: slide-in 1s ease-out forwards;
+  transition: opacity .5s;
+}
+.slide-leave {
+  
+}
+.slide-leave-active {
+  animation: slide-out 1s ease-out forwards;
+  opacity: 0;
+  transition: opacity 3s;
+  position: absolute;
+}
+.el-menu .el-menu-item-group__title
+{
+  line-height: 0em !important;
+  padding:3px 0px !important; 
+}
+.el-menu-item,
+.el-submenu__title{
+  height:1.75em !important;
+  line-height: 1em !important;
+}
+
+.slide-move {
+  transition: transform 1s;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateY(0)
+  }
+  to {
+    transform: translateY(20px)
+  }
+}
+/* == Fix ==*/
+.el-main{
+    padding: 0px;
+}
+    </style>
+</head>
+<body class="CSBody">
+    <div id="app">
+        <el-container>
+            <el-aside  width="200px" class="i-el-aside">
+                <page-aside 
+                    :menu_set="MenuSet" 
+                    :target="A" 
+                    @act_fun="changeFn" 
+                    @exec="bind_B"></page-aside>
+            </el-aside>
+            <el-main><table border="1" width="100%" >
+                      <tr>
+                          <td widt="*" >
+                     <el-input
+                      ref="A"
+                      type="textarea"
+                      :autosize="true"
+                      v-model="A"></el-input></td>
+                  
+                  <td width="70%">
+                    <el-input
+                      type="textarea"
+                      :autosize="true"
+                      v-model="B"></el-input></td>
+                      </tr>
+              </table>
+              <div>
+                <el-button type="primary" size="mini" round @click="ToA">《</el-button>
+                <el-button type="primary" size="mini"  round @click="Copy">Copy</el-button>
+              </div>
+                
+              <main-form :title="fnName" :act_fn="actFn" :target="A" @exec="bind_B"></main-form>
+          </el-container>
+                  
+    </div>
+    
+<script>
+    let Txt_App = {
+        Replace(Target,Old,New){
+            var reg = new RegExp(Old,'gi');
+            return Target.replace(reg, New);
+        },
+        條件換行(Target,SplitWord,isKeepSplitWord=false){
+            let arr = Target.split(SplitWord);
+            let _join = `${isKeepSplitWord?SplitWord:""}\n`
+            return arr.join(_join);
+        },
+        清前後空白(Target,isAutoJoin=true){
+            let arr = Target.split('\n');
+            let r = []
+            arr.forEach(el => {
+                r.push(el.trim());
+            });
+            if (isAutoJoin){
+                return r.join('\n') ;
+            }
+            return r;
+        },
+        SplitByLine(Target,AutoTrim=true){
+            let arr = AutoTrim 
+                ? Txt_App.清前後空白(Target,false)
+                : Target.split('\n');
+            return arr;
+        },
+        字串集結(Target,AutoTrim=true,JoinSplitWord=null){
+            let arr = Txt_App.SplitByLine(Target,AutoTrim);
+            if (JoinSplitWord != null){
+                return arr.join(JoinSplitWord);
+            }
+            return arr;
+        },
+        字串補定長(Target,LineSpan,AddWord=" ",AddAfter=true,AutoTrim=true,isAutoJoin=true){
+            let arr = Txt_App.SplitByLine(Target,AutoTrim);
+            let r = []
+            arr.forEach(el => {
+                if (LineSpan!=null){
+                    if (AddAfter){
+                        el = el.padEnd(LineSpan,AddWord);
+                        
+                    }else{
+                        el = el.padStart(LineSpan,AddWord);
+                    }
+                } 
+                r.push(el);
+            });
+            if (isAutoJoin){
+                return r.join('\n') ;
+            }
+            return r;
+        },
+        FormatTab(Target,tabs,isAutoJoin=true){
+            let _tab = _.repeat('\t',tabs);
+            let r = []
+            if (_.isString(Target)) Target = Target.split('\n');
+            Target.forEach((line)=>{
+                r.push(`${_tab}${line}`);
+            });
+            if (isAutoJoin) return r.join('\n');
+            return r;
+        },
+    }
+    let MenuSet = 
+    {
+        文字處理:{
+            置換文字:{
+                Old:"",
+                New:"",
+                fn:Txt_App.Replace
+            },
+            條件換行:{
+                SplitWord:'_',
+                isKeepSplitWord:false,
+                fn:Txt_App.條件換行
+            },
+            清前後空白:Txt_App.清前後空白 ,
+            字串集結:{
+                AutoTrim:true,
+                JoinSplitWord:'',
+                fn:Txt_App.字串集結
+            },
+            字串補定長:{
+                LineSpan:10,
+                AddWord:'',
+                AddAfter:true,
+                AutoTrim:true,
+                isAutoJoin:true,
+                fn:Txt_App.字串補定長
+            },
+            Tab排版:{
+                tabs:1,
+                fn:Txt_App.FormatTab
+            },
+        },
+        文字處理1:{
+            Tab排版:{
+                tabs:1,
+                fn:Txt_App.FormatTab
+            },
+        }
+        
+    }
+
+
+    let views = {
+        'page-aside':{
+            template:`
+            <div>
+                <el-radio-group v-model="collapseMode" style="margin-bottom: 20px;" size="small">
+                    <el-radio-button :label=1>折疊切換</el-radio-button>
+                    <el-radio-button :label=2>全部展開</el-radio-button>
+                </el-radio-group>
+                <el-menu :unique-opened="collapseMode==1" :default-openeds="openeds">
+                    <el-submenu v-for="(item0,key0) in menu_set" v-bind:key="key0" :index="key0">
+                        <template slot="title">
+                        <span>{{key0}}</span>
+                        </template>
+                        <el-menu-item-group>
+                        <el-menu-item v-for="(item1,key1) in item0" 
+                            @click="actFun(key1,item1)" 
+                            v-bind:key="key1"  
+                            :index="key1" >{{key1}}</el-menu-item>
+                        </el-menu-item-group>
+                </el-submenu>
+                </el-menu>
+            </div>
+                `,
+            props: ['menu_set','target'],
+            data(){
+                return {
+                openeds:Object.keys(this.menu_set),
+                collapseMode:1
+                }
+            },
+            watch:{
+                collapseMode(){
+                this.openeds 
+                    = (this.collapseMode==2)
+                    ?Object.keys(this.menu_set)
+                    :[];
+                }
+            },
+            methods:{
+                actFun(fnName,fn) {
+                    if (fn instanceof Function){
+                    let B = fn(this.target);
+                    this.$emit("exec", B);      
+                    }else{
+                    this.$emit("act_fun", fnName,fn);//③組件內對myResult變更後向外部發送事件通知
+                    }
+                }
+            }
+            
+        },
+        'main-form':{
+            template: `
+                <div><h4>{{title}}</h4>
+                <el-form ref="form" size="mini" label-width="150px" class="form-area">
+                <el-form-item v-for="(item,key) in act_fn" :label="key" v-if="key!='fn'" v-bind:key="key">
+                    <component  v-bind:is="genUI(item)" v-model="act_fn[key]"></component>
+                </el-form-item> 
+                <el-form-item>
+                        <el-button type="primary" @click="Exec" v-if="isShowExec" >Exec</el-button>
+                    </el-form-item> 
+                </el-form></div>
+            `,
+            props: ['title','act_fn','target'],
+            methods:{
+                
+                Exec() {
+                let args = [];
+                for (var key in this.act_fn){
+                    args.push(this.act_fn[key]);
+                }
+                let B = this.act_fn.fn(this.target,...args);
+                this.$emit("exec", B);
+                },
+                genUI(filed){
+                let _type = typeof(filed);
+                switch(_type){
+                    case "string":
+                    case "number":
+                    return 'el-input';
+                    break;
+                    case "boolean":
+                        return 'el-checkbox';
+                    break;
+                        }
+
+                }
+            },
+            computed: {
+                isShowExec(){
+                return this.act_fn['fn']!=null;
+                },
+            }
+            }
+    }    
+         
+
+    //** # Main
+    for (var k in views){
+        var _obj =  views[k]
+        Vue.component(k,_obj);
+    }
+    let tabsList = Object.keys(views);
+
+    let tabs =  {
+        el: "#app",
+        data:{
+                A:"   A-_--\\- /   ",B:"",
+                txtFormat:'YYYYMMDD',
+                txtDate:'20190201',
+                MenuSet,
+            actFn:{},
+            fnName:null
+        },
+        methods:{
+            Copy(){
+                this.$refs.A.select();
+                document.execCommand('copy');
+            },
+            ToA(){
+                this.A = this.B;
+            },
+            bind_B(val){
+                if (val instanceof Array){
+                    val = val.join("\n") ;
+                }
+                this.B = val;
+            },
+            changeFn(fnName,fn){
+                this.actFn = fn;
+                this.fnName = fnName;
+            },
+            Exec1(act){
+                console.log([this.A,this.B])
+                if (act instanceof Function){
+                    this.B = act(this.A);
+                }else{
+                    let args = [];
+                    for (var key in act){
+                    args.push(act[key]);
+                    }
+                    this.B = act.fn(this.A,...args);
+                }
+            }
+        }
+    };
+    Vue.config.productionTip = false
+    new Vue(tabs);
+        
+        
+    </script>
+</body>
+</html>
