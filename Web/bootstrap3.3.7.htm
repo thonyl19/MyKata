@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    
+    <!-- <script type="text/javascript" src="https://unpkg.com/json-fns/json-fns.js"></script> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .flex, .flex dt, .flex dd {
+            width:100%;
+            display: block;
+            padding:0px;
+            margin:0px;
+        }
+        .flex.f-col{
+            flex-flow: column;
+        }
+        .flex.f-row{
+            flex-flow: row;
+        }
+    
+        dl.flex {
+            display: flex;
+        }
+        
+        .flex dt 
+        {
+            flex:0;
+        }
+        
+        .flex dd
+        {
+            flex:1;
+        }
+        textarea{
+            width:100%;
+            height:15em;
+        }
+        pre{
+            width:100%;
+            height:100%;
+            background:yellow;
+            margin-top:.5em;
+            overflow-y:auto;
+        }
+        ul {
+            list-style-type:none;
+            margin:0;
+            padding:.3em;
+        }
+        li {
+            min-width:5em;
+            line-height:1.3em;
+            white-space:nowrap;
+        }
+        li:hover{
+            color:blue;
+            font-weight:400;
+            cursor:pointer;
+        }
+        li.active {
+            background-color:#20FFA6;
+        }
+     
+    </style>
+</head>
+<body class="CSBody">
+    <div id="app">
+        <dl class="flex f-row">
+            <dt>
+                <ul> 
+                    <li v-for="(item) in tabsList"
+                        v-bind:key="item"
+                        v-bind:class="['tab-button', { active: currentTab === item }]"
+                        >
+                        <a @click="currentTab =item"> {{item}}</a>
+                    </li>
+                </ul>
+            </dt>
+            <dd style="height:95vh ;" >
+                <dl class="flex f-col">
+                    <dt>
+                        <input type="button" value="Copy" @click="copy" />
+                         <input type="button" value="Copy Components" @click="copy_com" />
+                        <textarea v-model="Code" @blur="change()"></textarea>
+                        <component
+                            v-bind:is="currentTabComponent"
+                            :sets="currentTab"
+                        ></component>
+                         
+                    </dt>
+                    <dd>
+                        <!-- <pre>{{result}}</pre> -->
+                    </dd>
+                </dl>
+            </dd>
+        </dl>
+    </div>
+    
+<script>
+    /*
+    https://www.w3cplus.com/vue/seven-ways-to-define-a-component-template-by-vuejs.html
+    */
+    let views = {
+        Button(){
+            var _obj={
+                template:`
+                <div>
+                </div>`,
+                data(){
+                    return {
+                        list:['default','primary',
+                            'success',
+                            'info',
+                            'warning',
+                            'danger',
+                            'link']
+                    }
+                }
+
+            };
+            return _obj;
+        },
+        std(){
+            var _obj={
+                template:`
+                <div>
+                </div>`
+            };
+            return _obj;
+        },
+    }    
+         
+
+    //** # Main
+    for (var k in views){
+        var _obj =  views[k]();//Object.assign({},views[k])
+        Vue.component(`x-${k}`,_obj);
+    }
+    let tabsList = Object.keys(views);
+
+    let tabs =  {
+        data: {
+            tabsList,
+            "currentTab": tabsList[0],
+            "Code":''
+        },
+        "computed": {
+            currentTabComponent(){
+                var _obj = views[this.currentTab];
+                this.Code = _obj; 
+                return `x-${this.currentTab}`;
+            }
+        
+        },
+        methods: {
+            change(){
+                this.views[this.currentTab].template = this.Code;
+            },
+            copy(){
+
+            },
+            copy_com(){
+                
+            }
+        },
+        "el": "#app"
+    };
+    Vue.config.productionTip = false
+    new Vue(tabs);
+        
+        
+    </script>
+</body>
+</html>
