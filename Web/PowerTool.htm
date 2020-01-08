@@ -169,33 +169,32 @@ textarea {
         <el-container>
             <el-aside  width="200px" class="i-el-aside">
                 <page-aside 
-                    :menu_set="MenuSet" 
+                    :menu_set="FunUI" 
                     :target="A" 
                     @act_fun="changeFn" 
                     @exec="bind_B"></page-aside>
             </el-aside>
-            <el-main><table border="1" width="100%" >
-                      <tr>
-                          <td widt="*" >
-                     <el-input
-                      ref="A"
-                      type="textarea"
-                      :autosize="true"
-                      v-model="A"></el-input></td>
-                  
-                  <td width="70%">
-                    <el-input
-                      type="textarea"
-                      :autosize="true"
-                      v-model="B"></el-input></td>
-                      </tr>
+            <el-main>
+                <table border="1" width="100%" >
+                    <tr>
+                        <td widt="*" >
+                            <el-input
+                            ref="A"
+                            type="textarea"
+                            :autosize="true"
+                            v-model="A"></el-input></td>
+                        <td width="70%">
+                        <el-input
+                        type="textarea"
+                        :autosize="true"
+                        v-model="B"></el-input></td>
+                    </tr>
               </table>
-              <div>
+            <div>
                 <el-button type="primary" size="mini" round @click="ToA">《</el-button>
                 <el-button type="primary" size="mini"  round @click="Copy">Copy</el-button>
-              </div>
-                
-              <main-form :title="fnName" :act_fn="actFn" :target="A" @exec="bind_B"></main-form>
+            </div>
+            <fn-form :title="fnName" :act_fn="actFn" :target="A" @exec="bind_B"></fn-form>
           </el-container>
                   
     </div>
@@ -265,8 +264,7 @@ textarea {
             return r;
         },
     }
-    let MenuSet = 
-    {
+    let FunUI = {
         文字處理:{
             置換文字:{
                 Old:"",
@@ -303,7 +301,6 @@ textarea {
                 fn:Txt_App.FormatTab
             },
         }
-        
     }
 
 
@@ -318,105 +315,114 @@ textarea {
                 <el-menu :unique-opened="collapseMode==1" :default-openeds="openeds">
                     <el-submenu v-for="(item0,key0) in menu_set" v-bind:key="key0" :index="key0">
                         <template slot="title">
-                        <span>{{key0}}</span>
+                            <span>{{key0}}</span>
                         </template>
                         <el-menu-item-group>
-                        <el-menu-item v-for="(item1,key1) in item0" 
-                            @click="actFun(key1,item1)" 
-                            v-bind:key="key1"  
-                            :index="key1" >{{key1}}</el-menu-item>
+                            <el-menu-item v-for="(item1,key1) in item0" 
+                                @click="actFun(key1,item1)" 
+                                v-bind:key="key1"  
+                                :index="key1" >{{key1}}</el-menu-item>
                         </el-menu-item-group>
-                </el-submenu>
+                    </el-submenu>
                 </el-menu>
             </div>
                 `,
             props: ['menu_set','target'],
             data(){
                 return {
-                openeds:Object.keys(this.menu_set),
-                collapseMode:1
+                    openeds:Object.keys(this.menu_set),
+                    collapseMode:1
                 }
             },
             watch:{
                 collapseMode(){
-                this.openeds 
-                    = (this.collapseMode==2)
-                    ?Object.keys(this.menu_set)
-                    :[];
+                    this.openeds 
+                        = (this.collapseMode==2)
+                        ?Object.keys(this.menu_set)
+                        :[];
                 }
             },
             methods:{
                 actFun(fnName,fn) {
                     if (fn instanceof Function){
-                    let B = fn(this.target);
-                    this.$emit("exec", B);      
+                        let B = fn(this.target);
+                        this.$emit("exec", B);      
                     }else{
-                    this.$emit("act_fun", fnName,fn);//③組件內對myResult變更後向外部發送事件通知
+                        //組件內對myResult變更後向外部發送事件通知
+                        this.$emit("act_fun", fnName, fn);
                     }
                 }
             }
             
         },
-        'main-form':{
+        'fn-form':{
             template: `
-                <div><h4>{{title}}</h4>
+            <div>
+                {{act_fn}}
+                <h4>{{title}}</h4>
                 <el-form ref="form" size="mini" label-width="150px" class="form-area">
-                <el-form-item v-for="(item,key) in act_fn" :label="key" v-if="key!='fn'" v-bind:key="key">
-                    <component  v-bind:is="genUI(item)" v-model="act_fn[key]"></component>
-                </el-form-item> 
-                <el-form-item>
-                        <el-button type="primary" @click="Exec" v-if="isShowExec" >Exec</el-button>
+                    <el-form-item v-for="(item,key) in act_fn" 
+                        :label="key" 
+                        v-if="isFiledItem(key)" 
+                        v-bind:key="key">
+                        <component  v-bind:is="genUI(item)" 
+                            v-model="act_fn[key]"></component>
                     </el-form-item> 
-                </el-form></div>
+                    <el-form-item>
+                        <el-button type="primary" @click="Exec" 
+                            v-if="isShowExec">Exec</el-button>
+                    </el-form-item> 
+                </el-form>
+            </div>
             `,
             props: ['title','act_fn','target'],
             methods:{
-                
                 Exec() {
-                let args = [];
-                for (var key in this.act_fn){
-                    args.push(this.act_fn[key]);
-                }
-                let B = this.act_fn.fn(this.target,...args);
-                this.$emit("exec", B);
+                    let args = [];
+                    for (var key in this.act_fn){
+                        args.push(this.act_fn[key]);
+                    }
+                    let B = this.act_fn.fn(this.target,...args);
+                    this.$emit("exec", B);
                 },
                 genUI(filed){
-                let _type = typeof(filed);
-                switch(_type){
-                    case "string":
-                    case "number":
-                    return 'el-input';
-                    break;
-                    case "boolean":
-                        return 'el-checkbox';
-                    break;
-                        }
-
+                    let _type = typeof(filed);
+                    switch(_type){
+                        case "string":
+                        case "number":
+                            return 'el-input';
+                            break;
+                        case "boolean":
+                            return 'el-checkbox';
+                            break;
+                    }
+                },
+                //因為 fn 是用來綁定執行程序,所以不做欄位顯示轉換,其餘都需要轉換
+                isFiledItem(Key){
+                    return Key !='fn';
                 }
+                
             },
             computed: {
                 isShowExec(){
-                return this.act_fn['fn']!=null;
+                    return this.act_fn['fn']!=null;
                 },
             }
-            }
+        }
     }    
          
-
-    //** # Main
+ 
     for (var k in views){
         var _obj =  views[k]
         Vue.component(k,_obj);
     }
-    let tabsList = Object.keys(views);
-
     let tabs =  {
         el: "#app",
         data:{
-                A:"   A-_--\\- /   ",B:"",
-                txtFormat:'YYYYMMDD',
-                txtDate:'20190201',
-                MenuSet,
+            A:"   A-_--\\- /   ",B:"",
+            txtFormat:'YYYYMMDD',
+            txtDate:'20190201',
+            FunUI,
             actFn:{},
             fnName:null
         },
@@ -445,7 +451,7 @@ textarea {
                 }else{
                     let args = [];
                     for (var key in act){
-                    args.push(act[key]);
+                        args.push(act[key]);
                     }
                     this.B = act.fn(this.A,...args);
                 }
@@ -454,8 +460,6 @@ textarea {
     };
     Vue.config.productionTip = false
     new Vue(tabs);
-        
-        
     </script>
 </body>
 </html>
