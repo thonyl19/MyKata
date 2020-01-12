@@ -208,6 +208,15 @@ textarea {
     
 
     let views = {
+        'sql-filed-newline':{
+            template:`<el-menu-item><input type='checkbox' />test</el-menu-item>`,
+            prop:[],
+            methods:{
+                click(){
+
+                }
+            }
+        },
         'page-aside':{
             template:`
             <div>
@@ -221,10 +230,12 @@ textarea {
                             <span>{{key0}}</span>
                         </template>
                         <el-menu-item-group>
-                            <el-menu-item v-for="(item1,key1) in item0" 
+                            <component
+                                v-for="(item1,key1) in item0" 
+                                :is="genMenuItem(key1,item1)"
+                                :key="key1"  
                                 @click="actFun(key1,item1)" 
-                                v-bind:key="key1"  
-                                :index="key1" >{{genMenuItem(key1,item1)}}</el-menu-item>
+                            >{{key1}}</component>
                         </el-menu-item-group>
                     </el-submenu>
                 </el-menu>
@@ -247,6 +258,7 @@ textarea {
             },
             methods:{
                 actFun(fnName,fn) {
+                    //alert('test');
                     if (fn instanceof Function){
                         let B = fn(this.target);
                         this.$emit("exec", B);      
@@ -261,7 +273,7 @@ textarea {
                             return item;
                             break;
                     }
-                    return key;
+                    return 'el-menu-item';
                 }
             }
             
@@ -399,9 +411,17 @@ textarea {
                     tabs:1,
                     fn:App_Str.FormatTab
                 },
+                Tpl_ByLine:{
+                    tpl:'',
+                    col_split:',',
+                    AutoTrim:true,
+                    isAutoJoin:true,
+                    fn:App_Str.Tpl_ByLine
+                }
             },
             SQL:{
-                '@Filed換行':'<el-button>默认按钮</el-button>',
+                '@Filed換行':'sql-filed-newline',
+                //'<el-button>默认按钮</el-button>',
                 'SqlCmd 格式化(全作業)'(as_SqlCmd){
                     //Form1.CB1.checked
                     //SObj	= document.all("CB1");

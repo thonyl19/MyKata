@@ -2,7 +2,7 @@
 <html>
 <head runat="server">
     <title></title>
-     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
     <script src="https://unpkg.com/vuex@3.1.2/dist/vuex.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
@@ -80,7 +80,7 @@
                         v-bind:key="item"
                         v-bind:class="['tab-button', { active: currentTab === item }]"
                         >
-                        <a @click="currentTab =item"> {{item}}</a>
+                        <a @click="currentTab=item"> {{item}}</a>
                     </li>
                 </ul>
             </dt>
@@ -91,7 +91,7 @@
                          <input type="button" value="Copy Components" @click="copy_com" />
                         <textarea v-model="Code" @blur="change()"></textarea>
                         <component
-                            v-bind:is="currentTabComponent"
+                            :is="currentTabComponent"
                             :sets="currentTab"
                         ></component>
                          
@@ -383,7 +383,245 @@
             };
             return _obj;
         },
+        
+        
+        returnTemplate(){
+            /*
+            未完成
+            需求為,希望在 fu 中,return html code ,並在 UI 中生成 domObj 
+            */
+            var _obj={
+                template:`
+                <div>{{fn('test')}}
+                </div>`,
+                methods:{
+                    fn(val){
+                        return `<a><input type="checkbox" />${val}</a>`;
+                    }
+                }
+            };
+            return _obj; 
+        },
+        'v-html'(){
+            /*
+            1. v-html 試例
+            2. 在 產生出來的html 中,己經無再使用 vue 相關程序功能
+            */
+            var _obj={
+                data(){
+                    return {checked:'true'}
+                },
+                template:`
+                <div>{{checked}}
+                    <span  v-html="fn()"></span>
+                </div>`,
+                methods:{
+                    fn(){
+                        return  '<input type="checkbox" v-model="checked" />'
+                    }
+                }
+            };
+            return _obj;
+        },
+        
+        DynamicHtml_v1(){
+            /*
+            參考自 https://jsfiddle.net/Linusborg/1zdzu7k1/
+            */
+            var dynamic = {
+                props: ['template'],
+                data() {
+                    return {
+                        templateRender: null,
+                        msg:'test'
+                    };
+                },
+                render(h) {
+                    if (!this.templateRender) {
+                        return h('div', 'loading...');
+                    } else { // If there is a template, I'll show it
+                        return this.templateRender();
+                    }
+                },
+                watch: {
+                    // Every time the template prop changes, I recompile it to update the DOM
+                    template:{
+                        immediate: true, // makes the watcher fire on first render, too.
+                        handler() {
+                            var res = Vue.compile(this.template);
+                            this.templateRender = res.render;
+                            
+                            // staticRenderFns belong into $options, 
+                            // appearantly
+                            this.$options.staticRenderFns = []
+                            
+                            // clean the cache of static elements
+                            // this is a cache with the results from the staticRenderFns
+                            this._staticTrees = []
+                            
+                            // Fill it with the new staticRenderFns
+                            for (var i in res.staticRenderFns) {
+                                //staticRenderFns.push(res.staticRenderFns[i]);
+                                this.$options.staticRenderFns.push(res.staticRenderFns[i])
+                            }
+                        }
+                    }
+                },
+            };
 
+            var _obj={
+                data() {
+                    return {
+                        html: [
+                            '<div><span>First template--{{msg}}</span></div>',
+                            '<div><span>Second template</span></div>',
+                            '<div>Working template, no staticRenderFns here</div>'],
+                        index: 0,
+                    }
+                },
+                template:`
+                <div>
+                    <button @click="index = 0">First</button>
+                    <button @click="index = 1">Second</button>
+                    <button @click="index = 2">I work, no staticRenderFns here</button>
+                    <dynamic v-bind:template="html[index]"></dynamic>
+                </div>`,
+                components: {
+                    dynamic
+                },
+            };
+            return _obj;
+        },
+        DynamicHtml_v2(){
+            /*
+                Ref:https://jsfiddle.net/Linusborg/47ejdvyy/4/
+                比 V1 更為精簡
+            */
+            var Loading = {
+                template: `<div>Loading...</div>`
+            }
+            var dynamic = {
+                functional: true,
+                template: '#dynamic',
+                props: ['template'],
+                render(h, context) {
+                    const template = context.props.template
+                    const component = template ? { template } : Loading
+                    return h(component)
+                }
+            }
+            var _obj = {
+                template:`
+                <div>
+                    <button @click="index = 0">First</button>
+                    <button @click="index = 1">Second</button>
+                    <button @click="index = 2">I work, no staticRenderFns here</button>
+                    <dynamic :template="html[index]"></dynamic>
+                </div>`,
+                data(){
+                    return {
+                        html: [
+                        '<div id="mount-point"><span>First template</span></div>',
+                        '<div id="mount-point"><span>Second template</span></div>',
+                        '<div id="mount-point">Working template, no staticRenderFns here</div>'
+                        ],
+                        index: 0,
+                    }
+                },
+                components: {
+                    dynamic
+                },
+            }
+            return _obj;
+        },
+        DynamicHtml_v3(){
+            var Loading = {
+                template: `<div>Loading...</div>`
+            }
+            var dynamic = {
+                props: ['template'],
+                data() {
+                    return {
+                        templateRender: null,
+                        msg:'test'
+                    };
+                },
+                render(h) {
+                    if (!this.templateRender) {
+                        return h('div', 'loading...');
+                    } else { // If there is a template, I'll show it
+                        return this.templateRender();
+                    }
+                },
+                watch: {
+                    // Every time the template prop changes, I recompile it to update the DOM
+                    template:{
+                        immediate: true, // makes the watcher fire on first render, too.
+                        handler() {
+                            var res = this.template;
+                            this.templateRender = res.render;
+                            
+                            // staticRenderFns belong into $options, 
+                            // appearantly
+                            this.$options.staticRenderFns = []
+                            
+                            // clean the cache of static elements
+                            // this is a cache with the results from the staticRenderFns
+                            this._staticTrees = []
+                            
+                            // Fill it with the new staticRenderFns
+                            for (var i in res.staticRenderFns) {
+                                //staticRenderFns.push(res.staticRenderFns[i]);
+                                this.$options.staticRenderFns.push(res.staticRenderFns[i])
+                            }
+                        }
+                    }
+                },
+            };
+
+            var _obj = {
+                template:`
+                <div>
+                    <button @click="index = 0">First</button>
+                    <button @click="index = 1">Second</button>
+                    <button @click="index = 2">I work, no staticRenderFns here</button>
+                    <dynamic :template="html[index]"></dynamic>
+                </div>`,
+                data(){
+                    return {
+                        html: [
+                            Vue.compile('<div id="mount-point"><span>First template-{{msg}}</span></div>'),
+                            Vue.compile('<div id="mount-point"><span>Second template-{{msg}}</span></div>'),
+                            Vue.compile('<div id="mount-point">Working template, no staticRenderFns here-{{msg}}</div>')
+                        ],
+                        index: 0,
+                    }
+                },
+                components: {
+                    dynamic
+                },
+            }
+            return _obj;
+        },
+        VueCmd(){
+            var _obj={
+                template:`
+                <div>
+                </div>`
+            };
+            console.log(Vue.options.components);
+            return _obj;
+        },
+        'resizer-box'(){
+            //https://jsfiddle.net/Linusborg/jmo9Lknn/
+            var _obj={
+                template:`
+                <div>
+                </div>`
+            };
+            return _obj;
+        },
+        
         std(){
             var _obj={
                 template:`
@@ -405,16 +643,15 @@
     let tabs =  {
         data: {
             tabsList,
-            "currentTab": tabsList[0],
-            "Code":''
+            currentTab: 'DynamicHtml_v3'//tabsList[0],
+            ,Code:''
         },
-        "computed": {
+        computed: {
             currentTabComponent(){
                 var _obj = views[this.currentTab];
                 this.Code = _obj; 
                 return `x-${this.currentTab}`;
             }
-        
         },
         methods: {
             change(){

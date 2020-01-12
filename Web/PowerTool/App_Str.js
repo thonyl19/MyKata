@@ -10,6 +10,25 @@
         root['App_Str'] = factory(root.jQuery);
     }
 }(this, function ($) {
+    String.prototype.format = function (args) {
+        var str = this;
+        return str.replace(String.prototype.format.regex, function(item) {
+            var intVal = parseInt(item.substring(1, item.length - 1));
+            var replace;
+            if (intVal >= 0) {
+                replace = args[intVal];
+            } else if (intVal === -1) {
+                replace = "{";
+            } else if (intVal === -2) {
+                replace = "}";
+            } else {
+                replace = "";
+            }
+            return replace;
+        });
+    };
+    String.prototype.format.regex = new RegExp("{-?[0-9]+}", "g");
+
     let Txt_App = {
         Replace(Target,Old,New){
             var reg = new RegExp(Old,'gi');
@@ -73,6 +92,22 @@
             if (isAutoJoin) return r.join('\n');
             return r;
         },
+        _tpl_RegEx(idx)
+        {
+            return new RegExp(`({)?\\{${idx}\\}(?!})`, 'gm')
+        },
+        Tpl_ByLine(Target,tpl,col_split=",",AutoTrim=true,isAutoJoin=true){
+            let arr = Txt_App.SplitByLine(Target,AutoTrim);
+            col_split = col_split.replace(new RegExp('\\','gm'))
+            var r = [];
+            arr.forEach((line)=>{
+                debugger
+                let _arr = line.split(col_split);
+                r.push(tpl.format(_arr));
+            });
+            if (isAutoJoin) return r.join('\n');
+            return r;
+         }
     };
     return Txt_App;
 }));
