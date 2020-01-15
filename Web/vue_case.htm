@@ -163,6 +163,23 @@
             };
             return {_vue,_css};
         },
+        props_Function(){
+            var _vue={
+                template:`
+                <div>
+                </div>`,
+                props:{
+                    chg_fn:{
+                        type:Function,
+                        default(){
+                            //alert('test');
+                        }
+                    }
+                }
+            };
+            return {_vue};
+        },
+
         std(){
             var _vue={
                 template:`

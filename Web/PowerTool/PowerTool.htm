@@ -193,10 +193,11 @@
     <div id="app">
         <el-container>
             <el-aside width="200px" class="i-el-aside">
-                <page-aside :menu_set="FunUI"
-                            :target="A"
-                            @act_fun="changeFn"
-                            @exec="bind_B"></page-aside>
+                <page-aside 
+                    :menu_set="FunUI"
+                    :target="A"
+                    :chg_fn="chgFormUI"
+                    @exec="bind_B"></page-aside>
             </el-aside>
             <el-main>
                 <table border="1" width="100%">
@@ -218,7 +219,11 @@
                     <el-button type="primary" size="mini" round @click="ToA">《</el-button>
                     <el-button type="primary" size="mini" round @click="Copy">Copy</el-button>
                 </div>
-                <fn-form :title="fnName" :act_fn="actFn" :target="A" @exec="bind_B"></fn-form>
+                <fn-form 
+                    :title="fnName" 
+                    :act_fn="actFn" 
+                    :target="A" 
+                    @exec="bind_B"></fn-form>
         </el-container>
 
     </div>
@@ -261,7 +266,22 @@
                 </el-menu>
             </div>
                 `,
-            props: ['menu_set','target'],
+                
+            props:{
+                menu_set:{
+                    type:Object
+                },
+                target:{
+                    type:String
+                },
+                chg_fn:{
+                    type:Function,
+                    default(){
+                        //alert('test');
+                    }
+                }
+            },
+            // ['menu_set','target'],
             data(){
                 return {
                     openeds:Object.keys(this.menu_set),
@@ -272,19 +292,19 @@
                 collapseMode(){
                     this.openeds
                         = (this.collapseMode==2)
-                        ?Object.keys(this.menu_set)
-                        :[];
+                        ? Object.keys(this.menu_set)
+                        : [];
                 }
             },
             methods:{
                 actFun(fnName,fn) {
-                    //alert('test');
-                    if (fn instanceof Function){
+                    var isNoUI_Mode = fn instanceof Function;
+                    if (isNoUI_Mode){
                         let B = fn(this.target);
                         this.$emit("exec", B);
                     }else{
                         //組件內對myResult變更後向外部發送事件通知
-                        this.$emit("act_fun", fnName, fn);
+                        this.chg_fn(fnName, fn);
                     }
                 },
                 genMenuItem(key,item){
@@ -319,7 +339,19 @@
                 </el-form>
             </div>
             `,
-            props: ['title','act_fn','target'],
+            props:{
+                title:{
+                    type:String,
+                    default:"Please Input"
+                },
+                act_fn:{
+                    type:Object,
+                },
+                target:{
+                    type:String,
+                },
+                
+            },
             methods:{
                 Exec() {
                     let args = [];
@@ -436,8 +468,8 @@
                     fn:App_Str.FormatTab
                 },
                 Tpl_ByLine:{
-                    tpl:'',
-                    col_split:',',
+                    tpl:'{0},{1}',
+                    col_split:'\\t',
                     AutoTrim:true,
                     isAutoJoin:true,
                     fn:App_Str.Tpl_ByLine
@@ -450,7 +482,7 @@
                     //Form1.CB1.checked
                     //SObj  = document.all("CB1");
                     //@資料標準化(將資料全部不換行集結)
-                    var TmpData = App_SQL.SqlCmdDataSTD(as_SqlCmd);
+                    var TmpData = App_SQL.SqlCmdSTD(as_SqlCmd);
                     //@資料解析處理(將命令字元 做大寫轉換及大部換行處理)
                     TmpData = App_SQL.SqlCmdUpWord(TmpData);
                     if (App_SQL.isFiled換行){
@@ -463,20 +495,24 @@
                 Select2Update:App_SQL.Select2UpdatePG,
                 Update2Select:App_SQL.Update2Select,
                 FiledFormat:App_SQL.FiledFormat,
+                // '@Filed換行':{
+                //     props:[]
+                // }
             }
         };
 
         let tabs =  {
             el: "#app",
             data:{
-                //A:"   A-_--\\- /   ",
-                A:_sql,
+                A:"   A-_--\\- /   ",
+                //A:_sql,
+                //A:`A\ta\nB`,
                 B:"",
                 txtFormat:'YYYYMMDD',
                 txtDate:'20190201',
                 FunUI,
                 actFn:{},
-                fnName:null
+                fnName:'null'
             },
             methods:{
                 Copy(){
@@ -492,7 +528,8 @@
                     }
                     this.B = val;
                 },
-                changeFn(fnName,fn){
+                chgFormUI(fnName,fn){
+                    //console.log(fnName,fn);
                     this.actFn = fn;
                     this.fnName = fnName;
                 },
