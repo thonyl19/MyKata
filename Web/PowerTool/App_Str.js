@@ -92,21 +92,23 @@
             if (isAutoJoin) return r.join('\n');
             return r;
         },
+        _ts_escaped(val){
+            var s1 = "{}[]-/\\()*+?.%$|".replace(RegExp(".", "g"), "\\$&");
+            var s2 = RegExp(`[${s1}]`,'g');
+            var s3 = val.replace(s2, "\\$&");
+            return new RegExp(s3);
+        },
         _tpl_RegEx(idx) {
             return new RegExp(`({)?\\{${idx}\\}(?!})`, 'gm')
         },
         Tpl_ByLine(Target, tpl, col_split = ",", AutoTrim = true, isAutoJoin = true) {
+            debugger
             let arr = Txt_App.SplitByLine(Target, AutoTrim);
-            //col_split = col_split.replace(new RegExp('\\','gm'))
-            tpl =
-                `<div class="form-group col-lg-6">
-            <label>@RES.BLL.Face.{0}</label>
-            <input class="form-control" type="text" v-model="CurrentLot.{0}" readonly />
-        </div>`;
+            var _reg = new RegExp(col_split);//Txt_App._ts_escaped(col_split);
             var r = [];
             arr.forEach((line) => {
                 debugger
-                let _arr = line.split(col_split);
+                let _arr = line.split(_reg);
                 r.push(tpl.format(_arr));
             });
             if (isAutoJoin) return r.join('\n');
