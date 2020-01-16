@@ -8,93 +8,108 @@
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
     <script src="https://unpkg.com/jss-preset-default/dist/jss-preset-default.min.js"></script>
-    
+
     <!-- <script type="text/javascript" src="https://unpkg.com/json-fns/json-fns.js"></script> -->
     <script type="text/javascript" src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.8/dist/global/Rx.umd.js"></script>
-    
+
     <style>
+
+
+
+
+
+
+
+
+
+
+
+
+
         .flex, .flex dt, .flex dd {
-            width:100%;
+            width: 100%;
             display: block;
-            padding:0px;
-            margin:0px;
+            padding: 0px;
+            margin: 0px;
         }
-        .flex.f-col{
-            flex-flow: column;
-        }
-        .flex.f-row{
-            flex-flow: row;
-        }
-    
+
+            .flex.f-col {
+                flex-flow: column;
+            }
+
+            .flex.f-row {
+                flex-flow: row;
+            }
+
         dl.flex {
             display: flex;
         }
-        
-        .flex dt 
-        {
-            flex:0;
+
+        .flex dt {
+            flex: 0;
         }
-        
-        .flex dd
-        {
-            flex:1;
+
+        .flex dd {
+            flex: 1;
         }
-        textarea{
-            width:100%;
-            height:15em;
+
+        textarea {
+            width: 100%;
+            height: 15em;
         }
-        pre{
-            width:100%;
-            height:100%;
-            background:yellow;
-            margin-top:.5em;
-            overflow-y:auto;
+
+        pre {
+            width: 100%;
+            height: 100%;
+            background: yellow;
+            margin-top: .5em;
+            overflow-y: auto;
         }
+
         ul {
-            list-style-type:none;
-            margin:0;
-            padding:.3em;
+            list-style-type: none;
+            margin: 0;
+            padding: .3em;
         }
+
         li {
-            min-width:5em;
-            line-height:1.3em;
-            white-space:nowrap;
+            min-width: 5em;
+            line-height: 1.3em;
+            white-space: nowrap;
         }
-        li:hover{
-            color:blue;
-            font-weight:400;
-            cursor:pointer;
-        }
-        li.active {
-            background-color:#20FFA6;
-        }
-     
+
+            li:hover {
+                color: blue;
+                font-weight: 400;
+                cursor: pointer;
+            }
+
+            li.active {
+                background-color: #20FFA6;
+            }
     </style>
 </head>
 <body class="CSBody">
     <div id="app">
         <dl class="flex f-row">
             <dt>
-                <ul> 
+                <ul>
                     <li v-for="(item) in tabsList"
                         v-bind:key="item"
-                        v-bind:class="['tab-button', { active: currentTab === item }]"
-                        >
+                        v-bind:class="['tab-button', { active: currentTab === item }]">
                         <a @click="currentTab=item"> {{item}}</a>
                     </li>
                 </ul>
             </dt>
-            <dd style="height:95vh ;" >
+            <dd style="height:95vh ;">
                 <dl class="flex f-col">
                     <dt>
                         <input type="button" value="Copy" @click="copy" />
-                         <input type="button" value="Copy Components" @click="copy_com" />
+                        <input type="button" value="Copy Components" @click="copy_com" />
                         <textarea v-model="Code" @blur="change()"></textarea>
-                        <component
-                            :is="currentTabComponent"
-                            :sets="currentTab"
-                        ></component>
-                         
+                        <component :is="currentTabComponent"
+                                   :sets="currentTab"></component>
+
                     </dt>
                     <dd>
                         <!-- <pre>{{result}}</pre> -->
@@ -103,8 +118,8 @@
             </dd>
         </dl>
     </div>
-    
-<script>
+
+    <script>
     /*
     https://www.w3cplus.com/vue/seven-ways-to-define-a-component-template-by-vuejs.html
     */
@@ -120,6 +135,40 @@
                 "template": "<div>destroyed 測試,當切換到另一個頁籤時觸發.</div>",
                 destroyed(){
                     alert('物件己被銷毀!');
+                }
+            }
+            return _obj;
+        },
+        array_reNew() {
+            var _obj = {
+                template: `
+                <div>
+                    <ul>
+                        <li v-for="(value) in list">{{value}}</li>
+                    </ul>
+                    <input type="button" value="正確做法" @click="exec" />
+                    <input type="button" value="錯誤做法??" @click="exec1" />
+                </div>
+`,
+                data() {
+                    return {
+                        list:[1,2,3]
+                    }
+                },
+                methods:{
+                    exec() {
+                        this.list.splice(0);
+                        this.autoAdd(5);
+                    },
+                    exec1() {
+                        this.list=['A','B','C'];
+                        //this.autoAdd(7);
+                    },
+                    autoAdd(x) {
+                        for (var i = 0; i < x ; i++) {
+                            this.list.push(i);
+                        }
+                    }
                 }
             }
             return _obj;
@@ -141,7 +190,7 @@
            return _obj;
         },
 
- 
+
 
         rxjs連撃限制(){
             var _obj = {
@@ -172,7 +221,7 @@
             };
             return _obj;
         },
-        
+
         rxjs連續輸入延遲反應(){
             var _obj = {
                 data(){
@@ -208,7 +257,7 @@
             };
             return _obj;
         },
-        
+
         vuex範例(){
             const store = new Vuex.Store({
                 state: {
@@ -247,19 +296,19 @@
             return _obj;
         },
         router範例(){
-            const http404 = { 
+            const http404 = {
                 template: '<div>http404 path is : {{$route.path}}</div>',
                 mounted(){
                     console.log(this.$route.path);
                 }
             }
-            const index = { 
+            const index = {
                 template: '<div>index path is : {{$route.name}}</div>',
                 mounted(){
                     console.log(this.$route.path);
                 }
             }
-            const panda = { 
+            const panda = {
                 template: '<div>panda path is : {{$route.path}}</div>',
                 mounted(){
                     console.log(this.$route.path);
@@ -328,7 +377,7 @@
                `
             };
             Vue.component('list', list);
-       
+
             var _obj={
                 template:`
                 <div>
@@ -383,12 +432,12 @@
             };
             return _obj;
         },
-        
-        
+
+
         returnTemplate(){
             /*
             未完成
-            需求為,希望在 fu 中,return html code ,並在 UI 中生成 domObj 
+            需求為,希望在 fu 中,return html code ,並在 UI 中生成 domObj
             */
             var _obj={
                 template:`
@@ -400,7 +449,7 @@
                     }
                 }
             };
-            return _obj; 
+            return _obj;
         },
         'v-html'(){
             /*
@@ -423,7 +472,7 @@
             };
             return _obj;
         },
-        
+
         DynamicHtml_v1(){
             /*
             參考自 https://jsfiddle.net/Linusborg/1zdzu7k1/
@@ -450,15 +499,15 @@
                         handler() {
                             var res = Vue.compile(this.template);
                             this.templateRender = res.render;
-                            
-                            // staticRenderFns belong into $options, 
+
+                            // staticRenderFns belong into $options,
                             // appearantly
                             this.$options.staticRenderFns = []
-                            
+
                             // clean the cache of static elements
                             // this is a cache with the results from the staticRenderFns
                             this._staticTrees = []
-                            
+
                             // Fill it with the new staticRenderFns
                             for (var i in res.staticRenderFns) {
                                 //staticRenderFns.push(res.staticRenderFns[i]);
@@ -560,15 +609,15 @@
                         handler() {
                             var res = this.template;
                             this.templateRender = res.render;
-                            
-                            // staticRenderFns belong into $options, 
+
+                            // staticRenderFns belong into $options,
                             // appearantly
                             this.$options.staticRenderFns = []
-                            
+
                             // clean the cache of static elements
                             // this is a cache with the results from the staticRenderFns
                             this._staticTrees = []
-                            
+
                             // Fill it with the new staticRenderFns
                             for (var i in res.staticRenderFns) {
                                 //staticRenderFns.push(res.staticRenderFns[i]);
@@ -621,7 +670,26 @@
             };
             return _obj;
         },
-        
+
+        'keyup.enter'(){
+            var _obj = {
+                data() {
+                    return  {msg: 0}
+                },
+                template:`
+                <div>
+                <h1>{{ msg }}</h1>
+                     <input v-on:keyup.enter="onEnter" />
+                </div>`,
+                methods:{
+                    onEnter(){
+                        this.msg++;
+                    }
+                }
+            };
+            return _obj;
+        },
+
         std(){
             var _obj={
                 template:`
@@ -630,8 +698,8 @@
             };
             return _obj;
         },
-    }    
-         
+    }
+
 
     //** # Main
     for (var k in views){
@@ -649,7 +717,7 @@
         computed: {
             currentTabComponent(){
                 var _obj = views[this.currentTab];
-                this.Code = _obj; 
+                this.Code = _obj;
                 return `x-${this.currentTab}`;
             }
         },
@@ -661,15 +729,15 @@
 
             },
             copy_com(){
-                
+
             }
         },
         "el": "#app"
     };
     Vue.config.productionTip = false
     new Vue(tabs);
-        
-        
+
+
     </script>
 </body>
 </html>
