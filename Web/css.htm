@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
     <script src="https://unpkg.com/vue-styled-components@1.4.9/dist/vue-styled-components.js"></script>
     
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
     <style>
         .flex, .flex dt, .flex dd {
             width:100%;
@@ -320,6 +320,32 @@ https://codepen.io/GhostRider/pen/GHaFw
                 }
             };
             return {_vue,_css};
+        },
+        'fa-fw'() {
+            /*
+            Ref:https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons
+            1.使用 fa-fw 設定, 讓 fa 的項目可以不被圖片大小影響 到 整個外圍的 tag
+            2.學習使用 :stype :class 的動態設定方式
+            */
+            var _vue = {
+                template: `
+                <div>
+                    <input type="checkbox" v-model="set" />fa-fw <br />
+                    {{range}}<input type="range" min="1" max="10" v-model="range" class="slider" id="myRange">
+                    <div  :style="{fontSize:range +'rem' }">
+                        <div><i class="fa fa-edit" :class="{'fa-fw':set}" style="background:DodgerBlue"></i></div>
+                        <div><i class="fa fa-remove" :class="{'fa-fw':set}" style="background:SkyBlue"></i></div>
+                    </div>
+                </div>
+                `,
+                data(){
+                    return {
+                        set :true,
+                        range:1
+                    }
+                }
+            };
+            return { _vue };
         },
         std(){
             var _vue={
