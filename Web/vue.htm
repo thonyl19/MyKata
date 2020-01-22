@@ -124,20 +124,14 @@
     https://www.w3cplus.com/vue/seven-ways-to-define-a-component-template-by-vuejs.html
     */
     let views = {
-        "T01"(){
-            var _obj = {
-                "template": `<div>test</div>`,
-            }
-            return _obj;
-         },
         destroyed(){
-            var _obj = {
+            var _vue = {
                 "template": "<div>destroyed 測試,當切換到另一個頁籤時觸發.</div>",
                 destroyed(){
                     alert('物件己被銷毀!');
                 }
             }
-            return _obj;
+            return {_vue};
         },
         array_reNew() {
             var _obj = {
@@ -180,20 +174,20 @@
                 "props": ["message"]
             }
             Vue.component('ex_compoment', ex_compoment);
-            var _obj = {
+            var _vue = {
                 template: `
                 <div>
                     <ex_compoment message=\"Welcome to the VueJs Components Tutorial\"></ex_compoment>
                 </div>
                 `,
            }
-           return _obj;
+           return {_vue};
         },
 
 
 
         rxjs連撃限制(){
-            var _obj = {
+            var _vue = {
                 data(){
                     return {
                         clicks:0
@@ -219,11 +213,11 @@
                     }
                 }
             };
-            return _obj;
+            return {_vue};
         },
 
         rxjs連續輸入延遲反應(){
-            var _obj = {
+            var _vue = {
                 data(){
                     return {
                         val:'',
@@ -255,7 +249,7 @@
                     }
                 }
             };
-            return _obj;
+            return {_vue};
         },
 
         vuex範例(){
@@ -269,7 +263,7 @@
                 }
             });
 
-            var _obj={
+            var _vue={
                 template:`
                     <div>
                         <p>{{ count }}</p>
@@ -293,7 +287,7 @@
                     }
                 }
             };
-            return _obj;
+            return {_vue};
         },
         router範例(){
             const http404 = {
@@ -378,7 +372,7 @@
             };
             Vue.component('list', list);
 
-            var _obj={
+            var _vue={
                 template:`
                 <div>
                     輸入資料後,按enter 即可新增項目<input type="text" v-model="text" @keyup.enter="addItem" />
@@ -406,7 +400,7 @@
                     },
                 }
             };
-            return _obj;
+            return {_vue};
         },
 
         event案例(){
@@ -439,7 +433,7 @@
             未完成
             需求為,希望在 fu 中,return html code ,並在 UI 中生成 domObj
             */
-            var _obj={
+            var _vue={
                 template:`
                 <div>{{fn('test')}}
                 </div>`,
@@ -449,14 +443,14 @@
                     }
                 }
             };
-            return _obj;
+            return {_vue}; 
         },
         'v-html'(){
             /*
             1. v-html 試例
             2. 在 產生出來的html 中,己經無再使用 vue 相關程序功能
             */
-            var _obj={
+            var _vue={
                 data(){
                     return {checked:'true'}
                 },
@@ -470,7 +464,7 @@
                     }
                 }
             };
-            return _obj;
+            return {_vue};
         },
 
         DynamicHtml_v1(){
@@ -478,11 +472,12 @@
             參考自 https://jsfiddle.net/Linusborg/1zdzu7k1/
             */
             var dynamic = {
-                props: ['template'],
+                props: {
+                    'template':Object,
+                },
                 data() {
                     return {
                         templateRender: null,
-                        msg:'test'
                     };
                 },
                 render(h) {
@@ -518,7 +513,7 @@
                 },
             };
 
-            var _obj={
+            var _vue={
                 data() {
                     return {
                         html: [
@@ -539,8 +534,94 @@
                     dynamic
                 },
             };
-            return _obj;
+            return {_vue};
         },
+        DynamicHtml_v1_1(){
+            /*衍生試作
+            原本是想 利用 Vue.compile 的功能,看能不能讓 dynamic 產生的是  _obj.data.msg  的資料
+            但得證的結果是, 仍是取到 dynamic.data.msg  的資料
+            */
+            var Loading = {
+                template: `<div>Loading...</div>`
+            }
+            var _dynamic = {
+                //增加 msg , cb
+                props: {
+                    'template':Object,
+                    'msg':String,
+                    'cb':Function
+                },
+                data() {
+                    return {
+                        templateRender: null,
+                        //msg:'dynamic'
+                    };
+                },
+                render(h) {
+                    if (!this.templateRender) {
+                        return h(Loading);
+                    } else { // If there is a template, I'll show it
+                        return this.templateRender();
+                    }
+                },
+                watch: {
+                    // Every time the template prop changes, I recompile it to update the DOM
+                    template:{
+                        // makes the watcher fire on first render, too.
+                        immediate: true, 
+                        handler() {
+                            debugger
+                            var res = this.template;
+                            this.templateRender = res.render;
+                            
+                            // staticRenderFns belong into $options, 
+                            // appearantly
+                            this.$options.staticRenderFns = []
+                            
+                            // clean the cache of static elements
+                            // this is a cache with the results from the staticRenderFns
+                            this._staticTrees = []
+                            
+                            // Fill it with the new staticRenderFns
+                            for (var i in res.staticRenderFns) {
+                                //staticRenderFns.push(res.staticRenderFns[i]);
+                                this.$options.staticRenderFns.push(res.staticRenderFns[i])
+                            }
+                        }
+                    }
+                },
+            };
+
+            var _vue = {
+                //增加 :msg="msg" :cb="cb"
+                template:`
+                <div>
+                    <button @click="index = 0">First</button>
+                    <button @click="index = 1">Second</button>
+                    <button @click="index = 2">I work, no staticRenderFns here</button>
+                    <dynamic :template="html[index]" :msg="msg" :cb="cb"></dynamic>
+                </div>`,
+                data(){
+                    return {
+                        html: [
+                            Vue.compile('<div id="mount-point"><span>First template-{{msg}}</span></div>'),
+                            Vue.compile('<input type=text :value="msg" @keyup="cb(msg)" />'),
+                            Vue.compile('<div id="mount-point">Working template, no staticRenderFns here-{{msg}}</div>')
+                        ],
+                        index: 0,
+                        msg:'_obj'
+                    }
+                },
+                methods:{
+                    cb(val){
+                        console.log(val);
+                    }
+                }
+            }
+            return {_vue};
+        },
+        
+        
         DynamicHtml_v2(){
             /*
                 Ref:https://jsfiddle.net/Linusborg/47ejdvyy/4/
@@ -559,7 +640,7 @@
                     return h(component)
                 }
             }
-            var _obj = {
+            var _vue = {
                 template:`
                 <div>
                     <button @click="index = 0">First</button>
@@ -581,94 +662,149 @@
                     dynamic
                 },
             }
-            return _obj;
+            return {_vue};
         },
         DynamicHtml_v3(){
+            /*
+                Ref:https://jsfiddle.net/Linusborg/47ejdvyy/6/
+                加入資料 傳遞機制 其作工原理為                 
+                1.dynamic.data 是取自 _vue.computed().propsData 
+                2.propsData 中 ,將 value 另外做成 child_value
+                3.dynamic 在 render 時,會依據 變更後的值 , 動態生成一個 dynComponent,
+                    再 rander 到 UI上 
+
+            */
             var Loading = {
                 template: `<div>Loading...</div>`
             }
             var dynamic = {
-                props: ['template'],
-                data() {
+                functional: true,
+                data(){
                     return {
-                        templateRender: null,
-                        msg:'test'
-                    };
-                },
-                render(h) {
-                    if (!this.templateRender) {
-                        return h('div', 'loading...');
-                    } else { // If there is a template, I'll show it
-                        return this.templateRender();
+                        z:""
                     }
                 },
-                watch: {
-                    // Every time the template prop changes, I recompile it to update the DOM
-                    template:{
-                        immediate: true, // makes the watcher fire on first render, too.
-                        handler() {
-                            var res = this.template;
-                            this.templateRender = res.render;
-
-                            // staticRenderFns belong into $options,
-                            // appearantly
-                            this.$options.staticRenderFns = []
-
-                            // clean the cache of static elements
-                            // this is a cache with the results from the staticRenderFns
-                            this._staticTrees = []
-
-                            // Fill it with the new staticRenderFns
-                            for (var i in res.staticRenderFns) {
-                                //staticRenderFns.push(res.staticRenderFns[i]);
-                                this.$options.staticRenderFns.push(res.staticRenderFns[i])
-                            }
+                props: {
+                    template: String,
+                    data: { type: Object, default: () => ({}) },
+                    cb:Function
+                },
+                render(h, context) {
+                    //context 傳入的 是未生成 component 前的資料參數
+                     
+                    //debugger
+                    let {template} = context.props;
+ 
+                    const dynComponent = {
+                        template,
+                        data() { return context.props.data },
+                        methods:{
+                            cb:context.props.cb
                         }
                     }
-                },
-            };
-
-            var _obj = {
+                    console.log(context.props.data);
+                    const component = template ? dynComponent : Loading;
+                    return h(component);
+                }
+            }
+            var _vue = {
+                //增加一個 label 以便呈現 父子層之間的資料傳遞效果
                 template:`
                 <div>
+                    <div>父層的 Value: <input type="text" v-model="value"></div>
                     <button @click="index = 0">First</button>
                     <button @click="index = 1">Second</button>
                     <button @click="index = 2">I work, no staticRenderFns here</button>
-                    <dynamic :template="html[index]"></dynamic>
+                    <div>動態子層</div>
+                    <dynamic :template="html[index]" :data="propsData" :cb="cb"></dynamic>
                 </div>`,
                 data(){
                     return {
+                        value: 'Foo',
                         html: [
-                            Vue.compile('<div id="mount-point"><span>First template-{{msg}}</span></div>'),
-                            Vue.compile('<div id="mount-point"><span>Second template-{{msg}}</span></div>'),
-                            Vue.compile('<div id="mount-point">Working template, no staticRenderFns here-{{msg}}</div>')
+                        //增加一個 input 以便試驗同步的效果 
+                        `<div><span>child_value</span> <span>{{child_value}} 
+                            <input type=text v-model="child_value"  @keyup="cb(child_value)"/></span>
+                        </div>
+                        `,
+                        '<div><span>First template</span> <span>{{child_value}}</span></div>',
+                        '<div>Working template, no staticRenderFns here <span>{{child_value}}</span></div>'
                         ],
+                        //data: ['temp1', 'temp2', 'temp3'],
                         index: 0,
                     }
+                },
+                computed: {
+                    propsData() { return {child_value: this.value } }
                 },
                 components: {
                     dynamic
                 },
+                methods:{
+                    cb(val){
+                        this.value = val;
+                    }
+                }
             }
-            return _obj;
+            return {_vue};
         },
         VueCmd(){
-            var _obj={
+            var _vue={
                 template:`
                 <div>
                 </div>`
             };
             console.log(Vue.options.components);
-            return _obj;
+            return {_vue};
         },
         'resizer-box'(){
             //https://jsfiddle.net/Linusborg/jmo9Lknn/
-            var _obj={
+            var _vue={
                 template:`
                 <div>
                 </div>`
             };
-            return _obj;
+            return {_vue};
+        },
+        render範例(){
+            /*
+            Ref: http://doc.vue-js.com/v2/guide/render-function.html
+            1. render 使用方法 
+            2. v-model.number 限定資料型的用法 
+            3. render(h) 其實就是 render(createElement) 的簡式通用法 
+            */
+            var x_dy = {
+                render(h) {
+                    console.log(this.level);
+                    return h(
+                    'h' + this.level,   // tag name 标签名称
+                    this.$slots.default // 子组件中的阵列
+                    )
+                },
+                props: {
+                    level: {
+                    type: Number,
+                    required: true
+                    }
+                }
+            }
+            var _vue={
+                template:`
+                <div>
+                    {{range}}<input type="range" min="1" max="6" v-model.number="range" class="slider" id="myRange">
+                    <x_dy :level=range>test</x_dy>
+                </div>`,
+                data(){
+                    return {
+                        range:1
+                    }
+                },
+                components:{
+                    x_dy
+                }
+
+            };
+            return {_vue};
         },
 
         'keyup.enter'(){
@@ -691,20 +827,20 @@
         },
 
         std(){
-            var _obj={
+            var _vue={
                 template:`
                 <div>
                 </div>`
             };
-            return _obj;
+            return {_vue};
         },
     }
 
 
     //** # Main
     for (var k in views){
-        var _obj =  views[k]();//Object.assign({},views[k])
-        Vue.component(`x-${k}`,_obj);
+        var {_vue} =  views[k](); 
+        Vue.component(`x-${k}`,_vue);
     }
     let tabsList = Object.keys(views);
 
