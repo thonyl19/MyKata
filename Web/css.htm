@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
     <script src="https://unpkg.com/vue-styled-components@1.4.9/dist/vue-styled-components.js"></script>
     
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
     <style>
         .flex, .flex dt, .flex dd {
             width:100%;
@@ -321,7 +321,83 @@ https://codepen.io/GhostRider/pen/GHaFw
             };
             return {_vue,_css};
         },
-        std(){
+        'fa-fw'() {
+            /*
+            Ref:https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons
+            1.使用 fa-fw 設定, 讓 fa 的項目可以不被圖片大小影響 到 整個外圍的 tag
+            2.學習使用 :stype :class 的動態設定方式
+            */
+            var _vue = {
+                template: `
+                <div>
+                    <input type="checkbox" v-model="set" />fa-fw <br />
+                    {{range}}<input type="range" min="1" max="10" v-model="range" class="slider" id="myRange">
+                    <div  :style="{fontSize:range +'rem' }">
+                        <div><i class="fa fa-edit" :class="{'fa-fw':set}" style="background:DodgerBlue"></i></div>
+                        <div><i class="fa fa-remove" :class="{'fa-fw':set}" style="background:SkyBlue"></i></div>
+                    </div>
+                </div>
+                `,
+                data(){
+                    return {
+                        set :true,
+                        range:1
+                    }
+                }
+            };
+            return { _vue };
+        },
+        'linear-gradient'() {
+                var _obj = {
+                    _css:`
+                    .lg h1{
+                       margin: 1em;
+                        border-radius: 10px;
+                        box-sizing: border-box;
+                        border-width: 1px;
+                        border-style: solid;
+                        border-color: rgba(121, 121, 121, 1);
+                    }
+                    `,
+                    _vue:{
+                        template: `
+                        <div class="lg">
+                            {{myRange}}<input type="range" min="10" max="360" v-model="myRange" class="slider" >
+                            <h1 ref="styObj" :style="styleObject">資料統計</h1>
+                            <textarea v-model="sty"></textarea>
+                        </div>
+                        `,
+                        data(){
+                            return {
+                                flex_row:true,
+                                flex_g1:true,
+                                flex_center:true,
+                                myRange:10,
+                                sty:"",
+                            }
+                        },
+                        computed:{
+                            styleObject(){
+                                return {
+                                    // background: -webkit-linear-gradient(270deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
+                                    // background: -moz-linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
+                                    'background': `linear-gradient(${this.myRange}deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%)`
+                                }
+                            },
+                        },
+                        watch: {
+                            styleObject(){
+                                let {styObj} = this.$refs;
+                                if (styObj != null){
+                                    this.sty = styObj.style.cssText;
+                                }
+                            }
+                        }      
+                    }
+                };
+                return _obj;
+            },
+            std(){
             var _vue={
                 template:`
                 <div>
@@ -344,7 +420,7 @@ https://codepen.io/GhostRider/pen/GHaFw
     let tabs =  {
         data: {
             tabsList,
-            "currentTab": tabsList[1],
+            "currentTab": 'linear-gradient',// tabsList[1],
             "Code":''
         },
         "computed": {
