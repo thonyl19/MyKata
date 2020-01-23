@@ -1,43 +1,36 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
     <script src="https://unpkg.com/vuex@3.1.2/dist/vuex.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.js"></script>
-
-
     <script src="https://unpkg.com/vue-styled-components@1.4.9/dist/vue-styled-components.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.js"></script>
 
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css">
-
-
     <style>
-
-
-
-
         .flex, .flex dt, .flex dd {
             width: 100%;
             display: block;
             padding: 0px;
             margin: 0px;
+            
         }
 
-            .flex.f-col {
-                flex-flow: column;
-            }
+        .flex.f-col {
+            flex-flow: column;
+        }
 
-            .flex.f-row {
-                flex-flow: row;
-            }
+        .flex.f-row {
+            flex-flow: row;
+        }
 
         dl.flex {
             display: flex;
@@ -76,15 +69,15 @@
             white-space: nowrap;
         }
 
-            li:hover {
-                color: blue;
-                font-weight: 400;
-                cursor: pointer;
-            }
+        li:hover {
+            color: blue;
+            font-weight: 400;
+            cursor: pointer;
+        }
 
-            li.active {
-                background-color: #20FFA6;
-            }
+        li.active {
+            background-color: #20FFA6;
+        }
     </style>
 </head>
 <body class="CSBody">
@@ -140,61 +133,73 @@
         let views = {
             'dy-filter'() {
                 var _css = `
-                                .dy-filter{
-                                    position: relative;
-                                    /* display:  block; */
-                                    display: flex;
-                                    color  : red;
-                                }
+                    .dy-filter{
+                        position: relative;
+                        /* display:  block; */
+                        display: flex;
+                        color  : red;
+                    }
+                    
+                    
+                    .dy-filter input[type="search"]  {
+                        border       : 1px solid #ccc;
+                        border-radius: 10em;
+                        padding      : 0px 2.3em;
+                        transition   : all 0.5s ease 0s;
+                        width        : 100% !important;
+                        background   : #fcfcfc;
+                        line-height  : 2em;
+                        margin: .35em;
+                    }
+                    
+                    .dy-filter i.fa {
+                        display     : flex;
+                        position    : absolute;
+                        height      : 100%;
+                        align-items : center;
+                        width       : 1em;
+                        padding-left: .9em;
+                        padding-right: .9em;
+                        
+                    }
 
+                    .dy-filter .fa-times-circle {
+                        right: 1em;
+                    }
 
-                                .dy-filter input[type="search"]  {
-                                    border       : 1px solid #ccc;
-                                    border-radius: 10em;
-                                    padding      : 0px 2.3em;
-                                    transition   : all 0.5s ease 0s;
-                                    width        : 100% !important;
-                                    background   : #fcfcfc;
-                                    line-height  : 2em;
-                                    margin: .35em;
-                                }
-
-                                .dy-filter i.fa {
-                                    display     : flex;
-                                    position    : absolute;
-                                    height      : 100%;
-                                    align-items : center;
-                                    width       : 1em;
-                                    padding-left: .9em;
-                                }
-
-                                .dy-filter .fa-times-circle {
-                                    right: 1em;
-                                }
-
-                                .dy-filter .fa-times-circle:hover{
-                                    color: #1ab394;
-                                                                                            }
-                                                                                                `;
+                    .dy-filter .fa-times-circle:hover{
+                        color: #1ab394;                                                          
+                    }
+                `;
                 var _vue = {
                     template: `
-                                    <div class='dy-filter'>
-                                        <i class="fa fa-search"></i>
-                                        <i class="fa fa-times-circle"   ></i>
-                                        <input type="search" :placeholder="Placeholder"   />
-                                        <i class="clearfix"></i>
-                                    </div>`,
+                    <div class='dy-filter'>
+                        <i class="fa fa-search"></i>
+                        <i class="fa fa-times-circle" @click="Clear"></i>
+                        <input type="search" :placeholder="Placeholder"   />
+                        <i class="clearfix"></i>
+                    </div>`,
                     props: {
                         Placeholder: {
                             type: String,
                             default: "Please Input"
                         },
+                        Clear:{
+                            type:Function,
+                            default(){
+
+                            }
+                        }
                     }
+
 
                 };
                 return { _vue, _css };
             },
             'warp_selectize.js'() {
+                /*
+                Ref: https://jsfiddle.net/davidhequet/8wke3a23/
+                */
                 //loadjscssfile("https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css", "css")
                 //loadjscssfile("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css", "css")
                 //loadjscssfile("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", "js")
@@ -231,12 +236,13 @@
                 }
                 var _vue = {
                     template: `
-                                <div>
-                                    <selectize v-bind:options="options" v-model="selected" multiple size="1"
-                                            data-dropdown-parent="body" data-max-options="100"
-                                            data-value-field= 'id' data-label-field= 'text' data-search-field= 'text' data-sort-field= 'text'>
-                                    </selectize>
-                                </div>`,
+                    <div>
+                        selected:{{selected}}
+                        <selectize v-bind:options="options" v-model="selected" multiple size="1"
+                                data-dropdown-parent="body" data-max-options="100"
+                                data-value-field= 'id' data-label-field= 'text' data-search-field= 'text' data-sort-field= 'text'>
+                        </selectize>
+                    </div>`,
                     components: {
                         selectize
                     },
@@ -253,47 +259,57 @@
                 }
                 return { _vue };
             },
-            props_Function(){
-                var _vue={
-                    template:`
+            std() {
+                var _vue = {
+                    template: `
+                            <div>
+                            </div>`
+
+                };
+                return { _vue, _css };
+            },
+            props_Function() {
+                var _vue = {
+                    template: `
                     <div>
                     </div>`,
-                    props:{
-                        chg_fn:{
-                            type:Function,
-                            default(){ }
+                    props: {
+                        chg_fn: {
+                            type: Function,
+                            default() {
+                                //alert('test');
+                            }
                         }
                     }
                 };
-                return {_vue};
+                return { _vue };
             },
 
-            std(){
-                var _vue={
-                    template:`
+            std() {
+                var _vue = {
+                    template: `
                     <div>
                     </div>`
 
                 };
-                return {_vue};
+                return { _vue };
             },
         }
 
-
-        //** # Main
-        for (var k in views) {
-            var { _vue } = views[k]();
-            Vue.component(`x-${k}`, _vue);
-        }
+            //** # Main
+            for(var k in views) {
+                var { _vue } = views[k]();
+        Vue.component(`x-${k}`, _vue);
+            }
         let tabsList = Object.keys(views);
 
         let tabs = {
             data: {
                 tabsList,
-                "currentTab": tabsList[1],
+                "currentTab": tabsList[0],
                 "Code": ''
             },
-            "computed": {
+            computed: {
                 currentTabComponent() {
                     var _obj = views[this.currentTab];
                     this.Code = _obj;
