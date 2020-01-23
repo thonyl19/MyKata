@@ -253,41 +253,31 @@
                 }
                 return { _vue };
             },
-            std() {
-                var _vue = {
-                    template: `
-                        <div>
-                        </div>`
-
-            };
-            return {_vue,_css};
-        },
-        props_Function(){
-            var _vue={
-                template:`
-                <div>
-                </div>`,
-                props:{
-                    chg_fn:{
-                        type:Function,
-                        default(){
-                            //alert('test');
+            props_Function(){
+                var _vue={
+                    template:`
+                    <div>
+                    </div>`,
+                    props:{
+                        chg_fn:{
+                            type:Function,
+                            default(){ }
                         }
                     }
-                }
-            };
-            return {_vue};
-        },
+                };
+                return {_vue};
+            },
 
-        std(){
-            var _vue={
-                template:`
-                <div>
-                </div>`
+            std(){
+                var _vue={
+                    template:`
+                    <div>
+                    </div>`
 
-            };
-            return {_vue};
-        },
+                };
+                return {_vue};
+            },
+        }
 
 
         //** # Main

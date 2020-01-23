@@ -600,6 +600,7 @@
                     <button @click="index = 1">Second</button>
                     <button @click="index = 2">I work, no staticRenderFns here</button>
                     <dynamic :template="html[index]" :msg="msg" :cb="cb"></dynamic>
+                    
                 </div>`,
                 data(){
                     return {
@@ -672,6 +673,7 @@
                 2.propsData 中 ,將 value 另外做成 child_value
                 3.dynamic 在 render 時,會依據 變更後的值 , 動態生成一個 dynComponent,
                     再 rander 到 UI上 
+                4.試著 加入  keep-alive ,但沒有起到緩存的作用
 
             */
             var Loading = {
@@ -702,7 +704,7 @@
                             cb:context.props.cb
                         }
                     }
-                    console.log(context.props.data);
+                    console.log('render:' , context.props.data);
                     const component = template ? dynComponent : Loading;
                     return h(component);
                 }
@@ -716,7 +718,9 @@
                     <button @click="index = 1">Second</button>
                     <button @click="index = 2">I work, no staticRenderFns here</button>
                     <div>動態子層</div>
-                    <dynamic :template="html[index]" :data="propsData" :cb="cb"></dynamic>
+                    <keep-alive>
+                        <dynamic :template="html[index]" :data="propsData" :cb="cb"></dynamic>
+                    </keep-alive>
                 </div>`,
                 data(){
                     return {
