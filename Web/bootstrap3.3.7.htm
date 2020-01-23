@@ -1,90 +1,84 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html>
 <head runat="server">
     <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
+    <script src="https://unpkg.com/vue-styled-components@1.4.9/dist/vue-styled-components.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+    
     <style>
+	.flex, .flex dt, .flex dd {
+		width: 100%;
+		display: block;
+		padding: 0px;
+		margin: 0px;
+	}
 
+	.flex.f-col {
+		flex-flow: column;
+	}
 
+	.flex.f-row {
+		flex-flow: row;
+	}
 
+	dl.flex {
+		display: flex;
+	}
 
+	.flex dt {
+		flex: 0;
+	}
 
+	.flex dd {
+		flex: 1;
+	}
 
+	textarea {
+		width: 100%;
+		height: 15em;
+	}
 
+	pre {
+		width: 100%;
+		height: 100%;
+		background: yellow;
+		margin-top: .5em;
+		overflow-y: auto;
+	}
 
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: .3em;
+	}
 
+	li {
+		min-width: 5em;
+		line-height: 1.3em;
+		white-space: nowrap;
+	}
 
+	li:hover {
+		color: blue;
+		font-weight: 400;
+		cursor: pointer;
+	}
 
-
-
-
-
-
-
-
-
-        .flex, .flex dt, .flex dd {
-            width: 100%;
-            display: block;
-            padding: 0px;
-            margin: 0px;
-        }
-
-            .flex.f-col {
-                flex-flow: column;
-            }
-
-            .flex.f-row {
-                flex-flow: row;
-            }
-
-        dl.flex {
-            display: flex;
-        }
-
-        .flex dt {
-            flex: 0;
-        }
-
-        .flex dd {
-            flex: 1;
-        }
-
-        textarea {
-            width: 100%;
-            height: 15em;
-        }
-
-        pre {
-            width: 100%;
-            height: 100%;
-            background: yellow;
-            margin-top: .5em;
-            overflow-y: auto;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: .3em;
-        }
-
-        li {
-            min-width: 5em;
-            line-height: 1.3em;
-            white-space: nowrap;
-        }
-
-            li:hover {
-                color: blue;
-                font-weight: 400;
-                cursor: pointer;
-            }
-
-            li.active {
-                background-color: #20FFA6;
-            }
+	li.active {
+		background-color: #20FFA6;
+	}
+    
+    .d-show{
+        margin: 5px;
+    }
     </style>
 </head>
 <body class="CSBody">
@@ -105,7 +99,7 @@
                         <input type="button" value="Copy" @click="copy" />
                         <input type="button" value="Copy Components" @click="copy_com" />
                         <textarea v-model="Code" @blur="change()"></textarea>
-                        <component v-bind:is="currentTabComponent"
+                        <component v-bind:is="currentTabComponent" class="d-show"
                                    :sets="currentTab"></component>
 
                     </dt>
@@ -124,89 +118,255 @@
         */
         let views = {
             Form1() {
-                var _obj = {
+                var _vue = {
                     template: `
-                            <div class="container-fluid">
-                                <form class="form-horizontal">
-                                    <div class="form-group">
-                                        <label class="col-sm-2 control-label">Email</label>
-                                        <div class="col-sm-10">
-                                            <p class="form-control-static">email@example.com</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                    <label for="inputPassword" class="col-sm-2 control-label">Password</label>
-                                    <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                                    </div>
-                                    </div>
-                                </form>
-                            </div>
-                            `,
-                };
-                return _obj;
-            },
-            Form2() {
-                var _obj = {
-                    template: `
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="form-group col-lg-6">
-                                        <label class="col-sm-3 control-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <p class="form-control-static">email@example.com</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-lg-6">
-                                        <label for="inputPassword" class="col-sm-3 control-label">Password</label>
-                                        <div class="col-sm-9">
-                                            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-lg-6">
-                                        <label class="col-sm-3 control-label">Email</label>
-                                        <div class="col-sm-9">
-                                            <p class="form-control-static">email@example.com</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<div class="container-fluid">
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Email</label>
+			<div class="col-sm-10">
+				<p class="form-control-static">email@example.com</p>
+			</div>
+		</div>
+		<div class="form-group">
+		<label for="inputPassword" class="col-sm-2 control-label">Password</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="inputPassword" placeholder="Password">
+		</div>
+		</div>
+	</form>
+</div>
 `,
                 };
-                return _obj;
+                return { _vue };
+            },
+            Form2() {
+                var _vue = {
+                    template: `
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-3 control-label">Email</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">email@example.com</p>
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="inputPassword" class="col-sm-3 control-label">Password</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label class="col-sm-3 control-label">Email</label>
+                                <div class="col-sm-9">
+                                    <p class="form-control-static">email@example.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `,
+                };
+                return { _vue };
+            },
+            panel_1() {
+                var _css = `
+                .b{
+                    border: 1px solid rgba(0, 0, 0, 0.12);
+                }
+                /* ========================================================================
+                Component: slim-scroll.less
+                ========================================================================== */
+                [data-scrollable] {
+                    display: block;
+                }
+
+                .slimScrollBar {
+                    opacity: 1 !important;
+                    background-color: rgba(0, 0, 0, 0.35) !important;
+                    border: 0 !important;
+                    border-radius: 1px !important;
+                }
+
+                .slimScrollRail {
+                    opacity: 1 !important;
+                    background-color: rgba(0, 0, 0, 0.15) !important;
+                    border: 0 !important;
+                    border-radius: 0 !important;
+                    bottom: 0;
+                }
+                `;
+                var _vue = {
+                    template: `
+                    <div class="panel b">
+         <div class="panel-heading">
+            <div class="pull-right label label-danger">5</div>
+            <div class="pull-right label label-success">12</div>
+            <div class="panel-title">Team messages</div>
+         </div>
+         <!-- START list group-->
+         <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 180px;"><div data-height="180" data-scrollable="" class="list-group" style="overflow: hidden; width: auto; height: 180px;">
+            <!-- START list group item-->
+            <a href="#" class="list-group-item">
+               <div class="media-box">
+                  <div class="pull-left">
+                     <img src="img/head.png" alt="Image" class="media-box-object img-circle thumb32">
+                  </div>
+                  <div class="media-box-body clearfix">
+                     <small class="pull-right">2h</small>
+                     <strong class="media-box-heading text-primary">
+                        <span class="circle circle-success circle-lg text-left"></span>Catherine Ellis</strong>
+                     <p class="mb-sm">
+                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla...</small>
+                     </p>
+                  </div>
+               </div>
+            </a>
+            <!-- END list group item-->
+            <!-- START list group item-->
+            <a href="#" class="list-group-item">
+               <div class="media-box">
+                  <div class="pull-left">
+                     <img src="img/head.png" alt="Image" class="media-box-object img-circle thumb32">
+                  </div>
+                  <div class="media-box-body clearfix">
+                     <small class="pull-right">3h</small>
+                     <strong class="media-box-heading text-primary">
+                        <span class="circle circle-success circle-lg text-left"></span>Jessica Silva</strong>
+                     <p class="mb-sm">
+                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla facilisi.</small>
+                     </p>
+                  </div>
+               </div>
+            </a>
+            <!-- END list group item-->
+            <!-- START list group item-->
+            <a href="#" class="list-group-item">
+               <div class="media-box">
+                  <div class="pull-left">
+                     <img src="img/head.png" alt="Image" class="media-box-object img-circle thumb32">
+                  </div>
+                  <div class="media-box-body clearfix">
+                     <small class="pull-right">4h</small>
+                     <strong class="media-box-heading text-primary">
+                        <span class="circle circle-danger circle-lg text-left"></span>Jessie Wells</strong>
+                     <p class="mb-sm">
+                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla...</small>
+                     </p>
+                  </div>
+               </div>
+            </a>
+            <!-- END list group item-->
+            <!-- START list group item-->
+            <a href="#" class="list-group-item">
+               <div class="media-box">
+                  <div class="pull-left">
+                     <img src="img/head.png" alt="Image" class="media-box-object img-circle thumb32">
+                  </div>
+                  <div class="media-box-body clearfix">
+                     <small class="pull-right">1d</small>
+                     <strong class="media-box-heading text-primary">
+                        <span class="circle circle-danger circle-lg text-left"></span>Rosa Burke</strong>
+                     <p class="mb-sm">
+                        <small>Cras sit amet nibh libero, in gravida nulla. Nulla...</small>
+                     </p>
+                  </div>
+               </div>
+            </a>
+            <!-- END list group item-->
+            <!-- START list group item-->
+            <a href="#" class="list-group-item">
+               <div class="media-box">
+                  <div class="pull-left">
+                     <img src="img/head.png" alt="Image" class="media-box-object img-circle thumb32">
+                  </div>
+                  <div class="media-box-body clearfix">
+                     <small class="pull-right">2d</small>
+                     <strong class="media-box-heading text-primary">
+                        <span class="circle circle-danger circle-lg text-left"></span>Michelle Lane</strong>
+                     <p class="mb-sm">
+                        <small>Mauris eleifend, libero nec cursus lacinia...</small>
+                     </p>
+                  </div>
+               </div>
+            </a>
+            <!-- END list group item-->
+         </div><div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 7px; position: absolute; top: 34px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 104.18px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+         <!-- END list group-->
+         <!-- START panel footer-->
+         <div class="panel-footer clearfix">
+            <div class="input-group">
+               <input type="text" placeholder="Type message .." class="form-control input-sm">
+               <span class="input-group-btn">
+                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-paperclip"></i>
+                  </button>
+               </span>
+            </div>
+         </div>
+         <!-- END panel-footer-->
+      </div>
+`
+                };
+                return { _vue,_css };
+            },
+            panel_label() {
+                var _css = `
+                .panel-heading{
+                    margin:0px;
+                    padding:3px 10px 0 15px;
+                    border       : 1px solid #ccc;
+                    border-radius: 3em 1em 0 0 ;
+                    border-bottom:0px !important;
+                    background:linear-gradient(top,white,#0099FF);
+                    background:-moz-linear-gradient(top,white,#0099FF);
+                    background:-webkit-linear-gradient(top,white,#0099FF);
+                }
+                `
+                var _vue = {
+                    template: `
+<div>
+    <label class="panel-heading">Head</label>
+    <div class="panel panel-default">
+        Panel content
+    </div>
+</div>
+`
+                };
+                return { _vue ,_css };
             },
             std() {
-                var _obj = {
+                var _vue = {
                     template: `
-                        <div>
-                        </div>
-                        `
+<div>
+</div>
+`
                 };
-                return _obj;
+                return { _vue };
             },
         }
 
 
         //** # Main
         for (var k in views) {
-            var _obj = views[k]();//Object.assign({},views[k])
-            Vue.component(`x-${k}`, _obj);
+            var { _vue } = views[k]();
+            Vue.component(`x-${k}`, _vue);
         }
         let tabsList = Object.keys(views);
 
         let tabs = {
             data: {
                 tabsList,
-                "currentTab": 'Form2',// tabsList[0],
+                "currentTab": 'panel_label',// tabsList[0],
                 "Code": ''
             },
-            "computed": {
+            computed: {
                 currentTabComponent() {
                     var _obj = views[this.currentTab];
                     this.Code = _obj;
+                    var { _css } = _obj();
+                    if (_css != null) styled.injectGlobal`${_css}`;
                     return `x-${this.currentTab}`;
                 }
-
             },
             methods: {
                 change() {
