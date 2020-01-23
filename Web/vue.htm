@@ -829,6 +829,42 @@
             };
             return _obj;
         },
+        動態CSS(){
+            var _obj = {
+                _vue:{
+                    template: `
+                    <div>
+                        [linear-gradient]{{myRange}}<input type="range" min="10" max="40" v-model="myRange" class="slider" >
+                        <h1 ref="styObj">資料統計</h1>
+                        <textarea  v-model="csstxt"></textarea>
+                    </div>
+                    `,
+                    data(){
+                        return {
+                            myRange:10,
+                        }
+                    },
+                    mounted() {
+                        //必須需這樣處理,才能讓樣式在初始化時,被設定上去。
+                        this.$refs.styObj.style.cssText= this.csstxt;
+                    },
+                    
+                    computed:{
+                        csstxt(){
+                            let _css = `
+                                font-size:${this.myRange}px;
+                            `
+                            let {styObj} = this.$refs;
+                            if (styObj != null){
+                                styObj.style.cssText = _css;
+                            }
+                            return _css;
+                        },
+                    },
+                }
+            };
+            return _obj;
+        },
 
         std(){
             var _vue={
