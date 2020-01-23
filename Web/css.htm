@@ -65,6 +65,7 @@
         }
         li.active {
             background-color:#20FFA6;
+            
         }
      
     </style>
@@ -107,9 +108,13 @@
     https://www.w3cplus.com/vue/seven-ways-to-define-a-component-template-by-vuejs.html
     */
     let views = {
-        //https://cssinjs.org/jss-api?v=v10.0.3
-        //https://cssinjs.org/?v=v10.0.3
+        
         'css-jss用例'(){
+            /*
+            Ref:
+                https://cssinjs.org/jss-api?v=v10.0.3
+                https://cssinjs.org/?v=v10.0.3
+            */
             var styles = `{
                 wrapper {
                     padding: 40px;
@@ -134,6 +139,9 @@
             return {_vue};
         },
         'css-sc用例1'(){
+            /*
+            Ref: vue-styled-components
+            */
             var Wrapper = styled.default.div`{
                 display: flex;
                 flex-direction: column;
@@ -225,10 +233,10 @@
             
             var _vue={
                 template:`
-<pre>
-http://webkit-scroll-gen.sourceforge.net/
-https://codepen.io/GhostRider/pen/GHaFw
-</pre>`
+                    <pre>
+                    http://webkit-scroll-gen.sourceforge.net/
+                    https://codepen.io/GhostRider/pen/GHaFw
+                    </pre>`
 
             };
             return {_vue};
@@ -348,64 +356,169 @@ https://codepen.io/GhostRider/pen/GHaFw
             return { _vue };
         },
         'linear-gradient'() {
-                var _obj = {
-                    _css:`
-                    .lg h1{
-                       margin: 1em;
-                        border-radius: 10px;
-                        box-sizing: border-box;
-                        border-width: 1px;
-                        border-style: solid;
-                        border-color: rgba(121, 121, 121, 1);
-                    }
+            var _obj = {
+                _vue:{
+                    template: `
+                    <div class="lg">
+                        [linear-gradient]{{myRange}}<input type="range" min="10" max="360" v-model="myRange" class="slider" >
+                        <h1 ref="styObj">資料統計</h1>
+                        <textarea  v-model="csstxt"></textarea>
+                    </div>
                     `,
-                    _vue:{
-                        template: `
-                        <div class="lg">
-                            {{myRange}}<input type="range" min="10" max="360" v-model="myRange" class="slider" >
-                            <h1 ref="styObj" :style="styleObject">資料統計</h1>
-                            <textarea v-model="sty"></textarea>
-                        </div>
-                        `,
-                        data(){
-                            return {
-                                flex_row:true,
-                                flex_g1:true,
-                                flex_center:true,
-                                myRange:10,
-                                sty:"",
+                    data(){
+                        return {
+                            myRange:10,
+                        }
+                    },
+                    mounted() {
+                        this.$refs.styObj.style.cssText= this.csstxt;
+                    },
+                    
+                    computed:{
+                        csstxt(){
+                            debugger
+                            let _css = `
+                                margin: 1em;
+                                border-radius: 10px;
+                                box-sizing:border-box;
+                                border-width:1px;
+                                border-style:solid;
+                                border-color:rgba(121, 121, 121, 1);
+                                background:linear-gradient(${this.myRange}deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
+                            `
+                            let {styObj} = this.$refs;
+                            if (styObj != null){
+                                styObj.style.cssText = _css;
                             }
+                            return _css;
                         },
-                        computed:{
-                            styleObject(){
-                                return {
-                                    // background: -webkit-linear-gradient(270deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
-                                    // background: -moz-linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
-                                    'background': `linear-gradient(${this.myRange}deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%)`
-                                }
-                            },
-                        },
-                        watch: {
-                            styleObject(){
+                    },
+                    /*
+                    //以下是經過簡化後, 不需要的方法,留存備忘
+                    methods:{
+                        bindCss(){
+                            let {styObj} = this.$refs;
+                            if (styObj != null){
+                                styObj.style.cssText = this.csstxt;
+                            }
+                        }
+                    },
+                    watch:{
+                        // csstxt(){
+                        //     this.bindCss()
+                        // },
+                        
+                        不 work
+                        'this.$refs.styObj.style.cssText'(){
+                            debugger
+                        }
+                        
+                        原本的作用是希望在初始化時,就處理一次,但 因為 styObj 是 null,
+                            所以不 work 留存備忘之
+                        csstxt:{
+                            immediate: true, // makes the watcher fire on first render, too.
+                            handler() {
+                                debugger
                                 let {styObj} = this.$refs;
                                 if (styObj != null){
-                                    this.sty = styObj.style.cssText;
+                                    styObj.style.cssText = this.csstxt;
                                 }
                             }
-                        }      
+                        }
                     }
-                };
-                return _obj;
-            },
-            std(){
-            var _vue={
-                template:`
-                <div>
-                </div>`
-                
-
+                    */      
+                }
             };
-            return {_vue};
+            return _obj;
+        },
+        animation(){
+            /*
+            Ref:
+                https://www.oxxostudio.tw/articles/201803/css-animation.html
+                https://www.gradient-animator.com/
+            */
+            var _obj = {
+                _css:`
+                .sample1{
+                    position: relative;
+                    left:0;
+                    width:50px;
+                    height:50px;
+                    background:#f00;
+                    animation-name:oxxo;
+                    animation-duration:2s;
+                    animation-iteration-count:infinite
+                }
+                @keyframes oxxo{
+                    from{
+                        left:0;
+                    }
+                    to{
+                        left:100px;
+                    }
+                }
+
+                .sample2{
+                    margin: 1em;
+                    border-radius: 10px;
+                    box-sizing: border-box;
+                    border-width: 1px;
+                    border-style: solid;
+                    border-color: rgba(121, 121, 121, 1);
+                    background: linear-gradient(var(--pos,10deg), rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
+                    animation: gradient 2s linear infinite;
+                    
+                    
+                }
+                @keyframes gradient {
+                    0% { 
+                        --pos:10deg; 
+                    } 
+                    100% { 
+                        --pos:360deg; 
+                    }
+                }
+                `,
+                // animation: gradient 2s infinite ;
+                // animation-name:gradient;
+                //     animation-duration:2s;
+                //     animation-iteration-count:infinite;
+                _vue:{
+                    template:`
+                    <div>
+                        <div class="sample1"></div>
+                        <h1 class="sample2">sample2</h1>
+                    </div>`
+                }
+            };
+            return _obj;
+        },
+        animation_Case(){
+            /*
+            Ref:
+                https://codepen.io/thebabydino/pen/BxxMwg
+                https://codepen.io/thebabydino/pen/pVVYKL
+                https://codepen.io/thebabydino/pen/bMMJWK
+            */
+            var _obj = {
+                _vue:{
+                    template:`
+                    <div>
+                    </div>`
+                }
+            };
+            return _obj;
+        },
+        
+        std(){
+            var _obj = {
+                _vue:{
+                    template:`
+                    <div>
+                    </div>`
+                }
+            };
+            return _obj;
         },
     }    
          
