@@ -234,11 +234,15 @@
 
     let views = {
         'sql-filed-newline':{
-            template:`<el-menu-item><input type='checkbox' />test</el-menu-item>`,
-            prop:[],
-            methods:{
-                click(){
-
+            template:`<el-menu-item @click="isNewLine = !isNewLine"><input type='checkbox' v-model="isNewLine"/>Filed 換行</el-menu-item>`,
+            data(){
+                return {
+                    isNewLine:App_SQL.isFiled換行
+                }
+            },
+            watch:{
+                isNewLine(){
+                    App_SQL.isFiled換行 = this.isNewLine;
                 }
             }
         },
@@ -501,11 +505,17 @@
             }
         };
 
+        const store = new Vuex.Store({
+            state: {
+                //欄位是否以換行呈現
+                isFiledNewLine: true
+            },
+        });
         let tabs =  {
             el: "#app",
             data:{
-                A:"   A-_--\\- /   ",
-                //A:_sql,
+                //A:"   A-_--\\- /   ",
+                A:_sql,
                 //A:`A\ta\nB`,
                 B:"",
                 txtFormat:'YYYYMMDD',
