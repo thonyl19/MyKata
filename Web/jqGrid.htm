@@ -13,6 +13,7 @@
 
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.5/css/ui.jqgrid.min.css">
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
     
     <style>
@@ -115,24 +116,24 @@
     </div>
 
     <script>
-        debugger
- 
-        /*
-        https://www.w3cplus.com/vue/seven-ways-to-define-a-component-template-by-vuejs.html
-        */
         let views = {
             LoadData() {
+                /*
+                1.用 addRowData 實現資料載入的方法 
+                2.用 delRowData 實現資料清除的方法 
+                */
                 var _obj = {
                     _vue:{
                         template: `
                         <div style="margin-left:20px">
+                            <button @click="Load">Load</button>
+                            <button @click="Clear">Clear</button>
                             <table class="LoadData"></table>
                             <div id="jqGridPager"></div>
                         </div>
                             
                             `,
                         mounted() {
-                            debugger;
                             var _jg = $('.LoadData');
                             _jg.jqGrid({
                                 datatype: "local",
@@ -150,10 +151,35 @@
                                 viewrecords: true, // show the current page, data rang and total records on the toolbar
                                 caption: "Load jqGrid through Javascript Array"
                             });
-                            for(var i=0;i<=tmpData.mydata.length;i++)
-                                _jg.jqGrid('addRowData',i+1,tmpData.mydata[i]);
+                            
                             
                         },
+                        methods:{
+                            Load(){
+                                var _jg = $('.LoadData');
+                                for(var i=0;i<=tmpData.mydata.length;i++){
+                                    _jg.addRowData(i+1,tmpData.mydata[i]);    
+                                }
+                            },
+                            Clear(){
+                                /*試到最後,發現只能使用逐一刪除,
+                                    不確定是不是因為資料源自於 addRowData 的因素
+                                */
+                                var _jg = $('.LoadData');
+                                var arr = _jg.getDataIDs();
+                                arr.forEach(idx => {
+                                    _jg.delRowData(idx);
+                                });
+                                // $('.LoadData')
+                                //     .jqGrid('GridUnload');
+                                    //.jqGrid("clearGridData");
+                                    //.clearGridData(true);
+                                //.trigger("reloadGrid");
+
+                                //直接把整個 grid 清掉了
+                                //.GridUnload();
+                            }
+                        }
                          
                     }
                 };
