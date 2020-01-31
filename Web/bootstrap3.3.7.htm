@@ -311,7 +311,15 @@
             },
             panel_label() {
                 var _css = `
-                .panel-heading{
+                .panel-heading-1{
+                    margin:0px;
+                    padding:3px 10px 0 15px;
+                    border       : 1px solid #ccc;
+                    border-radius: 3em 1em 0 0 ;
+                    border-bottom:0px !important;
+                    background:linear-gradient(130deg, transparent 30% , #557777 50%);
+                }
+                .panel-heading-2{
                     margin:0px;
                     padding:3px 10px 0 15px;
                     border       : 1px solid #ccc;
@@ -322,15 +330,26 @@
                     background:-webkit-linear-gradient(top,white,#0099FF);
                 }
                 `
+
                 var _vue = {
                     template: `
-<div>
-    <label class="panel-heading">Head</label>
-    <div class="panel panel-default">
-        Panel content
-    </div>
-</div>
-`
+                    <div>
+                        <label class="panel-heading">Head</label>
+                        <div class="panel panel-default">
+                            Panel content
+                        </div>
+                        <input type=radio v-for="(idx) in list" 
+                            v-model.number="idx" 
+                            value="idx" 
+                            text="idx" />
+                    </div>
+                    `,
+                    data(){
+                        return {
+                            idx:1,
+                            list:[1,2]
+                        }
+                    }
                 };
                 return { _vue ,_css };
             },
