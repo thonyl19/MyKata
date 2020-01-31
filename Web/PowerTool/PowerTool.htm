@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head runat="server">
     <title></title>
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.min.js"></script>
@@ -13,24 +14,22 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css">
 
     <style>
-
-
-
-
-        .flex, .flex dt, .flex dd {
+        .flex,
+        .flex dt,
+        .flex dd {
             width: 100%;
             display: block;
             padding: 0px;
             margin: 0px;
         }
 
-            .flex.f-col {
-                flex-flow: column;
-            }
+        .flex.f-col {
+            flex-flow: column;
+        }
 
-            .flex.f-row {
-                flex-flow: row;
-            }
+        .flex.f-row {
+            flex-flow: row;
+        }
 
         dl.flex {
             display: flex;
@@ -69,15 +68,15 @@
             white-space: nowrap;
         }
 
-            li:hover {
-                color: blue;
-                font-weight: 400;
-                cursor: pointer;
-            }
+        li:hover {
+            color: blue;
+            font-weight: 400;
+            cursor: pointer;
+        }
 
-            li.active {
-                background-color: #20FFA6;
-            }
+        li.active {
+            background-color: #20FFA6;
+        }
 
 
         .i-el-aside {
@@ -92,13 +91,13 @@
             padding: 3px !important;
         }
 
-        li div > .form-area {
+        li div>.form-area {
             display: none;
             background: rgb(214, 229, 253);
             padding: 5em 1em;
         }
 
-        li > a:hover .form-area {
+        li>a:hover .form-area {
             display: block;
         }
 
@@ -139,8 +138,7 @@
             transition: opacity .5s;
         }
 
-        .slide-leave {
-        }
+        .slide-leave {}
 
         .slide-leave-active {
             animation: slide-out 1s ease-out forwards;
@@ -183,47 +181,33 @@
                 transform: translateY(20px)
             }
         }
+
         /* == Fix ==*/
         .el-main {
             padding: 0px;
         }
     </style>
 </head>
+
 <body class="CSBody">
     <div id="app">
         <el-container>
             <el-aside width="200px" class="i-el-aside">
-                <page-aside 
-                    :menu_set="FunUI"
-                    :target="A"
-                    :chg_fn="chgFormUI"
-                    @exec="bind_B"></page-aside>
+                <page-aside :menu_set="FunUI" :target="A" :chg_fn="chgFormUI" @exec="bind_B"></page-aside>
             </el-aside>
-            <el-main>
-                <table border="1" width="100%">
-                    <tr>
-                        <td widt="*">
-                            <el-input ref="A"
-                                      type="textarea"
-                                      :autosize="true"
-                                      v-model="A"></el-input>
-                        </td>
-                        <td width="70%">
-                            <el-input type="textarea"
-                                      :autosize="true"
-                                      v-model="B"></el-input>
-                        </td>
-                    </tr>
-                </table>
+                <dl class="flex row" >
+                    <dt>
+                        <el-input ref="A" type="textarea" :autosize="true" v-model="A"></el-input>
+                    </dt>
+                    <dd>
+                        <el-input type="textarea" :autosize="true" v-model="B"></el-input>
+                    </dd>
+                </dl>
                 <div>
                     <el-button type="primary" size="mini" round @click="ToA">《</el-button>
                     <el-button type="primary" size="mini" round @click="Copy">Copy</el-button>
                 </div>
-                <fn-form 
-                    :title="fnName" 
-                    :act_fn="actFn" 
-                    :target="A" 
-                    @exec="bind_B"></fn-form>
+                <fn-form :title="fnName" :act_fn="actFn" :target="A" @exec="bind_B"></fn-form>
         </el-container>
 
     </div>
@@ -232,22 +216,22 @@
 
 
 
-    let views = {
-        'sql-filed-newline':{
-            template:`<el-menu-item @click="isNewLine = !isNewLine"><input type='checkbox' v-model="isNewLine"/>Filed 換行</el-menu-item>`,
-            data(){
-                return {
-                    isNewLine:App_SQL.isFiled換行
+        let views = {
+            'sql-filed-newline': {
+                template: `<el-menu-item @click="isNewLine = !isNewLine"><input type='checkbox' v-model="isNewLine"/>Filed 換行</el-menu-item>`,
+                data() {
+                    return {
+                        isNewLine: App_SQL.isFiled換行
+                    }
+                },
+                watch: {
+                    isNewLine() {
+                        App_SQL.isFiled換行 = this.isNewLine;
+                    }
                 }
             },
-            watch:{
-                isNewLine(){
-                    App_SQL.isFiled換行 = this.isNewLine;
-                }
-            }
-        },
-        'page-aside':{
-            template:`
+            'page-aside': {
+                template: `
             <div>
                 <el-radio-group v-model="collapseMode" style="margin-bottom: 20px;" size="small">
                     <el-radio-button :label=1>折疊切換</el-radio-button>
@@ -270,60 +254,60 @@
                 </el-menu>
             </div>
                 `,
-                
-            props:{
-                menu_set:{
-                    type:Object
-                },
-                target:{
-                    type:String
-                },
-                chg_fn:{
-                    type:Function,
-                    default(){
-                        //alert('test');
-                    }
-                }
-            },
-            // ['menu_set','target'],
-            data(){
-                return {
-                    openeds:Object.keys(this.menu_set),
-                    collapseMode:1
-                }
-            },
-            watch:{
-                collapseMode(){
-                    this.openeds
-                        = (this.collapseMode==2)
-                        ? Object.keys(this.menu_set)
-                        : [];
-                }
-            },
-            methods:{
-                actFun(fnName,fn) {
-                    var isNoUI_Mode = fn instanceof Function;
-                    if (isNoUI_Mode){
-                        let B = fn(this.target);
-                        this.$emit("exec", B);
-                    }else{
-                        //組件內對myResult變更後向外部發送事件通知
-                        this.chg_fn(fnName, fn);
-                    }
-                },
-                genMenuItem(key,item){
-                    switch(key.substr(0,1)){
-                        case "@":
-                            return item;
-                            break;
-                    }
-                    return 'el-menu-item';
-                }
-            }
 
-        },
-        'fn-form':{
-            template: `
+                props: {
+                    menu_set: {
+                        type: Object
+                    },
+                    target: {
+                        type: String
+                    },
+                    chg_fn: {
+                        type: Function,
+                        default() {
+                            //alert('test');
+                        }
+                    }
+                },
+                // ['menu_set','target'],
+                data() {
+                    return {
+                        openeds: Object.keys(this.menu_set),
+                        collapseMode: 1
+                    }
+                },
+                watch: {
+                    collapseMode() {
+                        this.openeds
+                            = (this.collapseMode == 2)
+                                ? Object.keys(this.menu_set)
+                                : [];
+                    }
+                },
+                methods: {
+                    actFun(fnName, fn) {
+                        var isNoUI_Mode = fn instanceof Function;
+                        if (isNoUI_Mode) {
+                            let B = fn(this.target);
+                            this.$emit("exec", B);
+                        } else {
+                            //組件內對myResult變更後向外部發送事件通知
+                            this.chg_fn(fnName, fn);
+                        }
+                    },
+                    genMenuItem(key, item) {
+                        switch (key.substr(0, 1)) {
+                            case "@":
+                                return item;
+                                break;
+                        }
+                        return 'el-menu-item';
+                    }
+                }
+
+            },
+            'fn-form': {
+                template: `
             <div>
                 {{act_fn}}
                 <h4>{{title}}</h4>
@@ -343,63 +327,63 @@
                 </el-form>
             </div>
             `,
-            props:{
-                title:{
-                    type:String,
-                    default:"Please Input"
-                },
-                act_fn:{
-                    type:Object,
-                },
-                target:{
-                    type:String,
-                },
-                
-            },
-            methods:{
-                Exec() {
-                    let args = [];
-                    for (var key in this.act_fn){
-                        args.push(this.act_fn[key]);
-                    }
-                    let B = this.act_fn.fn(this.target,...args);
-                    this.$emit("exec", B);
-                },
-                genUI(filed){
-                    let _type = typeof(filed);
-                    switch(_type){
-                        case "string":
-                        case "number":
-                            return 'el-input';
-                            break;
-                        case "boolean":
-                            return 'el-checkbox';
-                            break;
-                        case "array":
-                            return 'textarea';
-                            break;
-                    }
-                },
-                //因為 fn 是用來綁定執行程序,所以不做欄位顯示轉換,其餘都需要轉換
-                isFiledItem(Key){
-                    return Key !='fn';
-                }
+                props: {
+                    title: {
+                        type: String,
+                        default: "Please Input"
+                    },
+                    act_fn: {
+                        type: Object,
+                    },
+                    target: {
+                        type: String,
+                    },
 
-            },
-            computed: {
-                isShowExec(){
-                    return this.act_fn['fn']!=null;
                 },
+                methods: {
+                    Exec() {
+                        let args = [];
+                        for (var key in this.act_fn) {
+                            args.push(this.act_fn[key]);
+                        }
+                        let B = this.act_fn.fn(this.target, ...args);
+                        this.$emit("exec", B);
+                    },
+                    genUI(filed) {
+                        let _type = typeof (filed);
+                        switch (_type) {
+                            case "string":
+                            case "number":
+                                return 'el-input';
+                                break;
+                            case "boolean":
+                                return 'el-checkbox';
+                                break;
+                            case "array":
+                                return 'textarea';
+                                break;
+                        }
+                    },
+                    //因為 fn 是用來綁定執行程序,所以不做欄位顯示轉換,其餘都需要轉換
+                    isFiledItem(Key) {
+                        return Key != 'fn';
+                    }
+
+                },
+                computed: {
+                    isShowExec() {
+                        return this.act_fn['fn'] != null;
+                    },
+                }
             }
         }
-    }
 
 
-    for (var k in views){
-        var _obj =  views[k]
-        Vue.component(k,_obj);
-    }
-    let _sql = `
+        for (var k in views) {
+            var _obj = views[k]
+            Vue.component(k, _obj);
+        }
+        let _sql = `
             SELECT
                     B0.document_id,B0.serno,B1.pic_serno,B0.trantoprod_no
                     ,B1.pic_ask_date    AS 需求日期
@@ -440,127 +424,128 @@
         ;
     `
 
-    $(()=>{
-        let FunUI = {
-            文字處理:{
-                置換文字:{
-                    Old:"",
-                    New:"",
-                    fn:App_Str.Replace
-                },
-                條件換行:{
-                    SplitWord:'_',
-                    isKeepSplitWord:false,
-                    fn:App_Str.條件換行
-                },
-                清前後空白:App_Str.清前後空白 ,
-                字串集結:{
-                    AutoTrim:true,
-                    JoinSplitWord:'',
-                    fn:App_Str.字串集結
-                },
-                字串補定長:{
-                    LineSpan:10,
-                    AddWord:'',
-                    AddAfter:true,
-                    AutoTrim:true,
-                    isAutoJoin:true,
-                    fn:App_Str.字串補定長
-                },
-                Tab排版:{
-                    tabs:1,
-                    fn:App_Str.FormatTab
-                },
-                Tpl_ByLine:{
-                    tpl:'{0},{1}',
-                    col_split:'\\t',
-                    AutoTrim:true,
-                    isAutoJoin:true,
-                    fn:App_Str.Tpl_ByLine
-                }
-            },
-            SQL:{
-                '@Filed換行':'sql-filed-newline',
-                //'<el-button>默认按钮</el-button>',
-                'SqlCmd 格式化(全作業)'(as_SqlCmd){
-                    //Form1.CB1.checked
-                    //SObj  = document.all("CB1");
-                    //@資料標準化(將資料全部不換行集結)
-                    var TmpData = App_SQL.SqlCmdSTD(as_SqlCmd);
-                    //@資料解析處理(將命令字元 做大寫轉換及大部換行處理)
-                    TmpData = App_SQL.SqlCmdUpWord(TmpData);
-                    if (App_SQL.isFiled換行){
-                        TmpData = App_SQL.FiledFormat(TmpData);
+        $(() => {
+            let FunUI = {
+                文字處理: {
+                    置換文字: {
+                        Old: "",
+                        New: "",
+                        fn: App_Str.Replace
+                    },
+                    條件換行: {
+                        SplitWord: '_',
+                        isKeepSplitWord: false,
+                        fn: App_Str.條件換行
+                    },
+                    清前後空白: App_Str.清前後空白,
+                    字串集結: {
+                        AutoTrim: true,
+                        JoinSplitWord: '',
+                        fn: App_Str.字串集結
+                    },
+                    字串補定長: {
+                        LineSpan: 10,
+                        AddWord: '',
+                        AddAfter: true,
+                        AutoTrim: true,
+                        isAutoJoin: true,
+                        fn: App_Str.字串補定長
+                    },
+                    Tab排版: {
+                        tabs: 1,
+                        fn: App_Str.FormatTab
+                    },
+                    Tpl_ByLine: {
+                        tpl: '{0},{1}',
+                        col_split: '\\t',
+                        AutoTrim: true,
+                        isAutoJoin: true,
+                        fn: App_Str.Tpl_ByLine
                     }
-                    return TmpData;
                 },
-                SqlCmdSTD:App_SQL.SqlCmdSTD ,
-                SqlCmdUpWord:App_SQL.SqlCmdUpWord,
-                Select2Update:App_SQL.Select2UpdatePG,
-                Update2Select:App_SQL.Update2Select,
-                FiledFormat:App_SQL.FiledFormat,
-                // '@Filed換行':{
-                //     props:[]
-                // }
-            }
-        };
-
-        const store = new Vuex.Store({
-            state: {
-                //欄位是否以換行呈現
-                isFiledNewLine: true
-            },
-        });
-        let tabs =  {
-            el: "#app",
-            data:{
-                //A:"   A-_--\\- /   ",
-                A:_sql,
-                //A:`A\ta\nB`,
-                B:"",
-                txtFormat:'YYYYMMDD',
-                txtDate:'20190201',
-                FunUI,
-                actFn:{},
-                fnName:'null'
-            },
-            methods:{
-                Copy(){
-                    this.$refs.A.select();
-                    document.execCommand('copy');
-                },
-                ToA(){
-                    this.A = this.B;
-                },
-                bind_B(val){
-                    if (val instanceof Array){
-                        val = val.join("\n") ;
-                    }
-                    this.B = val;
-                },
-                chgFormUI(fnName,fn){
-                    //console.log(fnName,fn);
-                    this.actFn = fn;
-                    this.fnName = fnName;
-                },
-                Exec1(act){
-                    console.log([this.A,this.B])
-                    if (act instanceof Function){
-                        this.B = act(this.A);
-                    }else{
-                        let args = [];
-                        for (var key in act){
-                            args.push(act[key]);
+                SQL: {
+                    '@Filed換行': 'sql-filed-newline',
+                    //'<el-button>默认按钮</el-button>',
+                    'SqlCmd 格式化(全作業)'(as_SqlCmd) {
+                        //Form1.CB1.checked
+                        //SObj  = document.all("CB1");
+                        //@資料標準化(將資料全部不換行集結)
+                        var TmpData = App_SQL.SqlCmdSTD(as_SqlCmd);
+                        //@資料解析處理(將命令字元 做大寫轉換及大部換行處理)
+                        TmpData = App_SQL.SqlCmdUpWord(TmpData);
+                        if (App_SQL.isFiled換行) {
+                            TmpData = App_SQL.FiledFormat(TmpData);
                         }
-                        this.B = act.fn(this.A,...args);
+                        return TmpData;
+                    },
+                    SqlCmdSTD: App_SQL.SqlCmdSTD,
+                    SqlCmdUpWord: App_SQL.SqlCmdUpWord,
+                    Select2Update: App_SQL.Select2UpdatePG,
+                    Update2Select: App_SQL.Update2Select,
+                    FiledFormat: App_SQL.FiledFormat,
+                    // '@Filed換行':{
+                    //     props:[]
+                    // }
+                }
+            };
+
+            const store = new Vuex.Store({
+                state: {
+                    //欄位是否以換行呈現
+                    isFiledNewLine: true
+                },
+            });
+            let tabs = {
+                el: "#app",
+                data: {
+                    //A:"   A-_--\\- /   ",
+                    A: _sql,
+                    //A:`A\ta\nB`,
+                    B: "",
+                    txtFormat: 'YYYYMMDD',
+                    txtDate: '20190201',
+                    FunUI,
+                    actFn: {},
+                    fnName: 'null'
+                },
+                methods: {
+                    Copy() {
+                        this.$refs.A.select();
+                        document.execCommand('copy');
+                    },
+                    ToA() {
+                        this.A = this.B;
+                    },
+                    bind_B(val) {
+                        if (val instanceof Array) {
+                            val = val.join("\n");
+                        }
+                        this.B = val;
+                    },
+                    chgFormUI(fnName, fn) {
+                        //console.log(fnName,fn);
+                        this.actFn = fn;
+                        this.fnName = fnName;
+                    },
+                    Exec1(act) {
+                        console.log([this.A, this.B])
+                        if (act instanceof Function) {
+                            this.B = act(this.A);
+                        } else {
+                            let args = [];
+                            for (var key in act) {
+                                args.push(act[key]);
+                            }
+                            this.B = act.fn(this.A, ...args);
+                        }
                     }
                 }
-            }
-        };
-        Vue.config.productionTip = false
-        new Vue(tabs);
-    })
+            };
+            Vue.config.productionTip = false
+            new Vue(tabs);
+        })
     </script>
 
 </body>
+
 </html>
