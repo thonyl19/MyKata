@@ -1,0 +1,7 @@
+{
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "splitpanes": "^2.2.1"
+  }
+}

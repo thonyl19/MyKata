@@ -2,3 +2,7 @@ CSharp/bin/**/*
 CSharp/obj/**/*
 Kata_Master
 *.bat
+**/node_modules/**
+**/~*/*
+**/**/*~*.*
+**/package-lock.json
