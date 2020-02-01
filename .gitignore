@@ -1,0 +1,4 @@
+CSharp/bin/**/*
+CSharp/obj/**/*
+Kata_Master
+*.bat
