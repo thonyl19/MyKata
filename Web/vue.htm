@@ -112,7 +112,32 @@
         /*
         https://www.w3cplus.com/vue/seven-ways-to-define-a-component-template-by-vuejs.html
         */
+        let API = {
+            'v-html'() {
+                /*
+                1. v-html 試例
+                2. 在 產生出來的html 中,己經無再使用 vue 相關程序功能
+                */
+                var _vue = {
+                    data() {
+                        return { checked: 'true' }
+                    },
+                    template: `
+                <div>{{checked}}
+                    <span  v-html="fn()"></span>
+                </div>`,
+                    methods: {
+                        fn() {
+                            return '<input type="checkbox" v-model="checked" />'
+                        }
+                    }
+                };
+                return { _vue };
+            },
+
+        }
         let views = {
+            API,
             destroyed() {
                 var _vue = {
                     "template": "<div>destroyed 測試,當切換到另一個頁籤時觸發.</div>",
@@ -434,28 +459,7 @@
                 };
                 return { _vue };
             },
-            'v-html'() {
-                /*
-                1. v-html 試例
-                2. 在 產生出來的html 中,己經無再使用 vue 相關程序功能
-                */
-                var _vue = {
-                    data() {
-                        return { checked: 'true' }
-                    },
-                    template: `
-                <div>{{checked}}
-                    <span  v-html="fn()"></span>
-                </div>`,
-                    methods: {
-                        fn() {
-                            return '<input type="checkbox" v-model="checked" />'
-                        }
-                    }
-                };
-                return { _vue };
-            },
-
+            
             DynamicHtml_v1() {
                 /*
                 參考自 https://jsfiddle.net/Linusborg/1zdzu7k1/
