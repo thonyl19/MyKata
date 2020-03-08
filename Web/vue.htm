@@ -3,12 +3,14 @@
 
 <head runat="server">
     <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
     <script src="https://unpkg.com/vuex@3.1.2/dist/vuex.js"></script>
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
     <script src="https://unpkg.com/jss-preset-default/dist/jss-preset-default.min.js"></script>
+    <script src="tpl_sample.js"></script>
 
     <!-- <script type="text/javascript" src="https://unpkg.com/json-fns/json-fns.js"></script> -->
     <script type="text/javascript" src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.8/dist/global/Rx.umd.js"></script>
@@ -68,7 +70,7 @@
             white-space: nowrap;
         }
 
-        li:hover {
+        li.over-fun:hover {
             color: blue;
             font-weight: 400;
             cursor: pointer;
@@ -82,36 +84,9 @@
 
 <body class="CSBody">
     <div id="app">
-        <dl class="flex f-row">
-            <dt>
-                <ul>
-                    <li v-for="(item) in tabsList" v-bind:key="item"
-                        v-bind:class="['tab-button', { active: currentTab === item }]">
-                        <a @click="currentTab=item"> {{item}}</a>
-                    </li>
-                </ul>
-            </dt>
-            <dd style="height:95vh ;">
-                <dl class="flex f-col">
-                    <dt>
-                        <input type="button" value="Copy" @click="copy" />
-                        <input type="button" value="Copy Components" @click="copy_com" />
-                        <textarea v-model="Code" @blur="change()"></textarea>
-                        <component :is="currentTabComponent" :sets="currentTab"></component>
-
-                    </dt>
-                    <dd>
-                        <!-- <pre>{{result}}</pre> -->
-                    </dd>
-                </dl>
-            </dd>
-        </dl>
     </div>
 
     <script>
-        /*
-        https://www.w3cplus.com/vue/seven-ways-to-define-a-component-template-by-vuejs.html
-        */
         let API = {
             'v-html'() {
                 /*
@@ -136,8 +111,8 @@
             },
 
         }
-        let views = {
-            API,
+        var views = {
+
             destroyed() {
                 var _vue = {
                     "template": "<div>destroyed 測試,當切換到另一個頁籤時觸發.</div>",
@@ -459,7 +434,7 @@
                 };
                 return { _vue };
             },
-            
+
             DynamicHtml_v1() {
                 /*
                 參考自 https://jsfiddle.net/Linusborg/1zdzu7k1/
@@ -878,9 +853,9 @@
                     template: `
                 <div><a id="ex_extend"></a>
                 </div>`,
-                mounted() {
-                    new Profile().$mount('#ex_extend');
-                },
+                    mounted() {
+                        new Profile().$mount('#ex_extend');
+                    },
                 };
                 return { _vue };
             },
@@ -899,19 +874,19 @@
                 /*
                 https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/228790/
                 */
-                Vue.prototype.changeData = function (){//changeData是函式名
-                alert('執行成功');
+                Vue.prototype.changeData = function () {//changeData是函式名
+                    alert('執行成功');
                 }
                 var _vue = {
                     template: `
                 <Button @click="Exec">Call changeData
                 </Button>`,
-                methods: {
-                    Exec(){
-                        this.changeData();
-                    }
-                },
-                
+                    methods: {
+                        Exec() {
+                            this.changeData();
+                        }
+                    },
+
                 };
                 return { _vue };
             },
@@ -924,44 +899,8 @@
                 return { _vue };
             },
         }
-
-
-        //** # Main
-        for (var k in views) {
-            var { _vue } = views[k]();
-            Vue.component(`x-${k}`, _vue);
-        }
-        let tabsList = Object.keys(views);
-
-        let tabs = {
-            data: {
-                tabsList,
-                currentTab: 'DynamicHtml_v3'//tabsList[0],
-                , Code: ''
-            },
-            computed: {
-                currentTabComponent() {
-                    var _obj = views[this.currentTab];
-                    this.Code = _obj;
-                    return `x-${this.currentTab}`;
-                }
-            },
-            methods: {
-                change() {
-                    this.views[this.currentTab].template = this.Code;
-                },
-                copy() {
-
-                },
-                copy_com() {
-
-                }
-            },
-            "el": "#app"
-        };
-        Vue.config.productionTip = false
-        new Vue(tabs);
-
+        window.sample = { API,views }
+         
 
     </script>
 </body>
