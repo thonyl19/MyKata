@@ -96,6 +96,24 @@
             background-repeat: no-repeat;
             background-position: 50%;
         }
+
+        .split {
+     -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+     box-sizing: border-box;
+     overflow-y: auto;
+     overflow-x: hidden;
+     height: 60vh;
+ }
+ .content {
+     border: 1px solid #C0C0C0;
+     box-shadow: inset 0 1px 2px #e4e4e4;
+     background-color: #fff;
+ }
+ /* .split.split-horizontal,
+ .gutter.gutter-horizontal {
+     height: 100%;
+ } */
     </style>
 </head>
 
@@ -160,7 +178,57 @@
                     },
                 };
                 return { _vue };
-            }, std() {
+            }, 垂直分割() {
+                var _vue = {
+                    template: `
+                    <div class="split split-horizontal">
+                        <div id="c" class="split content">c</div>
+                        <div id="d" class="split content">d</div>
+                    </div>
+                    `,
+                    mounted() {
+                        Split(['#c', '#d'], {
+                            direction: 'vertical',
+                            sizes: [25, 75],
+                            gutterSize: 8,
+                            cursor: 'row-resize'
+                        })
+                    },
+
+                };
+                return { _vue };
+            },
+            '上2下1'() {
+                var _vue = {
+                    template: `
+                    <div style="width:100%;height:20em;">
+                        <dl id="A" class="flex">
+                            <dd id="A1">A1</dd>
+                            <dd id="A2">A2</dd>
+                        </dl>
+                        <div id="B" class="split split-horizontal">
+                            B
+                        </div>
+                    </div>
+                    `,
+                    mounted() {
+                        Split(['#A', '#B'], {
+                            direction: 'vertical',
+                            //sizes: [25, 75],
+                            gutterSize: 8,
+                            cursor: 'row-resize'
+                        })
+                        Split(['#A1', '#A2'], {
+                            
+                            gutterSize: 8,
+                            cursor: 'col-resize'
+                        })
+
+                    },
+                };
+                return { _vue };
+            }
+            , std() {
                 var _vue = {
                     template: `
                     <div>
@@ -182,7 +250,7 @@
         let tabs = {
             data: {
                 tabsList,
-                "currentTab": tabsList[0],
+                "currentTab": tabsList[2],
                 "Code": ''
             },
 

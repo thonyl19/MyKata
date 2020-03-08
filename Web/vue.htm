@@ -79,6 +79,10 @@
         li.active {
             background-color: #20FFA6;
         }
+        .itme-main{
+            background-color:lightblue;
+            padding: 3px;
+        }
     </style>
 </head>
 
@@ -123,7 +127,11 @@
                 return { _vue };
             },
             array_reNew() {
-                var _obj = {
+                /*
+                測試 Array 資料變動作法.
+                1.如果是一般單純的數據陣列,似乎使用 直接替代掉的作法即可
+                */
+                var _vue = {
                     template: `
                 <div>
                     <ul>
@@ -144,8 +152,7 @@
                             this.autoAdd(5);
                         },
                         exec1() {
-                            this.list = ['A', 'B', 'C'];
-                            //this.autoAdd(7);
+                            this.list = [{A:'A'}, {B:'B'}, {C:'C'}];
                         },
                         autoAdd(x) {
                             for (var i = 0; i < x; i++) {
@@ -154,10 +161,16 @@
                         }
                     }
                 }
-                return _obj;
+                return {_vue};
             },
 
-            propsCase() {
+            props應用() {
+                /*
+                演示 props 的應用方式
+                1.如果純字串填值的話,必須如 Case1 的寫法 -- 不加 : 前綴,
+                2.如果是以傳動態變數的話,則必須以 Case2 的寫法 加 : 前綴
+                3.額外試出,似乎不加 : 前綴也行 ,雖然省事 ,但會有識別上的顧慮 
+                */
                 var ex_compoment = {
                     "template": "<h1>{{message}}</h1>",
                     "props": ["message"]
@@ -166,80 +179,20 @@
                 var _vue = {
                     template: `
                 <div>
-                    <ex_compoment message=\"Welcome to the VueJs Components Tutorial\"></ex_compoment>
+                    <ex_compoment message=\"Case1\"></ex_compoment>
+                    <ex_compoment :message="Case2"></ex_compoment>
+                    <ex_compoment message="Case2"></ex_compoment>
                 </div>
                 `,
+                    data(){
+                        return {
+                            Case2:"Case2"
+                        }
+                    }
                 }
                 return { _vue };
             },
 
-
-
-            rxjs連撃限制() {
-                var _vue = {
-                    data() {
-                        return {
-                            clicks: 0
-                        }
-                    },
-                    "template": `
-                    <div>限制點撃每秒只能作用一次,其餘不會觸發<input type=button ref='myButton' value='exec'>
-                    <div>{{clicks}}</div></div>
-                `,
-                    mounted() {
-                        let _self = this;
-                        //Rx.Observable.fromEvent(this.$refs.myButton, 'click')
-                        //.subscribe(_self.exec);
-                        let z = Rx.Observable.fromEvent(this.$refs.myButton, 'click');
-                        z.throttleTime(1000)
-                            //.scan(count => count + 1, 0)
-                            .subscribe(_self.exec);
-
-                    },
-                    methods: {
-                        exec() {
-                            this.clicks++;
-                        }
-                    }
-                };
-                return { _vue };
-            },
-
-            rxjs連續輸入延遲反應() {
-                var _vue = {
-                    data() {
-                        return {
-                            val: '',
-                            cb_val: '',
-                            keyupObs: null,
-                        }
-                    },
-                    template: `
-                    <div>限制點撃每秒只能作用一次,其餘不會觸發
-                        <input type=text ref='myTxt' v-model='val' >
-                    <div>當前己輸入值：{{val}} , 1秒後才整個接收的完整值：{{cb_val}}</div></div>
-                `,
-                    mounted() {
-                        let _self = this;
-                        //Rx.Observable.fromEvent(this.$refs.myButton, 'click')
-                        //.subscribe(_self.exec);
-                        this.keyupObs = Rx.Observable
-                            .fromEvent(this.$refs.myTxt, 'keyup')
-                            .debounceTime(700)
-                            .subscribe(_self.exec);
-                    },
-                    destroyed() {
-                        this.keyupObs.unsubscribe();
-                        console.log('keyupObs 註銷', this.keyupObs);
-                    },
-                    methods: {
-                        exec() {
-                            this.cb_val = this.val;
-                        }
-                    }
-                };
-                return { _vue };
-            },
 
             vuex範例() {
                 const store = new Vuex.Store({
@@ -899,7 +852,76 @@
                 return { _vue };
             },
         }
-        window.sample = { API,views }
+        var rxjs = {
+            連撃限制() {
+                var _vue = {
+                    data() {
+                        return {
+                            clicks: 0
+                        }
+                    },
+                    "template": `
+                    <div>限制點撃每秒只能作用一次,其餘不會觸發<input type=button ref='myButton' value='exec'>
+                    <div>{{clicks}}</div></div>
+                `,
+                    mounted() {
+                        let _self = this;
+                        //Rx.Observable.fromEvent(this.$refs.myButton, 'click')
+                        //.subscribe(_self.exec);
+                        let z = Rx.Observable.fromEvent(this.$refs.myButton, 'click');
+                        z.throttleTime(1000)
+                            //.scan(count => count + 1, 0)
+                            .subscribe(_self.exec);
+
+                    },
+                    methods: {
+                        exec() {
+                            this.clicks++;
+                        }
+                    }
+                };
+                return { _vue };
+            },
+
+            連續輸入延遲反應() {
+                var _vue = {
+                    data() {
+                        return {
+                            val: '',
+                            cb_val: '',
+                            keyupObs: null,
+                        }
+                    },
+                    template: `
+                    <div>限制點撃每秒只能作用一次,其餘不會觸發
+                        <input type=text ref='myTxt' v-model='val' >
+                    <div>當前己輸入值：{{val}} , 1秒後才整個接收的完整值：{{cb_val}}</div></div>
+                `,
+                    mounted() {
+                        let _self = this;
+                        //Rx.Observable.fromEvent(this.$refs.myButton, 'click')
+                        //.subscribe(_self.exec);
+                        this.keyupObs = Rx.Observable
+                            .fromEvent(this.$refs.myTxt, 'keyup')
+                            .debounceTime(700)
+                            .subscribe(_self.exec);
+                    },
+                    destroyed() {
+                        this.keyupObs.unsubscribe();
+                        console.log('keyupObs 註銷', this.keyupObs);
+                    },
+                    methods: {
+                        exec() {
+                            this.cb_val = this.val;
+                        }
+                    }
+                };
+                return { _vue };
+            },
+
+        }
+        
+        window.sample = { API,views , rxjs}
          
 
     </script>

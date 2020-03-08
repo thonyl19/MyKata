@@ -18,7 +18,7 @@
                 left:{
                     template :`
                     <ul>
-                        <li v-for="(grp,main_key) in sample"><a>{{main_key}}</a>
+                        <li v-for="(grp,main_key) in sample"><a class="itme-main">{{main_key}}</a>
                             <ul>
                                 <li v-for="(item,item_key) in grp" class="over-fun">
                                     <a @click="act(item)"> {{item_key}}</a>
@@ -82,12 +82,10 @@
                     },
                     methods: {
                         change() {
+                            if (this.Code == null) return ;
                             var _code =  this.Code.toString();
                             _code = _code.replace(/\bfunction /gi,"");
                             eval('var _fn = function '+ _code);
-                            //this.Code = _fn;
-
-                            //var x =  this.Code+'()' ;
                             this.currentTab = _fn;
                         },
                         copy() {
@@ -103,13 +101,6 @@
             for (var name in tpl_sample) {
                 Vue.component(`x-tpl-sample-${name}`, tpl_sample[name]);
             }
-
-            // for (var k in sample) {
-            //     var { _vue } = sample[k]();
-            //     Vue.component(`x-${k}`, _vue);
-            // }
-            //let tabsList = Object.keys(views);
- 
             var main = Vue.extend(tpl_sample.main);
             new main().$mount('#app');
         }else
