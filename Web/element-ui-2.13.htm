@@ -153,7 +153,59 @@
             }
             return {_vue,_css};
         },
-         
+        'dialog 自適高度'(){
+            /*
+            當在 el-dialog 的內容超過螢幕範圍時,原生的樣式不支援做內容捲動的呈現,
+                而是整個 el-dialog 做整頁的捲動
+            */
+            var _obj={
+                _css:`
+                .abow_dialog {
+                    display: flex;
+                    justify-content: center;
+                    align-items: Center;
+                    overflow: hidden;
+                }
+                .abow_dialog .el-dialog {
+                    margin: 0 auto !important;
+                    height: 90%;
+                    overflow: hidden;
+                    width: 85rem !important;
+                    max-width: 95vw;
+                }
+                .abow_dialog .el-dialog__body {
+                    position: absolute;
+                    left: 0;
+                    top: 54px;
+                    bottom: 0;
+                    right: 0;
+                    padding: 1em 2.3em;
+                    z-index: 1;
+                    overflow: hidden;
+                    overflow-y: auto;
+                }
+                `,
+                _vue:{
+                    template:`
+                    <div>
+                        
+                        <el-dialog title="搜尋" :visible.sync="visible" :class="[switch_model?'abow_dialog':'']">
+                            <div>
+                                <input type=checkbox v-model="switch_model" />content scroll
+                            </div>
+                            <iframe scrolling="no" src="element-ui-2.13.htm" style="height:120vh;"></iframe>
+                        </el-dialog>
+                    </div>`,
+                    data(){
+                        return {
+                            switch_model:true,
+                            visible:true
+                        }
+                    }
+                },
+            };
+            return _obj;
+        }, 
         std(){
             var _obj={
                 template:`
