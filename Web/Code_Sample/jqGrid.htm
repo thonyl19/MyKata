@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
+    <script src="https://unpkg.com/vue-styled-components@1.4.9/dist/vue-styled-components.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/js/jquery.jqGrid.min.js"></script>
+    <script src="_tmpData.js" ></script>
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/free-jqgrid/4.15.5/css/ui.jqgrid.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+    
+    <style>
+	.flex, .flex dt, .flex dd {
+		width: 100%;
+		display: block;
+		padding: 0px;
+		margin: 0px;
+	}
+
+	.flex.f-col {
+		flex-flow: column;
+	}
+
+	.flex.f-row {
+		flex-flow: row;
+	}
+
+	dl.flex {
+		display: flex;
+	}
+
+	.flex dt {
+		flex: 0;
+	}
+
+	.flex dd {
+		flex: 1;
+	}
+
+	textarea {
+		width: 100%;
+		height: 15em;
+	}
+
+	pre {
+		width: 100%;
+		height: 100%;
+		background: yellow;
+		margin-top: .5em;
+		overflow-y: auto;
+	}
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: .3em;
+	}
+
+	li {
+		min-width: 5em;
+		line-height: 1.3em;
+		white-space: nowrap;
+	}
+
+	li:hover {
+		color: blue;
+		font-weight: 400;
+		cursor: pointer;
+	}
+
+	li.active {
+		background-color: #20FFA6;
+	}
+    
+    .d-show{
+        margin: 5px;
+    }
+    </style>
+</head>
+<body class="CSBody">
+    <div id="app">
+        <dl class="flex f-row">
+            <dt style="min-width:13em;">
+                <ul>
+                    <li v-for="(item) in tabsList"
+                        v-bind:key="item"
+                        v-bind:class="['tab-button', { active: currentTab === item }]">
+                        <a @click="currentTab =item"> {{item}}</a>
+                    </li>
+                </ul>
+            </dt>
+            <dd style="height:95vh ;">
+                <dl class="flex f-col">
+                    <dt>
+                        <input type="button" value="Copy" @click="copy" />
+                        <input type="button" value="Copy Components" @click="copy_com" />
+                        <textarea v-model="Code" @blur="change()"></textarea>
+                        <component v-bind:is="currentTabComponent" class="d-show"
+                                   :sets="currentTab"></component>
+
+                    </dt>
+                    <dd>
+                        <!-- <pre>{{result}}</pre> -->
+
+                    </dd>
+                </dl>
+            </dd>
+        </dl>
+    </div>
+
+    <script>
+        let views = {
+            LoadData() {
+                /*
+                1.用 addRowData 實現資料載入的方法 
+                2.用 delRowData 實現資料清除的方法 
+                */
+                var _obj = {
+                    _vue:{
+                        template: `
+                        <div style="margin-left:20px">
+                            <button @click="Load">Load</button>
+                            <button @click="Clear">Clear</button>
+                            <table class="LoadData"></table>
+                            <div id="jqGridPager"></div>
+                        </div>
+                            
+                            `,
+                        mounted() {
+                            var _jg = $('.LoadData');
+                            _jg.jqGrid({
+                                datatype: "local",
+                                //data: tmpData.mydata,
+                                height: 250,
+                                colModel: [
+                                    { label: 'Inv No', name: 'id', width: 75, key:true },
+                                    { label: 'Date', name: 'invdate', width: 90 },
+                                    { label: 'Client', name: 'name', width: 100 },
+                                    { label: 'Amount', name: 'amount', width: 80 },
+                                    { label: 'Tax', name: 'tax', width: 80 },
+                                    { label: 'Total', name: 'total', width: 80 },
+                                    { label: 'Notes', name: 'note', width: 150 }
+                                ],
+                                viewrecords: true, // show the current page, data rang and total records on the toolbar
+                                caption: "Load jqGrid through Javascript Array"
+                            });
+                            
+                            
+                        },
+                        methods:{
+                            Load(){
+                                var _jg = $('.LoadData');
+                                for(var i=0;i<=tmpData.mydata.length;i++){
+                                    _jg.addRowData(i+1,tmpData.mydata[i]);    
+                                }
+                            },
+                            Clear(){
+                                /*試到最後,發現只能使用逐一刪除,
+                                    不確定是不是因為資料源自於 addRowData 的因素
+                                */
+                                var _jg = $('.LoadData');
+                                var arr = _jg.getDataIDs();
+                                arr.forEach(idx => {
+                                    _jg.delRowData(idx);
+                                });
+                                // $('.LoadData')
+                                //     .jqGrid('GridUnload');
+                                    //.jqGrid("clearGridData");
+                                    //.clearGridData(true);
+                                //.trigger("reloadGrid");
+
+                                //直接把整個 grid 清掉了
+                                //.GridUnload();
+                            }
+                        }
+                         
+                    }
+                };
+                return _obj;
+            },
+            std() {
+                var _obj = {
+                    _vue:{
+                        template: `
+                            <div>
+                            </div>
+                            `
+                    }
+                };
+                return _obj;
+            },
+        }
+
+
+        //** # Main
+        for (var k in views) {
+            var { _vue } = views[k]();
+            Vue.component(`x-${k}`, _vue);
+        }
+        let tabsList = Object.keys(views);
+
+        let tabs = {
+            data: {
+                tabsList,
+                "currentTab": tabsList[0],
+                "Code": ''
+            },
+            computed: {
+                currentTabComponent() {
+                    var _obj = views[this.currentTab];
+                    this.Code = _obj;
+                    var { _css } = _obj();
+                    if (_css != null) styled.injectGlobal`${_css}`;
+                    return `x-${this.currentTab}`;
+                }
+            },
+            methods: {
+                change() {
+                    this.views[this.currentTab].template = this.Code;
+                },
+                copy() {
+
+                },
+                copy_com() {
+
+                }
+            },
+            "el": "#app"
+        };
+        Vue.config.productionTip = false
+        new Vue(tabs);
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+.flex,
+.flex dt,
+.flex dd {
+  width: 100%;
+  display: block;
+  padding: 0px;
+  margin: 0px;
+}
+
+.flex.f-col {
+  flex-flow: column;
+}
+
+.flex.f-row {
+  flex-flow: row;
+}
+
+dl.flex {
+  display: flex;
+}
+
+.flex dt {
+  flex: 0;
+}
+
+.flex dd {
+  flex: 1;
+}
+
+textarea {
+  width: 100%;
+  height: 15em;
+}
+
+pre {
+  width: 100%;
+  height: 100%;
+  background: yellow;
+  margin-top: 0.5em;
+  overflow-y: auto;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0.3em;
+}
+
+li {
+  min-width: 5em;
+  line-height: 1.3em;
+  white-space: nowrap;
+}
+
+li.over-fun:hover {
+  color: blue;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+li.active {
+  background-color: #20ffa6;
+}
+.itme-main {
+  background-color: lightblue;
+  padding: 3px;
+}

@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
+    <style>
+        .flex, .flex dt, .flex dd {
+            width: 100%;
+            display: block;
+            padding: 0px;
+            margin: 0px;
+        }
+
+            .flex.f-col {
+                flex-flow: column;
+            }
+
+            .flex.f-row {
+                flex-flow: row;
+            }
+
+        dl.flex {
+            display: flex;
+        }
+
+        .flex dt {
+            flex: 0;
+        }
+
+        .flex dd {
+            flex: 1;
+        }
+
+        textarea {
+            width: 100%;
+            height: 15em;
+        }
+
+        pre {
+            width: 100%;
+            height: 100%;
+            background: yellow;
+            margin-top: .5em;
+            overflow-y: auto;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: .3em;
+        }
+
+        li {
+            min-width: 5em;
+            line-height: 1.3em;
+            white-space: nowrap;
+        }
+
+            li:hover {
+                color: blue;
+                font-weight: 400;
+                cursor: pointer;
+            }
+    </style>
+</head>
+<body class="CSBody">
+    <div id="App">
+        <dl class="flex f-row">
+            <dt>
+                <ul>
+                    <li v-for="(item,key) in list"><a @click="exec(key)"> {{key}}</a></li>
+                </ul>
+            </dt>
+            <dd style="height:95vh ;">
+                <dl class="flex f-col">
+                    <dt>
+                        <input type="button" value="Action" @click="act" />
+                        <textarea v-model="code"> </textarea>
+                    </dt>
+                    <dd>
+                        <pre>{{result}}</pre>
+                    </dd>
+                </dl>
+            </dd>
+
+        </dl>
+
+    </div>
+
+    <script>
+        var test = {
+            '取yyyyMMdd日期語法'() {
+                return new Date().toISOString().substring(0, 10).replace(/-/g, "");
+            },
+            '整數往前補零'() {
+                return (1).toString().padStart(3, '0');
+            },
+            'array 操作'() {
+                var ar = ['zero', 'one', 'two', 'three'];
+                ar.shift(); // returns "zero"
+                console.log(ar); // ["one", "two", "three"]
+            },
+            '數字轉換'() {
+                let r = {
+                    '二進位': (10).toString(2),
+                    '16進位': (10).toString(16),
+                }
+                return r;
+            },
+            '物件複製'() {
+                var A = { a: 1, b: 2 };
+                var B = { A, c: 3 };
+                var C = Object.assign({}, B);
+                return JSON.stringify(C, null, 2);
+            },
+            'addEventListener'() {
+                /*
+                Ref:https://jsfiddle.net/Linusborg/39ues2rx/
+                未完成
+                <input type="text">
+                <button id="A">Test</button>
+                const btn = document.getElementById('A')
+                btn.addEventListener('mouseenter', evt => {alert('test')})
+                */
+
+            },
+            'resizable'() {
+                //https://jsfiddle.net/Linusborg/xzjfw8gm/
+            },
+            '處理逸脫字元'() {
+                /*
+                    https://codereview.stackexchange.com/questions/153691/escape-user-input-for-use-in-js-regex
+                    將  reg 字串, 轉換成 相應的 逸脫字元 表示式 (escaped)
+
+                */
+
+                var fn = {
+                    pattern: RegExp("[" + "{}[]-/\\()*+?.%$|".replace(RegExp(".", "g"), "\\$&") + "]", "g")
+                    , sanitize_for_regex_v1(val) {
+                        return val.replace(fn.pattern, "\\$&");
+                    }
+
+                    , dispatch: {
+                        '{': true,
+                        '}': true,
+                        '[': true,
+                        ']': true,
+                        '-': true,
+                        '/': true,
+                        '\\': true,
+                        '(': true,
+                        ')': true,
+                        '*': true,
+                        '+': true,
+                        '?': true,
+                        '.': true,
+                        '^': true,
+                        '$': true,
+                        '|': true
+                    },
+                    sanitize_for_regex_v2(val) {
+                        var escaped = "";
+                        for (var i = 0; i !== val.length; ++i) {
+                            if (fn.dispatch[val[i]]) {
+                                escaped += "\\";
+                            }
+
+                            escaped += val[i];
+                        }
+                        return escaped;
+                    }
+                }
+
+                var v1 = fn.sanitize_for_regex_v1("\t");
+                var _reg_v1 = new RegExp(v1, 'gi');
+                alert('1\t2'.replace(_reg_v1, ','));
+
+                var v2 = fn.sanitize_for_regex_v2("\t");
+                var _reg_v2 = new RegExp(v2, 'gi');
+                alert('1\t2'.replace(_reg_v2, ','));
+
+            },
+            isEmptyObj() {
+                //_.isEmpty({});
+                //$.isEmptyObject(obj)
+                //Object.keys(obj).length === 0
+            }
+                t() {
+                /*
+                https://note.pcwu.net/2017/03/14/js-split-text/
+                */
+
+            },
+        }
+
+        new Vue({
+            el: "#App",
+            data() {
+                return {
+                    list: test,
+                    result: 'test',
+                    code: '',
+                }
+            },
+            methods: {
+                exec(key) {
+                    let _fn = this.list[key];
+                    var _reg = new RegExp(`(\'|\"|)${key}(\'|\"|)`);
+                    this.code = _fn.toString().replace(_reg, 'function');
+
+                    var _result = _fn();
+                    this.result
+                        = typeof (_result) == "string"
+                            ? _result
+                            : JSON.stringify(_result, undefined, 4)
+                        ;
+                },
+                act() {
+                    let x = eval(`(${this.code})()`);
+                    this.result = x;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

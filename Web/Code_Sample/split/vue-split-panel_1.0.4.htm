@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui@2.13.0/lib/index.js"></script>
+    <script src="https://unpkg.com/jss@9.8.7/dist/jss.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/element-ui@2.13.0/lib/index.js"></script>
+    <script src="../node_modules/vue-split-panel/dist/vue-split-panel.js"></script>
+    
+    <link href="../node_modules/vue-split-panel/dist/styles/vue-split-panel.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index.css">
+
+    <style>
+        .flex,
+        .flex dt,
+        .flex dd {
+            width: 100%;
+            display: block;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .flex.f-col {
+            flex-flow: column;
+        }
+
+        .flex.f-row {
+            flex-flow: row;
+        }
+
+        dl.flex {
+            display: flex;
+        }
+
+        .flex dt {
+            flex: 0;
+        }
+
+        .flex dd {
+            flex: 1;
+        }
+
+        textarea {
+            width: 100%;
+            height: 15em;
+        }
+
+        pre {
+            width: 100%;
+            height: 100%;
+            background: yellow;
+            margin-top: .5em;
+            overflow-y: auto;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: .3em;
+        }
+
+        li {
+            min-width: 5em;
+            line-height: 1.3em;
+            white-space: nowrap;
+        }
+
+        li:hover {
+            color: blue;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        li.active {
+            background-color: #20FFA6;
+        }
+
+        .d-show {
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body class="CSBody">
+    <pre>
+        https://www.npmjs.com/package/vue-split-panel
+        https://github.com/bajaniyarohit/vue-split-panel#readme
+        2018 左右就沒有再更新了
+        官方 demo 的效果不錯,只是 一直無法試出 script load 的方式,
+            只好放棄.
+
+    </pre>
+    <div id="app" class='components-container'>
+        <div style="border:1px solid #ccc">
+            <Split style="height: 500px;">
+                <SplitArea :size="33" :minSize="100">
+                    panel left
+                </SplitArea>
+                <SplitArea :size="33" :minSize="100">
+                    panel center
+                </SplitArea>
+                <SplitArea :size="33" :minSize="300">
+                    panel right
+                </SplitArea>
+            </Split>
+        </div>
+    </div>
+
+    <script >
+        $(() => {
+            // Vue.config.productionTip = false;
+            // // Vue.use(VueSplit);
+            // //let {Split,SplitArea} = window['vue-split-panel'];
+            
+            // let VueSplit = window['vue-split-panel'];
+            // //let {Split,SplitArea} = VueSplit;
+
+            // Vue.use(VueSplit);
+
+            //VueSplit.install(Vue);
+            //.use(VueSplit);
+
+            //Vue.component('split-pane', SplitPane);
+            //const { Splitpanes, Pane } = splitpanes;
+            let views = {
+                std() {
+                    var _obj = {
+                        _vue: {
+                            template: `
+                            <div>
+                            </div>
+                            `
+                        }
+                    };
+                    return _obj;
+                },
+            }
+
+
+            //** # Main
+            for (var k in views) {
+                var { _vue } = views[k]();
+                Vue.component(`x-${k}`, _vue);
+            }
+            let tabsList = Object.keys(views);
+
+            var Main = {
+                el: "#app",
+                data: {
+                    tabsList,
+                    "currentTab": tabsList[0],
+                    "Code": ''
+                },
+                //components: {Split:VueSplit.Split,SplitArea:VueSplit.SplitArea},
+                //components: {Split,SplitArea},
+                computed: {
+                    currentTabComponent() {
+                        var _obj = views[this.currentTab];
+                        this.Code = _obj;
+                        var { _css } = _obj();
+                        if (_css != null) styled.injectGlobal`${_css}`;
+                        return `x-${this.currentTab}`;
+                    }
+                },
+                
+                methods: {
+                    change() {
+                        this.views[this.currentTab].template = this.Code;
+                    },
+                    copy() {
+
+                    },
+                    copy_com() {
+
+                    }
+                }
+            };
+            new Vue(Main);
+        })
+
+    </script>
+</body>
+
+</html>
