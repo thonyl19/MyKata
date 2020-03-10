@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head runat="server">
     <title></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -9,85 +10,87 @@
     <script src="https://unpkg.com/vue-styled-components@1.4.9/dist/vue-styled-components.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
-    
+
     <style>
-	.flex, .flex dt, .flex dd {
-		width: 100%;
-		display: block;
-		padding: 0px;
-		margin: 0px;
-	}
+        .flex,
+        .flex dt,
+        .flex dd {
+            width: 100%;
+            display: block;
+            padding: 0px;
+            margin: 0px;
+        }
 
-	.flex.f-col {
-		flex-flow: column;
-	}
+        .flex.f-col {
+            flex-flow: column;
+        }
 
-	.flex.f-row {
-		flex-flow: row;
-	}
+        .flex.f-row {
+            flex-flow: row;
+        }
 
-	dl.flex {
-		display: flex;
-	}
+        dl.flex {
+            display: flex;
+        }
 
-	.flex dt {
-		flex: 0;
-	}
+        .flex dt {
+            flex: 0;
+        }
 
-	.flex dd {
-		flex: 1;
-	}
+        .flex dd {
+            flex: 1;
+        }
 
-	textarea {
-		width: 100%;
-		height: 15em;
-	}
+        textarea {
+            width: 100%;
+            height: 15em;
+        }
 
-	pre {
-		width: 100%;
-		height: 100%;
-		background: yellow;
-		margin-top: .5em;
-		overflow-y: auto;
-	}
+        pre {
+            width: 100%;
+            height: 100%;
+            background: yellow;
+            margin-top: .5em;
+            overflow-y: auto;
+        }
 
-	ul {
-		list-style-type: none;
-		margin: 0;
-		padding: .3em;
-	}
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: .3em;
+        }
 
-	li {
-		min-width: 5em;
-		line-height: 1.3em;
-		white-space: nowrap;
-	}
+        li {
+            min-width: 5em;
+            line-height: 1.3em;
+            white-space: nowrap;
+        }
 
-	li:hover {
-		color: blue;
-		font-weight: 400;
-		cursor: pointer;
-	}
+        li:hover {
+            color: blue;
+            font-weight: 400;
+            cursor: pointer;
+        }
 
-	li.active {
-		background-color: #20FFA6;
-	}
-    
-    .d-show{
-        margin: 5px;
-    }
+        li.active {
+            background-color: #20FFA6;
+        }
+
+        .d-show {
+            margin: 5px;
+        }
     </style>
 </head>
+
 <body class="CSBody">
     <div id="app">
         <dl class="flex f-row">
             <dt style="min-width:13em;">
                 <ul>
-                    <li v-for="(item) in tabsList"
-                        v-bind:key="item"
+                    <li v-for="(item) in tabsList" v-bind:key="item"
                         v-bind:class="['tab-button', { active: currentTab === item }]">
                         <a @click="currentTab =item"> {{item}}</a>
                     </li>
@@ -99,8 +102,7 @@
                         <input type="button" value="Copy" @click="copy" />
                         <input type="button" value="Copy Components" @click="copy_com" />
                         <textarea v-model="Code" @blur="change()"></textarea>
-                        <component v-bind:is="currentTabComponent" class="d-show"
-                                   :sets="currentTab"></component>
+                        <component v-bind:is="currentTabComponent" class="d-show" :sets="currentTab"></component>
 
                     </dt>
                     <dd>
@@ -307,51 +309,67 @@
       </div>
 `
                 };
-                return { _vue,_css };
+                return { _vue, _css };
             },
             panel_label() {
-                var _css = `
-                .panel-heading-1{
-                    margin:0px;
-                    padding:3px 10px 0 15px;
-                    border       : 1px solid #ccc;
-                    border-radius: 3em 1em 0 0 ;
-                    border-bottom:0px !important;
-                    background:linear-gradient(130deg, transparent 30% , #557777 50%);
-                }
-                .panel-heading-2{
-                    margin:0px;
-                    padding:3px 10px 0 15px;
-                    border       : 1px solid #ccc;
-                    border-radius: 3em 1em 0 0 ;
-                    border-bottom:0px !important;
-                    background:linear-gradient(top,white,#0099FF);
-                    background:-moz-linear-gradient(top,white,#0099FF);
-                    background:-webkit-linear-gradient(top,white,#0099FF);
-                }
-                `
-
-                var _vue = {
-                    template: `
-                    <div>
-                        <label class="panel-heading">Head</label>
-                        <div class="panel panel-default">
-                            Panel content
-                        </div>
-                        <input type=radio v-for="(idx) in list" 
-                            v-model.number="idx" 
-                            value="idx" 
-                            text="idx" />
+                
+                var _obj = {
+                    _css: `
+                        .panel-heading-1{
+                            margin:0px;
+                            padding:3px 10px 0 15px;
+                            border       : 1px solid #ccc;
+                            border-radius: 3em 1em 0 0 ;
+                            border-bottom:0px !important;
+                            background:linear-gradient(130deg, transparent 30% , #557777 50%);
+                        }
+                        .panel-heading-2{
+                            margin:0px;
+                            padding:3px 10px 0 15px;
+                            border       : 1px solid #ccc;
+                            border-radius: 3em 1em 0 0 ;
+                            border-bottom:0px !important;
+                            background:linear-gradient(top,white,#0099FF);
+                            background:-moz-linear-gradient(top,white,#0099FF);
+                            background:-webkit-linear-gradient(top,white,#0099FF);
+                        }
+                        `,
+                    _vue: {
+                        template: `
+                <div>{{sel}}
+                    <ul>
+                        <li v-for="(idx) in list">
+                        <input type=radio v-model.number="sel" :value="idx" />
+                        {{idx}}</li>
+                    </ul>
+                    <label class="panel-heading">Head</label>
+                    <div class="panel panel-default" v-bind:class="[sel == 1 ? 'panel-heading-1' : 'panel-heading-2']" >
+                        Panel content
                     </div>
-                    `,
-                    data(){
-                        return {
-                            idx:1,
-                            list:[1,2]
+                    <div class="panel panel-default" v-bind:class="['panel-heading-'+sel]" >
+                        Panel content
+                    </div>
+                    
+                </div>
+                `,
+                        data() {
+                            return {
+                                sel: 1,
+                                list: [1, 2]
+                            }
                         }
                     }
+                }
+                return _obj;
+            },
+            std1() {
+                var _vue = {
+                    template: `
+<div>
+</div>
+`
                 };
-                return { _vue ,_css };
+                return { _vue };
             },
             std() {
                 var _vue = {
@@ -375,7 +393,7 @@
         let tabs = {
             data: {
                 tabsList,
-                "currentTab": 'panel_label',// tabsList[0],
+                "currentTab": tabsList[3],
                 "Code": ''
             },
             computed: {
@@ -406,4 +424,5 @@
 
     </script>
 </body>
+
 </html>
