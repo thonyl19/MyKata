@@ -385,7 +385,97 @@
     };
     return _obj;
   },
+  'scroll'() {
+    var _obj = {
+      _css:`
+        :root {
+          --webkit_scrollbar:7px;
+          --webkit_scrollbar-button:0px;
+        }
+        .sty-scroll {
+          margin-bottom: .35em;
+          overflow-y: auto;
+          width:60rem;
+          height:10rem;
+        }
+        .sty-scroll.hover:hover{
+          overflow-x: scroll !important;
+          overflow-y: scroll !important;
+        }
+        .sty-scroll.hover{
+          overflow-x: hidden !important;
+          overflow-y: hidden !important;
+        }
 
+        .sty-scroll::-webkit-scrollbar-track {
+          border-radius: 10px;
+          background: rgba(0,0,0,0.1);
+          border: 1px solid #62C905;
+        }
+        
+        .sty-scroll::-webkit-scrollbar-thumb {
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+          border-radius: 10px;
+          background-color: #F5F5F5;
+        }
+        
+        .sty-scroll::-webkit-scrollbar-thumb:hover {
+          background: #fff;
+        }
+        
+        .sty-scroll::-webkit-scrollbar-thumb:active {
+          background: linear-gradient(left, #22ADD4, #1E98BA);
+        }
+
+        .sty-scroll::-webkit-scrollbar {
+          width: var(--webkit_scrollbar); 
+          height:var(--webkit_scrollbar); 
+          background-color: #62C905;
+        }
+
+        .sty-scroll::-webkit-scrollbar-button {
+          width: var(--webkit_scrollbar_button); 
+          height:var(--webkit_scrollbar_button); 
+          background-color: #62C905;
+        }
+      `,
+      _vue: {
+        template: `
+          <div >
+            <input type="checkbox" v-model="AutoHide" @click="AutoHide=!AutoHide" />[AutoHide]{{AutoHide}} <br/>
+            <input type="range" v-model.num="webkit_scrollbar" min=3 max=20   />滑軌主體size[webkit-scrollbar]{{webkit_scrollbar}} <br/>
+            <input type="range" v-model.num="webkit_scrollbar_button" min=0 max=30   />滑軌內部兩端保留空間size[webkit_scrollbar_button]{{webkit_scrollbar_button}} <br/>
+            
+            <div class="sty-scroll" :class="[AutoHide?'hover':'']">
+              <iframe src="vue.htm" scrolling="no" style="width:150%;height:150%;"></iframe>
+            </div>
+          </div>`,
+          data(){
+            return {
+              AutoHide : false,
+              webkit_scrollbar:7,
+              webkit_scrollbar_button:0,
+            }
+          },
+          methods:{
+            setProp(key,val){
+              document.documentElement.style.setProperty(key,val);
+            }
+          },
+          watch:{
+            webkit_scrollbar(){
+              this.setProp('--webkit_scrollbar', this.webkit_scrollbar + 'px');
+            },
+            webkit_scrollbar_button(){
+              this.setProp('--webkit_scrollbar_button', this.webkit_scrollbar_button + 'px');
+            }
+
+          }
+
+      }
+    };
+    return _obj;
+  },
   std() {
     var _obj = {
       _vue: {
