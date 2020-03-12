@@ -111,16 +111,7 @@
     };
     return { _vue };
   },
-  scrollBar() {
-    var _vue = {
-      template: `
-                    <pre>
-                    http://webkit-scroll-gen.sourceforge.net/
-                    https://codepen.io/GhostRider/pen/GHaFw
-                    </pre>`
-    };
-    return { _vue };
-  },
+
   "text-shadow"() {
     /* 用例說明
             1.主要是動態呈現  text-shadow 的效果.
@@ -385,13 +376,29 @@
     };
     return _obj;
   },
-  'scroll'() {
+  
+  scroll() {
+    /*
+    [Ref]
+      http://webkit-scroll-gen.sourceforge.net/
+      https://codepen.io/GhostRider/pen/GHaFw
+     */
+
     var _obj = {
       _css:`
         :root {
           --webkit_scrollbar:7px;
-          --webkit_scrollbar-button:0px;
+          --webkit_scrollbar-button:3px;
         }
+        @keyframes oxxo{
+          0%{
+          }
+          100%{
+              overflow-x: hidden !important;
+              overflow-y: hidden !important;
+          }
+      }
+
         .sty-scroll {
           margin-bottom: .35em;
           overflow-y: auto;
@@ -403,12 +410,17 @@
           overflow-y: scroll !important;
         }
         .sty-scroll.hover{
+          -webkit-animation: oxxo 3s ease 1 normal;
+          -moz-animation: oxxo 3s ease 1 normal;
+            -o-animation: oxxo 3s ease 1 normal;
+               animation: oxxo 3s ease 1 normal;
           overflow-x: hidden !important;
           overflow-y: hidden !important;
-        }.sty-scroll::-webkit-scrollbar-track {
+        }
+        .sty-scroll::-webkit-scrollbar-track {
           border-radius: 10px;
           background: rgba(0,0,0,0.1);
-          border: 1px solid #62C905;
+          //border: 1px solid #62C905;
         }
         
         .sty-scroll::-webkit-scrollbar-thumb {
@@ -428,13 +440,13 @@
         .sty-scroll::-webkit-scrollbar {
           width: var(--webkit_scrollbar); 
           height:var(--webkit_scrollbar); 
-          background-color: #62C905;
+          background: rgba(0,0,0,0);
         }
 
         .sty-scroll::-webkit-scrollbar-button {
           width: var(--webkit_scrollbar_button); 
           height:var(--webkit_scrollbar_button); 
-          background-color: #62C905;
+          background: rgba(0,0,0,0);
         }
       `,
       _vue: {
@@ -452,7 +464,12 @@
             return {
               AutoHide : false,
               webkit_scrollbar:7,
-              webkit_scrollbar_button:0,
+              webkit_scrollbar_button:3,
+              form:{
+                webkit_scrollbar_track:{
+                  radius:10
+                }
+              }
             }
           },
           methods:{
@@ -575,4 +592,4 @@
   }
 };
 
-window.sample = { views };
+window.sample = { views ,def:'scroll' };
