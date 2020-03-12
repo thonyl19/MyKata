@@ -385,7 +385,94 @@
     };
     return _obj;
   },
+  'margin 的問題'() {
+    /*
+    [Ref]
+      https://css-tricks.com/box-sizing/
 
+    使用 magin 需要注意, 在 width:100% 的情形下,無論 box-sizing 是那一種模式,
+       margin 跟 width:100 會有衝突造成跑版的情形, 基本上 ,
+       如果是要滿邊且內縮的需求, 單獨使用 margin 即可. 
+       但高度的部份 就需要再找解法了,
+    
+    */
+    var _obj = {
+      _css:`
+      .sty-div{
+        margin:.5em;
+        height:100%;
+      }
+      .border-box{
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing:border-box;
+      }
+      .content-box{
+        -webkit-box-sizing:content-box;
+        -moz-box-sizing: content-box;
+        box-sizing:content-box;
+      }
+      .width100{
+        width:100%;
+      }
+      `,
+      _vue: {
+        template: `
+          <div>
+            <button @click="mode = mode=='border-box'?'content-box':'border-box'">{{mode}}</button>
+            <div style="width:10em;height:10em" class="area-mk" :class=[mode]>
+              <div class="sty-div area-mk" :class="[width100?'width100':'',mode]" @click="width100=!width100">[isWidth100]{{width100}}</div>
+            </div>
+          </div>
+          `
+        ,data(){
+          return {
+              mode:'border-box',
+              width100:true
+          }
+        }
+      }
+    };
+    return _obj;
+  },
+  iframe() {
+    var _obj = {
+      _css:`
+      .sty-iframe{
+        margin:.5em;
+        height:100%;
+      }
+      `,
+      _vue: {
+        template: `
+            <x-tpl-sample-range>
+              <div class="sty-iframe area-mk"></div>
+            </x-tpl-sample-range>
+          `
+        ,data(){
+          return {
+            width:10,
+            height:10
+          }
+        }
+      }
+    };
+    return _obj;
+  },
+  'PageFoot'() {
+    /*
+    [Ref]
+      https://hongkiat.github.io/on-scroll-footer/
+    */
+    var _obj = {
+      _vue: {
+        template: `
+                    <div>
+                    </div>`
+      }
+    };
+    return _obj;
+  },
   std() {
     var _obj = {
       _vue: {

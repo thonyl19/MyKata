@@ -10,9 +10,9 @@
         factory(root.jQuery);
     }
 }(this, function ($) {
-    $(()=>{
+    $(() => {
         window.tmpData = {
-            "mydata":[
+            "mydata": [
                 { "id": "1", "invdate": "2007-10-01", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
                 { "id": "2", "invdate": "2007-10-02", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
                 { "id": "3", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
@@ -22,14 +22,32 @@
                 { "id": "7", "invdate": "2007-10-04", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
                 { "id": "8", "invdate": "2007-10-03", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
                 { "id": "9", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" }
-         ]
+            ]
         }
-        
-        let {sample} = window;
-        if (sample){
+
+        let { sample } = window;
+        if (sample) {
             var tpl_sample = {
-                left:{
-                    template :`
+                range: {
+                    template: `
+                      <div>
+                        <div>[width]{{i_width}}vw<input type="range" min="10" max="100" v-model.num="i_width" class="slider" id="myRange"></div>
+                        <div>[height]{{i_height}}vh<input type="range" min="10" max="100" v-model.num="i_height" class="slider" id="myRange"></div>
+                        <div class="area-mk" :style="{ height: i_height+'vh',width:i_width+'vw' }">
+                            <slot>
+                                <a>default</a>
+                            </slot></li>
+                        </div>
+                      </div>`
+                    , data() {
+                        return {
+                            i_width: 10,
+                            i_height: 10
+                        }
+                    }
+                },
+                left: {
+                    template: `
                     <ul>
                         <li v-for="(grp,main_key) in sample"><a class="itme-main">{{main_key}}</a>
                             <ul>
@@ -40,21 +58,21 @@
                         </li>
                     </ul>
                     `,
-                    props:{
-                        sample:Object,
-                        action:[Object,Function,String]
+                    props: {
+                        sample: Object,
+                        action: [Object, Function, String]
                     },
-                    methods:{
-                        act(obj){
+                    methods: {
+                        act(obj) {
                             this.$emit('update:action', obj)
                         }
                     }
                 },
-                test:{
-                    template:`<div>test</div>`
+                test: {
+                    template: `<div>test</div>`
                 },
-                main:{
-                    template:`
+                main: {
+                    template: `
                     <dl class="flex f-row">
                         <dt>
                             <x-tpl-sample-left :sample="sample" :action.sync="currentTab"></x-tpl-sample-left>
@@ -70,56 +88,55 @@
                         </dd>
                     </dl>
                     `,
-                    data(){
+                    data() {
                         return {
                             sample,
                             currentTab: 'tpl-sample-test',
                             Code: ''
-                            
+
                         }
                     },
-                   
+
                     computed: {
                         currentComponent() {
-                            var isString = typeof(this.currentTab) == "string";
-                            if (isString){
+                            var isString = typeof (this.currentTab) == "string";
+                            if (isString) {
                                 var _obj = views[this.currentTab];
                                 this.Code = _obj;
                                 return `x-${this.currentTab}`;
                             }
                             this.Code = this.currentTab;
-                            var {_vue,_css} = this.currentTab();
-                            if (_css !=null) styled.injectGlobal`${_css}`;
+                            var { _vue, _css } = this.currentTab();
+                            if (_css != null) styled.injectGlobal`${_css}`;
                             return _vue;
                         }
                     },
                     methods: {
                         change() {
-                            if (this.Code == null) return ;
-                            var _code =  this.Code.toString();
-                            _code = _code.replace(/\bfunction /gi,"");
-                            eval('var _fn = function '+ _code);
+                            if (this.Code == null) return;
+                            var _code = this.Code.toString();
+                            _code = _code.replace(/\bfunction /gi, "");
+                            eval('var _fn = function ' + _code);
                             this.currentTab = _fn;
                         },
                         copy() {
-        
+
                         },
                         copy_com() {
-        
+
                         }
                     },
                 }
             }
-            
+
             for (var name in tpl_sample) {
                 Vue.component(`x-tpl-sample-${name}`, tpl_sample[name]);
             }
             var main = Vue.extend(tpl_sample.main);
             new main().$mount('#app');
-        }else
-        {
+        } else {
             alert('找不到 sample object!')
         }
     })
 }));
- 
+
