@@ -49,7 +49,8 @@
                 left: {
                     template: `
                     <ul>
-                        <li v-for="(grp,main_key) in sample"><a class="itme-main">{{main_key}}</a>
+                        <li v-for="(grp,main_key) in _sample" >
+                            <a class="itme-main">{{main_key}}</a>
                             <ul>
                                 <li v-for="(item,item_key) in grp" class="over-fun">
                                     <a @click="act(item)"> {{item_key}}</a>
@@ -61,6 +62,27 @@
                     props: {
                         sample: Object,
                         action: [Object, Function, String]
+                    },
+                    computed:{
+                        _sample(){
+                            debugger;
+                            var _self = this;
+                            var _r = {};
+                            let {def=''} = _self.sample;
+                            for (var item in _self.sample){
+                                switch(item){
+                                    case 'def':
+                                        break;
+                                    default:
+                                        var grp = _self.sample[item];
+                                        var _fn = grp[def];
+                                        if (_fn != null) _self.act(_fn);
+                                        _r[item] = grp;
+                                        break;
+                                }
+                            }
+                            return _r;
+                        }
                     },
                     methods: {
                         act(obj) {
@@ -99,6 +121,7 @@
 
                     computed: {
                         currentComponent() {
+                            debugger
                             var isString = typeof (this.currentTab) == "string";
                             if (isString) {
                                 var _obj = views[this.currentTab];
