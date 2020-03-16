@@ -124,8 +124,6 @@
                             debugger
                             var isString = typeof (this.currentTab) == "string";
                             if (isString) {
-                                var _obj = views[this.currentTab];
-                                this.Code = _obj;
                                 return `x-${this.currentTab}`;
                             }
                             this.Code = this.currentTab;
