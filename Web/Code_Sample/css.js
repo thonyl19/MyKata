@@ -380,8 +380,11 @@
   scroll() {
     /*
     [Ref]
+      https://css-tricks.com/custom-scrollbars-in-webkit/
+      https://github.com/inuyaksa/jquery.nicescroll
       http://webkit-scroll-gen.sourceforge.net/
       https://codepen.io/GhostRider/pen/GHaFw
+      https://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
      */
 
     var _obj = {
@@ -405,17 +408,33 @@
           width:60rem;
           height:10rem;
         }
+
+        .sty-scroll.hover:hover {
+          overflow-x: auto !important;
+          overflow-y: auto !important;
+          padding-right: var(--webkit_scrollbar) !important;
+      }
+
+        //限制只有 y 軸會顯示
+        .sty-scroll.hover.hover-y:hover {
+          overflow-x: hidden !important;
+          padding-right: calc(var(--webkit_scrollbar)*2) !important;
+      }
+
         .sty-scroll.hover:hover{
           overflow-x: scroll !important;
           overflow-y: scroll !important;
         }
+
         .sty-scroll.hover{
+          //保留 scrollbar 空間,避免 UI 閃動
           -webkit-animation: oxxo 3s ease 1 normal;
           -moz-animation: oxxo 3s ease 1 normal;
-            -o-animation: oxxo 3s ease 1 normal;
-               animation: oxxo 3s ease 1 normal;
-          overflow-x: hidden !important;
-          overflow-y: hidden !important;
+          -o-animation: oxxo 3s ease 1 normal;
+          animation: oxxo 3s ease 1 normal;
+          overflow-x: hidden;
+          overflow-y: hidden;
+          padding-right: calc(var(--webkit_scrollbar)*2) !important;
         }
         .sty-scroll::-webkit-scrollbar-track {
           border-radius: 10px;
@@ -452,17 +471,19 @@
       _vue: {
         template: `
           <div >
-            <input type="checkbox" v-model="AutoHide" @click="AutoHide=!AutoHide" />[AutoHide]{{AutoHide}} <br/>
+            <input type="checkbox" v-model="hover" @click="hover=!hover" />[hover]{{hover}} <br/>
+            <input type="checkbox" v-model="hover_y" @click="hover_y=!hover_y" />[hover-y]{{hover_y}} <br/>
             <input type="range" v-model.num="webkit_scrollbar" min=3 max=20   />滑軌主體size[webkit-scrollbar]{{webkit_scrollbar}} <br/>
             <input type="range" v-model.num="webkit_scrollbar_button" min=0 max=30   />滑軌內部兩端保留空間size[webkit_scrollbar_button]{{webkit_scrollbar_button}} <br/>
             
-            <div class="sty-scroll" :class="[AutoHide?'hover':'']">
+            <div class="sty-scroll" :class="[hover?'hover':'',hover_y?'hover-y':'']">
               <iframe src="vue.htm" scrolling="no" style="width:150%;height:150%;"></iframe>
             </div>
           </div>`,
           data(){
             return {
-              AutoHide : false,
+              hover : false,
+              hover_y : false,
               webkit_scrollbar:7,
               webkit_scrollbar_button:3,
               form:{
@@ -543,6 +564,9 @@
     return _obj;
   },
   iframe() {
+    /*
+    https://ddstudio.tw/pure-css-responsive-iframe/
+    */
     var _obj = {
       _css:`
       .sty-iframe{

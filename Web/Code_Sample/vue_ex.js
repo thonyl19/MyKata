@@ -1,4 +1,10 @@
-﻿let API = {
+﻿/*
+[Note]
+    https://github.com/guahsu/Vue-TurnTable/
+
+*/
+
+let API = {
     'v-html'() {
         /*
         1. v-html 試例
