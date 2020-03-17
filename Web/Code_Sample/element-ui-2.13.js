@@ -1,4 +1,4 @@
-﻿let views = {
+﻿let Views = {
   "自定義 el-select 項目圖示"() {
     var _css = `
             img {
@@ -104,12 +104,102 @@
     return _obj;
   },
   std() {
-    var _obj = {
+    var _vue = {
       template: `
                 <div>
                 </div>`
     };
-    return _obj;
-  }
+    return {_vue};
+  },
 };
-window.sample = {views};
+let Case = {
+  'bts.form-control'() {
+    /*
+    在套用 form-control 之後 , element UI 的樣式會出現跑版的問題,
+      目前仍找不到比較好的解決方案
+    */
+    var _vue = {
+      template: `
+                <div>
+                <div><input type="checkbox" v-model="isUse" />套用 form-control</div>
+                <el-select :class="[isUse?'form-control':'']"  v-model="sel">
+                  <el-option v-for="item in list_box_type"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+            </el-select>
+                </div>`,
+                data(){
+                  return {
+                    isUse:true,
+                    sel:0,
+                    list_box_type: [
+                      {
+                          value: 0,
+                          label: 'ZGB'
+                      }, {
+                          value: 1,
+                          label: 'Lens'
+                      }, {
+                          value: 2,
+                          label: 'T-Spacer'
+                      }
+                  ],
+                  }
+                }
+    };
+    return {_vue};
+  },
+  'el-checkbox Tab控制'(){
+      /*
+      情境需求:
+      1.基本的輸入,是以 [備註記錄],[位置碼] 為主
+      2.因為[備註記錄] 大多都重覆,為了增加建檔效率,所以,設 Keep 功能,
+        讓[備註記錄] 可以保留,直接輸入下筆[位置碼]
+      3.總合 1,2 的需求,輸入操作的控制為以下模式
+      A:第一次輸入
+        tab依序為[備註記錄][Keep][位置碼]
+
+      需求變更,此段己不必要,先保留
+      */
+      var _vue = {
+        template: `
+          <div>
+            <el-input ref="errCode" placeholder="请输入内容" size="mini" style="width:50rem;" tabindex="1">
+              <template slot="prepend">
+                  備註記錄
+              </template>
+              <template slot="append">
+                  <el-checkbox v-model="isKeep" @@click="isKeep=!isKeep"> Keep</el-checkbox>
+              </template>
+            </el-input>
+      
+            <el-input placeholder="请输入内容" size="mini" @@keyup.enter.native="mapCode_input($event)" v-model="mapCode" style="width:30rem;" tabindex="3">
+                <template slot="prepend">
+                    位置碼
+                </template>
+            </el-input>
+        </div>`,
+        data(){
+          return {
+            isKeep: false,
+            mapCode: "",
+            errCode: "",
+            
+          }
+        },
+        methods: {
+          isKeepErrCode(isErrCodeFocus) {
+              if (this.isKeep == false) {
+                  this.errCode = ""
+                  if (isErrCodeFocus) this.$refs.errCode.focus();
+              };
+          },
+        },
+      };
+      return {_vue};
+  }
+
+};
+window.sample = {Views,Case};
