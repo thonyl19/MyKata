@@ -1,4 +1,4 @@
-﻿let views = {
+﻿let Views = {
   Form1() {
     var _vue = {
       template: `
@@ -258,14 +258,174 @@
     };
     return { _vue };
   },
-  std() {
-    var _vue = {
-      template: `
-        <div>
-        </div>
-        `
-    };
-    return { _vue };
-  }
+  std1() {
+      var _obj = {
+         _vue:{
+            template: `
+            <div>
+            </div>
+            `
+         }};
+      return _obj;
+   }
 };
-window.sample = { views };
+let Group = {
+   Case1() {
+      var _obj = {
+         _css:`
+            .switch .form-control {
+               padding-top: 7px;
+               margin-bottom: 0;
+            }
+
+            .switch * {
+               cursor: pointer;
+            }
+
+            .switch input {
+               opacity: 0;
+               position: absolute;
+               z-index: -1;
+            }
+
+            .switch span {
+               position: relative;
+               display: inline-block;
+               width: 40px;
+               height: 20px;
+               background-color: #fff;
+               border: 1px solid #ddd;
+               border-radius: 100px;
+               transition: all .5s;
+               box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1) inset;
+               vertical-align: middle;
+            }
+
+               .switch span:after {
+                  content: "";
+                  position: absolute;
+                  background-color: #fff;
+                  top: 0;
+                  left: 0;
+                  height: 18px;
+                  width: 18px;
+                  border: 1px solid #ddd;
+                  border-radius: 400px;
+                  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+                  -webkit-transition: all .2s;
+               }
+
+            .switch.switch-lg span {
+               width: 50px;
+               height: 25px;
+            }
+
+               .switch.switch-lg span:after {
+                  height: 23px;
+                  width: 23px;
+               }
+
+            .switch.switch-sm span {
+               width: 30px;
+               height: 15px;
+            }
+
+               .switch.switch-sm span:after {
+                  height: 13px;
+                  width: 13px;
+               }
+
+            .switch input:checked + span {
+               background-color: #5d9cec;
+               border-color: #5d9cec;
+               transition: all .5s;
+            }
+
+               .switch input:checked + span:after {
+                  left: 50%;
+                  transition: all .2s;
+               }
+
+            .switch input:disabled + span {
+               background-color: #f1f1f1;
+               cursor: not-allowed;
+            }
+
+         `,
+         _vue:{
+            template: `
+            <div >
+                <div class="input-group" style="width:30em;">
+                  <span class="input-group-addon">@</span>
+                  <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
+                  <span class="input-group-btn">
+                     <button class="btn btn-default" type="button">Go!</button>
+                     <span class="btn btn-default">
+                        <i class="fa fa-flag"></i>
+                     </span>
+                     <span class="btn btn-default">
+                        <span class="switch" title="啟用/停用">
+                           <input type="checkbox" checked="checked" />
+                           <span></span>
+                        </span>
+                     </span>
+                  </span>
+               </div>
+            </div>
+            `
+         }};
+      return _obj;
+   },
+   '官方範例'(){
+      var _obj = {
+         _vue:{
+            template: `
+            <div>
+            <form class="form-inline">
+  <div class="form-group has-success has-feedback">
+    <label class="control-label" for="inputSuccess4">Input with success</label>
+    <input type="text" class="form-control" id="inputSuccess4" aria-describedby="inputSuccess4Status">
+    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+    <span id="inputSuccess4Status" class="sr-only">(success)</span>
+  </div>
+</form>
+<form class="form-inline">
+<div class="form-group has-success has-feedback">
+  <label class="control-label" for="inputGroupSuccess3">Input group with success</label>
+  <div class="input-group">
+    <span class="input-group-addon">@</span>
+    <input type="text" class="form-control" id="inputGroupSuccess3" aria-describedby="inputGroupSuccess3Status">
+  </div>
+  <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+  <span id="inputGroupSuccess3Status" class="sr-only">(success)</span>
+</div>
+</form>
+<div class="input-group">
+  <span class="input-group-addon" id="basic-addon1">@</span>
+  <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+</div>
+
+<div class="input-group">
+  <input type="text" class="form-control" placeholder="Recipient's username" aria-describedby="basic-addon2">
+  <span class="input-group-addon" id="basic-addon2">@example.com</span>
+</div>
+
+<div class="input-group">
+  <span class="input-group-addon">$</span>
+  <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+  <span class="input-group-addon">.00</span>
+</div>
+
+<label for="basic-url">Your vanity URL</label>
+<div class="input-group">
+  <span class="input-group-addon" id="basic-addon3">https://example.com/users/</span>
+  <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+</div>
+            </div>
+            `
+         }};
+      return _obj;
+   },
+
+};
+window.sample = { views: Views ,Group,def:'Case1' };
