@@ -834,4 +834,4 @@ var rxjs = {
 
 }
 
-window.sample = { API,views , rxjs}
+window.sample = { API,views: Views , rxjs}
