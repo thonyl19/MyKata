@@ -426,6 +426,27 @@ let Group = {
          }};
       return _obj;
    },
-
 };
-window.sample = { views: Views ,Group,def:'Case1' };
+let Fail = {
+   'input-group'() {
+       var _obj = {
+          _vue:{
+             template: `
+             <div>
+               <pre>原本主要目的,是要 使用 input-group 將控件形成 group,
+               但指定 label 寛度時,就會出現破版的問題</pre>
+               <span width="200px" class="area-mk">
+                  <div class="form-group input-group">
+                        <label class="input-group-addon col-sm-4">label</label>
+                        <div class="col-sm-8">
+                           <input class="form-control"   required="required" type="text" readonly="readonly">
+                        </div>
+                  </div>
+               </span>
+             </div>
+             `
+          }};
+       return _obj;
+    },
+}
+window.sample = { views: Views,Group ,Fail ,def:'input-group' };
