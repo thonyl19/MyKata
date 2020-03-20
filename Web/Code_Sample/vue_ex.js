@@ -28,7 +28,7 @@ let API = {
     },
 
 }
-var views = {
+var Views = {
 
     destroyed() {
         var _vue = {
@@ -88,7 +88,7 @@ var views = {
             "template": "<h1>{{message}}</h1>",
             "props": ["message"]
         }
-        Vue.component('ex_compoment', ex_compoment);
+        //Vue.component('ex_compoment', ex_compoment);
         var _vue = {
             template: `
         <div>
@@ -97,6 +97,7 @@ var views = {
             <ex_compoment message="Case2"></ex_compoment>
         </div>
         `,
+            components:{ex_compoment},
             data(){
                 return {
                     Case2:"Case2"
@@ -105,7 +106,47 @@ var views = {
         }
         return { _vue };
     },
-
+    'props fun應用'() {
+        var ex_compoment = {
+            "template": `
+            <div>{{fun1==false?'不傳值,預設不顯示.':fun1}}
+                <button v-if="fun1!=false" @click="fun1">觸發事件</button>
+                <button :disabled="fun1==false"  @click="fun1">觸發事件</button>
+            </div>`,
+            "props":{
+               fun1:{
+                   type:[Boolean,Function],
+                    default:false
+               } 
+            }
+        }
+ 
+        var _obj = {
+           _vue:{
+              template: `
+              <div>
+                <pre>利用prop 多型的機制
+                1.fun1 預設false ,當不賦值時,可控制 button 自動不顯示或 disabled
+                2.當有傳入 fun() 時,則會顯示 button 並將之綁上 click 事件.
+                </pre>
+                <ex_compoment ></ex_compoment>
+                <ex_compoment :fun1="act"></ex_compoment>
+            </div>
+              `,
+              components:{ex_compoment},
+              data(){
+                  return {
+                      Case2:"Case2"
+                  }
+              },
+              methods:{
+                  act(){
+                      alert('test');
+                  }
+              }
+           }};
+        return _obj;
+     },
 
     vuex範例() {
         const store = new Vuex.Store({
@@ -833,5 +874,53 @@ var rxjs = {
     },
 
 }
+var Fail = {
+    'prop 異常現象'() {
+        var ex_compoment = {
+            "template": `
+            <div>[AddVer]{{AddVer}} <br />
+            [fun_Add]{{fun_Add}}
+            </div>`,
+            "props":{
+               AddVer:{
+                   type:[Boolean,Function],
+                    default:false
+               },
+               fun_Add:{
+                    type:[Boolean,Function],
+                    default:false
+                }
+            }
+        }
+ 
+        var _obj = {
+           _vue:{
+              template: `
+              <div>
+                <pre> [props fun應用] 的機制在專案應用時,碰到這樣詭異的問題
+                1.如範例 同樣都是綁上 act() 的程序,但顯示時,AddVer 始終顯示 false
+                2.但改成 fun_Add ,就可以正確的傳入 function
+                3.奇怪的是,個案搬到這裡測試時,是可以正常運作的 .....
+                </pre>
+                <ex_compoment :AddVer="act" :fun_Add="act"></ex_compoment>
+                
+            </div>
+              `,
+              components:{ex_compoment},
+              data(){
+                  return {
+                      Case2:"Case2"
+                  }
+              },
+              methods:{
+                  act(){
+                      alert('test');
+                  }
+              }
+           }};
+        return _obj;
+     },
 
-window.sample = { API,views: Views , rxjs}
+}
+
+window.sample = { API, Views , rxjs,Fail ,def:'std1'}
