@@ -2,3 +2,4 @@ CSharp/bin/Debug/**/*
 CSharp/obj/**/*
 CSharp/.vs/CSharp/**/*
 CSharp/.vs/vs2019/**/*
+CSharp/scriptcs_bin/**/*
