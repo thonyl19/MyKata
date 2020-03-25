@@ -8,7 +8,7 @@ SPEC>
 
 using System;
 
-namespace CSharp_Codility
+namespace CSharp.Codility
 {
     public class L01
     {

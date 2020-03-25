@@ -1,4 +1,4 @@
-/*
+﻿/*
 Ref
     https://carsonwah.github.io/factory-design-pattern.html
 SPEC>

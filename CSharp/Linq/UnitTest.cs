@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using CSharp.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CSharp
+namespace CSharp.Linq
 {
     [TestClass]
-    public class UnitTest_Linq
+    public class UnitTest
     {
 
         [TestMethod]

@@ -1,10 +1,9 @@
-using CSharp.DesingPattern;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CSharp
+namespace CSharp.DesingPattern
 {
     [TestClass]
-    public class UnitTest_DP
+    public class UnitTest
     {
  
         [TestMethod]

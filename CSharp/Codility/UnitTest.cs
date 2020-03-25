@@ -5,10 +5,10 @@ using CSharp.Codility;
 using CSharp.Comm;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CSharp
+namespace CSharp.Codility
 {
     [TestClass]
-    public class UnitTest_Codility
+    public class UnitTest
     {
 
         [TestMethod]
