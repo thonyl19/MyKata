@@ -127,6 +127,63 @@ let Views = {
         }};
        return _obj;
     },
+    'Complex_headers'() {
+      var _obj = {
+        //https://datatables.net/extensions/fixedcolumns/examples/styling/rowspan.html
+         _vue:{
+            template: `
+           <div class="row">
+             <div class="col-lg-12">
+               <div class="panel panel-default">
+                  <div class="panel-heading">
+                     Data Tables |
+                     <small>Zero Configuration + Export Buttons</small>
+                  </div>
+                  <div class="panel-body">
+                      <div class="table-responsive">
+                       <table id="example" class="display" width="100%"></table>
+                       </table>
+                      </div>
+                  </div>
+               </div>
+             </div>
+           </div>
+            `,
+            mounted() {
+             $('#example').DataTable(
+               {data: dataSet,
+                 columns: [
+                     { title: "Name" },
+                     { title: "Position" },
+                     { title: "Office" },
+                     { title: "Extn." },
+                     { title: "Start date" },
+                     { title: "Salary" }
+                 ],
+               rowReorder: {
+                   selector: 'td:nth-child(2)'
+               },
+               responsive: true,
+               scrollY:        "300px",
+                scrollX:        true,
+                scrollCollapse: true,
+                paging:         false,
+                fixedColumns:   true,
+               buttons: [
+                   {extend: 'copy',  className: 'btn-sm' },
+                   {extend: 'csv',   className: 'btn-sm' },
+                   {extend: 'excel', className: 'btn-sm', title: 'XLS-File'},
+                   {extend: 'pdf',   className: 'btn-sm', title: $('title').text() },
+                   {extend: 'print', className: 'btn-sm' }
+               ]
+               });
+         }
+       }};
+      return _obj;
+   },
+   'Basic initialisation'(){
+      //https://datatables.net/extensions/buttons/examples/initialisation/simple.html
+   }
  
 };
 
