@@ -65,7 +65,7 @@
                     },
                     computed:{
                         _sample(){
-                            debugger;
+                            
                             var _self = this;
                             var _r = {};
                             let {def=''} = _self.sample;
@@ -121,7 +121,6 @@
 
                     computed: {
                         currentComponent() {
-                            debugger
                             var isString = typeof (this.currentTab) == "string";
                             if (isString) {
                                 return `x-${this.currentTab}`;

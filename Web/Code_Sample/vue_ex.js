@@ -65,7 +65,7 @@ var Views = {
                     this.autoAdd(5);
                 },
                 exec1() {
-                    this.list = [{A:'A'}, {B:'B'}, {C:'C'}];
+                    this.list = [{ A: 'A' }, { B: 'B' }, { C: 'C' }];
                 },
                 autoAdd(x) {
                     for (var i = 0; i < x; i++) {
@@ -74,79 +74,10 @@ var Views = {
                 }
             }
         }
-        return {_vue};
-    },
-
-    props應用() {
-        /*
-        演示 props 的應用方式
-        1.如果純字串填值的話,必須如 Case1 的寫法 -- 不加 : 前綴,
-        2.如果是以傳動態變數的話,則必須以 Case2 的寫法 加 : 前綴
-        3.額外試出,似乎不加 : 前綴也行 ,雖然省事 ,但會有識別上的顧慮 
-        */
-        var ex_compoment = {
-            "template": "<h1>{{message}}</h1>",
-            "props": ["message"]
-        }
-        //Vue.component('ex_compoment', ex_compoment);
-        var _vue = {
-            template: `
-        <div>
-            <ex_compoment message=\"Case1\"></ex_compoment>
-            <ex_compoment :message="Case2"></ex_compoment>
-            <ex_compoment message="Case2"></ex_compoment>
-        </div>
-        `,
-            components:{ex_compoment},
-            data(){
-                return {
-                    Case2:"Case2"
-                }
-            }
-        }
         return { _vue };
     },
-    'props fun應用'() {
-        var ex_compoment = {
-            "template": `
-            <div>{{fun1==false?'不傳值,預設不顯示.':fun1}}
-                <button v-if="fun1!=false" @click="fun1">觸發事件</button>
-                <button :disabled="fun1==false"  @click="fun1">觸發事件</button>
-            </div>`,
-            "props":{
-               fun1:{
-                   type:[Boolean,Function],
-                    default:false
-               } 
-            }
-        }
- 
-        var _obj = {
-           _vue:{
-              template: `
-              <div>
-                <pre>利用prop 多型的機制
-                1.fun1 預設false ,當不賦值時,可控制 button 自動不顯示或 disabled
-                2.當有傳入 fun() 時,則會顯示 button 並將之綁上 click 事件.
-                </pre>
-                <ex_compoment ></ex_compoment>
-                <ex_compoment :fun1="act"></ex_compoment>
-            </div>
-              `,
-              components:{ex_compoment},
-              data(){
-                  return {
-                      Case2:"Case2"
-                  }
-              },
-              methods:{
-                  act(){
-                      alert('test');
-                  }
-              }
-           }};
-        return _obj;
-     },
+
+
 
     vuex範例() {
         const store = new Vuex.Store({
@@ -796,14 +727,170 @@ var Views = {
 
         };
         return { _vue };
-    },
-    std() {
+    }
+}
+var Props = {
+    基本用法() {
+        var _note = `
+        <pre>演示 props 的應用方式
+        1.如果純字串填值的話,必須如 Case1 的寫法 -- 不加 : 前綴,
+        2.如果是以傳動態變數的話,則必須以 Case2 的寫法 加 : 前綴
+        3.額外試出,似乎不加 : 前綴也行 ,雖然省事 ,但會有識別上的顧慮</pre>`
+
+        var ex_compoment = {
+            "template": "<h1>{{message}}</h1>",
+            "props": ["message"]
+        }
+        //Vue.component('ex_compoment', ex_compoment);
         var _vue = {
             template: `
         <div>
-        </div>`
-        };
+            ${_note}
+            <ex_compoment message=\"Case1\"></ex_compoment>
+            <ex_compoment :message="Case2"></ex_compoment>
+            <ex_compoment message="Case2"></ex_compoment>
+        </div>
+        `,
+            components: { ex_compoment },
+            data() {
+                return {
+                    Case2: "Case2"
+                }
+            }
+        }
         return { _vue };
+    },
+    'props fun應用'() {
+        var _note = `
+        <pre>利用prop 多型的機制
+        1.fun1 預設false ,當不賦值時,可控制 button 自動不顯示或 disabled
+        2.當有傳入 fun() 時,則會顯示 button 並將之綁上 click 事件.</pre>
+        `
+        var ex_compoment = {
+            "template": `
+            <div>{{fun1==false?'不傳值,預設不顯示.':fun1}}
+                <button v-if="fun1!=false" @click="fun1">觸發事件</button>
+                <button :disabled="fun1==false"  @click="fun1">觸發事件</button>
+            </div>`,
+            "props": {
+                fun1: {
+                    type: [Boolean, Function],
+                    default: false
+                }
+            }
+        }
+
+        var _obj = {
+            _vue: {
+                template: `
+              <div>
+                ${_note}
+                <ex_compoment ></ex_compoment>
+                <ex_compoment :fun1="act"></ex_compoment>
+                </div>
+              `,
+                components: { ex_compoment },
+                data() {
+                    return {
+                        Case2: "Case2"
+                    }
+                },
+                methods: {
+                    act() {
+                        alert('test');
+                    }
+                }
+            }
+        };
+        return _obj;
+    },
+    /* eslint-disable */
+
+    '預設值範例'() {
+        var _note = `
+            未完成
+            <pre>這個範例是在專案中碰到的使用情境.
+            1.如果在 props 參數初始化時,要能取用到 data 內的參數,就必須得使用 $options.data() 的方式取得
+            2.
+
+            </pre>
+            `;
+        var ex_compoment = {
+            "template": "<h1>[arg1]{{arg1}}[ops]{{ops}}</h1>",
+            props:{
+                arg1:{
+                    type:Object,
+                    default(){
+                        debugger
+                        return this.$options.data().arg_base;
+                    }
+                },
+                ops:Object,
+            },
+            data(){
+                return {
+                    arg_base:{
+                        A:"這個是帶預設值的範例"
+                    }
+                }
+            },
+            mounted() {
+                var _def = {
+                    msg:"這是預設值"
+                };
+                this.ops =  $.extend(_def, this.ops);
+            },
+        };
+        var ex_compoment_p = {
+            "template": `
+            <div>
+                <ex_compoment :arg_1="arg" :ops="ops"></ex_compoment>
+            </div>
+            `,
+            components:{ex_compoment},
+            props:{
+                arg:{
+                    type:Object,
+                    default(){
+                        debugger
+                        return this.$options.data().arg_base;
+                    }
+                }
+            },
+            data(){
+                return {
+                    arg_base:{
+                        A:"這個是帶預設值的範例"
+                    }
+                }
+            },
+            computed: {
+                ops() {
+                    var _ops = $.extend({}, this.def_ops, this.selectize_ops);
+                    return _ops;
+                }
+            }
+        }
+        var _obj = {
+            _vue: {
+                template: `
+                    <div>
+                        ${_note}
+                        <ex_compoment_p></ex_compoment_p>
+                        <ex_compoment_p :arg="AA"></ex_compoment_p>
+                    </div>
+                    `,
+                components:{ex_compoment_p},
+                data(){
+                    return {
+                        AA:{
+                            T:'這個是有傳入的樣本'
+                        }
+                    }
+                }
+            }
+        };
+        return _obj;
     },
 }
 var rxjs = {
@@ -876,51 +963,53 @@ var rxjs = {
 }
 var Fail = {
     'prop 異常現象'() {
+        var _note = `
+        <pre>[props fun應用] 的機制在專案應用時,碰到這樣詭異的問題
+        1.如範例 同樣都是綁上 act() 的程序,但顯示時,AddVer 始終顯示 false
+        2.但改成 fun_Add ,就可以正確的傳入 function
+        3.奇怪的是,個案搬到這裡測試時,是可以正常運作的 .....</pre>
+        `
         var ex_compoment = {
             "template": `
             <div>[AddVer]{{AddVer}} <br />
             [fun_Add]{{fun_Add}}
             </div>`,
-            "props":{
-               AddVer:{
-                   type:[Boolean,Function],
-                    default:false
-               },
-               fun_Add:{
-                    type:[Boolean,Function],
-                    default:false
+            "props": {
+                AddVer: {
+                    type: [Boolean, Function],
+                    default: false
+                },
+                fun_Add: {
+                    type: [Boolean, Function],
+                    default: false
                 }
             }
         }
- 
+
         var _obj = {
-           _vue:{
-              template: `
+            _vue: {
+                template: `
               <div>
-                <pre> [props fun應用] 的機制在專案應用時,碰到這樣詭異的問題
-                1.如範例 同樣都是綁上 act() 的程序,但顯示時,AddVer 始終顯示 false
-                2.但改成 fun_Add ,就可以正確的傳入 function
-                3.奇怪的是,個案搬到這裡測試時,是可以正常運作的 .....
-                </pre>
+                ${_note}
                 <ex_compoment :AddVer="act" :fun_Add="act"></ex_compoment>
-                
             </div>
               `,
-              components:{ex_compoment},
-              data(){
-                  return {
-                      Case2:"Case2"
-                  }
-              },
-              methods:{
-                  act(){
-                      alert('test');
-                  }
-              }
-           }};
+                components: { ex_compoment },
+                data() {
+                    return {
+                        Case2: "Case2"
+                    }
+                },
+                methods: {
+                    act() {
+                        alert('test');
+                    }
+                }
+            }
+        };
         return _obj;
-     },
+    },
 
 }
 
-window.sample = { API, Views , rxjs,Fail ,def:'std1'}
+window.sample = { API, Views, Props, rxjs, Fail, def: '預設值範例' }
