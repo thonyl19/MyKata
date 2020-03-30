@@ -1,4 +1,5 @@
-﻿var dataSet = [
+﻿
+var dataSet = [
   [ "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
   [ "Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750" ],
   [ "Ashton Cox", "Junior Technical Author", "San Francisco", "1562", "2009/01/12", "$86,000" ],
@@ -52,31 +53,117 @@ let Views = {
          }};
       return _obj;
    },
+   'DataBase_Array'() {
+    var _obj = {
+       _vue:{
+          template: `
+          <div>
+            <table id="example" class="display" width="100%"></table>
+            </table>
+          </div>
+          `,
+          mounted() {
+            $('.display').DataTable(
+              {data: dataSet,
+                columns: [
+                    { title: "Name" },
+                    { title: "Position" },
+                    { title: "Office" },
+                    { title: "Extn." },
+                    { title: "Start date" },
+                    { title: "Salary" }
+                ]}
+            );
+          },
+       }};
+    return _obj;
+ },
   'DataBase_Json'() {
       var _obj = {
          _vue:{
             template: `
             <div>
-              <table id="example" class="display" width="100%"></table>
+              <button @click="Load">Load</button>
+              <table  class="display" width="100%"></table>
               </table>
             </div>
-            `,
+            `,data(){
+              return {
+                jqDT:{}
+              }
+            },
             mounted() {
-              $('.display').DataTable(
-                {data: dataSet,
-                  columns: [
-                      { title: "Name" },
-                      { title: "Position" },
-                      { title: "Office" },
-                      { title: "Extn." },
-                      { title: "Start date" },
-                      { title: "Salary" }
+              this.jqDT =  $('.display').DataTable(
+                {columns: [
+                      { "title": "id","data": "id" },
+                      { "title": "invdate" ,"data": "invdate" },
+                      { "title": "name" ,"data": "name" },
+                      { "title": "note" ,"data": "note" },
+                      { "title": "amount" ,"data": "amount" },
+                      { "title": "tax" ,"data": "tax" },
+                      { "title": "total","data": "total"  }
                   ]}
               );
+            },
+            methods: {
+              Load(){
+                this.jqDT
+                  .clear()
+                  .rows
+                  .add(window.tmpData.mydata)
+                  .draw();
+              }
             },
          }};
       return _obj;
    },
+   'DataBase_LoadArray'() {
+    var _obj = {
+       _vue:{
+          template: `
+          <div>
+            <button @click="Load">Load</button>
+            <table ref="jqDT" id="example" class="display" width="100%"></table>
+            </table>
+          </div>
+          `,
+          data(){
+            return {
+              jqDT:{}
+            }
+          },
+          mounted() {
+            this.jqDT = $('.display').DataTable(
+              {columns: [
+                    { title: "Name" },
+                    { title: "Position" },
+                    { title: "Office" },
+                    { title: "Extn." },
+                    { title: "Start date" },
+                    { title: "Salary" }
+                ]}
+            );
+          },
+          methods: {
+            Load(){
+              this.jqDT
+                .clear()
+                .rows
+                .add(dataSet)
+                .draw();
+
+                // 另一種比較麻煩的資料載入方式
+                // var length = Object.keys(dataSet).length;
+                // for (var i = 1; i < dataSet.length; i++) {
+                //     var row = dataSet[i];
+                //     $dt.row.add(row);
+                // }
+                // $dt.draw();
+            }
+          },
+       }};
+    return _obj;
+ },
 
    'Responsive-自適應折行'() {
        var _obj = {
@@ -189,5 +276,5 @@ let Views = {
 
 window.sample = { 
   Views 
-  ,def:'std3' 
+  ,def:'DataBase_Json' 
 };
