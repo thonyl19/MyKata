@@ -78,11 +78,21 @@ let Views = {
        }};
     return _obj;
  },
-  'DataBase_Json'() {
+  'DataBase_Json'(_note="") {
       var _obj = {
-         _vue:{
+        _baseSet:{columns: [
+            { "title": "id","data": "id" },
+            { "title": "invdate" ,"data": "invdate" },
+            { "title": "name" ,"data": "name" },
+            { "title": "note" ,"data": "note" },
+            { "title": "amount" ,"data": "amount" },
+            { "title": "tax" ,"data": "tax" },
+            { "title": "total","data": "total"  }
+        ]},
+        _vue:{
             template: `
             <div>
+              ${_note}
               <button @click="Load">Load</button>
               <table  class="display" width="100%"></table>
               </table>
@@ -93,17 +103,7 @@ let Views = {
               }
             },
             mounted() {
-              this.jqDT =  $('.display').DataTable(
-                {columns: [
-                      { "title": "id","data": "id" },
-                      { "title": "invdate" ,"data": "invdate" },
-                      { "title": "name" ,"data": "name" },
-                      { "title": "note" ,"data": "note" },
-                      { "title": "amount" ,"data": "amount" },
-                      { "title": "tax" ,"data": "tax" },
-                      { "title": "total","data": "total"  }
-                  ]}
-              );
+              this.jqDT =  $('.display').DataTable(_obj._baseSet);
             },
             methods: {
               Load(){
@@ -268,6 +268,13 @@ let Views = {
        }};
       return _obj;
    },
+   'Cell href'() {
+      var _obj = Views.DataBase_Json(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 cell 欄位做加工處理.</pre>`);
+      _obj._baseSet.columns[0].createdCell = (td, cellData, rowData, row, col)=>{
+        $(td).html(`<a href=#  onclick="alert('${cellData}');" >${cellData}</a>`)
+      }
+      return _obj;
+   },
    'Basic initialisation'(){
       //https://datatables.net/extensions/buttons/examples/initialisation/simple.html
    }
@@ -276,5 +283,5 @@ let Views = {
 
 window.sample = { 
   Views 
-  ,def:'DataBase_Json' 
+  ,def:'Cell href' 
 };
