@@ -118,6 +118,7 @@
                     `,
                     data() {
                         return {
+                            //window.window
                             sample,
                             currentTab: 'tpl-sample-test',
                             Code: ''
