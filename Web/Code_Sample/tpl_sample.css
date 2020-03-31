@@ -21,6 +21,7 @@ dl.flex {
 
 .flex dt {
   flex: 0;
+  font-weight:400;
 }
 
 .flex dd {
@@ -50,7 +51,7 @@ ul {
 
 li {
   min-width: 5em;
-  line-height: 1.3em;
+  line-height: 1.39em;
   white-space: nowrap;
 }
 
@@ -60,12 +61,22 @@ li.over-fun:hover {
   cursor: pointer;
 }
 
+li.over-fun a{
+  color: black;
+}
+
+.over-fun.sel a{
+  color: blue;
+}
+
 li.active {
   background-color: #20ffa6;
 }
 .itme-main {
   background-color: lightblue;
   padding: 3px;
+  border-radius: 7px;
+  padding: 3px 7px;
 }
 
 .area-mk{

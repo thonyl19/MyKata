@@ -52,13 +52,18 @@
                         <li v-for="(grp,main_key) in _sample" >
                             <a class="itme-main">{{main_key}}</a>
                             <ul>
-                                <li v-for="(item,item_key) in grp" class="over-fun">
-                                    <a @click="act(item)"> {{item_key}}</a>
+                                <li v-for="(item,item_key) in grp" class="over-fun" :class="[sel==item_key?'sel':'']" >
+                                    <a @click="act(item,item_key)"> {{item_key}}</a>
                                 </li>
                             </ul>
                         </li>
                     </ul>
                     `,
+                    data(){
+                        return {
+                            sel:''
+                        }
+                    },
                     props: {
                         sample: Object,
                         action: [Object, Function, String]
@@ -85,7 +90,8 @@
                         }
                     },
                     methods: {
-                        act(obj) {
+                        act(obj,item_key) {
+                            this.sel = item_key; 
                             this.$emit('update:action', obj)
                         }
                     }
