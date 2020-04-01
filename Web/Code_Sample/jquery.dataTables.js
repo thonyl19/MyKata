@@ -344,6 +344,7 @@ var API = {
         var _self = this;
         _self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
         _self.jqDT.on( 'click', 'tr', function () {
+          console.log(event);
           debugger
           $(this).toggleClass('selected');
           var _r = _self.jqDT.rows('.selected').data();
@@ -358,9 +359,98 @@ var API = {
     })
     return _obj;
   },
+  'Cell Click'() {
+    var _obj = Views.DataBase_Json(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
+      https://datatables.net/examples/api/select_row.html ,主要演示以下範例
+      1. columnDefs 擴充定義樣式的設定 
+          columnDefs 用法與 columns 雷同,但主要的差別在於 columnDefs 
+            可以使用 targets 將設定一次指給多個欄位 
+      2. 取得 選取行的資料的方法
+          row() 跟 rows() 的用法雷同,差別在
+          row => 回傳值為物件,適用單撃取值的情境
+          rows =>回傳值為陣列,適用取得複數資料的情境
+      3. column(this).dataSrc()  取得事件 tag 對應的綁定欄位
+      </pre>
+      <div>{{selected}}</div>
+    `);
+    _obj._baseSet.columnDefs = [
+      { className: "cell_0", "targets": [ 0 ] },
+      { className: "e_click", "targets": [ 2,3 ] 
+        ,createdCell(td, cellData, rowData, row, col) {
+          $(td).html(`<a href=#>${cellData}</a>`);
+        }}
+    ];    
+    _obj._vue = Object.assign(_obj._vue, {
+      data(){
+        return {
+          jqDT:{},
+          selected:[],
+        }
+      },
+      mounted() {
+        var _self = this;
+        _self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+        _self.jqDT.on( 'click', '.cell_0', function () {
+          debugger
+          var _r = _self.jqDT.rows(this).data();
+          //取得 cells , 但沒有實質效用
+          var _c = _self.jqDT.cells(this);
+          _self.selected = [_r[0]];
+        });
+        _self.jqDT.on( 'click', '.e_click', function () {
+          //取得點撃來源的 綁定欄位名稱
+          let filed = _self.jqDT.column(this).dataSrc();
+          //取得點撃來源的 整欄資料
+          var data = _self.jqDT.row(this).data();
+          let _arr = [{filed,data}];
+          _self.selected = _arr;
+        });
+      },
+       
+    })
+    return _obj;
+  },
+};
+var Tool = {
+  Json2Colums() {
+     var _obj = {
+        _vue: {
+           template: `
+              <div>
+              JSON<input type=text v-model="json_code" /><BR />
+              <textarea v-model="code"></textarea>
+              </div>
+              `,
+            data(){
+              return {
+                json_code:'',
+                arr_code:[]
+              }
+            },
+            computed: {
+              code(){
+                try {
+                  var _s = JSON.parse(this.json_code)
+                  var _arr = [];
+                  for(var i in _s){
+                    _arr.push({title:i,data:i})
+                  }
+                  this.arr_code = _arr;
+                } catch (error) {
+                  var z = error;
+                }
+
+                return JSON.stringify(this.arr_code).replace(/\},\{/g,'},\n{');
+              }
+            },
+        }
+     };
+     return _obj;
+  },
 }
 window.sample = {
   Views,
-  API
-  , def: 'Row Selection'
+  API,
+  Tool
+  , def: 'Cell Click'
 };
