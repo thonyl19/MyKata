@@ -1,4 +1,10 @@
-﻿let Views = {
+﻿/*
+babel 的測試 Code ,但是沒用,主要的原因是,無法使用 local file的方式來載入範例檔 
+const getMessage = () => "Hello World";
+document.getElementById('output').innerHTML = getMessage();
+*/
+
+let Views = {
   std1() {
      var _note = `
         <pre>
