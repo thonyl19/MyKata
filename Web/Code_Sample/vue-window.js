@@ -358,7 +358,64 @@ let Views = {
                }
             }};
          return _obj;
-      }
+      },
+    std1() {
+        var _obj = {
+          _css:`
+          .box {
+            width: 100px;
+            height: 40px;
+            background-color: aqua;
+            box-shadow: 0 0 4pt rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            cursor: grab;
+          }
+          `,
+           _vue:{
+              template: `
+              <div>
+              <hsc-window-style-metal>
+              <hsc-window
+                title="Drag Handle"
+                :width="400"
+                :height="300"
+                :left.sync="left"
+                :top.sync="top"
+              >
+                <div
+                  ref="handle"
+                  class="box"
+                  @mousedown.stop.prevent="mousedown"
+                ></div>
+              </hsc-window>
+            </hsc-window-style-metal>
+              </div>
+              `,
+              data() {
+                return {
+                  left: undefined ,
+                  top: undefined ,
+                }
+              },
+              methods: {
+                mousedown(e) {
+                  const baseLeft = this.left
+                  const baseTop = this.top
+                  const mousemove = (e2) => {
+                    this.left = baseLeft + e2.screenX - e.screenX
+                    this.top = baseTop + e2.screenY - e.screenY
+                  }
+                  const mouseup = () => {
+                    document.removeEventListener('mousemove', mousemove)
+                    document.removeEventListener('mouseup', mouseup)
+                  }
+                  document.addEventListener('mousemove', mousemove)
+                  document.addEventListener('mouseup', mouseup)
+                }
+              }
+           }};
+        return _obj;
+     }
 
 };
 
