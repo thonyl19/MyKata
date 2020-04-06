@@ -7,6 +7,9 @@
 
 ### Run C#
     https://mike2014mike.github.io/vscode/2018/09/14/vscode-csharp/
+### 套件使用記錄
+>    [.Net Core Test Explorer](https://marketplace.visualstudio.com/items?itemName=derivitec-ltd.vscode-dotnet-adapter&ssr=false#overview)
+>>超高使用人數,但實際使用時發現,沒辦法簡單的排除問題,只好棄用.
 
 
 ### Log
@@ -20,5 +23,10 @@
 >  vs2019.sln
 >  CSharp.csproj    
 
-當試著把 vs2019.sln 移掉後,再執行 extension 的 Run All Test 後, 就發現測試項目有正常跑出來了
+當試著把 vs2019.sln 移掉後,再執行 extension 的 Run All Test 後, 就發現測試項目有正常跑出來了.
+總體而言,需要安裝以下套件才能正確執行
+>   [CS-Script](https://marketplace.visualstudio.com/items?itemName=oleg-shilo.cs-script)
+>   [.NET Core Test Explorer](https://marketplace.visualstudio.com/items?itemName=formulahendry.dotnet-test-explorer)
+>>不過,在公司環境測試其他套件時,把它關掉後再重開,就不 work了, TMD...
+
 每次久不使用,再使用便出一堆問題,感覺真的很煩.
