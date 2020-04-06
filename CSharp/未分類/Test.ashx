@@ -1,10 +1,10 @@
-<%@ WebHandler Language="C#" Class="Genesis.Gtimes.Portal.Ashx.Test" %>
+<%@ WebHandler Language="C#" Class="CSharp.Ashx.Test" %>
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Genesis.Gtimes.Portal.Ashx
+namespace CSharp.Ashx
 {
     /// <summary>
     /// Handler1 的摘要描述
