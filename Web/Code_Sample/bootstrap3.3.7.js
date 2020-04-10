@@ -3,18 +3,18 @@
     var _vue = {
       template: `
 <div class="container-fluid">
-	<form class="form-horizontal">
+	<form class="row">
 		<div class="form-group">
-			<label class="col-sm-2 control-label">Email</label>
-			<div class="col-sm-10">
+			<label class="col-lg-2 col-xs-4 control-label">Email</label>
+			<div class="col-lg-4  col-xs-8">
 				<p class="form-control-static">email@example.com</p>
 			</div>
 		</div>
 		<div class="form-group">
-		<label for="inputPassword" class="col-sm-2 control-label">Password</label>
-		<div class="col-sm-10">
-			<input type="password" class="form-control" id="inputPassword" placeholder="Password">
-		</div>
+         <label for="inputPassword" class="col-lg-2  col-xs-4 control-label">Password</label>
+         <div class="col-lg-4  col-xs-8">
+            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+         </div>
 		</div>
 	</form>
 </div>
@@ -449,4 +449,4 @@ let Fail = {
        return _obj;
     },
 }
-window.sample = { views: Views,Group ,Fail ,def:'input-group' };
+window.sample = { views: Views,Group ,Fail ,def:'Form1' };

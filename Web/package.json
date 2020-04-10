@@ -2,6 +2,7 @@
   "scripts": {},
   "devDependencies": {},
   "dependencies": {
+    "lodash": "^4.17.15",
     "split.js": "^1.5.11",
     "splitpanes": "^2.2.1",
     "vue-multipane": "^0.9.5",
