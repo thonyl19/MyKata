@@ -1,3 +1,10 @@
+/*
+[Ref]
+https://zh.wikipedia.org/wiki/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F
+https://regex101.com/codegen?language=csharp
+https://regexr.com/
+*/
+
 import * as _ from 'lodash';
 var list_number = [
     '100.11',
