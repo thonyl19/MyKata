@@ -804,8 +804,71 @@ var Props = {
         };
         return _obj;
     },
-    /* eslint-disable */
-
+    '.sync 用法'() {
+        var _note = `
+        <pre>在子物件中,如果 要對 prop 進來的變數做值的變更,
+        必須要透過 另一個變數來做處理,否則會出現如下錯誤訊息：
+            Avoid mutating a prop directly since the value will be overwritten whenever 
+            the parent component re-renders. Instead, use a data or computed property 
+            based on the prop's value. Prop being mutated: "value"
+        主要的大意是, vue 在父組件重新渲染時，prop 的值都會被覆蓋，
+            這樣會造成子物件連帶受影響,因此,應該要避免直接修改 prop 的值
+        </pre>
+        `;
+     var dynamic = {
+        props: {
+            title: String,
+            value: {
+                type: [String,Object],
+                default(){
+                   return null;
+                }
+            },
+            placeholder: {
+                type: String,
+                default: '123'
+            }
+        },
+        template: `<dl>
+                        <dt>{{title}}</dt>
+                        <dd>
+                            <slot>
+                                <input type="text" class="form-control" :placeholder="placeholder" v-model="c_val" />
+                            </slot>
+                        </dd>
+                    </dl>
+                    `,
+        computed:{
+           c_val:{
+              get(){
+                 return this.value;
+              },
+              set(val){
+                 this.$emit('update:value', val);
+              }
+           }
+        },
+     };
+     var _obj = {
+        _vue: {
+           template: `
+              <div>
+                 ${_note}
+                <div>[form]{{form}}</div>
+                <dynamic title="批號" :value.sync="form.value_1"></dynamic>
+              </div>
+              `,
+           components:{dynamic},
+           data(){
+              return {
+                 form:{ value_1:'',
+                 }
+              }
+           }
+        }
+     };
+     return _obj;
+    },
     '預設值範例'() {
         var _note = `
             未完成
@@ -1012,4 +1075,4 @@ var Fail = {
 
 }
 
-window.sample = { API, Views, Props, rxjs, Fail, def: '預設值範例' }
+window.sample = { API, Views, Props, rxjs, Fail, def: 'std1' }

@@ -249,26 +249,138 @@
     };
     return _obj;
   },
-  std1() {
+
+   '.row 兩欄式'() {
     var _vue = {
       template: `
-<div>
-</div>
+      <div class="row">
+      <div class="col-lg-2 col-xs-4">
+          <label class=" control-label">Email</label>
+      </div>
+      <div class="col-lg-4  col-xs-8">
+          <input ref="LOT" class="form-control col-lg-4  col-xs-8" type="text" 
+/>
+      </div>
+      <div class="col-lg-2 col-xs-4">
+          <label class=" control-label">Email</label>
+      </div>
+      <div class="col-lg-4  col-xs-8">
+          <input ref="LOT" class="form-control col-lg-4  col-xs-8" type="text" 
+           />
+      </div>
+      <div class="col-lg-2 col-xs-4">
+          <label class=" control-label">Email</label>
+      </div>
+      <div class="col-lg-4  col-xs-8">
+          <input ref="LOT" class="form-control col-lg-4  col-xs-8" type="text" 
+           />
+      </div>
+  </div>
 `
     };
     return { _vue };
   },
-  std1() {
-      var _obj = {
-         _vue:{
-            template: `
-            <div>
-            </div>
-            `
-         }};
-      return _obj;
-   }
+  '.form-horizontal'() {
+     var _note = `
+        <pre>
+        </pre>
+        `;
+     var _obj = {
+         _css:`
+            .form-horizontal .form-group {
+               margin-left: 0px !important; 
+               
+            }
+            .col-lg-8 ,.col-xs-8
+            ,.col-lg-4 ,.col-xs-4,
+            .col-lg-6 ,.col-xs-12 {
+               padding-right: 7px !important;
+               padding-left: 0px !important;
+            }
+         `,
+         _vue: {
+           template: `
+              <div>
+                 ${_note}
+                 <form class="form-horizontal">
+                  <div class="form-group col-lg-6 col-xs-12">
+                     <label for="inputEmail3" class="col-lg-4 col-xs-4 control-label">Email</label>
+                     <div class="col-lg-8 col-xs-8">
+                        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                     </div>
+                  </div>
+                  <div class="form-group col-lg-6 col-xs-12">
+                     <label for="inputEmail3" class="col-lg-4 col-xs-4 control-label">Email</label>
+                     <div class="col-lg-8 col-xs-8">
+                        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                     </div>
+                  </div>
+               </form>
+              </div>
+              `
+        }
+     };
+     return _obj;
+  },
 };
+var Tool = {
+   std11() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
+      var _obj = {
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  <textarea style="height:5em;" v-model="tpl_code">
+                  </textarea>
+                  <textarea style="height:3em;" v-model="sets" @change="on_change">
+               </textarea>
+               <div v-html="sample"></div>
+               </div>
+               `,
+            data(){
+               return {
+                  sets:`label
+<input type="text" class="form-control" placeholder="" v-model="">`,
+                  tpl_code :`<div class="form-group col-lg-6 col-xs-12">
+                           <label class="col-lg-4 col-xs-4 control-label">{label}</label>
+                           <div class="col-lg-8 col-xs-8">{input}</div>
+                        </div>`
+               }
+            },
+            computed: {
+               sample(){
+                  let {sets} = this;
+                  if (sets == null) return ;
+                  var arr = sets.split("\n");
+                  var _code = this.tpl_code;
+                  arr.forEach((el,idx) => {
+                     switch(idx){
+                        case 0:
+                           _code = _code.replace('{label}',el);
+                           break;
+                        case 1:
+                           _code = _code.replace('{input}',el);
+                           break;
+                     }
+                  });
+                  return _code;
+               }
+            },
+            methods: {
+               on_change(){
+                  alert('test');
+               }
+            },
+
+         }
+      };
+      return _obj;
+   },
+}
 let Group = {
    Case1() {
       var _obj = {
@@ -426,6 +538,72 @@ let Group = {
          }};
       return _obj;
    },
+   std1() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
+      var dynamic = {
+         props: {
+             title: String,
+             value: {
+                 type: [String,Object],
+                 default(){
+                    return null;
+                 }
+             },
+             placeholder: {
+                 type: String,
+                 default: '123'
+             }
+         },
+         template: `<div class="form-group col-lg-6 col-xs-12">
+                     <slot name="lable" >
+                         <label class="col-lg-4 col-xs-4 control-label">{{title}}</label>
+                     </slot>
+                     <div class="col-lg-8 col-xs-8">
+                         <slot>
+                             <input type="text" class="form-control" :placeholder="placeholder" v-model="c_val" />
+                         </slot>
+                     </div>
+                   </div>`,
+         computed:{
+            c_val:{
+               get(){
+                  return this.value;
+               },
+               set(val){
+                  this.$emit('update:value', val);
+               }
+            }
+         },
+      };
+      var _obj = {
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  <div>[form]{{form}}</div>
+                  <div class="row">
+                        <dynamic title="批號" :value.sync="form.value_1"></dynamic>
+                        <dynamic title="批號">
+                           <input type="password" class="form-control" v-model="form.value_2" />
+                        </dynamic>
+                  </div>
+               </div>
+               `,
+            components:{dynamic},
+            data(){
+               return {
+                  form:{ value_1:'',
+                     value_2:''
+                  }
+               }
+            }
+         }
+      };
+      return _obj;
+   },
 };
 let Fail = {
    'input-group'() {
@@ -449,4 +627,4 @@ let Fail = {
        return _obj;
     },
 }
-window.sample = { views: Views,Group ,Fail ,def:'Form1' };
+window.sample = {  Views,Tool,Group ,Fail ,def:'std1' };
