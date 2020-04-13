@@ -291,9 +291,9 @@
                margin-left: 0px !important; 
                
             }
-            .col-lg-8 ,.col-xs-8
-            ,.col-lg-4 ,.col-xs-4,
-            .col-lg-6 ,.col-xs-12 {
+            .col-lg-8 , .col-sm-8 ,
+            .col-lg-4 , .col-sm-4 ,
+            .col-lg-6 , .col-sm-12 {
                padding-right: 7px !important;
                padding-left: 0px !important;
             }
@@ -303,9 +303,9 @@
               <div>
                  ${_note}
                  <form class="form-horizontal">
-                  <div class="form-group col-lg-6 col-xs-12">
-                     <label for="inputEmail3" class="col-lg-4 col-xs-4 control-label">Email</label>
-                     <div class="col-lg-8 col-xs-8">
+                  <div class="form-group col-lg-6 col-sm-12">
+                     <label for="inputEmail3" class="col-lg-4 col-sm-4 control-label">Email</label>
+                     <div class="col-lg-8 col-sm-8">
                         <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
                      </div>
                   </div>
@@ -557,11 +557,11 @@ let Group = {
                  default: '123'
              }
          },
-         template: `<div class="form-group col-lg-6 col-xs-12">
+         template: `<div class="form-group col-lg-6 col-sm-12">
                      <slot name="lable" >
-                         <label class="col-lg-4 col-xs-4 control-label">{{title}}</label>
+                         <label class="col-lg-4 col-sm-4 control-label">{{title}}</label>
                      </slot>
-                     <div class="col-lg-8 col-xs-8">
+                     <div class="col-lg-8 col-sm-8">
                          <slot>
                              <input type="text" class="form-control" :placeholder="placeholder" v-model="c_val" />
                          </slot>
@@ -579,6 +579,18 @@ let Group = {
          },
       };
       var _obj = {
+         _css:`
+            .form-horizontal .form-group {
+               margin-left: 0px !important; 
+               
+            }
+            .col-lg-8 , .col-sm-8 ,
+            .col-lg-4 , .col-sm-4 ,
+            .col-lg-6 , .col-sm-12 {
+               padding-right: 7px !important;
+               padding-left: 0px !important;
+            }
+         `,
          _vue: {
             template: `
                <div>
