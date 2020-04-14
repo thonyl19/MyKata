@@ -21,16 +21,6 @@ var list_number = [
     '-10.1%',
 ];
 var fn = {
-    '整數往前補零'() {
-        return (1).toString().padStart(3, '0');
-    },
-    '數字轉換'() {
-        let r = {
-            '二進位': (10).toString(2),
-            '16進位': (10).toString(16),
-        }
-        return r;
-    },
     '物件複製'() {
         var A = { a: 1, b: 2 };
         var B = { A, c: 3 };
