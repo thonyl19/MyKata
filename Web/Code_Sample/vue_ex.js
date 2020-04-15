@@ -29,7 +29,24 @@ let API = {
 
 }
 var Views = {
-
+    '.number .lazy'() {
+        //https://medium.com/pierceshih/vue-js-%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-day2-v-model%E8%B3%87%E6%96%99%E9%9B%99%E5%90%91%E7%B6%81%E5%AE%9A-9d54a82e23e5
+       var _note = `
+          <pre>
+          </pre>
+          `;
+       var _obj = {
+          _vue: {
+             template: `
+                <div>
+                   ${_note}
+    
+                </div>
+                `
+          }
+       };
+       return _obj;
+    },
     destroyed() {
         var _vue = {
             "template": "<div>destroyed 測試,當切換到另一個頁籤時觸發.</div>",

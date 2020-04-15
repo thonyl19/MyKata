@@ -512,6 +512,7 @@ let Group = {
   <span id="inputGroupSuccess3Status" class="sr-only">(success)</span>
 </div>
 </form>
+------
 <div class="input-group">
   <span class="input-group-addon" id="basic-addon1">@</span>
   <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
@@ -538,7 +539,7 @@ let Group = {
          }};
       return _obj;
    },
-   std1() {
+   '.form-group'() {
       var _note = `
          <pre>
          </pre>
@@ -610,6 +611,43 @@ let Group = {
                   form:{ value_1:'',
                      value_2:''
                   }
+               }
+            }
+         }
+      };
+      return _obj;
+   },
+   std1() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
+      var _obj = {
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  <div class="input-group">
+                     <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{display}}  <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                           <li v-for="(el,key) in list" @click="selected(el,key)" :class="[sel_key==key?'active':'']" ><a href="#">{{el}}-{{key}}</a></li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+               `,
+            data(){
+               return {
+                  list:['Action','Another action','Something else here'],
+                  sel_key:0,
+                  display:'',
+               }
+            },
+            methods:{
+               selected(el,key){
+                  this.sel_key = key;
+                  this.display = el;
                }
             }
          }
