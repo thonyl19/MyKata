@@ -1,14 +1,24 @@
 ﻿let Views = {
-  std1() {
+   std1() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
       var _obj = {
-         _vue:{
+         _vue: {
             template: `
-            <div>
-            </div>
-            `
-         }};
+               <div>
+                  ${_note}
+               </div>
+               `,
+            data(){
+               return {
+              }
+            } 
+         }
+      };
       return _obj;
-   }
+   },
 };
 
 window.sample = { 
