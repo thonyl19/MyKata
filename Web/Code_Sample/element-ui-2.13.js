@@ -1,4 +1,8 @@
-﻿let Views = {
+﻿/*
+https://v3.bootcss.com/getting-started/
+*/
+
+let Views = {
   "自定義 el-select 項目圖示"() {
     var _css = `
             img {
@@ -112,6 +116,7 @@
     return {_vue};
   },
 };
+
 let Case = {
   'bts.form-control'() {
     /*
@@ -405,22 +410,14 @@ let Case = {
  },
 };
 let Fail = {
-  'bts.input-group 整合失敗'() {
+
+  ''() {
     var _obj = {
        _vue:{
           template: `
           <div>
-            <pre>*原本希望利用 bts.input-group 來實作 group btn 的效果,
-            但發現, el-ui 跟 bts 會產生互斥的問題</pre>
-            <div class="form-group has-success has-feedback">
-              <label class="control-label" for="inputGroupSuccess3">整合失敗</label>
-              <div class="input-group">
-              <el-button class="btn btn-default" >test</el-button>
-                <input type="text" class="form-control" id="inputGroupSuccess3" aria-describedby="inputGroupSuccess3Status">
-              </div>
-              <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-              <span id="inputGroupSuccess3Status" class="sr-only">(success)</span>
-            </div>
+            <pre></pre>
+            
           </div>
           `
        }};
@@ -511,5 +508,54 @@ let Fail = {
     return _obj;
  },
 }
+var Group = {
+  
+  'Bts .btn-group'() {
+    var _note = `
+      <pre>
+      1.原本希望利用 bts.input-group 來實作 group btn 的效果,
+        但發現, el-ui 跟 bts 會產生互斥的問題,後來發現根本是搞錯了,
+        應該是要用 btn-group
+      2.而原本 input-group 的問題,經測試發現,主要是因為 group 中,
+        只能有一個主物件設為 form-control , 第二個 form-control 一定會破壞排版 ,
+        所以 button ,得用 input-group-btn 來協助整合 ,
+        但 input  就無法整入了
+      </pre>
+       `;
+    var _obj = {
+       _vue: {
+          template: `
+             <div>
+                ${_note}
+                <h3>.btn-group</h3>
+                <div class="btn-group">
+                  <el-button class="btn btn-default" >el-button</el-button>
+                  <input type="button" class="btn  btn-default" value="html_button" />
+                  <button  class="btn  btn-default">button</button> 
+                </div>
+                <h3>.input-group</h3>
+                <div class="input-group">
+                  <span class="input-group-addon" id="basic-addon1">@</span>
+                  <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+                  <span class="input-group-btn">
+                    <el-button class="btn btn-default" >el-button</el-button>
+                    <input type="button" class="btn  btn-default" value="html_button" />
+                    <button  class="btn  btn-default">button</button>
+                  </span>
+                </div>
+             </div>
+             `,
+          data(){
+             return {
+            }
+          } 
+       }
+    };
+    return _obj;
+ 
+ 
+  },
+  
+}
 
-window.sample = {Views,Case,Fail,def:'el-switch 應用問題'};
+window.sample = {Views,Group ,Case,Fail,def:'std1'};

@@ -18,7 +18,7 @@
 		</div>
 	</form>
 </div>
-`
+`,
     };
     return { _vue };
   },
@@ -47,7 +47,7 @@
                             </div>
                         </div>
                     </div>
-                    `
+                    `,
     };
     return { _vue };
   },
@@ -190,7 +190,7 @@
          </div>
          <!-- END panel-footer-->
       </div>
-`
+`,
     };
     return { _vue, _css };
   },
@@ -242,15 +242,15 @@
         data() {
           return {
             sel: 1,
-            list: [1, 2]
+            list: [1, 2],
           };
-        }
-      }
+        },
+      },
     };
     return _obj;
   },
 
-   '.row 兩欄式'() {
+  ".row 兩欄式"() {
     var _vue = {
       template: `
       <div class="row">
@@ -276,17 +276,17 @@
            />
       </div>
   </div>
-`
+`,
     };
     return { _vue };
   },
-  '.form-horizontal'() {
-     var _note = `
+  ".form-horizontal"() {
+    var _note = `
         <pre>
         </pre>
         `;
-     var _obj = {
-         _css:`
+    var _obj = {
+      _css: `
             .form-horizontal .form-group {
                margin-left: 0px !important; 
                
@@ -298,8 +298,8 @@
                padding-left: 0px !important;
             }
          `,
-         _vue: {
-           template: `
+      _vue: {
+        template: `
               <div>
                  ${_note}
                  <form class="form-horizontal">
@@ -317,21 +317,21 @@
                   </div>
                </form>
               </div>
-              `
-        }
-     };
-     return _obj;
+              `,
+      },
+    };
+    return _obj;
   },
 };
 var Tool = {
-   std11() {
-      var _note = `
+  std11() {
+    var _note = `
          <pre>
          </pre>
          `;
-      var _obj = {
-         _vue: {
-            template: `
+    var _obj = {
+      _vue: {
+        template: `
                <div>
                   ${_note}
                   <textarea style="height:5em;" v-model="tpl_code">
@@ -341,50 +341,49 @@ var Tool = {
                <div v-html="sample"></div>
                </div>
                `,
-            data(){
-               return {
-                  sets:`label
+        data() {
+          return {
+            sets: `label
 <input type="text" class="form-control" placeholder="" v-model="">`,
-                  tpl_code :`<div class="form-group col-lg-6 col-xs-12">
+            tpl_code: `<div class="form-group col-lg-6 col-xs-12">
                            <label class="col-lg-4 col-xs-4 control-label">{label}</label>
                            <div class="col-lg-8 col-xs-8">{input}</div>
-                        </div>`
-               }
-            },
-            computed: {
-               sample(){
-                  let {sets} = this;
-                  if (sets == null) return ;
-                  var arr = sets.split("\n");
-                  var _code = this.tpl_code;
-                  arr.forEach((el,idx) => {
-                     switch(idx){
-                        case 0:
-                           _code = _code.replace('{label}',el);
-                           break;
-                        case 1:
-                           _code = _code.replace('{input}',el);
-                           break;
-                     }
-                  });
-                  return _code;
-               }
-            },
-            methods: {
-               on_change(){
-                  alert('test');
-               }
-            },
-
-         }
-      };
-      return _obj;
-   },
-}
+                        </div>`,
+          };
+        },
+        computed: {
+          sample() {
+            let { sets } = this;
+            if (sets == null) return;
+            var arr = sets.split("\n");
+            var _code = this.tpl_code;
+            arr.forEach((el, idx) => {
+              switch (idx) {
+                case 0:
+                  _code = _code.replace("{label}", el);
+                  break;
+                case 1:
+                  _code = _code.replace("{input}", el);
+                  break;
+              }
+            });
+            return _code;
+          },
+        },
+        methods: {
+          on_change() {
+            alert("test");
+          },
+        },
+      },
+    };
+    return _obj;
+  },
+};
 let Group = {
-   Case1() {
-      var _obj = {
-         _css:`
+  Case1() {
+    var _obj = {
+      _css: `
             .switch .form-control {
                padding-top: 7px;
                margin-bottom: 0;
@@ -464,8 +463,8 @@ let Group = {
             }
 
          `,
-         _vue:{
-            template: `
+      _vue: {
+        template: `
             <div >
                 <div class="input-group" style="width:30em;">
                   <span class="input-group-addon">@</span>
@@ -484,14 +483,15 @@ let Group = {
                   </span>
                </div>
             </div>
-            `
-         }};
-      return _obj;
-   },
-   '官方範例'(){
-      var _obj = {
-         _vue:{
-            template: `
+            `,
+      },
+    };
+    return _obj;
+  },
+  官方範例() {
+    var _obj = {
+      _vue: {
+        template: `
             <div>
             <form class="form-inline">
   <div class="form-group has-success has-feedback">
@@ -535,30 +535,31 @@ let Group = {
   <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
 </div>
             </div>
-            `
-         }};
-      return _obj;
-   },
-   '.form-group'() {
-      var _note = `
+            `,
+      },
+    };
+    return _obj;
+  },
+  ".form-group"() {
+    var _note = `
          <pre>
          </pre>
          `;
-      var dynamic = {
-         props: {
-             title: String,
-             value: {
-                 type: [String,Object],
-                 default(){
-                    return null;
-                 }
-             },
-             placeholder: {
-                 type: String,
-                 default: '123'
-             }
-         },
-         template: `<div class="form-group col-lg-6 col-sm-12">
+    var dynamic = {
+      props: {
+        title: String,
+        value: {
+          type: [String, Object],
+          default() {
+            return null;
+          },
+        },
+        placeholder: {
+          type: String,
+          default: "123",
+        },
+      },
+      template: `<div class="form-group col-lg-6 col-sm-12">
                      <slot name="lable" >
                          <label class="col-lg-4 col-sm-4 control-label">{{title}}</label>
                      </slot>
@@ -568,19 +569,19 @@ let Group = {
                          </slot>
                      </div>
                    </div>`,
-         computed:{
-            c_val:{
-               get(){
-                  return this.value;
-               },
-               set(val){
-                  this.$emit('update:value', val);
-               }
-            }
-         },
-      };
-      var _obj = {
-         _css:`
+      computed: {
+        c_val: {
+          get() {
+            return this.value;
+          },
+          set(val) {
+            this.$emit("update:value", val);
+          },
+        },
+      },
+    };
+    var _obj = {
+      _css: `
             .form-horizontal .form-group {
                margin-left: 0px !important; 
                
@@ -592,8 +593,8 @@ let Group = {
                padding-left: 0px !important;
             }
          `,
-         _vue: {
-            template: `
+      _vue: {
+        template: `
                <div>
                   ${_note}
                   <div>[form]{{form}}</div>
@@ -605,26 +606,104 @@ let Group = {
                   </div>
                </div>
                `,
-            components:{dynamic},
-            data(){
-               return {
-                  form:{ value_1:'',
-                     value_2:''
-                  }
-               }
-            }
-         }
-      };
-      return _obj;
-   },
-   std1() {
-      var _note = `
+        components: { dynamic },
+        data() {
+          return {
+            form: { value_1: "", value_2: "" },
+          };
+        },
+      },
+    };
+    return _obj;
+  },
+  ".btn-group"() {
+   var _note = `
+            <pre>
+            </pre>
+            `;
+   var _obj = {
+     _vue: {
+       template: `
+                  <div>
+                     ${_note}
+                     <div class="btn-group" role="group" aria-label="...">
+                     <button type="button" class="btn btn-default">Left</button>
+                     <button type="button" class="btn btn-default">Middle</button>
+                     <button type="button" class="btn btn-default">Right</button>
+                   </div>
+                  </div>
+                  `,
+       data() {
+         return {};
+       },
+     },
+   };
+   return _obj;
+ },
+ ".input-group"() {
+   var _note = `
+          <pre>
+          1.input-group-addon 不適用 button , input.text 之類的 tag ,
+            只適用 label span 之類的 tag , 但是可以使用 btn 的樣式,
+            以 擬 btn 的方式做應用 
+          2. form-control 的樣式只能存在一個 ,不然就產生錯置的情形
+          </pre>
+           `;
+   var _obj = {
+     _vue: {
+       template: `
+                 <div>
+                    ${_note}
+                    <div class="input-group">
+                      <span class="input-group-addon" id="basic-addon1">@</span>
+                      <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+                      <span class="input-group-addon btn"  >@</span>
+                    </div>
+                 </div>
+                 `,
+       data() {
+         return {};
+       },
+     },
+   };
+   return _obj;
+ },
+ ".input-group-btn"() {
+   var _note = `
+            <pre>
+            參考自 http://jsfiddle.net/yLvk5mn1/31/
+            但試著做成兩個 input 連在一起,發現不可行....
+            </pre>
+            `;
+   var _obj = {
+      
+     _vue: {
+       template: `
+                  <div>
+                     ${_note}
+                     <div class="input-group" style="margin: 10px;">
+                       <span class="input-group-addon">Between</span>
+                       <input type="text" class="form-control" placeholder="Type something..." />
+                       <span class="input-group-addon" style="border-left: 0; border-right: 0;"></span>
+                       <input type="text" class="form-control" placeholder="Type something..." />
+                       </div>
+                  </div>
+                  `,
+       data() {
+         return {};
+       },
+     },
+   };
+   return _obj;
+ },
+  std1() {
+    var _note = `
          <pre>
          </pre>
          `;
-      var _obj = {
-         _vue: {
-            template: `
+    var _obj = {
+      _vue: {
+        template: `
                <div>
                   ${_note}
                   <div class="input-group">
@@ -637,29 +716,30 @@ let Group = {
                   </div>
                </div>
                `,
-            data(){
-               return {
-                  list:['Action','Another action','Something else here'],
-                  sel_key:0,
-                  display:'',
-               }
-            },
-            methods:{
-               selected(el,key){
-                  this.sel_key = key;
-                  this.display = el;
-               }
-            }
-         }
-      };
-      return _obj;
-   },
+        data() {
+          return {
+            list: ["Action", "Another action", "Something else here"],
+            sel_key: 0,
+            display: "",
+          };
+        },
+        methods: {
+          selected(el, key) {
+            this.sel_key = key;
+            this.display = el;
+          },
+        },
+      },
+    };
+    return _obj;
+  },
 };
+ 
 let Fail = {
-   'input-group'() {
-       var _obj = {
-          _vue:{
-             template: `
+  "input-group"() {
+    var _obj = {
+      _vue: {
+        template: `
              <div>
                <pre>原本主要目的,是要 使用 input-group 將控件形成 group,
                但指定 label 寛度時,就會出現破版的問題</pre>
@@ -672,9 +752,10 @@ let Fail = {
                   </div>
                </span>
              </div>
-             `
-          }};
-       return _obj;
-    },
-}
-window.sample = {  Views,Tool,Group ,Fail ,def:'std1' };
+             `,
+      },
+    };
+    return _obj;
+  },
+};
+window.sample = { Views, Tool, Group, Fail, def: "std1" };
