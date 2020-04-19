@@ -651,13 +651,13 @@ let Group = {
            `;
    var _obj = {
      _vue: {
+      //  <span class="input-group-addon" id="basic-addon1">@</span>
+      //  <span class="input-group-addon btn"  >@</span>
        template: `
                  <div>
                     ${_note}
                     <div class="input-group">
-                      <span class="input-group-addon" id="basic-addon1">@</span>
                       <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
-                      <span class="input-group-addon btn"  >@</span>
                     </div>
                  </div>
                  `,
@@ -758,4 +758,49 @@ let Fail = {
     return _obj;
   },
 };
-window.sample = { Views, Tool, Group, Fail, def: "std1" };
+let Vue_Prd = {
+  std1() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
+      var _obj = {
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  <div>[input value]{{value}}</div>
+                  <bts-grp-filed 
+                    label="基本型" 
+                    v-model="value"
+                    placeholder="test"
+                    ></bts-grp-filed>
+                  <bts-grp-filed 
+                    label="應用型" 
+                    >
+                      <input type="checkbox" v-model="_check_value"/>
+                    </bts-grp-filed>
+               </div>
+               `,
+            data(){
+               return {
+                value:''
+              }
+            },
+            computed: {
+              _check_value:{
+                get(){
+                  if (typeof(this.value)!='boolean') return true;
+                  return this.value;
+                },
+                set(val){
+                  this.value=val;
+                }
+              }
+            }, 
+         }
+      };
+      return _obj;
+   },
+}
+window.sample = { Views, Tool, Group, Fail, Vue_Prd, def: "std1" };

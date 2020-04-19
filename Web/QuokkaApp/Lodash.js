@@ -29,13 +29,17 @@ var fn = {
         arr;
     },
     '_assignInWith'(){
-        var a = {a:1,c:3,z:{z1:1}};
+        var a = {a:1,c:3,z:{z1:1,z3:3}};
         var b = {a:-1,b:2,z:{z1:-1,z2:-1}}
         var c = [
             _.assignInWith({},a,b),
             _.assignWith({},a,b),
             _.assignIn({},a,b),
+            //既有的不會被覆蓋一,沒有的項目會添加進去 
             _.defaultsDeep({},a,b),
+            //既有的會被覆蓋一,沒有的項目會添加進去 
+            _.merge({},a,b),
+            
         ];
         c
     }
