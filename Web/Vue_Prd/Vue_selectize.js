@@ -98,9 +98,11 @@
                             return this.values;
                         },
                         set(val) {
-                            this.sel.setValue(val, true);
+                            //this.sel.setValue(val, true);
+                            //this.values = val;
                             this.$emit('update:values', val);
                             this.$emit('input', val);
+                            //console.log(this.values);
                         }
                     },
                     
@@ -159,8 +161,8 @@
                         <div :class="[isShowIcon?'':'input-group-btn']"  v-show="readonly==false">
                             <select></select>
                         </div>
-                        <span class="input-group-btn btn" v-if="readonly" readonly>
-                            {{fn_View()}}
+                        <span class="input-group-btn" v-if="readonly" readonly>
+                            <span class="btn"  v-html="fn_View()"></span>
                         </span>
                     </div >
                     `,
@@ -177,6 +179,10 @@
                     query_when_filterd_zero:{
                         type: Boolean,
                         default: true
+                    },
+                    readonly_filed: {
+                        type: String,
+                        default: null
                     }
                 },
                 computed:{
@@ -218,7 +224,11 @@
                         return false;
                     },
                     fn_View(){
-                        return '<br />'
+                        debugger
+                        if (this.selected_val.length == 0){
+                            return '<br />'
+                        }
+                        return this.selected_val.join(',');
                     }
                 }
             });

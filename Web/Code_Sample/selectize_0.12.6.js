@@ -6,9 +6,9 @@ var _def =
 {
    options(){
       return [
-         {email: 'brian@thirdroute.com', name: 'Brian Reavis'},
-         {email: 'nikola@tesla.com', name: 'Nikola Tesla'},
-         {email: 'someone@gmail.com'}
+         {email: 'brian@thirdroute.com', name: 'Brian Reavis',tt:'A'},
+         {email: 'nikola@tesla.com', name: 'Nikola Tesla',tt:'B'},
+         {email: 'someone@gmail.com', name: 'name',tt:'C'}
       ]
    },
    ops(){
@@ -152,24 +152,42 @@ var Vue_Prd = {
            </pre>
            `;
          var _obj = {
+            _css:`
+            .input-group-btn[readonly] {
+               background-color: rgb(237, 241, 242);
+               opacity: 1;
+               text-align: left !important;
+           }
+            `,
            _vue: {
               template: `
                  <div>
                     ${_note}
                     [readonly] <input type=checkbox v-model="readonly" />
                     [query_when_filterd_zero] <input type=checkbox v-model="query_when_filterd_zero" />
-                    <div>[value]{{value}}</div>
-                    <vue-selectize-dynquery v-model="value" 
+                    <div>[value]{{value_1}}</div>
+                    <vue-selectize-dynquery v-model="value_1" 
                      :options="options"  
                      :selectize_ops="x_ops"
                      :readonly="readonly"
                      :query_when_filterd_zero="query_when_filterd_zero"
                      ></vue-selectize-dynquery>
+                     <hr />
+                     <div>顯示使用不同的欄位</div>
+                     <div>[value]{{value_2}}</div>
+                     <vue-selectize-dynquery v-model="value_2" 
+                        :options="options"  
+                        :selectize_ops="x_ops"
+                        :readonly="readonly"
+                        :query_when_filterd_zero="query_when_filterd_zero"
+                        readonly_filed="tt"
+                        ></vue-selectize-dynquery>
                  </div>
                  `,
                  data(){
                   return {
-                     value:'123',
+                     value_1:'123',
+                     value_2:'123',
                      options,
                      x_ops,
                      readonly:true,
