@@ -1,8 +1,6 @@
 /*
 [Ref]
-https://zh.wikipedia.org/wiki/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F
-https://regex101.com/codegen?language=csharp
-https://regexr.com/
+https://lodash.net/docs/4.16.1.html
 */
 
 import * as _ from 'lodash';

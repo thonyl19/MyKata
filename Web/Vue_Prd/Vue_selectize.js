@@ -38,7 +38,7 @@
         Base(){
             return {
                 props: {
-                    values: {
+                    value: {
                         type: [String, Array],
                         default: ''
                     },
@@ -69,7 +69,7 @@
                     var _self = this;
                     
                     var opt =_self._init_ops();
-                    _self.sel = $('select',this.$el)
+                    _self.sel = $('select',_self.$el)
                         .selectize(opt)[0]
                         .selectize;
                     
@@ -95,14 +95,12 @@
                 computed: {
                     selected_val: {
                         get() {
-                            return this.values;
+                            return this.value;
                         },
                         set(val) {
-                            //this.sel.setValue(val, true);
-                            //this.values = val;
-                            this.$emit('update:values', val);
+                            if (typeof(val)=="string") val =[val];
+                            this.$emit('update:value', val);
                             this.$emit('input', val);
-                            //console.log(this.values);
                         }
                     },
                     
@@ -143,6 +141,8 @@
                     },
                     getSelectedRow() {
                         var _sel = this.sel;
+                        // let {items} = _sel;
+                        // if (items==null) return [];
                         var SelectedRow = $.map(_sel.items, function (value) {
                             return _sel.options[value];
                         });
@@ -162,10 +162,11 @@
                             <select></select>
                         </div>
                         <span class="input-group-btn" v-if="readonly" readonly>
-                            <span class="btn"  v-html="fn_View()"></span>
+                            <span class="btn" v-html="readonly_html"></span>
                         </span>
                     </div >
                     `,
+ 
                 props:{
                     icon_search: {
                         type: Boolean,
@@ -189,6 +190,28 @@
                     isShowIcon() {
                         return this.icon_search && (this.readonly == false);
                     },
+                    readonly_html(){
+                        var _arr = [];
+                        // if (this.readonly_filed !=null){
+                        //     _arr = this.options.map(el=>{
+
+                        //     })
+                        //     _.each(this.options,(el)=>{
+                        //         _arr.push(el[this.readonly_filed]);
+                        //     })
+                        //     if (_arr.length !=0){
+                        //         return _arr.join(',');
+                        //     }
+                        // } 
+                        _arr = Array.isArray(this.value)
+                            ?this.value
+                            :[this.value];
+                        //console.log([this.value,this.selected_val]);
+                        if (_arr.length == 0){
+                            return '<br />';
+                        }
+                        return _arr.join(',');
+                    }
                 },
                 methods: {
                     _init_ops(){
@@ -223,13 +246,7 @@
                         });
                         return false;
                     },
-                    fn_View(){
-                        debugger
-                        if (this.selected_val.length == 0){
-                            return '<br />'
-                        }
-                        return this.selected_val.join(',');
-                    }
+                    
                 }
             });
             return _obj;
