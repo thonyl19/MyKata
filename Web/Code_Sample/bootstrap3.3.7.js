@@ -1,5 +1,6 @@
 ﻿/*
 https://v3.bootcss.com/getting-started/
+http://w3c.3306.biz/bootstrap_input_groups/show-35-123-1.html
 */
 let Views = {
   Form1() {

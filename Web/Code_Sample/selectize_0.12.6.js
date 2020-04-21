@@ -208,6 +208,9 @@ var Vue_Prd = {
               `,
               data(){
                return {
+                  list:[
+                     []
+                  ],
                   value_1:'brian@thirdroute.com',
                   value_2:['brian@thirdroute.com','nikola@tesla.com'],
                   options,
