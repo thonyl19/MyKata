@@ -56,7 +56,10 @@ var Vue_Prd = {
                    ${_note}
                    <div>[values]{{values}}</div>
                    [readonly]<input type=checkbox v-model="readonly" />
-                   <vue-selectize v-model="values" :options="options"  :selectize_ops="x_ops" :readonly="readonly"></vue-selectize>
+                   <vue-selectize v-model="values" :options="options"  
+                        :selectize_ops="x_ops"
+                        :readonly="readonly"
+                        ></vue-selectize>
                 </div>
                 `,
              data(){
@@ -144,9 +147,92 @@ var Vue_Prd = {
        };
        return _obj;
     },
+    //'all type'
+    def() {
+      var options = _def.options();
+
+      var _note = `
+        <pre>
+        </pre>
+        `;
+      var _obj = {
+         _css:`
+         .input-group-btn[readonly] {
+            background-color: rgb(237, 241, 242);
+            opacity: 1;
+            text-align: left !important;
+        }
+         `,
+        _vue: {
+           template: `
+              <div>
+                 ${_note}
+                 <div>readonly="true",readonly_inputType="false"</div>
+                 <vue-selectize-dynquery v-model="value_1" 
+                     :options="options"  
+                     :selectize_ops="x_ops(1)"
+                     :readonly="true"
+                     :readonly_inputType="false"
+                     :query_when_filterd_zero="query_when_filterd_zero"
+                     ></vue-selectize-dynquery>
+                  
+                  <div>readonly="false",readonly_inputType="true"</div>
+                  <vue-selectize-dynquery v-model="value_1" 
+                     :options="options"  
+                     :selectize_ops="x_ops(1)"
+                     :readonly="false"
+                     :readonly_inputType="true"
+                     :query_when_filterd_zero="query_when_filterd_zero"
+                     ></vue-selectize-dynquery>
+                  
+                  <div>readonly="true",readonly_inputType="true"</div>
+                  <vue-selectize-dynquery v-model="value_1" 
+                     :options="options"  
+                     :selectize_ops="x_ops(1)"
+                     :readonly="true"
+                     :readonly_inputType="true"
+                     :query_when_filterd_zero="query_when_filterd_zero"
+                     ></vue-selectize-dynquery>
+                  
+                  <div>readonly="false",readonly_inputType="false"</div>
+                  <vue-selectize-dynquery v-model="value_1" 
+                     :options="options"  
+                     :selectize_ops="x_ops(1)"
+                     :readonly="false"
+                     :readonly_inputType="false"
+                     :query_when_filterd_zero="query_when_filterd_zero"
+                     ></vue-selectize-dynquery>
+                 <hr/>
+                  
+              </div>
+              `,
+              data(){
+               return {
+                  value_1:'brian@thirdroute.com',
+                  value_2:['brian@thirdroute.com','nikola@tesla.com'],
+                  options,
+                  readonly:true,
+                  readonly_inputType:true,
+                  query_when_filterd_zero:true
+               }
+             },
+             methods:{
+               x_ops(Case){
+                  var x_ops = _def.ops();
+                  switch(Case){
+                     case 2:
+                        x_ops.maxItems=3;
+                        break;
+                  }
+                  return x_ops;
+               }
+             } 
+        }
+     };
+     return _obj;
+  },
     //'vue-selectize-grp_1'
     std1() {
-         var x_ops = _def.ops();
          var options = _def.options();
 
          var _note = `
@@ -167,11 +253,21 @@ var Vue_Prd = {
                     ${_note}
                     [readonly] <input type=checkbox v-model="readonly" />
                     [query_when_filterd_zero] <input type=checkbox v-model="query_when_filterd_zero" />
+                    [readonly_inputType]<input type=checkbox v-model="readonly_inputType" />
                     <div>[value]{{value_1}}</div>
                     <vue-selectize-dynquery v-model="value_1" 
                      :options="options"  
-                     :selectize_ops="x_ops"
+                     :selectize_ops="x_ops(1)"
                      :readonly="readonly"
+                     :readonly_inputType="readonly_inputType"
+                     :query_when_filterd_zero="query_when_filterd_zero"
+                     ></vue-selectize-dynquery>
+                  <hr/>
+                  <vue-selectize-dynquery v-model="value_1" 
+                     :options="options"  
+                     :selectize_ops="x_ops(1)"
+                     :readonly="!readonly"
+                     :readonly_inputType="!readonly_inputType"
                      :query_when_filterd_zero="query_when_filterd_zero"
                      ></vue-selectize-dynquery>
                      <hr />
@@ -179,8 +275,9 @@ var Vue_Prd = {
                      <div>[value]{{value_2}}</div>
                      <vue-selectize-dynquery v-model="value_2" 
                         :options="options"  
-                        :selectize_ops="x_ops"
+                        :selectize_ops="x_ops(2)"
                         :readonly="readonly"
+                        :readonly_inputType="readonly_inputType"
                         :query_when_filterd_zero="query_when_filterd_zero"
                         readonly_filed="tt"
                         ></vue-selectize-dynquery>
@@ -189,11 +286,22 @@ var Vue_Prd = {
                  data(){
                   return {
                      value_1:'brian@thirdroute.com',
-                     value_2: ['A','B'],
+                     value_2:['brian@thirdroute.com','nikola@tesla.com'],
                      options,
-                     x_ops,
                      readonly:true,
+                     readonly_inputType:true,
                      query_when_filterd_zero:true
+                  }
+                },
+                methods:{
+                  x_ops(Case){
+                     var x_ops = _def.ops();
+                     switch(Case){
+                        case 2:
+                           x_ops.maxItems=3;
+                           break;
+                     }
+                     return x_ops;
                   }
                 } 
            }
@@ -205,5 +313,5 @@ var Vue_Prd = {
 window.sample = { 
   Views ,
   Vue_Prd
-  ,def:'std1' 
+  ,def:'def' 
 };

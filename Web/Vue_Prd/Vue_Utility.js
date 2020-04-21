@@ -30,6 +30,7 @@
             return {
                 type: Function,
                 default(cb) {
+                    console.log('Fun()');
                     if (typeof (cb) == "function") cb();
                 }
             };
