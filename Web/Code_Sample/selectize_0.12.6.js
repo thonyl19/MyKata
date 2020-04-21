@@ -55,14 +55,16 @@ var Vue_Prd = {
                 <div>
                    ${_note}
                    <div>[values]{{values}}</div>
-                   <vue-selectize v-model="values" :options="options"  :selectize_ops="x_ops"></vue-selectize>
+                   [readonly]<input type=checkbox v-model="readonly" />
+                   <vue-selectize v-model="values" :options="options"  :selectize_ops="x_ops" :readonly="readonly"></vue-selectize>
                 </div>
                 `,
              data(){
                return  {
                   values:'',
                   options,
-                  x_ops
+                  x_ops,
+                  readonly:false
                }
              } 
           }
@@ -186,8 +188,8 @@ var Vue_Prd = {
                  `,
                  data(){
                   return {
-                     value_1:'123',
-                     value_2:'123',
+                     value_1:'brian@thirdroute.com',
+                     value_2: ['A','B'],
                      options,
                      x_ops,
                      readonly:true,

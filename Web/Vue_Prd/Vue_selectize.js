@@ -75,7 +75,7 @@
                     
                     _self.sel.on("change", _self.fn_change);
                     _self.sel.setValue(_self.selected_val, true);
-        
+                    //console.log('mounted:setValue');
                     if (_self.is_formcontrol) {
                         _self.sel.$control.addClass('form-control');
                     }
@@ -90,6 +90,14 @@
                 watch: {
                     options(options) {
                         this.bind_options(options);
+                    },
+                    readonly(val){
+                        console.log('watch:readonly');
+                        if (val){
+                            this.sel.lock()
+                        }else{
+                            this.sel.unlock()
+                        }
                     }
                 },
                 computed: {
@@ -152,6 +160,103 @@
             }
         },
         Bts_DynQuery(){
+            var _obj =  _.merge(_fn.Base(),{
+                template: `
+                    <div class="x-vue-selectize-grp input-group">
+                        <div class="input-group-addon" v-show="readonly==false">
+                            <i class="fa fa-search" aria-hidden="true" ></i>
+                        </div>
+                        <div :class="[isShowIcon?'':'input-group-btn']">
+                            <select></select>
+                        </div>
+                    </div >
+                    `,
+ 
+                props:{
+                    icon_search: {
+                        type: Boolean,
+                        default: true
+                    },
+                    is_formcontrol: {
+                        type: Boolean,
+                        default: true
+                    },
+                    fn_query: Vue.prototype.$PropDef.Fun(),
+                    query_when_filterd_zero:{
+                        type: Boolean,
+                        default: true
+                    },
+                    readonly_filed: {
+                        type: String,
+                        default: null
+                    }
+                },
+                computed:{
+                    isShowIcon() {
+                        return this.icon_search && (this.readonly == false);
+                    },
+                    readonly_html(){
+                        var _arr = [];
+                        // if (this.readonly_filed !=null){
+                        //     _arr = this.options.map(el=>{
+
+                        //     })
+                        //     _.each(this.options,(el)=>{
+                        //         _arr.push(el[this.readonly_filed]);
+                        //     })
+                        //     if (_arr.length !=0){
+                        //         return _arr.join(',');
+                        //     }
+                        // } 
+                        _arr = Array.isArray(this.value)
+                            ?this.value
+                            :[this.value];
+                        //console.log([this.value,this.selected_val]);
+                        if (_arr.length == 0){
+                            return '<br />';
+                        }
+                        return _arr.join(',');
+                    }
+                },
+                methods: {
+                    _init_ops(){
+                        var _self = this;
+                        var _base = {
+                            create: this.fn_create,
+                            render: {
+                                option_create(data, escape) {
+                                    //console.log([_self.query_when_filterd_zero , this.currentResults.total]);
+                                    if (_self.query_when_filterd_zero==false || this.currentResults.total == 0) {
+                                        return `
+                                        <div class="option"> 
+                                            <span class="label label-success">Query</span> ${escape(data.input)}
+                                        </div>
+                                        `
+                                    }
+                                    return "";
+                                }
+                            }
+                        };
+                        var _ops = _fn.selectize_def(_base,this.selectize_ops);
+                        if (this.options != null)
+                            _ops.options = this.options;
+                        return _ops;
+                    },
+                    fn_create(input, callback) {
+                        var _self = this;
+                        _self.fn_query(input, (data) => {
+                            _self.selected_val = "";
+                            _self.sel.clear(true);
+                            _self.sel.setTextboxValue("");
+                        });
+                        return false;
+                    },
+                    
+                }
+            });
+            return _obj;
+        },
+        Bts_DynQuery_(){
             var _obj =  _.merge(_fn.Base(),{
                 template: `
                     <div class="x-vue-selectize-grp input-group">

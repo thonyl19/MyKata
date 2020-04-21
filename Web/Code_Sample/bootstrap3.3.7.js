@@ -1,4 +1,7 @@
-﻿let Views = {
+﻿/*
+https://v3.bootcss.com/getting-started/
+*/
+let Views = {
   Form1() {
     var _vue = {
       template: `
