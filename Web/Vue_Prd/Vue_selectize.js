@@ -54,6 +54,10 @@
                         type: Boolean,
                         default: false
                     },
+                    single_value:{
+                        type: Boolean,
+                        default: false
+                    },
                     event_enter: Vue.prototype.$PropDef.FunAppend(),
                     auto_drowdown:{
                         type: Boolean,
@@ -86,6 +90,9 @@
                             event_enter(e, _self.sel);
                         }
                     })
+                    if (_self.readonly){
+                        _self.sel.lock();
+                    }
                 },
                 watch: {
                     options(options) {
@@ -106,11 +113,12 @@
                         },
                         set(val) {
                             if (typeof(val)=="string") val =[val];
-                            this.$emit('update:value', val);
+                            if (this.single_value && val.length!=0){
+                                val = val[0];
+                            }
                             this.$emit('input', val);
                         }
                     },
-                    
                 },
                 destroyed: function () {
                     this.sel.destroy();
@@ -161,24 +169,24 @@
         Bts_DynQuery(){
             var _obj =  _.merge(_fn.Base(),{
                 template: `
-                    <div class="x-vue-selectize-grp input-group">
-                        <div class="input-group-addon" v-show="readonly==false">
-                            <i class="fa fa-search" aria-hidden="true" ></i>
-                        </div>
-                        <div :class="[isShowIcon?'':'input-group-btn']"  v-show="readonly==false">
+                    <div class="x-vue-selectize-grp input-group" :style="fix_layout">
+                        <slot name="addon" v-if="icon_search" >
+                            <div class="input-group-addon" v-if="readonly==false" @click="icon_search_click">
+                                <i class="fa fa-search" aria-hidden="true" ></i>
+                            </div>
+                        </slot>
+                        <input type="text" class="form-control" v-if="readonly_type=='TT'" readonly v-model="readonly_input" /> 
+                        <div v-show="select_show" >
                             <select></select>
                         </div>
-                        <span class="input-group-btn" v-if="readonly" readonly>
-                            <span class="btn" v-html="readonly_html"></span>
-                        </span>
                     </div >
                     `,
- 
                 props:{
                     icon_search: {
                         type: Boolean,
                         default: true
                     },
+                    icon_search_click: Vue.prototype.$PropDef.Fun(),
                     is_formcontrol: {
                         type: Boolean,
                         default: true
@@ -191,29 +199,36 @@
                     readonly_filed: {
                         type: String,
                         default: null
+                    },
+                    readonly_inputType:{
+                        type: Boolean,
+                        default: true
                     }
                 },
                 computed:{
+                    readonly_type(){
+                        var A = this.readonly?"T":"F";
+                        var B = this.readonly_inputType?"T":"F";
+                        return A+B;
+                    },
+                    select_show(){
+                        return this.readonly_type!='TT';
+                    },
+                    fix_layout(){
+                        var isNeedFix = this.readonly_type == "TF" || this.readonly_type == "TT";
+                        if (isNeedFix || !this.icon_search){
+                            return {display:'block !important'} 
+                        }
+                        return {};
+                    },
                     isShowIcon() {
                         return this.icon_search && (this.readonly == false);
                     },
-                    readonly_html(){
+                    readonly_input(){
                         var _arr = [];
-                        // if (this.readonly_filed !=null){
-                        //     _arr = this.options.map(el=>{
-
-                        //     })
-                        //     _.each(this.options,(el)=>{
-                        //         _arr.push(el[this.readonly_filed]);
-                        //     })
-                        //     if (_arr.length !=0){
-                        //         return _arr.join(',');
-                        //     }
-                        // } 
                         _arr = Array.isArray(this.value)
                             ?this.value
                             :[this.value];
-                        //console.log([this.value,this.selected_val]);
                         if (_arr.length == 0){
                             return '<br />';
                         }
