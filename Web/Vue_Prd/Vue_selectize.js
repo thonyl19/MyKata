@@ -90,6 +90,13 @@
                 watch: {
                     options(options) {
                         this.bind_options(options);
+                    },
+                    readonly(val) {
+                        if (val) {
+                            this.sel.lock();
+                        } else {
+                            this.sel.unlock();
+                        }
                     }
                 },
                 computed: {
