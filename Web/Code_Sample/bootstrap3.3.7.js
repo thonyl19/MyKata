@@ -620,17 +620,25 @@ let Group = {
     };
     return _obj;
   },
-  ".btn-group"() {
+  //".btn-group"
+  def() {
    var _note = `
             <pre>
             </pre>
             `;
    var _obj = {
+     _css:`
+      .btn-grp{
+        text-align:left;
+        border: 1px solid #ccc;
+      }
+     `,
      _vue: {
        template: `
                   <div>
                      ${_note}
                      <div class="btn-group" role="group" aria-label="...">
+                     <input type="text" class="btn btn-grp">Left</input>
                      <button type="button" class="btn btn-default">Left</button>
                      <button type="button" class="btn btn-default">Middle</button>
                      <button type="button" class="btn btn-default">Right</button>
@@ -807,4 +815,4 @@ let Vue_Prd = {
       return _obj;
    },
 }
-window.sample = { Views, Tool, Group, Fail, Vue_Prd, def: "std1" };
+window.sample = { Views, Tool, Group, Fail, Vue_Prd, def: "def" };

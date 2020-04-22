@@ -613,7 +613,61 @@
       }
     };
     return _obj;
-  }
+  },
+  def() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
+      var _obj = {
+        _css:`
+        .Group{
+          margin: 1em;
+              border-radius: 3px;
+              box-sizing:border-box;
+              border: 1px solid #ccc;
+              display:table;              
+        }
+        .Group input[type=text],
+        .Group button{
+          display:table-cell;
+        }
+        .Group input[type=text]{
+            height: 34px;
+            padding: 0px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 0px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        
+        }
+        `,
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  <div class=Group>
+                    <input type="text" />
+                    <button>test</button>
+                  </div>
+               </div>
+               `,
+            data(){
+               return {
+              }
+            } 
+         }
+      };
+      return _obj;
+   },
 };
 
-window.sample = { views ,def:'scroll' };
+window.sample = { views ,def:'def' };
