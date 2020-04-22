@@ -1,320 +1,396 @@
-﻿/*
-https://github.com/selectize/selectize.js/tree/master/docs
-*/
-
-var _def = 
-{
-   options(){
-      return [
-         {email: 'brian@thirdroute.com', name: 'Brian Reavis',tt:'A'},
-         {email: 'nikola@tesla.com', name: 'Nikola Tesla',tt:'B'},
-         {email: 'someone@gmail.com', name: 'name',tt:'C'}
-      ]
-   },
-   ops(){
-      var obj = {
-         delimiter: ',',
-         persist: false,
-         valueField: 'email',
-         labelField: 'name',
-         searchField: ['name', 'email'],
-      };
-      return obj;
+﻿(function (root, factory) {
+   if (typeof define === 'function' && define.amd) {
+       //AMD
+       define(['jquery', 'Vue'], factory);
+   } else if (typeof exports === 'object') {
+       //Node, CommonJS之类的
+       module.exports = factory(require('jquery'), require('Vue'));
+   } else {
+       //浏览器全局变量(root 即 window)
+       root.returnExports = factory(root.jQuery, root.Vue, root._);
    }
-};
-let Views = {
-  Base() {
-      var _obj = {
-         _vue:{
-            template: `
-            <div>
-               <select></select>
-            </div>
-            `,
-            mounted() {
-               var ops = _def.ops();
-               ops.options = _def.options();
-               $('select',this.$el).selectize(ops);
-            },
-         }};
-      return _obj;
-   }
-};
-var Vue_Prd = {
-   'vue-selectize_0'() {
-      debugger;
-      var _note =`
-          <pre>基本型應用</pre>
-          `;
-      var x_ops = _def.ops();
-      //x_ops.options = _def.options();
-      var options = _def.options();
-      var _obj = {
-          _vue: {
-             template: `
-                <div>
-                   ${_note}
-                   <div>[values]{{values}}</div>
-                   [readonly]<input type=checkbox v-model="readonly" />
-                   <vue-selectize v-model="values" :options="options"  
-                        :selectize_ops="x_ops"
-                        :readonly="readonly"
-                        ></vue-selectize>
-                </div>
-                `,
-             data(){
-               return  {
-                  values:'',
-                  options,
-                  x_ops,
-                  readonly:false
+}(this, function ($, Vue, _) {
+   var _fn = {
+       selectize_def(...args) {
+           var _base = {
+               create: false,
+               maxItems: 1,
+               theme: 'links',
+               labelField: 'Display',
+               valueField: 'No',
+               searchField: ['Display', 'No'],
+           }
+           return _.merge(_base, ...args)
+       },
+       /**
+        * 特殊 render 程序 
+        */
+       render_sty: {
+           GTMES(arg) {
+               var _base = {
+                   render: {
+                       option(data, escape) {
+                           let { labelField, valueField } = this.settings;
+                           return `
+                           <div class="option">
+                           <span class="label label-primary">${escape(data[valueField])}</span> ${escape(data[labelField])}
+                           </div>
+                       `;
+                       },
+                       item(data, escape) {
+                           let { labelField, valueField } = this.settings;
+                           return `<div class="item"><span class="label label-primary">${escape(data[valueField])}</span> ${escape(data[labelField])}</div>`;
+                       }
+                   }
                }
-             } 
-          }
-       };
-       return _obj;
-   },
-   'vue-selectize_1'() {
-       var _note = `
-          <pre>應用型
-          1.動態載入,複選測試,auto_drowdown
-          2.反自動下拉模式,是為了演示,當載入資料後,
-            auto_drowdown 不要產生預定的行為,就可以用 bind_options 的程序,
-            另外完成這樣需求.
-          </pre>
-          `;
-          var x_ops = _def.ops();
-          x_ops.maxItems = 2;
-          var _obj = {
-            _vue: {
-               template: `
-                  <div>
-                     ${_note}
-                     <div>[values]{{values}}</div>
-                     [資料更新後,自動顯示]<input type=checkbox v-model="auto_drowdown" />
-                     <button @click="Load">Load Data</button>
-                     <button @click="Load1">Load Data(反自動下拉模式)</button>
-                     <vue-selectize ref="sel" v-model="values" :options="options" :selectize_ops="x_ops" :auto_drowdown="auto_drowdown"></vue-selectize>
-                  </div>
-                  `,
-               data(){
-                 return  {
-                    values:'',
-                    auto_drowdown:false,
-                    options:[],
-                    x_ops
-                 }
+               return _.merge(_base, arg)
+           }
+       },
+       Base() {
+           return {
+               props: {
+                   value: {
+                       type: [String, Array],
+                       default: ''
+                   },
+                   options: {
+                       type: Array,
+                       default: null
+                   },
+                   selectize_ops: {
+                       type: Object,
+                       default() { return {} }
+                   },
+                   is_formcontrol: {
+                       type: Boolean,
+                       default: false
+                   },
+                   auto_drowdown: {
+                       type: Boolean,
+                       default: false
+                   },
+                   readonly: {
+                       type: Boolean,
+                       default: false
+                   },
+                   render_sty: {
+                       type: String,
+                       default: null
+                   },
+                   event_enter: Vue.prototype.$PropDef.FunAppend(),
+                   auto_load: Vue.prototype.$PropDef.FunAppend(),
+               },
+               template: '<div class="x-vue-selectize"><select></select></div>',
+               mounted() {
+                   var _self = this;
+
+                   var opt = _self._init_ops();
+                   if (_self.render_sty != null) {
+                       let render = _fn.render_sty[_self.render_sty];
+                       if (render != null) {
+                           ops = render(ops);
+                       }
+                   }
+                   console.log({ 'select:mounted': opt })
+
+                   _self.sel = $('select', _self.$el)
+                       .selectize(opt)[0]
+                       .selectize;
+
+                   _self.sel.on("change", _self.fn_change);
+                   _self.sel.setValue(_self.selected_val, true);
+
+                   if (_self.is_formcontrol) {
+                       _self.sel.$control.addClass('form-control');
+                   }
+
+                   _self.sel.$control_input.keypress(function (e) {
+                       if (e.which == 13) {
+                           let { event_enter = _self.def_event_enter } = vm;
+                           event_enter(e, _self.sel);
+                       }
+                   })
+                   if (_self.readonly) {
+                       _self.sel.lock();
+                   }
+                   if (_self.auto_load != null) {
+                       debugger
+                       _self.auto_load();
+                   }
+               },
+               watch: {
+                   options(options) {
+                       this.bind_options(options);
+                   },
+                   readonly(val) {
+                       if (val) {
+                           this.sel.lock();
+                       } else {
+                           this.sel.unlock();
+                       }
+                   },
+                   value(val) {
+                       //console.log({ '[select:watch]': val })
+                       this.sel.setValue(val, true);
+                   }
+               },
+               computed: {
+                   selected_val: {
+                       get() {
+                           return this.value;
+                       },
+                       set(val) {
+                           //if (typeof (val) == "string") val = [val];
+                           //if (this.single_value && val.length != 0) {
+                           //    val = val[0];
+                           //}
+                           //console.log({ '[selected_val:computed]': val })
+                           this.$emit('input', val);
+                       }
+                   },
+               },
+               destroyed: function () {
+                   this.sel.destroy();
                },
                methods: {
-                  Load(){
-                     this.options = _def.options();
-                  },
-                  Load1(){
-                     this.$refs.sel.bind_options(_def.options(),!this.auto_drowdown);
-                  }
-               }, 
-            }
-         };
-         return _obj;
-    },
-    'BTS_GrpFiled 整合'() {
-      var x_ops = _def.ops();
-      var options = _def.options();
-       var _note = `
-          <pre>
-          </pre>
-          `;
-       var _obj = {
-          _vue: {
-             template: `
-                <div>
-                   ${_note}
-                   <bts-grp-filed 
-                    label="應用型" 
-                    >
-                    <vue-selectize v-model="value" :options="options"  :selectize_ops="x_ops"></vue-selectize>
-                    </bts-grp-filed>
-                </div>
-                `,
-             data(){
-               return {
-                  value:'',
-                  options,
-                  x_ops
+                   _init_ops() {
+                       var _ops = _fn.selectize_def(this.selectize_ops);
+                       if (this.options != null)
+                           _ops.options = this.options;
+                       return _ops;
+                   },
+                   bind_options(options, isAutoDrowDown = this.auto_drowdown) {
+                       if (options == null) return;
+                       var val = this.selected_val;
+                       this.sel.clearOptions();
+                       this.sel.addOption(options);
+                       this.sel.refreshOptions(isAutoDrowDown);
+                       this.sel.setValue(val);
+                   },
+                   def_event_enter(event, selObj) {
+                       let { $Alert = null } = this;
+                       var _msg = 'Data Not Find!!';
+                       if ($Alert != null) {
+                           $Alert.Err(_msg);
+                       } else {
+                           alert(_msg);
+                       }
+                   },
+                   fn_change() {
+                       var _val = this.sel.getValue();
+                       this.selected_val = _val;
+                   },
+                   getSelectedRow() {
+                       var _sel = this.sel;
+                       var SelectedRow = $.map(_sel.items, function (value) {
+                           return _sel.options[value];
+                       });
+                       return SelectedRow;
+                   },
+                   fn_View(isHtml = false) {
+                       debugger
+                       var _arr = [];
+                       _arr = Array.isArray(this.value)
+                           ? this.value
+                           : [this.value];
+                       var re = _arr.join(',');
+                       if (re == "" && isHtml) re = '<br />';
+                       return re;
+                   },
                }
-             } 
-          }
-       };
-       return _obj;
-    },
-    //'all type'
-    def() {
-      var options = _def.options();
-
-      var _note = `
-        <pre>
-        </pre>
-        `;
-      var _obj = {
-         _css:`
-         .input-group-btn[readonly] {
-            background-color: rgb(237, 241, 242);
-            opacity: 1;
-            text-align: left !important;
-        }
-         `,
-        _vue: {
-           template: `
-              <div>
-                 ${_note}
-                 <div>readonly="true",readonly_inputType="false"</div>
-                 <vue-selectize-dynquery v-model="value_1" 
-                     :options="options"  
-                     :selectize_ops="x_ops(1)"
-                     :readonly="true"
-                     :readonly_inputType="false"
-                     :query_when_filterd_zero="query_when_filterd_zero"
-                     ></vue-selectize-dynquery>
-                  
-                  <div>readonly="false",readonly_inputType="true"</div>
-                  <vue-selectize-dynquery v-model="value_1" 
-                     :options="options"  
-                     :selectize_ops="x_ops(1)"
-                     :readonly="false"
-                     :readonly_inputType="true"
-                     :query_when_filterd_zero="query_when_filterd_zero"
-                     ></vue-selectize-dynquery>
-                  
-                  <div>readonly="true",readonly_inputType="true"</div>
-                  <vue-selectize-dynquery v-model="value_1" 
-                     :options="options"  
-                     :selectize_ops="x_ops(1)"
-                     :readonly="true"
-                     :readonly_inputType="true"
-                     :query_when_filterd_zero="query_when_filterd_zero"
-                     ></vue-selectize-dynquery>
-                  
-                  <div>readonly="false",readonly_inputType="false"</div>
-                  <vue-selectize-dynquery v-model="value_1" 
-                     :options="options"  
-                     :selectize_ops="x_ops(1)"
-                     :readonly="false"
-                     :readonly_inputType="false"
-                     :query_when_filterd_zero="query_when_filterd_zero"
-                     ></vue-selectize-dynquery>
-                 <hr/>
-                  
-              </div>
-              `,
-              data(){
-               return {
-                  list:[
-                     []
-                  ],
-                  value_1:'brian@thirdroute.com',
-                  value_2:['brian@thirdroute.com','nikola@tesla.com'],
-                  options,
-                  readonly:true,
-                  readonly_inputType:true,
-                  query_when_filterd_zero:true
-               }
-             },
-             methods:{
-               x_ops(Case){
-                  var x_ops = _def.ops();
-                  switch(Case){
-                     case 2:
-                        x_ops.maxItems=3;
-                        break;
-                  }
-                  return x_ops;
-               }
-             } 
-        }
-     };
-     return _obj;
-  },
-    //'vue-selectize-grp_1'
-    std1() {
-         var options = _def.options();
-
-         var _note = `
-           <pre>
-           </pre>
-           `;
-         var _obj = {
-            _css:`
-            .input-group-btn[readonly] {
-               background-color: rgb(237, 241, 242);
-               opacity: 1;
-               text-align: left !important;
            }
-            `,
-           _vue: {
-              template: `
-                 <div>
-                    ${_note}
-                    [readonly] <input type=checkbox v-model="readonly" />
-                    [query_when_filterd_zero] <input type=checkbox v-model="query_when_filterd_zero" />
-                    [readonly_inputType]<input type=checkbox v-model="readonly_inputType" />
-                    <div>[value]{{value_1}}</div>
-                    <vue-selectize-dynquery v-model="value_1" 
-                     :options="options"  
-                     :selectize_ops="x_ops(1)"
-                     :readonly="readonly"
-                     :readonly_inputType="readonly_inputType"
-                     :query_when_filterd_zero="query_when_filterd_zero"
-                     ></vue-selectize-dynquery>
-                  <hr/>
-                  <vue-selectize-dynquery v-model="value_1" 
-                     :options="options"  
-                     :selectize_ops="x_ops(1)"
-                     :readonly="!readonly"
-                     :readonly_inputType="!readonly_inputType"
-                     :query_when_filterd_zero="query_when_filterd_zero"
-                     ></vue-selectize-dynquery>
-                     <hr />
-                     <div>顯示使用不同的欄位</div>
-                     <div>[value]{{value_2}}</div>
-                     <vue-selectize-dynquery v-model="value_2" 
-                        :options="options"  
-                        :selectize_ops="x_ops(2)"
-                        :readonly="readonly"
-                        :readonly_inputType="readonly_inputType"
-                        :query_when_filterd_zero="query_when_filterd_zero"
-                        readonly_filed="tt"
-                        ></vue-selectize-dynquery>
-                 </div>
-                 `,
-                 data(){
-                  return {
-                     value_1:'brian@thirdroute.com',
-                     value_2:['brian@thirdroute.com','nikola@tesla.com'],
-                     options,
-                     readonly:true,
-                     readonly_inputType:true,
-                     query_when_filterd_zero:true
-                  }
-                },
-                methods:{
-                  x_ops(Case){
-                     var x_ops = _def.ops();
-                     switch(Case){
-                        case 2:
-                           x_ops.maxItems=3;
-                           break;
-                     }
-                     return x_ops;
-                  }
-                } 
-           }
-        };
-        return _obj;
-     },
-}
+       },
+       Bts_DynQuery() {
+           var _obj = _.merge(_fn.Base(), {
+               template: `
+                   <div class="x-vue-selectize-grp input-group" :style="fix_layout">
+                       <slot name="addon" v-if="icon_search" >
+                           <div class="input-group-addon btn" v-if="readonly==false" @click="icon_search_click">
+                               <i class="fa fa-search" aria-hidden="true" ></i>
+                           </div>
+                       </slot>
+                       <input type="text" class="form-control" v-if="readonly_type=='TT'" readonly v-model="readonly_input" /> 
+                       <div v-show="select_show" >
+                           <select></select>
+                       </div>
+                   </div >
+                   `,
+               props: {
+                   icon_search: {
+                       type: Boolean,
+                       default: true
+                   },
+                   icon_search_click: Vue.prototype.$PropDef.Fun(),
+                   is_formcontrol: {
+                       type: Boolean,
+                       default: true
+                   },
+                   fn_query: Vue.prototype.$PropDef.Fun(),
+                   query_when_filterd_zero: {
+                       type: Boolean,
+                       default: true
+                   },
+                   readonly_filed: {
+                       type: String,
+                       default: null
+                   },
+                   readonly_inputType: {
+                       type: Boolean,
+                       default: true
+                   }
+               },
+               computed: {
+                   readonly_type() {
+                       var A = this.readonly ? "T" : "F";
+                       var B = this.readonly_inputType ? "T" : "F";
+                       return A + B;
+                   },
+                   select_show() {
+                       return this.readonly_type != 'TT';
+                   },
+                   fix_layout() {
+                       var isNeedFix = this.readonly_type == "TF" || this.readonly_type == "TT";
+                       if (isNeedFix || !this.icon_search) {
+                           return { display: 'block !important' }
+                       }
+                       return {};
+                   },
+                   isShowIcon() {
+                       return this.icon_search && (this.readonly == false);
+                   },
+                   readonly_input() {
+                       return this.fn_View();
+                   }
+               },
+               methods: {
+                   _init_ops() {
+                       var _self = this;
+                       var _base = {
+                           create: this.fn_create,
+                           render: {
+                               option_create(data, escape) {
+                                   //console.log([_self.query_when_filterd_zero , this.currentResults.total]);
+                                   if (_self.query_when_filterd_zero == false || this.currentResults.total == 0) {
+                                       return `
+                                       <div class="option"> 
+                                           <span class="label label-success">Query</span> ${escape(data.input)}
+                                       </div>
+                                       `
+                                   }
+                                   return "";
+                               }
+                           }
+                       };
+                       var _ops = _fn.selectize_def(_base, this.selectize_ops);
+                       if (this.options != null)
+                           _ops.options = this.options;
+                       return _ops;
+                   },
+                   fn_create(input, callback) {
+                       var _self = this;
+                       _self.fn_query(input, (data) => {
+                           _self.selected_val = "";
+                           _self.sel.clear(true);
+                           _self.sel.setTextboxValue("");
+                       });
+                       return false;
+                   },
 
-window.sample = { 
-  Views ,
-  Vue_Prd
-  ,def:'def' 
-};
+               }
+           });
+           return _obj;
+       },
+       Bts_ExtenInput() {
+       },
+       GT_GroupPara() {
+           var _obj = _.merge(_fn.Base(), {
+               props: {
+                   group_no: {
+                       type: String,
+                       default: null
+                   },
+                   auto_load: {
+                       type: Function,
+                       default() {
+                           var _self = this;
+                           _self.api_GroupPara(_self.group_no, (data) => {
+                               _self.options = data;
+                           })
+                       }
+                   },
+                   selectize_ops: {
+                       type: Object,
+                       default() {
+                           return {
+                               labelField: 'PARA_DSER',
+                               valueField: 'PARAMETER_NO',
+                               searchField: ['PARA_DSER', 'PARAMETER_NO'],
+                           }
+                       }
+                   },
+               },
+               /*
+                <slot name="addon" v-if="icon_search" >
+                           <div class="input-group-addon btn" v-if="readonly==false" @click="icon_search_click">
+                               <i class="fa fa-search" aria-hidden="true" ></i>
+                           </div>
+                       </slot>
+                       <input type="text" class="form-control" v-if="readonly_type=='TT'" readonly v-model="readonly_input" />
+                       <div v-show="select_show" >
+                           <select></select>
+                       </div> class="input-group-btn"
+                */
+               template: `
+                   <div class="input-group x-ddl-group-para">
+                       <slot name="addon" >
+                           <input type="text" class="form-control" v-if="isShowInput" v-model="input_val" v-bind:readonly="readonly" />
+                       </slot>
+                       <span v-show="readonly==false">
+                           <select />
+                       </span>
+                       <span class="input-group-btn btn"
+                           v-if="readonly" readonly 
+                           v-html="readonly_html">
+                       </span>
+                   </div >
+                   `,
+               computed: {
+                   isShowInput() {
+                       return this.input_value != null;
+                   }
+                   , readonly_html() {
+                       debugger
+                       return this.fn_View(true);
+                   }
+               },
+               methods: {
+                   api_GroupPara(GroupNo, cb) {
+                       var _self = this;
+                       var url = _self.$URL.chg_Path('MES/WorkOrder/GroupPara', { GroupNo });
+                       var _ajax = {
+                           url,
+                           type: 'get',
+                           success(data) {
+                               switch (typeof (cb)) {
+                                   case "function":
+                                       cb(data);
+                                       break;
+                                   case "boolean":
+                                       //tode
+                                       break;
+                               }
+
+                           }
+                       };
+                       $.submitForm(_ajax);
+                   },
+               }
+           });
+           return _obj;
+       }
+   }
+   Vue.component('vue-selectize', _fn.Base());
+   Vue.component('vue-selectize-dynquery', _fn.Bts_DynQuery());
+   Vue.component('vue-selectize-group-para', _fn.GT_GroupPara());
+
+}));
