@@ -7,9 +7,9 @@
         module.exports = factory(require('jquery'));
     } else {
         //浏览器全局变量(root 即 window)
-        factory(root.jQuery);
+        factory(root.jQuery,root._);
     }
-}(this, function ($) {
+}(this, function ($,_) {
     $(() => {
         window.tmpData = {
             "mydata": [
@@ -77,16 +77,17 @@
                             var _r = {};
                             let {def=''} = _self.sample;
                             for (var item in _self.sample){
-                                switch(item){
-                                    case 'def':
-                                        break;
-                                    default:
-                                        var grp = _self.sample[item];
-                                        var _fn = grp[def];
-                                        if (_fn != null) _self.act(_fn);
-                                        _r[item] = grp;
-                                        break;
+                                debugger
+                                var grp = _self.sample[item];
+                                var keys = Object.keys(grp);
+                                var arr = keys.filter((o)=>{
+                                    return  o.substring(0,1)=="*";
+                                })
+                                if (arr.length !=0){
+                                    var _fn = grp[arr[0]];
+                                    _self.act(_fn)
                                 }
+                                _r[item] = grp;
                             }
                             return _r;
                         }
