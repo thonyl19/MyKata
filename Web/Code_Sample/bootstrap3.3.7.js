@@ -620,8 +620,7 @@ let Group = {
     };
     return _obj;
   },
-  //".btn-group"
-  def() {
+  "*.btn-group"() {
    var _note = `
             <pre>
             </pre>

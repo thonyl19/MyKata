@@ -311,7 +311,7 @@ var Vue_Prd = {
         };
         return _obj;
      },
-     def() {
+     'vue-selectize-group-para'() {
          var _note = `
             <pre>
             </pre>
