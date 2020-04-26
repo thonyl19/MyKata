@@ -1,5 +1,6 @@
 ﻿/*
 https://v3.bootcss.com/getting-started/
+https://github.com/ElemeFE/element/tree/dev/packages
 */
 
 let Views = {
@@ -558,4 +559,145 @@ var Group = {
   
 }
 
-window.sample = {Views,Group ,Case,Fail,def:'std1'};
+var Row = {
+  'def'() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
+      var _obj = {
+        _css:`
+        .el-row {
+          margin-bottom: 20px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+        .el-col {
+          border-radius: 4px;
+        }
+        .bg-purple-dark {
+          background: #99a9bf;
+        }
+        .bg-purple {
+          background: #d3dce6;
+        }
+        .bg-purple-light {
+          background: #e5e9f2;
+        }
+        .grid-content {
+          border-radius: 4px;
+          min-height: 36px;
+        }
+        .row-bg {
+          padding: 10px 0;
+          background-color: #f9fafc;
+        }
+        `,
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  <el-row :gutter="20">
+                    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                    <el-col :span="12">
+                      <el-row :gutter="20">
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                  <el-row :gutter="20">
+                    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                    <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                    <el-col :span="12">
+                      <el-row :gutter="20">
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                        <el-col :span="6"><div class="grid-content bg-purple"></div></el-col>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+               </div>
+               `,
+            data(){
+               return {
+              }
+            } 
+         }
+      };
+      return _obj;
+   },
+
+}
+
+let Vue_Prd = {
+  '*std1'() {
+      var _note = `
+         <pre>bts-grp-filed 的用例
+         1.基本型
+         2.應用型 - 混搭其他 基本物件 
+         3.應用型 - .btn-group 用法,不過,這裡在 RWD 呈現沒,沒有自適應的效果 
+         </pre>
+         `;
+      //let {_vue,_css} = Group['.btn-group']('')
+      var _obj = {
+          _css:``,
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  <div>[input value]{{value}}</div>
+                  <h3>el-grp-filed</h3>
+                  <el-row>
+                    <el-grp-filed 
+                      label="基本型" 
+                      v-model="value"
+                      placeholder="test"
+                      ></el-grp-filed>
+                    <el-grp-filed
+                      label="應用型" >
+                        <input type="checkbox" v-model="_check_value"/>
+                    </el-grp-filed>
+                  </el-row>
+                  
+                  <h3>bts-grp-filed</h3>
+                  <bts-grp-filed 
+                    label="基本型" 
+                    v-model="value"
+                    placeholder="test"
+                    ></bts-grp-filed>
+                  <bts-grp-filed
+                    label="應用型" >
+                      <input type="checkbox" v-model="_check_value"/>
+                  </bts-grp-filed>
+                   
+               </div>
+               `,
+            //components:{dyn:_vue},
+            data(){
+               return {
+                value:''
+              }
+            },
+            computed: {
+              _check_value:{
+                get(){
+                  if (typeof(this.value)!='boolean') return true;
+                  return this.value;
+                },
+                set(val){
+                  this.value=val;
+                }
+              }
+            }, 
+         }
+      };
+      return _obj;
+   },
+}
+window.sample = {Views ,Row,Group ,Case,Fail,Vue_Prd};

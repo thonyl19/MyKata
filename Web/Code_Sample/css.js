@@ -670,4 +670,4 @@
    },
 };
 
-window.sample = { views ,def:'def' };
+window.sample = { views };

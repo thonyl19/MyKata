@@ -386,6 +386,11 @@ var Tool = {
 };
 let Group = {
   Case1() {
+    var _note = `
+    <pre>公司UI 的需求 , 主要是將 做版本控制
+    
+    </pre>
+            `;
     var _obj = {
       _css: `
             .switch .form-control {
@@ -470,6 +475,7 @@ let Group = {
       _vue: {
         template: `
             <div >
+                ${_note}
                 <div class="input-group" style="width:30em;">
                   <span class="input-group-addon">@</span>
                   <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
@@ -620,30 +626,39 @@ let Group = {
     };
     return _obj;
   },
-  "*.btn-group"() {
-   var _note = `
-            <pre>
-            </pre>
+  ".btn-group"(_note=null) {
+   _note = _note?? `
+    <pre>
+    因為工作需求的情境,需要想辦法讓 input.text 可以融入 group ,
+      所以特別試出這個方法來達成需求. 
+    但需要補充一些樣式設定,原本是用 .btn-grp 來處理,
+      不過改成以直接綁定的方式效果一樣.
+    </pre>
             `;
    var _obj = {
      _css:`
-      .btn-grp{
+      .btn-grp1,
+      input[type='text'].btn
+      {
         text-align:left;
         border: 1px solid #ccc;
+        width:5em;
       }
+      
      `,
      _vue: {
        template: `
-                  <div>
-                     ${_note}
-                     <div class="btn-group" role="group" aria-label="...">
-                     <input type="text" class="btn btn-grp">Left</input>
-                     <button type="button" class="btn btn-default">Left</button>
-                     <button type="button" class="btn btn-default">Middle</button>
-                     <button type="button" class="btn btn-default">Right</button>
-                   </div>
-                  </div>
-                  `,
+        <div>
+            ${_note}
+          <div class="btn-group" role="group" aria-label="...">
+            <input type="text" class="btn btn-grp" />
+            <button type="button" class="btn btn-default">Left</button>
+            <input type="text" class="btn" />
+            <button type="button" class="btn btn-default">Right</button>
+            <input type="text" class="btn" />
+          </div>
+        </div>
+        `,
        data() {
          return {};
        },
@@ -651,6 +666,7 @@ let Group = {
    };
    return _obj;
  },
+ 
  ".input-group"() {
    var _note = `
           <pre>
@@ -668,7 +684,7 @@ let Group = {
                  <div>
                     ${_note}
                     <div class="input-group">
-                      <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+                      <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" />
                     </div>
                  </div>
                  `,
@@ -695,7 +711,10 @@ let Group = {
                      <div class="input-group" style="margin: 10px;">
                        <span class="input-group-addon">Between</span>
                        <input type="text" class="form-control" placeholder="Type something..." />
-                       <span class="input-group-addon" style="border-left: 0; border-right: 0;"></span>
+                       <input type="text" class="form-control" placeholder="Type something..." />
+                       <span class="input-group-addon" style="border-left: 0; border-right: 0;">
+                        ----
+                       </span>
                        <input type="text" class="form-control" placeholder="Type something..." />
                        </div>
                   </div>
@@ -744,6 +763,7 @@ let Group = {
     };
     return _obj;
   },
+ 
 };
  
 let Fail = {
@@ -770,12 +790,17 @@ let Fail = {
   },
 };
 let Vue_Prd = {
-  std1() {
+  '*std1'() {
       var _note = `
-         <pre>
+         <pre>bts-grp-filed 的用例
+         1.基本型
+         2.應用型 - 混搭其他 基本物件 
+         3.應用型 - .btn-group 用法,不過,這裡在 RWD 呈現沒,沒有自適應的效果 
          </pre>
          `;
+      let {_vue,_css} = Group['.btn-group']('')
       var _obj = {
+          _css:``,
          _vue: {
             template: `
                <div>
@@ -791,8 +816,14 @@ let Vue_Prd = {
                     >
                       <input type="checkbox" v-model="_check_value"/>
                     </bts-grp-filed>
+                  <bts-grp-filed 
+                    label="搭配 .btn-group" 
+                    >
+                      <dyn class="input-group-btn"/>
+                    </bts-grp-filed>
                </div>
                `,
+            components:{dyn:_vue},
             data(){
                return {
                 value:''
@@ -814,4 +845,4 @@ let Vue_Prd = {
       return _obj;
    },
 }
-window.sample = { Views, Tool, Group, Fail, Vue_Prd, def: "def" };
+window.sample = { Views, Tool, Group, Fail, Vue_Prd};

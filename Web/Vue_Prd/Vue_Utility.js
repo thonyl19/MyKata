@@ -1,4 +1,5 @@
 (function (root, factory) {
+    debugger
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'Vue'], factory);
     } else if (typeof exports === 'object') {
