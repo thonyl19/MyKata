@@ -331,7 +331,7 @@
                     <div class="vue-selectize-group-para input-group ">
                         <slot name="addon" >
                             <span class="input-group-btn" v-if="isShowInput">
-                                <input type="text" class="btn btn-grp "  v-model="input_val" v-bind:readonly="readonly" />
+                                <input type="text" class="btn btn-grp"  v-model="input_val" v-bind:readonly="readonly" />
                             </span>
                         </slot>
                         <input type="text" class="form-control" v-if="readonly" readonly v-model="readonly_input" /> 
