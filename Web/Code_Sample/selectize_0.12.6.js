@@ -54,11 +54,12 @@ var Vue_Prd = {
              template: `
                 <div>
                    ${_note}
-                   <div>[values]{{values}}</div>
+                   <div>[values]{{values}}</div><button @click="fn_change">Change</button>
                    [readonly]<input type=checkbox v-model="readonly" />
                    <vue-selectize v-model="values" :options="options"  
                         :selectize_ops="x_ops"
                         :readonly="readonly"
+                        ref="ddl"
                         ></vue-selectize>
                 </div>
                 `,
@@ -68,6 +69,12 @@ var Vue_Prd = {
                   options,
                   x_ops,
                   readonly:false
+               }
+             },
+             methods:{
+               fn_change(){
+                  debugger
+                  this.$refs.ddl.sel.setValue('nikola@tesla.com');
                }
              } 
           }
