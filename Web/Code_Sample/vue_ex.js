@@ -5,6 +5,39 @@
 */
  
 let API = {
+    __def() {
+        /*
+        Vue.directive('numberOnly', {
+            bind: function (el) {
+                debugger
+                this.handler = function (e) {
+                    e.srcElement.value = e.srcElement.value.replace(/\D+/, '')
+                }.bind(this)
+                el.addEventListener('input', this.handler)
+            },
+            unbind: function (el) {
+                debugger
+                el.removeEventListener('input', this.handler)
+            }
+        })
+        
+        */
+       var _note = `
+          <pre>
+          </pre>
+          `;
+       var _obj = {
+          _vue: {
+             template: `
+                <div>
+                   ${_note}
+    
+                </div>
+                `
+          }
+       };
+       return _obj;
+    },
     'v-html'() {
         /*
         1. v-html 試例
