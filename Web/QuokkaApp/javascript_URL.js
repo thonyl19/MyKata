@@ -8,10 +8,12 @@ https://regexr.com/
 import * as _ from 'lodash';
 
 var fn = {
-    'Base'(){
+    '_Base'(){
         let githubURL = new URL('https://github.com/search?test=1');
         var searchParams1 = new URLSearchParams('q=react&type=Code');
 
+        console.log(searchParams1.has('q'))
+        console.log(searchParams1.has('q1'))
         // 方法二：代入陣列
         var searchParams2 = new URLSearchParams([['q', 'react'], ['type', 'Code']]);
 
