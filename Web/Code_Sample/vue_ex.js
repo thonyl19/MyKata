@@ -3,7 +3,7 @@
     https://github.com/guahsu/Vue-TurnTable/
 
 */
-
+ 
 let API = {
     'v-html'() {
         /*
@@ -1092,4 +1092,4 @@ var Fail = {
 
 }
 
-window.sample = { API, Views, Props, rxjs, Fail, def: 'std1' }
+window.sample = { API, Views, Props, rxjs, Fail  }
