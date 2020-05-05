@@ -5,6 +5,27 @@
 */
  
 let API = {
+    '*searchpanes'() {
+        /**
+         * https://datatables.net/reference/api/#searchpanes
+         * 
+         */
+       var _note = `
+          <pre>
+          </pre>
+          `;
+       var _obj = {
+          _vue: {
+             template: `
+                <div>
+                   ${_note}
+    
+                </div>
+                `
+          }
+       };
+       return _obj;
+    },
     __def() {
         /*
         Vue.directive('numberOnly', {

@@ -475,7 +475,7 @@ var Tool = {
   },
 }
 var Case = {
-  'href.click 演生事件'() {
+  'href.click 衍生事件'() {
     var _obj = Views['Responsive-自適應折行'](`<pre>這個範列是以 [Responsive-自適應折行] 為基底,以演示下面的問題
     1.在自動折行的功能中, col[0] 的位置在點撃時,會觸發展開 隱藏欄位的功能
     2.在應用情境中,該欄位設 href 以實現開啟子視窗的功能
@@ -486,7 +486,9 @@ var Case = {
       和範例中所示, v1,v2 的取法,功能1 的事件都會先觸發,
       只有 v3 的取法才能讓 功能2 先觸發.</pre>`);
     _obj._baseSet.columnDefs = [
-      {className:'e_click' , "targets": [0,1]
+      {className:'e_click' 
+        //指定那幾個欄位要套用這個功能
+        , "targets": [0,1]
         ,createdCell(td, cellData, rowData, row, col) {
           $(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
         }}
