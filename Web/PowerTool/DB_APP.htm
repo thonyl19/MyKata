@@ -1,0 +1,651 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title>資料庫應用</title>
+		<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
+		<meta content="VisualStudio.HTML" name="ProgId">
+		<meta content="Microsoft Visual Studio .NET 7.1" name="Originator">
+<style>
+textarea
+{
+/*width=100%;*/
+}
+</style>		
+	</head>
+	<body>
+		<form name="TForm" method="post" action="_derived/nortbots.htm" target="_New" ID="Form1">
+			<PRE>
+<input type="radio"  Name=OP1 onclick=BeRun(1,0) ID="Radio1" VALUE="Radio1">SqlCmd 格式化(全作業)			--SqlCmdFormat()
+<input type="radio"  Name=OP1 onclick=BeRun(2,0) ID="Radio2" VALUE="Radio2">SqlCmd 標準化				--SqlCmdDataSTD()
+<input type="radio"  Name=OP1 onclick=BeRun(3,0) ID="Radio3" VALUE="Radio2">SQL 的命令字元轉成大寫			--SqlCmdUpWord()
+<input type="radio"  Name=OP1 onclick=BeRun(4,0) ID="Radio4" VALUE="Radio2">將UPDATE 指令轉成 SELET 條件		--Update2Select()
+<input type="radio"  Name=OP1 onclick=BeRun(5,0) ID="Radio5" VALUE="Radio2">將SELECT 指令轉成 UPDATE 的程式語法	--Select2UpdatePG()
+<input type="checkbox"  Name=CB1 onclick=BeRun(99,0) checked >將 SELECT, UPDATE 的項目換行		--FiledFormat()
+<input type="radio"  Name=OP1 onclick=BeRun(6,0) ID="Radio6" VALUE="Radio2">將 SQL 語法制成 string Array		--BeStringArray()
+<input type="radio"  Name=OP1 onclick=BeRun(7,0) ID="Radio7" VALUE="Radio2">將 string Array 反解成 SQL 語法		--BeStringArrayAnalysis()
+<INPUT type="button" value="Button" ID="Button1" NAME="Button1" onclick=tesst()>
+</PRE>
+			<table border="1" width="920" ID="Table1">
+				<tr>
+					<td width="10">
+						<textarea rows="5" name="T001" cols=120 Onclick="BeT001_Select();SmartTAreaUStyle(this,'height=300pt;')" ID="Textarea1">
+ 
+ 
+ SELECT 
+			B0.document_id,B0.serno,B1.pic_serno,B0.trantoprod_no
+		 	,B1.pic_ask_date 	AS 需求日期
+		 	, B0.prod_splycode	AS 廠商補貨碼
+		 	, B0.prod_pdid		AS 原廠品編
+		 	, P1.prod_cname		AS 商品名稱
+		 	, case 	B1.pic_type 
+		 		when 'A' then '網頁' 
+		 		when 'B' then '平面' 
+		 		end 圖檔類型
+		 	,B2.reason_name		AS 圖檔不合格原因 
+			,(B1.pic_serno -1 )AS 不合格次數
+  FROM 	b2b_newprod_pretreat B0
+		 	LEFT JOIN b2b_newproduct_pictreat B1
+		 		ON B0.document_id = B1.document_id 
+		 		AND B0.serno = B1.serno 
+		 		AND B1.pic_serno = f_get_b2bpic_maxserno(b0.document_id,b0.serno)
+		 	--帶前次 pic_serno
+		 	LEFT JOIN b2b_newproduct_pictreat B11
+		 		ON B11.document_id = B0.document_id 
+		 		AND B11.serno = B0.serno 
+		 		AND B11.pic_serno = (B1.pic_serno-1)
+		 	JOIN  product P1
+		 		ON  P1.prod_no = B0.trantoprod_no
+		 	LEFT JOIN b2b_pic_nopass_reason B2
+		 		ON B2.reason_no = B11.pic_art_nopass_reason
+ WHERE	b0.sply_No like '0007%'
+		 	AND B1.pic_sply_reply = 'B'
+		 	AND B1.is_end = 'N'
+		 	AND (('0' = '0')
+				OR ('1' = '0'
+		 				AND B0.prod_splycode = '')
+				OR ('2' = '0'
+		 				AND B0.prod_pdid = '')
+				OR ('3' = '0'
+		 				AND SUBSTR(B1.pic_ask_date,1,5) = ''))
+ ORDER 	BY B1.pic_ask_date desc
+;				
+						</textarea></td>
+				</tr>
+				<tr>
+					<td width="650" onclick="BeLeft()">＜=</td>
+				</tr>
+				<tr>
+					<td width="650"><textarea rows="5" name="T002"  cols=120 ID="Textarea2" onfocus="SmartTAreaUStyle(this,'height=300pt;')"></textarea></td>
+				</tr>
+			</table>
+			<PRE>
+以 form 為起始中樞 處理完 select 區間後，再回頭處理 from 、 where 
+
+
+每次產生，都要視為製作新的物件(因為如果相同，直接複製傳回不就得了)
+
+select
+	(select from where)
+from
+	(select from where) 
+where 
+	aa in (select from)
+
+**正確解析 SQL 
+
+把 select 轉成
+	欄位資料
+		解析出挑檔欄位 
+			--XX,以 資料庫連結,傳回實際資料後,再進行轉換,用文字分析到好,幾乎不太可能
+						
+	update 語法
+	store procdure
+		拉好要產生的欄位、關連及條件
+		轉換成 procdure
+
+</PRE>
+		</form>
+		<FONT face="新細明體"></FONT>
+		<P><FONT face="新細明體">將 update 的指令，轉換成查詢語法--可快速的確認更新是否成功 </FONT>
+		</P>
+		<P><FONT face="新細明體">將&nbsp;select &nbsp;的指令，轉換成更新(刪除)語法--可精確的完成更新(刪除)的動作</FONT></P>
+		<P><FONT face="新細明體">解析功能--能快速的將SQL語法做解析、整理及縮排。</FONT></P>
+<script language="javascript">
+
+Update2Select00(" UPDATE 	b2b_quoted SET  	prod_splycode	= 'C0666' 	,quoted_qty    	= 1 	,quoted_sprice 	= 0 	,quoted_price  	= 420 	,quoted_memo 	= '黑色代碼#C0666;白色代碼#9357' 	,prodstate_no 	= 'A' 	,quoted_indate 	= '0951206'");
+var VT1=document.all('T001')
+var VT2=document.all('T002')
+var flgT001	= false;
+var go_ArrData;
+function tesst()
+{
+	alert(VT1.onblur);
+}
+
+function BeLeft()
+{
+	VT1.value	= VT2.value;
+}
+
+///==功能程序========================================================================================================
+
+/*
+資料規格化
+NOTE:所謂的規格化，是把所有資料集合起來，以便做後續的處理分析
+		1.剔除換行符號
+		2.取得基本key word
+*/
+function SqlCmdDataSTD(as_SqlCmd)
+{
+	regexp	= new RegExp("\\s+","gi");
+	var tmpData	= as_SqlCmd.replace(regexp," ");;
+	var arr_SqlCMD = new Array("UNION","INSERT INTO","DELETE","UPDATE","SET"
+	,"SELECT","FROM","WHERE","GROUP","ORDER","HAVING","JOIN","LEFT JOIN","CASE","WHEN","ELSE","END");
+	for ( i = 0 ; i < arr_SqlCMD.length ; i++)
+	{
+		regexp	= new RegExp("\\b" + arr_SqlCMD[i] + "\\s","gi");
+		var tmpData	= tmpData.replace(regexp,"\n" + arr_SqlCMD[i] +"\t");
+	}
+	//go_ArrData	= as_SqlCmd.split('\n');
+	//FiledFormat1(0);
+	return tmpData;
+}
+
+function SqlCmdAns01(as_SqlCmd)
+{
+	var li_Return	= "";
+	go_ArrData	= as_SqlCmd.split('\n');
+	for (i= 0 ; i < go_ArrData.length ; i++)
+	{
+		if (go_ArrData[i] != '')
+		{
+			FiledFormat1(i);
+		}
+	}
+	return go_ArrData.join('');
+}
+function FiledFormat1(ai_goArrIndex)
+{
+	var li_Return	= "";
+	var ls_tmpData	= "";
+	var ls_tmpWord	= "";
+	var li_NewLineFlg	= 0;
+	//if (ai_goArrIndex > go_ArrData.length){return ;}
+	for (var i1= 0 ; i1 < go_ArrData[ai_goArrIndex].length ; i1++)
+	{
+		ls_tmpWord	= go_ArrData[ai_goArrIndex].substr(i1,1);
+		switch(ls_tmpWord)
+		{
+			case "(":
+				li_NewLineFlg++;
+				break;
+			case ")":
+				li_NewLineFlg--;
+				break;
+			case ",":
+				if (li_NewLineFlg == 0 )
+				{
+					ls_tmpWord	= "\n\t" + ls_tmpWord;	
+				}
+				break;
+		}
+		ls_tmpData	+= ls_tmpWord;
+	}
+	if (li_NewLineFlg ==0)
+	{
+		go_ArrData[ai_goArrIndex]	= '\n' +ls_tmpData;
+	}
+	else
+	{
+		go_ArrData[ai_goArrIndex]	= ls_tmpData;
+	}
+	return 	li_Return;
+}
+
+
+
+/*
+SQL 的命令字元轉成大寫
+NOTE:處理不需要複雜化，如果遇到不能處理的，修改視情形調整來源就好了
+*/
+function SqlCmdUpWord(as_SqlCmd)
+{
+	var arr_SqlCMD = new Array("UNION","INSERT INTO","DELETE","UPDATE","SET"
+	,"SELECT","DISTINCT","CASE","WHEN","THEN","ELSE","END","AS"
+	,"FROM","WHERE","IN","BETWEEN","AND","OR","ISNULL"
+	,"GROUP","ORDER","BY","DESC","VALUES","\\(");
+	var	tmpData	= as_SqlCmd;
+	//alert(arr_SqlCMD.length);
+	for ( i = 0 ; i < arr_SqlCMD.length ; i++)
+	{
+		regexp	= new RegExp("\\b" + arr_SqlCMD[i] + "\\s","gi");
+		switch(arr_SqlCMD[i])
+		{
+			//\n{}\t
+			case "UNION":
+			case "INSERT INTO":
+			case "DELETE":
+			case "UPDATE":
+			case "SET":
+			case "SELECT":
+			case "FROM":
+			case "WHERE":
+			case "\\(":
+				tmpData	= tmpData.replace(regexp,"\n" + arr_SqlCMD[i] + "\t");
+				break;
+			/*
+			//\n\t{}
+			case "AND":
+			case "OR":
+				tmpData	= tmpData.replace(regexp,"\n\t" + arr_SqlCMD[i]+ " ");
+				break;
+			//\n\t\t{}
+			case "WHEN":
+			case "ELSE":
+			case "END":
+				tmpData	= tmpData.replace(regexp,"\n\t\t" + arr_SqlCMD[i]+ " ");
+				break;
+			default:
+				tmpData	= tmpData.replace(regexp,arr_SqlCMD[i]+ " ");
+				break;
+			*/
+		}
+	}
+	return tmpData;
+}
+
+//將 SELECT, UPDATE 的欄位換行 主程序
+/*SPEC.
+	以 SET 跟 SELECT 為單位
+	逐一字串比對
+		若有 '(' 則計數 +1  
+		若有 ')' 則計數 -1  
+		若遇到 ',' 且 計數 = 0 則換行  
+*/
+function FiledFormat(as_SqlCmd)
+{
+	var ls_Return	= as_SqlCmd;
+	var ls_tmpWord	= "";
+	var ls_tmpData	= "";
+	var li_NewLineFlg	= 0;
+	var reg_SqlCmd	= new RegExp("\\bSET.+|\\bSELECT.+","gi");
+	var matched = ls_Return.match(reg_SqlCmd);
+	if (matched) 
+	{	
+		for (var i=0; i< matched.length; i++) 
+		{
+			ls_tmpData	= "";
+			for (var i1= 0 ; i1 < matched[i].length ; i1++)
+			{
+				ls_tmpWord	= matched[i].substr(i1,1);
+				switch(ls_tmpWord)
+				{
+					case "(":
+						li_NewLineFlg++;
+						break;
+					case ")":
+						li_NewLineFlg--;
+						break;
+					case ",":
+						if (li_NewLineFlg == 0 )
+						{
+							ls_tmpData	+= "\n\t";	
+						}
+						break;
+				}
+				ls_tmpData	+= ls_tmpWord;
+			}
+			ls_Return	= ls_Return.replace(matched[i],ls_tmpData);  
+		}
+	}		
+/*	
+	if (Form1.CB1.checked)
+	{
+		reg_FiledSplit	= new RegExp(",","gi");
+		reg_SqlCmd	= new RegExp("\\bSET.+|\\bSELECT.+","gi");
+		matched = tmpData.match(reg_SqlCmd);
+		if (matched) 
+		{	
+			//alert(matched.length);
+			for (var i=0; i< matched.length; i++) 
+			{
+				tmpData	= tmpData.replace(matched[i],matched[i].replace(reg_FiledSplit,"\n\t,"));  
+			}
+		}		
+	}
+*/	
+	return 	ls_Return;
+}
+
+//
+/*
+將 SELECT, UPDATE 的欄項依逗號換行
+SPEC:
+
+/
+function FiledSplit(as_Data)
+{
+	regexp	= new RegExp(",","gi");
+	return as_Data.replace(regexp,"\n" + arr_SqlCMD[i] + "\t");
+}
+*/
+
+
+/*
+將UPDATE 指令轉成 SELET 條件
+SPEC:
+1.先將 Update 改成 from
+2.處理 set 改成相對 select 
+	把原先 value 值  AS 成欄位名稱 
+*/
+
+function Update2Select(as_SqlCmd)
+{
+	var TmpData	= SqlCmdDataSTD(as_SqlCmd);
+	TmpData	= SqlCmdUpWord(TmpData);
+	//1.先將 Update 改成 from
+	reg_SqlCmd	= new RegExp("\\bUPDATE\\s","gi");
+	TmpData	= TmpData.replace(reg_SqlCmd,"FROM\t");
+
+	//2.處理 set 改成相對 select 
+	reg_SqlCmd	= new RegExp("\\bSET.+","gi");
+	matched = TmpData.match(reg_SqlCmd);
+	if (matched) 
+	{	
+			//ls_Select	= matched[0].replace(new RegExp("=","gi")," AS ");
+			ls_Select	= Update2Select00(matched[0]);
+			//alert(TmpData);
+			//清掉原 set 條件
+			TmpData	= TmpData.replace(matched[0]+"\n","");  
+			TmpData	= ls_Select.replace(new RegExp("\\bSET\\s","gi"),"SELECT\t") 	+ TmpData;
+	}	
+	return TmpData;
+}
+
+/*
+處理 Set 的資料，將之處理成 select 正確的語法
+，以排除 轉換成 AS 後，代名稱為數字而造成語法錯誤的問題
+*/
+function Update2Select00(as_Data)
+{
+	var arr_TmpA	= as_Data.split('=');
+	var arr_TmpB	;
+	var ls_Tmp		;
+	var li_LenTmpB	= 0;
+	// [i=1]剔除第一個不用處理
+	for (i = 1 ; i < arr_TmpA.length ; i++)
+	{
+		arr_TmpB	= arr_TmpA[i].split(',');
+		li_LenTmpB	= arr_TmpB.length;
+		//alert(arr_TmpA[i] + "--" + arr_TmpB.length);
+		switch(li_LenTmpB)
+		{
+			case 1:
+			case 2:
+				//@取得逗號前的資料  EX:['C0666' 	,quoted_qty]
+				ls_Tmp	= trim(arr_TmpB[0]);
+				//@判斷若 不為逗號 則自動處理成 'data'
+				if (ls_Tmp.substr(0,1) != "'")
+				{
+					arr_TmpB[0]	= "'" + ls_Tmp + "'";
+					arr_TmpA[i]	= arr_TmpB.join(',');
+				}
+				
+				break;
+			default:
+				alert('發現異常:' + as_Data);
+				break;
+		}
+	}
+	return  arr_TmpA.join(' AS ');
+}
+
+
+/*
+將 SELET 條件 轉成 UPDATE 程式指令
+SPEC:
+1.處理 select 改成 set   
+	把原先 成欄位名稱  設成 變數名稱 
+2.先將  from  改成 Update 
+*/
+function Select2UpdatePG(as_SqlCmd)
+{
+	var TmpData	= SqlCmdDataSTD(as_SqlCmd);
+	TmpData	= SqlCmdUpWord(TmpData);
+
+	//1.處理 select  改成相對  set
+	reg_SqlCmd	= new RegExp("\\bSELECT.+","gi");
+	matched = TmpData.match(reg_SqlCmd);
+	if (matched) 
+	{	
+			ls_SET	= "";
+			arrTmpA	= matched[0].replace(new RegExp("\\bSELECT\\s","gi"),"").split(",");
+			for (i = 0 ; i < arrTmpA.length ; i++)
+			{
+				arrTmpB	= arrTmpA[i].split(new RegExp("\\bAS\\s","gi"));
+				switch(arrTmpB.length)
+				{
+					case 1:
+						ls_SET	+= "," + arrTmpB[0] + "='as_" + trim(arrTmpB[0]) + "'";
+						break;
+					case 2:
+						ls_SET	+= "," + arrTmpB[0] + "='as_" + trim(arrTmpB[1]) + "'";
+						break;
+				}
+			}
+			//清掉原 select 條件
+			TmpData	= TmpData.replace(matched[0]+"\n","");  
+			TmpData	= "SET\t" + ls_SET.substring(1) + TmpData;
+	}
+	
+	//2.先將 from 改成 Update
+	reg_SqlCmd	= new RegExp("\\bFROM.+\\s","gi");
+	matched = TmpData.match(reg_SqlCmd);
+	if (matched) 
+	{
+		TmpData	= TmpData.replace(matched[0],"");  
+		TmpData	= matched[0].replace(new RegExp("\\bFROM\\s","gi"),"UPDATE\t") + TmpData;	
+	}	
+	return TmpData;
+}
+
+
+//將 SQL 語法制成 string Array
+function BeStringArray(as_Data)
+{
+	var VS_return="";
+	var NN	= 0;
+	var arrData	= as_Data.split('\r\n');
+	for (var i=0; i < arrData.length ; i++)
+	{
+		if (trim(arrData[i]) != "")
+		{
+			NN++;
+			if (NN==1)
+			{
+				VS_return	+="\t\t\tstring[] SqlCmd = new string[]\n\t\t\t{\n" 
+								+"\t\t\t\t\" " + arrData[i] + "\"\n";
+			}
+			else
+			{
+				switch(arrData[i].substr(0,1))
+				{
+					case "\t":
+						VS_return	+="\t\t\t\t,\"\t\t " + arrData[i] + "\"\n";
+						break;
+					default:
+						VS_return	+="\t\t\t\t,\" " + arrData[i] + "\"\n";
+						break;
+				}
+			}
+		}
+	}
+	//alert(VS_return)
+	return VS_return + "\t\t\t};\n\t\t\treturn string.Join(\"\\n\",SqlCmd);"
+}
+
+//將 string Array 反解成 SQL 語法
+function BeStringArrayAnalysis(as_Data)
+{
+	var ls_Return="";
+	ls_Return	= as_Data.replace(new RegExp("\t\"|\t,\"|\"\r|\"\$","gi"),"");
+	return SqlCmdFormat(ls_Return);
+}
+
+
+function BeRegExpUseArray(arr_Data,as_chgData)
+{
+
+}
+
+//取得 ChkeckBox 和 RADIO 物件被核選的情形
+//SObjGrp=ChkeckBox(傳回 被核選的物件總數)
+//SObjGrp=RADIO(傳回 第幾個物件被核選；若傳入的SObjGrp 其實只有一個物件，則以 {+:有選取 -:未選取}表示核選狀態)
+function CChked(SObjGrp)
+{
+	var Chked_N=0
+	try
+	{
+		Obj_N=SObjGrp.length
+		for (var i=0;i < SObjGrp.length ; i++)
+		{
+		
+			if (SObjGrp[i].checked)
+			{
+				Chked_N++
+				RADIOsChecked=i
+			}
+		}
+		if(SObjGrp[0].type.toUpperCase()=="RADIO"){Chked_N=RADIOsChecked}
+	}
+	catch(e)
+	{
+			if (SObjGrp.checked)
+			{
+				Chked_N=1
+				if(SObjGrp.type.toUpperCase()=="RADIO"){Chked_N="+"}
+			}
+			else
+			{
+				if(SObjGrp.type.toUpperCase()=="RADIO"){Chked_N="-"}
+			}
+	}
+	//alert(Chked_N)
+	return Chked_N
+}
+
+String.prototype.trim=trim;
+String.prototype.DBSign=DBSign;
+
+function trim() 
+{
+	tmpData	= this;
+	if (arguments.length > 0 )
+	{
+		tmpData	= arguments[0];
+	}
+	return tmpData.replace(/^\s+|\s+$/g, "");
+}
+
+function DBSign()
+{
+	return '"'  + this + '"';
+}
+
+//因為vb 和 java 的陣列不能互通，所以得先把資料送過來處理成 java 格式的陣列，再做後續處理
+function BeJavaSplit(VS_Data,VS_SW)
+{
+	return VS_Data.split(VS_SW)
+}
+
+
+function SmartTAreaUStyle(ao_SObj,as_Style)
+{
+	var tmpblur		= ao_SObj.onblur;
+	//var tmpfocus	= ao_SObj.onfocus;
+	//若 tmpblur 取得是空事件，則代一個空的事件給它 
+	if (tmpblur	 == null){tmpblur	= function(){return true;}};
+	//將變動的程序加在原有的 function 之後
+	ao_SObj.onblur	= function(){tmpblur();event.srcElement.style.cssText = "";}; 
+	ao_SObj.style.cssText	= as_Style;
+}
+
+
+///==事件程序========================================================================================================
+// SqlCmd 格式化(全作業)
+function SqlCmdFormat(as_SqlCmd)
+{
+	//Form1.CB1.checked
+	//SObj	= document.all("CB1");
+	//@資料標準化(將資料全部不換行集結)
+	var TmpData	= SqlCmdDataSTD(as_SqlCmd);
+	//@資料解析處理(將命令字元 做大寫轉換及大部換行處理)
+	TmpData	= SqlCmdUpWord(TmpData);
+	if (Form1.CB1.checked)
+	{
+		TmpData	= FiledFormat(TmpData);
+	}
+	return TmpData;
+}
+
+//處理 T001 全選的功能，避免一直重覆 全選 
+function BeT001_Select()
+{
+	if (flgT001 == false)
+	{
+		flgT001	= true;
+		TForm.T001.onblur	= function(){flgT001 = false;};
+		TForm.T001.select();
+	}
+	
+}
+
+
+function obj_Sql()
+{
+	var SELECT;
+	var FROM;
+	var WHERE;
+}
+
+
+		</script>
+		<script language="vbscript">
+Sub Auto_CP()
+	with document.all("T002")
+		document.all("T001").blur()
+		.select()
+		Set C_Data = .createTextRange()
+		C_Data.execCommand "Copy" 
+	End with 
+End sub 
+
+sub BeRun(SIndex,BeAuto_CP)
+	select case SIndex
+		case 1
+			'msgbox(BeJavaSplit(VT1.value,vbnewline))
+			VT2.value=SqlCmdFormat(VT1.value)
+			
+		case 2
+			VT2.value=SqlCmdDataSTD(VT1.value)
+			VT2.value=SqlCmdAns01(VT2.value)
+		case 3
+			VT2.value=SqlCmdUpWord(VT1.value)
+		case 4
+			VT2.value=Update2Select(VT1.value)
+		case 5
+			VT2.value=Select2UpdatePG(VT1.value)
+		case 6
+			VT2.value=BeStringArray(VT1.value)
+		case 7
+			VT2.value=BeStringArrayAnalysis(VT1.value)
+			
+		case 99
+			VT2.value=SqlCmdFormat(VT2.value)
+			'VT2.value=SQL_analysis(VT1.value)
+	end select 
+	if BeAuto_CP=0 then Auto_CP
+end sub 
+		</script>
+	</body>
+</html>

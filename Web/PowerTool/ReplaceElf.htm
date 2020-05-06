@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title></title>
+		<meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+		<meta name="ProgId" content="VisualStudio.HTML">
+		<meta name="Originator" content="Microsoft Visual Studio .NET 7.1">
+	</head>
+	<body>
+		<FONT face="·s²Ó©úÅé"><TEXTAREA id="Textarea1" name="Textarea1" rows="29" cols="26">@as_splmno='0007'
+@as_date1='0940702'
+@as_date='0940701'
+@prodtype_no1='300'
+@prodtype_no2='300'</TEXTAREA><TEXTAREA id="Textarea2" name="Textarea2" rows="29" cols="106">
+   select d.prodtype_no,
+       e.prodtype_name,
+       d.prod_seq,
+       d.prod_cname,
+       d.prod_pdid,
+       c.comp_no,
+       c.comp_cm,
+       sum(b.saleqty),
+       sum(b.exchangeqty),
+       isnull((select y.inventoryqty
+               fromb2b_inven_header x,b2b_inven_detail y
+               where x.document_id = y.document_id
+               and x.splm_no = @as_splmno
+             and x.comp_no = a.comp_no
+               and x.record_date = @as_date1
+               and y.prod_seq = d.prod_seq),0)
+     from b2b_inven_header a,b2b_inven_detail b,company c,prodseq d,prodtype_no e
+     where a.document_id = b.document_id
+     and a.comp_no = c.comp_no
+     and b.prod_seq = d.prod_seq
+    and e.prodtype_forsale = 'Y'
+     and d.prodtype_no = e.prodtype_no
+     and a.brand_no = @as_brandno
+     and a.splm_no = @as_splmno
+     and a.record_date between @as_date and @as_date1
+     and e.prodtype_no between @prodtype_no1 and @prodtype_no2
+     group by d.prodtype_no,
+       e.prodtype_name,
+       d.prod_seq,
+       d.prod_cname,
+       d.prod_pdid,
+       c.comp_no,
+       c.comp_cm;
+
+			
+
+			</TEXTAREA></FONT>
+		<br>
+		<INPUT id="Button1" type="button" value="Replace" NAME="Button1">
+		<INPUT id="Button2" type="button" value="ReReplace" NAME="Button2">
+		<script language="vbscript">
+
+sub Button1_onclick()
+	NotWin.show BeChange(0)
+end sub 
+
+sub Button2_onclick()
+	NotWin.show BeChange(1)
+end sub 
+
+function BeChange(SMode)
+	GW=document.all.Textarea1.value
+	if GW="" then 
+		BeChange=""
+		exit function
+	end if 
+	DGW=Split(GW,vbnewline)
+	'msgbox Ubound(DGW)
+	GW=document.all.Textarea2.value
+	for i=0 to  Ubound(DGW)
+		if len(DGW(i)) >2 then 		
+			DGW1=Split(DGW(i),"=")
+			if SMode=0 then 
+				GW =replace(GW ,DGW1(0),"<font color=red>" & DGW1(1) & "</font>")
+			else
+				GW =replace(GW ,DGW1(1) ,"<font color=red>" & DGW1(0) & "</font>")
+			end if 
+		end if 
+	next 
+	'document.all.Note.document.innerHTML
+	'this.document.execCommand('Copy');
+	BeChange="<PRE id='Note' onclick=vbscript:window.opener.CopyToClipboard(document.all.Note.innertext):msgbox('Copy')>" & GW & "</PRE>" 
+	'BeChange="<PRE id='Note' onclick=vbscript:msgbox('test'):msgbox('bbb')>" & GW & "</PRE>" 
+end function 
+
+function  CopyToClipboard(SW)
+    clipboardData.clearData()
+    call clipboardData.setdata ("Text", SW)
+    
+End function 
+		</script>
+		<script id="PGCmd" src="/WebTEST/REF/Tools/WindowElf.js" language="javascript"></script>
+		<script language="javascript">
+	var NotWin;
+	NotWin=new WindowElf("", "", "width=520,height=500,status=yes,resizable=yes,scrollbars=yes,top=200,left=200");
+	//NotWin.Show();
+	/*'NotWin.Write('shit');
+@as_splmno='0007'
+@as_date1='0940702'
+@as_date='0940701'
+@prodtype_no1='300'
+@prodtype_no2='300'	
+*/
+
+		</script>
+	</body>
+</html>

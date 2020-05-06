@@ -1,0 +1,310 @@
+<html>
+	<head>
+		<title>底線轉換</title>
+		<meta http-equiv="Content-Language" content="zh-tw">
+		<meta http-equiv="Content-Type" content="text/html; charset=big5">
+		<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+		<meta name="ProgId" content="FrontPage.Editor.Document">
+	</head>
+	<body>
+		<form name="TForm" method="post" action="_derived/nortbots.htm" target="_New">
+			<!--webbot bot="SaveResults" startspan U-File="_private/form_results.txt"
+  S-Format="TEXT/CSV" S-Label-Fields="TRUE" --><input TYPE="hidden" NAME="VTI-GROUP" VALUE="0"><!--webbot
+  bot="SaveResults" endspan i-checksum="43374" -->
+			<table border="1" width="920">
+				<tr>
+					<td width="10">
+						<textarea rows="10" name="T001" cols="30" OnChange="Smart()" Onclick="TForm.T001.select()"></textarea></td>
+					<td width="18" onclick="BeLeft()">&lt;=</td>
+					<td width="650"><textarea rows="10" name="T002" cols="90"></textarea></td>
+				</tr>
+			</table>
+			<PRE>
+<input type="radio"  Name=OP checked onclick='FT001("-","_");Auto_CP()'>中線轉底線    <input type="radio"  Name=OP onclick='FT001("_","-");Auto_CP()'>底線轉中線		                                                                     <input type="button" name="App001" Value=查詢欄位定義>
+<input type="radio"  Name=OP onclick=FT001(TForm.FT001_OC1.value,TForm.FT001_OC2.value);Auto_CP()>文字置換<input type="text" name="FT001_OC1"><input type="text" name="FT001_OC2">		Asc(",")=44
+<input type="radio"  Name=OP onclick=FTrim();Auto_CP()>清前後空白
+<input type="radio"  Name=OP onclick=FT002();Auto_CP()>條件換行<input type="text" name="FT002_OC"><input type="checkbox"  Name="FT002_OC1">保留條件字元
+<input type="radio"  Name=OP onclick=FT003();Auto_CP()>字串集結<input type="text" name="FT003_OC1" value=65>間隔符號<input type="text" name="FT003_OC2">
+<input type="radio"  Name=OP onclick=FT004();Auto_CP()>字串前置補定長<input type="text" name="FT004_OC" value=7>
+<input type="radio"  Name=OP onclick=FT005();Auto_CP()>字串啣後補至定長<input type="text" name="FT005_OC" value=72>
+<input type="radio"  Name=OP onclick=FT011();Auto_CP()>轉換日期    	
+<input type="radio"  Name=OP onclick=FT012();Auto_CP()>Data2Table  	分隔字元<input type="text" name="FT012_OC1" >
+<input type="radio"  Name=OP onclick=FT013();Auto_CP()>分析資料所包含的特別字元格式    
+<input type="radio"  Name=OP onclick=FT015();Auto_CP()>SQL Cmd AutoIntoValue   Command()<input type="text" name="FT015_OC1" OnBlur=FT015()>   <input type="checkbox"  Name="FT015_OC2" onclick=FT015();Auto_CP() checked>保留對照字
+
+</PRE>
+		</form>
+		<script language="javascript" src="/WebTEST/REF/Tools/WindowElf.js"></script>
+		<Script Language="VBScript">
+
+Set VT1=TForm.T001
+Set VT2=TForm.T002
+
+Sub Smart()
+	Set SObj=TForm.OP
+	GW=CChked(SObj)
+	'msgbox GW
+	SObj(GW).onclick
+End Sub 
+
+Sub BeLeft()
+	TForm.T001.value =TForm.T002.value
+End Sub 
+
+'文字轉換
+Function  FT001(A1,A2)
+	VT2.value =replace(VT1.value,BeSPWord(A1),BeSPWord(A2))
+end Function  
+
+'條件換行
+Function  FT002()
+	SW=TForm.FT002_OC.value
+	if TForm.FT002_OC1.checked then DEFW=SW
+   	if SW="" then SW=","
+   	SW=BeSPWord(SW)
+	DGW=Split(Replace(Replace(VT1.Value,chr(13),""),chr(10),""),SW)
+	For i=0 to Ubound(DGW)
+		GW=GW & DEFW & Trim(DGW(i)) & chr(13)
+	Next 
+	'if TForm.FT002_OC1.checked then GW=Mid (GW,len(DEFW)+1) 
+	VT2.Value =Mid (GW,len(DEFW)+1) 
+end Function
+
+'清前後空白
+Function FTrim()
+	DGW=Split(VT1.Value,vbnewline)
+	for i=0 to UBound(DGW)
+		SW=SW & Trim(DGW(i))& VbCrLf
+	next 
+   	TForm.T002.value=SW
+End Function 
+
+'字串集結
+Function FT003()
+	DGW=Split(VT1.Value,vbnewline)
+	VT2.Value=""
+        TGW=""
+	FT003_OC1=CInt(TForm.FT003_OC1.value)
+	FT003_OC2=TForm.FT003_OC2.value
+	for i=0 to Ubound(DGW)
+                DGW(i)=DGW(i) & FT003_OC2
+		if Len(TGW) + Len(DGW(i))<=FT003_OC1 then 
+			TGW=TGW & DGW(i) 
+		else 
+		   	VT2.Value=VT2.Value & TGW & vbnewline 
+			TGW=DGW(i)
+		end if 
+	next 
+	if VT2.Value="" then
+		VT2.Value=TGW
+	else
+		VT2.Value=VT2.Value & TGW & vbnewline
+	end if 
+End Function 
+
+'字串前置補定長
+Function FT004()
+	DGW=Split(VT1.Value,vbnewline)
+	FT004_OC=CInt(TForm.FT004_OC.value)	
+	TSW=String(FT004_OC," ")
+	for i=0 to Ubound (DGW)
+		 GW=GW & TSW & DGW(i) & VBnewline
+	next 
+	VT2.Value=GW 
+End Function 
+
+
+
+
+
+'轉換日期
+Sub FT011()
+	IF VT1.Value="" THEN VT1.Value=now()
+	Get_Data=Trim(VT1.Value)
+	YY= bword(year(Get_Data)-1911,"0",3,"L") & "年"
+	MM= bword(Month(Get_Data),"0",2,"L") & "月" 
+	DD= bword(Day(Get_Data),"0",2,"L") & "日"
+	VT2.Value= YY & MM & DD
+End Sub 
+
+'Data2Table
+Sub FT012()
+	VT2.Value =Data2Table(VT1.Value,BeSPWord(TForm.FT012_OC1.Value))
+End Sub
+
+'分析資料所包含的特別字元格式
+Sub FT013()
+	VT2.Value=ChkSPWord(VT1.Value)
+end Sub 
+
+'POALog 2 Excel 
+Sub FT014()
+	VT2.Value=Replace(Replace(VT1.Value,vbnewline,chr(9)),"|@|",vbnewline)
+End Sub 
+
+
+'SQLCmd,OverView,"DATA_YR",DATA_YR
+Function FT015_1(SQLCmd,OverView,SDName,SData)
+	DIM TMPW
+	'DATA_YR = '091' --
+	TMPW= SDName & " = '" & SData & "' --|"
+	SQLCmd=Replace(SQLCmd, SDName ,TMPW)
+	OverView=OverView & TMPW & vbnewline
+End Function 
+
+Sub Auto_CP()
+	with TForm.T002
+		.select()
+		Set C_Data = .createTextRange()
+		C_Data.execCommand "Copy" 
+	End with 
+End sub 
+
+
+
+
+
+'查詢欄位定義
+Set SWindow=window
+Sub App001_OnClick()
+	'VT2.Value
+	with TForm
+		.action="http://t01/神通/查詢欄位名稱定義.ASP?SW=" & VT2.Value
+		.Submit()
+	end with 
+End Sub 
+
+
+Sub BeSel()
+	with TForm.T001
+		.select()
+	End with 
+End Sub 
+
+Function CChked(SObj)
+	On Error Resume Next 
+	Dim Chked_N,i,Obj_N
+	Chked_N=0
+	Get_AbsChecked="-"
+	with SObj
+		Obj_N=.length
+		'msgbox Obj_N
+			if Err.number> 0 then 
+			if .checked then 
+				Chked_N=1
+				IF Ucase(.type)="RADIO" Then Chked_N="+"
+			Else 
+				IF Ucase(.type)="RADIO" Then Chked_N="-"
+			End if 
+		else 
+			For i=0 to .length-1
+				if .Item(i).checked then 
+					Chked_N=Chked_N+1
+					Get_AbsChecked=i
+				End IF 
+			next 
+			IF Ucase(.Item(0).type)="RADIO" Then Chked_N=Get_AbsChecked 
+		End if 
+	End with 
+	Err.clear
+	CChked=Chked_N
+End Function 
+
+'往左右補特定字元到定長
+Function BWord(TW, BW, BZn, RL)
+    BW = String(BZn - Len(TW), BW)
+    
+    Select Case UCase(RL)
+        Case "R"
+            BWord = TW & BW
+        Case "L"
+            BWord = BW & TW
+    End Select
+End Function
+
+
+
+'將 資料 直接轉成 Html Table 語法(PS:不含合併儲存格)
+'Data2Table(預設資料'分隔字元)
+Function Data2Table(SW,SetSPW)
+	Dim DTMP1,DTMP2
+	Dim i,LPn
+	DTMP1=Split(SW,vbnewline)
+	'預設為Excel 的分隔符號
+	IF SetSPW="" then SetSPW=chr(9)
+	'msgbox ASC(SetSPW)
+	for i=0 to Ubound(DTMP1)
+		DTMP2=Split(DTMP1(i),SetSPW)
+		LPn=Ubound(DTMP2)
+		If LPn>0 then 
+			for i2=0 to LPn
+				TMPW=TMPW & "<TD>" & DTMP2(i2)
+			next 
+			GW=GW & vbnewline & "<TR>" & TMPW 
+			TMPW=""
+		end if 
+	next 
+	Data2Table="<table border=1 cellpadding=4 cellspacing=1>" & GW & "</table>"
+End Function 
+
+'將特別字元(無法用按鍵打出來表示的字元)，以特別處理的方式加以轉換
+'Ex  SW = [32,9]
+Function BeSPWord(SW)
+        On Error Resume next
+	Dim DTMP1
+	Dim i,TMPW
+	if Left(SW,1)="[" and Right(SW,1)="]" then 
+		DTMP1=Split(Replace(mid(SW,2),"]",""),",")
+		SW=""
+		For i=0 to Ubound(DTMP1)
+			TMPW=cint(DTMP1(i))
+			If Err.Number <> 0 Then
+				SW=SW & DTMP1(i)
+				Err.Clear
+			else 
+				SW=SW & chr(TMPW)
+			end if 
+		next 
+	end if 
+	BeSPWord=SW
+End Function 
+
+'分析 資料中 所包含的特別字元格式，以便後續處理作業
+Function ChkSPWord(SW)
+	'Excel 間隔字元
+	SW=Replace(SW,chr(9), "[9," & chr(9)& "]")
+	'Tab 字元
+	SW=Replace(SW,chr(32),"[32," & chr(32)& "]")
+	SW=Replace(SW,chr(10),"[10," & chr(10)& "]")
+	SW=Replace(SW,chr(13),"[13," & chr(13)& "]")
+	
+	ChkSPWord=SW
+End Function 
+
+'將資料 依指定的條件強制換行
+Function BeNextLine(SW,NCd,SNCd)
+	SW=TForm.FT002_OC.value
+	'
+	if TForm.FT002_OC1.checked then DEFW=SW
+   	if SW="" then SW=","
+   	SW=BeSPWord(SW)
+	DGW=Split(Replace(Replace(VT1.Value,chr(13),""),chr(10),""),SW)
+	For i=0 to Ubound(DGW)
+		GW=GW & DEFW & Trim(DGW(i)) & chr(13)
+	Next 
+	'if TForm.FT002_OC1.checked then GW=Mid (GW,len(DEFW)+1) 
+	VT2.Value =Mid (GW,len(DEFW)+1) 
+End Function 
+
+
+		</Script>
+<script language="javascript">
+var t = new Date();
+d = new Date();
+t = new Date().setYear(97);
+alert(t.toLocaleString());
+
+
+</script>
+	</body>
+</html>
