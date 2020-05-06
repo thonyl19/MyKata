@@ -23,5 +23,4 @@
 
 window.sample = { 
   Views 
-  ,def:'std1' 
 };
