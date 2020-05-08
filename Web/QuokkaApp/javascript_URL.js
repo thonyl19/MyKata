@@ -10,7 +10,14 @@ import * as _ from 'lodash';
 var fn = {
     '_Base'(){
         let githubURL = new URL('https://github.com/search?test=1');
+        githubURL
         var searchParams1 = new URLSearchParams('q=react&type=Code');
+        githubURL
+        var g1 = githubURL.searchParams.get('test');
+        
+        g1
+        
+
 
         console.log(searchParams1.has('q'))
         console.log(searchParams1.has('q1'))
