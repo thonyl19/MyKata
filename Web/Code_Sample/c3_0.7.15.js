@@ -96,7 +96,7 @@ var c3char = {
   },
 };
 let Views = {
-  "*def"() {
+  "base"() {
     var _note = `
          <pre>
          </pre>
