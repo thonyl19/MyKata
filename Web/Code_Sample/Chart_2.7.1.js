@@ -1,10 +1,48 @@
 ﻿let { Line,Bar ,mixins } = VueChartJs;
 const { reactiveProp } = mixins;
+let _data = {
+   Bar(){
+      return {
+         data:{
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            datasets: [{
+            label: "Dataset #1",
+            backgroundColor: "rgba(255,99,132,0.2)",
+            borderColor: "rgba(255,99,132,1)",
+            borderWidth: 2,
+            hoverBackgroundColor: "rgba(255,99,132,0.4)",
+            hoverBorderColor: "rgba(255,99,132,1)",
+            data: [65, 59, 20, 81, 56, 55, 40],
+            }]
+         },
+         options:{
+            maintainAspectRatio: false,
+            scales: {
+            yAxes: [{
+               stacked: true,
+               gridLines: {
+                  display: true,
+                  color: "rgba(255,99,132,0.2)"
+               }
+            }],
+            xAxes: [{
+               gridLines: {
+                  display: false
+               }
+            }]
+            }
+         }
+      }  
+   }
+
+}
 let Views = {
+
    Bar_case1() {
        var _note = `
           <pre>
           https://github.com/apertureless/vue-chartjs
+          最基本的應用
           </pre>
           `;
        var _obj = {
@@ -43,7 +81,7 @@ let Views = {
        };
        return _obj;
     },
-   '_std1'() {
+   '*std1'() {
       var _note = `
          <pre>
          https://vue-chartjs.org/zh-cn/guide/#%E6%9B%B4%E6%96%B0-charts
@@ -52,12 +90,26 @@ let Views = {
       var dyn = {
          extends: Line,
          mixins: [reactiveProp],
-         props: ['options'],
+         props: {
+            chartData:{
+               type:Object
+            },
+            options:{
+               type:Object,
+               defaut(){
+                  return {
+                     responsive:true,
+                     maintainAspectRatio:true
+                  }
+               }
+            }},
          mounted () {
+            console.log({options:this.options});
            // this.chartData 在 mixin 创建.
            // 如果你需要替换 options , 请创建本地的 options 对象
            this.renderChart(this.chartData, this.options)
-         }
+         },
+          
       };
       var _obj = {
          _vue: {
@@ -65,19 +117,58 @@ let Views = {
                <div>
                   ${_note}
                   <div class="small">
-                     <line-chart :chart-data="datacollection"></line-chart>
                      <button @click="fillData()">Randomize</button>
+                     <input type="range" min="10" max="90" v-model.number="width">[width]{{range_w}}%
+                     <input type="range" min="10" max="50" v-model.number="height">[height]{{range_h}}vh<br />
+                     [responsive]<input type="checkbox" v-model="ops.responsive" />
+                     [maintainAspectRatio]<input type="checkbox" v-model="ops.maintainAspectRatio" />{{ops}}
+                     <div ref="chartWrap" :style="{width:range_w+'%',height:range_h+'vh'}" style="position: relative;margin: auto;">
+                        <line-chart  ref="chart" :chart-data="datacollection" :options="ops"></line-chart>
+                     </div>
                   </div>
                </div>
                `,
             components:{'line-chart':dyn},
             data(){
                return {
-                  datacollection: null
+                  width:90,
+                  height:50,
+                  datacollection: null,
+                  ops:{
+                     responsive:true,
+                     maintainAspectRatio:false
+                  }
               }
             } ,
+            computed: {
+               range_w(){
+                  return this.width;
+               },
+               range_h(){
+                  return this.height;
+               }
+            },
             mounted () {
-               this.fillData()
+               var _self = this;
+               this.fillData();
+
+               /*
+               原本要試作監聽 resize 事件後,做 update size 
+                  相關程序 ,但沒有成功,先擱置之
+
+               const contall = this.$refs.chartWrap;
+               const chart = this.$refs.chart;
+               //引入插件
+               //[Ref]https://www.jianshu.com/p/1d7694609f1b
+               const erd = elementResizeDetectorMaker({
+                  strategy: 'scroll'
+               })
+               // 监听父元素尺寸变化，来重置图表属性
+               erd.listenTo(contall, function(element) {
+                  console.log(element);
+                  // 图表自带的重置函数
+                  _self.$data._chart.update();
+               })*/
              },
              methods: {
                fillData () {
@@ -107,6 +198,62 @@ let Views = {
    },
 };
 
+let RWD = {
+   '原生語法'() {
+      var _note = `
+         <pre>
+         https://codepen.io/chartjs/pen/YVWZbz
+         參考此案例,以原生語法實作RWD
+         </pre>
+         `;
+      var _obj = {
+         _css:`
+         canvas {
+           border: 1px dotted red;
+         }
+         
+         .chart-container {
+           position: relative;
+           margin: auto;
+           height: 80vh;
+           width: 80vw;
+         }
+         
+         `,
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                    <div class="chart-container">
+                       <canvas id="chart"></canvas>
+                    </div>
+               </div>
+               `,
+            mounted() {
+               Chart.Bar('chart', _data.Bar());
+            }, 
+         }
+      };
+      return _obj;
+   },
+   def() {
+       var _note = `
+          <pre>
+          </pre>
+          `;
+       var _obj = {
+         _vue: {
+            extends: Bar,
+            mounted () {
+               // Overwriting base render method with actual data.
+               let {data,options} = _data.Bar();
+               this.renderChart(data,options)
+             } 
+          }
+       };
+       return _obj;
+    },
+}
 window.sample = { 
-  Views 
+  Views ,RWD
 };
