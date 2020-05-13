@@ -669,5 +669,55 @@
       return _obj;
    },
 };
+let Case = {
+  '*percentage-circle'() {
+      var _note = `
+         <pre>
 
-window.sample = { views };
+         </pre>
+         `;
+      var _obj = {
+        _css:`
+          .sty{
+            width:10em;
+            height:10em;
+            background:#ffff0038;
+          }
+          .sty1{
+            opacity:0.5;
+          }
+        `,
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+                  {{range}}<input type="range" min="0" max="100" v-model="range" class="slider" />
+                  <div class="sty">
+                    <div class="sty1 c100" :class="[per]" style="fontSize:7rem;" >
+                      <span>50%</span>
+                      <div class="slice">
+                        <div class="bar"></div>
+                        <div class="fill"></div>
+                      </div>
+                    </div>
+                  </div>
+               </div>
+               `,
+            data(){
+               return {
+                range:0,
+              }
+            }
+            ,computed:{
+              per(){
+                return `p${this.range}`;
+              }
+            }
+         }
+      };
+      return _obj;
+   },
+}
+window.sample = { views ,
+  Case
+};
