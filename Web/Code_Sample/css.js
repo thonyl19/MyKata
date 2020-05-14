@@ -1,4 +1,5 @@
-﻿let views = {
+﻿
+let views = {
   "css-jss用例"() {
     /*
             Ref:
@@ -670,7 +671,7 @@
    },
 };
 let Case = {
-  '*percentage-circle'() {
+  'percentage-circle'() {
       var _note = `
          <pre>
 
@@ -718,6 +719,110 @@ let Case = {
       return _obj;
    },
 }
+let Table = {
+  //http://johnsardine.com/example/simple-little-table/
+
+}
+let Layout = {
+  'RWD-Title'() {
+     var _note = `
+        <pre>
+        個案需求 
+        1.在大螢幕時,標題置中
+        2.在小螢幕時,標題靠左
+        3.有個功能圖示,要浮動置左
+        4.Timer 功能
+        </pre>
+        `;
+     var _obj = {
+        _css:`
+          @media screen and (min-width: 750px) {
+              .ds-algin {
+                  text-align: left !important;
+              }
+          }
+      
+          @media screen and (min-width: 950px) {
+              .ds-algin {
+                  text-align: center !important;
+              }
+          }
+          .bg-green {
+            font-family: color: #656565;
+            font-family: "微軟正黑體","Source Sans Pro", sans-serif;
+            background: rgb(55, 188, 155);
+            color: #fff !important;
+          }
+          .ds-title {
+            font-size: 2.37rem;
+            font-weight: 800;
+            color: white;
+            padding: 0px 35px;
+        }
+    
+        .ds-timer {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            margin-right: 1em;
+            margin-top: 7px;
+            font-size: 1.5rem;
+        }
+    
+        .ds-switch {
+            position: absolute;
+            left: 3px;
+            top: 5px;
+            cursor: pointer;
+        }
+        `,
+        _vue: {
+           template: `
+              <div>
+                 ${_note}
+                 <div class="bg-green ds-algin" style="position:relative">
+                      <span class="ds-title">製造生產監控指標</span>
+                      <span class="ds-timer ">{{ date }} {{ time }}</span>
+                      <i class="ds-switch fa fa-desktop"></i>
+                  </div>
+              </div>
+              `,
+              data() {
+                return {
+                    time: '',
+                    date: '',
+                }
+            },
+            mounted() {
+                var _self = this;
+                _self.Timer();
+            },
+            methods: {
+                Timer() {
+                    var _self = this;
+                    var week = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+                    var timerID = setInterval(updateTime, 1000);
+                    updateTime();
+                    function updateTime() {
+                        var cd = new Date();
+                        _self.time = zeroPadding(cd.getHours(), 2) + ':' + zeroPadding(cd.getMinutes(), 2) + ':' + zeroPadding(cd.getSeconds(), 2);
+                        _self.date = zeroPadding(cd.getFullYear(), 4) + '-' + zeroPadding(cd.getMonth() + 1, 2) + '-' + zeroPadding(cd.getDate(), 2) + ' ' + week[cd.getDay()];
+                    };
+
+                    function zeroPadding(num, digit) {
+                        var zero = '';
+                        for (var i = 0; i < digit; i++) {
+                            zero += '0';
+                        }
+                        return (zero + num).slice(-digit);
+                    }
+            }
+          }
+        }
+     };
+     return _obj;
+  },
+}
 window.sample = { views ,
-  Case
+  Case,Table,Layout
 };
