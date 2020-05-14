@@ -720,8 +720,72 @@ let Case = {
    },
 }
 let Table = {
-  //http://johnsardine.com/example/simple-little-table/
+  'Case1'() {
+     var _note = `
+        <pre>
+        1.字體隨著版面動態放大
+        2.表格樣式
+        3.在這個個案中,表格是需要撐滿高度,且平均分配,經實驗後,用 table 實現最簡單
+        </pre>
+        `;
+     var _obj = {
+        _css:`
+        .xtpl-b01 {
+          //讓表格格線變細 , 需搭配 border="1"
+          border-collapse: collapse;
+          border-spacing: 0;
 
+          //字體動態放大的關鍵
+          font-size: 2.35vmin;
+          font-weight: 900;
+          text-align: center;
+          width: 97%;
+          font-family: Arial, Helvetica, sans-serif;
+          color: #666;
+          text-shadow: 1px 1px 0px #fff;
+          background: #fafafa;
+          margin-bottom: 2rem;
+          border: #ccc 1px solid;
+          -moz-border-radius: 3px;
+          -webkit-border-radius: 3px;
+          border-radius: 3px;
+          -moz-box-shadow: 0 1px 2px #d1d1d1;
+          -webkit-box-shadow: 0 1px 2px #d1d1d1;
+          box-shadow: 0 1px 2px #d1d1d1;
+
+          height:40vh;
+      }
+      .xtpl-b01 tr {
+        background: #f4f4f4;
+    }
+        `,
+        _vue: {
+           template: `
+              <div>
+                 ${_note}
+                 <table class="xtpl-b01"  border="1"  >
+                    <tr height="30%">
+                        <td width="60%">待投工單數</td>
+                        <td>30</td>
+                    </tr>
+                    <tr height="20%">
+                        <td colspan="2">明細 List...</td>
+                    </tr>
+                    <tr height="30%">
+                        <td>在製工單數</td>
+                        <td>700</td>
+                    </tr>
+                    <tr height="20%">
+                        <td colspan="2">明細 List...</td>
+                    </tr>
+                </table>
+              </div>
+              `
+        }
+     };
+     return _obj;
+  },
+  //http://johnsardine.com/example/simple-little-table/
 }
 let Layout = {
   'RWD-Title'() {
