@@ -16,20 +16,21 @@ let _data = {
             }]
          },
          options:{
-            maintainAspectRatio: false,
+            responsive:true,
+            maintainAspectRatio:false,
             scales: {
-            yAxes: [{
-               stacked: true,
-               gridLines: {
-                  display: true,
-                  color: "rgba(255,99,132,0.2)"
-               }
-            }],
-            xAxes: [{
-               gridLines: {
-                  display: false
-               }
-            }]
+               yAxes: [{
+                  stacked: true,
+                  gridLines: {
+                     display: true,
+                     color: "rgba(255,99,132,0.2)"
+                  }
+               }],
+               xAxes: [{
+                  gridLines: {
+                     display: false
+                  }
+               }]
             }
          }
       }  
@@ -68,6 +69,7 @@ let Views = {
    Line_case1() {
        var _note = `
           <pre>
+          lineTension: 0 //轉折改用直角
           </pre>
           `;
        var _obj = {
@@ -81,6 +83,7 @@ let Views = {
        };
        return _obj;
     },
+    
    '*std1'() {
       var _note = `
          <pre>
@@ -112,18 +115,39 @@ let Views = {
           
       };
       var _obj = {
+         _css:`
+            .flex{
+               display:flex;
+               flex-direction: column;
+               height:30vh;
+            }
+            .f-g1{
+               flex-grow: 1;
+               border:1px dotted red;
+            }
+         `,
+         //
          _vue: {
             template: `
                <div>
                   ${_note}
-                  <div class="small">
+                  <div>
                      <button @click="fillData()">Randomize</button>
                      <input type="range" min="10" max="90" v-model.number="width">[width]{{range_w}}%
                      <input type="range" min="10" max="50" v-model.number="height">[height]{{range_h}}vh<br />
                      [responsive]<input type="checkbox" v-model="ops.responsive" />
                      [maintainAspectRatio]<input type="checkbox" v-model="ops.maintainAspectRatio" />{{ops}}
-                     <div ref="chartWrap" :style="{width:range_w+'%',height:range_h+'vh'}" style="position: relative;margin: auto;">
-                        <line-chart  ref="chart" :chart-data="datacollection" :options="ops"></line-chart>
+                     <div class="flex" :style="{width:range_w+'%',height:range_h+'vh'}">
+                        
+                        <div class="f-g1" ref="wrap">
+                           <line-chart  ref="chart" 
+                              :chart-data="datacollection" 
+                              :options="ops" 
+                              style="position: relative;margin: auto;height:10px;" 
+                              
+                              ></line-chart>
+                        </div>
+                        <div class="f-g1"><br/></div>
                      </div>
                   </div>
                </div>
@@ -151,29 +175,30 @@ let Views = {
             mounted () {
                var _self = this;
                this.fillData();
-
+               
                /*
                原本要試作監聽 resize 事件後,做 update size 
-                  相關程序 ,但沒有成功,先擱置之
-
-               const contall = this.$refs.chartWrap;
-               const chart = this.$refs.chart;
-               //引入插件
-               //[Ref]https://www.jianshu.com/p/1d7694609f1b
+               相關程序 ,但沒有成功,先擱置之
+               */
+              const contall = this.$refs.wrap;
+              const chart = this.$refs.chart;
+              chart.$refs.canvas.parentNode.style.height = `${contall.clientHeight}px`;
+               // //引入插件
+               // //[Ref]https://www.jianshu.com/p/1d7694609f1b
                const erd = elementResizeDetectorMaker({
                   strategy: 'scroll'
                })
-               // 监听父元素尺寸变化，来重置图表属性
+               // // 监听父元素尺寸变化，来重置图表属性
                erd.listenTo(contall, function(element) {
                   console.log(element);
                   // 图表自带的重置函数
-                  _self.$data._chart.update();
-               })*/
+                  //_self.$data._chart.update();
+                  chart.$refs.canvas.parentNode.style.height = `${contall.clientHeight}px`;
+               })
              },
              methods: {
                fillData () {
-                  debugger
-                 this.datacollection = {
+                  this.datacollection = {
                    labels: [this.getRandomInt(), this.getRandomInt()],
                    datasets: [
                      {
@@ -236,24 +261,195 @@ let RWD = {
       };
       return _obj;
    },
-   def() {
+   'vueChat用法'() {
        var _note = `
           <pre>
           </pre>
           `;
        var _obj = {
+         _css:`
+         canvas {
+           border: 1px dotted red;
+         }
+         
+         .chart-container {
+           position: relative;
+           margin: auto;
+           height: 80vh;
+           width: 80vw;
+         }
+         
+         `,
          _vue: {
             extends: Bar,
             mounted () {
+               //透過這裡將 樣式綁定,使 RWD work
+               this.cssClasses = "chart-container";
                // Overwriting base render method with actual data.
                let {data,options} = _data.Bar();
-               this.renderChart(data,options)
+               this.renderChart(data,options);
              } 
           }
        };
        return _obj;
     },
+   '*flex'() {
+      var _note = `
+         <pre>
+         </pre>
+         `;
+         var dyn = {
+            extends: Line,
+            mixins: [reactiveProp],
+            props: ['chartData', 'options'],
+            mounted () {
+              this.renderChart(this.chartData, this.options)
+            }
+         };
+         var _obj = {
+            _css:`
+               .flex{
+                  display:flex;
+                  flex-direction: column;
+               }
+               .f-g1{
+                  flex-grow: 1;
+                  border:1px dotted red;
+               }
+                
+                
+                .chart-container {
+                  position: relative;
+                  margin: auto;
+                }
+            `,
+            /*
+            <div class="chart-container">
+                                 <canvas id="chart"></canvas>
+                              </div>
+            */
+            _vue: {
+               template: `
+                  <div>
+                     ${_note}
+                     <div>
+                        <input type="range" min="10" max="90" v-model.number="width">[width]{{range_w}}%
+                        <input type="range" min="10" max="50" v-model.number="height">[height]{{range_h}}vh<br />
+                        <div ref="wrap_div" class="flex" :style="{width:range_w+'%',height:range_h+'vh'}">
+                           <div class="f-g1" >
+                              <line-chart class="chart-container"
+                                 :chartData="char_1.data"
+                                 :options="char_1.options"
+                                 :styles="myStyles"
+                                 />
+                           </div>
+                           <div class="f-g1"><br/></div>
+                           <div class="f-g1"  ><br/></div>
+                        </div>
+                     </div>
+                  </div>
+                  `,
+               components:{'line-chart':dyn},
+               data(){
+                  return {
+                     hh:10,
+                     width:90,
+                     height:50,
+                     char_1:_data.Bar()
+                 }
+               } ,
+               computed: {
+                  range_w(){
+                     return this.width;
+                  },
+                  range_h(){
+                     return this.height;
+                  },
+                  myStyles () {
+                     return {
+                       height: `${this.hh}px`,
+                       position: 'relative'
+                     }
+                   }
+               },
+               mounted () {
+                  this.t02();
+
+                  /*
+                  $('.f-g1').each((idx,el)=>{
+                     erd.listenTo(el, function(element) {
+                        // console.log($(element));
+                        _self.hh = $(element).height();
+                        $('canvas',element).each((idx,_el)=>{
+                           debugger
+                           _el.parentNode.style.height = `${_self.hh}px`;
+                        })
+                        // 图表自带的重置函数
+                        //_self.$data._chart.update();
+                        //chart.$refs.canvas.parentNode.style.height = `${contall.clientHeight}px`;
+                     })
+                  })
+                  */
+                   
+               },
+               methods:{
+                  t01(){
+                     debugger
+                     var wrap_div = this.$refs.wrap_div;
+                     const erd = elementResizeDetectorMaker({
+                        strategy: 'scroll'
+                     })
+                     erd.listenTo(wrap_div, function(element) {
+                        console.log(element);
+                        // 图表自带的重置函数
+                        //_self.$data._chart.update();
+                        //chart.$refs.canvas.parentNode.style.height = `${contall.clientHeight}px`;
+                     })
+                  },
+                  t02(){
+                     var _self = this;
+                     var wrap_div = this.$refs.wrap_div;
+                     const erd = elementResizeDetectorMaker({
+                        strategy: 'scroll'
+                     })
+                     erd.listenTo(wrap_div, function(element) {
+                        _self.hh = $('.f-g1:eq(0)',element).height();
+                        // .each((idx,el)=>{
+                        //    $(el).height
+                        // })
+                     })
+                  }
+
+               }
+            }
+         };
+         return _obj;
+      
+   },
+}
+let QA = {
+   'template整合應用'() {
+      var _note = `
+         <pre>
+         Q:測試 template 整合應用
+         A:不行.
+         [Ref]https://vue-chartjs.org/guide/#vue-single-file-components
+         模板標籤無法合併
+         </pre>
+         `;
+      var _obj = {
+         _vue: {
+           extends: Line,
+           props: ['data', 'options'],
+           mounted () {
+             this.renderChart(this.data, this.options)
+           }
+         }
+      };
+      return _obj;
+   },
+
 }
 window.sample = { 
-  Views ,RWD
+  Views ,RWD , QA
 };

@@ -1026,6 +1026,42 @@ var Props = {
         };
         return _obj;
     },
+    '*def'() {
+       var _note = `
+          <pre>
+          Q:Prop 的資料,在 beforeCreate 是否可以被取用
+          A:不行
+          </pre>
+          `;
+        var dyn = {
+            extends: {},
+            template:`
+                <div>{{t_type}}</div>
+            `,
+            props:{
+                t_type:{
+                    type:String,
+                    default:"Line"
+                }
+            },
+            beforeCreate() {
+                debugger
+            },
+        };
+       var _obj = {
+          _vue: {
+             template: `
+                <div>
+                   ${_note}
+                    <dyn t_type="Test"></dyn>
+                </div>
+                `,
+
+            components:{dyn}
+          }
+       };
+       return _obj;
+    },
 }
 var rxjs = {
     連撃限制() {

@@ -77,7 +77,6 @@
                             var _r = {};
                             let {def=''} = _self.sample;
                             for (var item in _self.sample){
-                                debugger
                                 var grp = _self.sample[item];
                                 var keys = Object.keys(grp);
                                 var arr = keys.filter((o)=>{
