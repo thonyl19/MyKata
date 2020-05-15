@@ -9,7 +9,7 @@
         //浏览器全局变量(root 即 window)
         root.returnExports = factory(root.jQuery, root.Vue, root._);
     }
- }(this, function ($, Vue, _) {
+}(this, function ($, Vue, _) {
     var _fn = {
         selectize_def(...args) {
             var _base = {
@@ -79,11 +79,15 @@
                     },
                     event_enter: Vue.prototype.$PropDef.FunAppend(),
                     //auto_load: Vue.prototype.$PropDef.FunAppend(),
+                    id: {
+                        type: String,
+                        default: null
+                    }
                 },
                 template: '<div class="x-vue-selectize"><select></select></div>',
                 mounted() {
                     var _self = this;
- 
+
                     var opt = _self._init_ops();
                     if (_self.render_sty != null) {
                         let render = _fn.render_sty[_self.render_sty];
@@ -91,19 +95,20 @@
                             ops = render(ops);
                         }
                     }
-                    console.log({ 'select:mounted': opt })
- 
+                    if (_self.id != null) {
+                        console.log({ id: _self.id, 'select:mounted': opt })
+                    }
                     _self.sel = $('select', _self.$el)
                         .selectize(opt)[0]
                         .selectize;
- 
+
                     _self.sel.on("change", _self.fn_change);
                     _self.sel.setValue(_self.selected_val, true);
- 
+
                     if (_self.is_formcontrol) {
                         _self.sel.$control.addClass('form-control');
                     }
- 
+
                     _self.sel.$control_input.keypress(function (e) {
                         if (e.which == 13) {
                             let { event_enter = _self.def_event_enter } = vm;
@@ -153,7 +158,7 @@
                     this.sel.destroy();
                 },
                 methods: {
-                    __mounted_after(){ },
+                    __mounted_after() { },
                     _init_ops() {
                         var _ops = _fn.selectize_def(this.selectize_ops);
                         if (this.options != null)
@@ -189,7 +194,6 @@
                         return SelectedRow;
                     },
                     fn_View(isHtml = false) {
-                        debugger
                         var _arr = [];
                         _arr = Array.isArray(this.value)
                             ? this.value
@@ -197,6 +201,14 @@
                         var re = _arr.join(',');
                         if (re == "" && isHtml) re = '<br />';
                         return re;
+                    },
+                    msg_NoData() {
+                        let { $Alert = null } = this;
+                        if ($Alert != null) {
+                            $Alert.msg_NoData();
+                        } else {
+                            this.$message('No Data!!');
+                        }
                     },
                 }
             }
@@ -270,7 +282,7 @@
                                     //console.log([_self.query_when_filterd_zero , this.currentResults.total]);
                                     if (_self.query_when_filterd_zero == false || this.currentResults.total == 0) {
                                         return `
-                                        <div class="option"> 
+                                        <div class="create"> 
                                             <span class="label label-success">Query</span> ${escape(data.input)}
                                         </div>
                                         `
@@ -286,14 +298,22 @@
                     },
                     fn_create(input, callback) {
                         var _self = this;
-                        _self.fn_query(input, (data) => {
+                        var fn_cb = (data, isAlertNoData = true) => {
+                            /*
+                            前端調用,一定要使用這段 callback , 不然就得自己手動,
+                                處理輸入清空這段動作
+                             */
                             _self.selected_val = "";
                             _self.sel.clear(true);
                             _self.sel.setTextboxValue("");
-                        });
+                            if (isAlertNoData && (data == null || data.length == 0)) {
+                                _self.msg_NoData();
+                            }
+                        };
+                        _self.fn_query(input, fn_cb);
                         return false;
                     },
- 
+
                 }
             });
             return _obj;
@@ -315,23 +335,12 @@
                         type: String,
                         default: null
                     },
-                     
-                    selectize_ops: {
-                        type: Object,
-                        default() {
-                            return {
-                                labelField: 'name',
-                                valueField: 'email',
-                                searchField: ['email', 'name'],
-                            }
-                        }
-                    },
-                },// :style="fix_layout"
+                },
                 template: `
-                    <div class="vue-selectize-group-para input-group ">
+                    <div class="vue-selectize-group-para input-group " :style="fix_layout">
                         <slot name="addon" >
                             <span class="input-group-btn" v-if="isShowInput">
-                                <input type="text" class="btn btn-grp"  v-model="input_val" v-bind:readonly="readonly" />
+                                <input type="text" class="btn btn-grp "  v-model="input_val" v-bind:readonly="readonly" />
                             </span>
                         </slot>
                         <input type="text" class="form-control" v-if="readonly" readonly v-model="readonly_input" /> 
@@ -346,13 +355,12 @@
                         return this.input_value != null;
                     }
                     , readonly_html() {
-                        debugger
                         return this.fn_View(true);
                     },
                     fix_layout() {
-                        var A=this.readonly?"T":"F";
-                        var B=this.isShowInput?"T":"F"
-                        switch(A+B){
+                        var A = this.readonly ? "T" : "F";
+                        var B = this.isShowInput ? "T" : "F"
+                        switch (A + B) {
                             case "TF":
                             case "FF":
                                 return { display: 'block !important' }
@@ -370,18 +378,32 @@
                     },
                 },
                 methods: {
-                    __mounted_after(){
+                    __mounted_after() {
                         var _self = this;
-                        _self.bind_options([
-                            {email: 'brian@thirdroute.com', name: 'Brian Reavis',tt:'A'},
-                            {email: 'nikola@tesla.com', name: 'Nikola Tesla',tt:'B'},
-                            {email: 'someone@gmail.com', name: 'name',tt:'C'}
-                         ]);
+                        //_self.bind_options([
+                        //    { email: 'brian@thirdroute.com', name: 'Brian Reavis', tt: 'A' },
+                        //    { email: 'nikola@tesla.com', name: 'Nikola Tesla', tt: 'B' },
+                        //    { email: 'someone@gmail.com', name: 'name', tt: 'C' }
+                        //]);
 
-                        return ;
-                        _self.api_GroupPara(_self.group_no, (data) => {
-                            _self.options = data;
-                        })
+                        //return;
+                        if (_self.options == null && _self.readonly == false) {
+                            _self.api_GroupPara(_self.group_no, (data) => {
+                                _self.options = data;
+                            })
+                        }
+                    },
+                    _init_ops() {
+                        var _self = this;
+                        var _base = {
+                            labelField: 'PARA_DSER',
+                            valueField: 'PARAMETER_NO',
+                            searchField: ['PARA_DSER', 'PARAMETER_NO'],
+                        };
+                        var _ops = _fn.selectize_def(_base, this.selectize_ops);
+                        if (this.options != null)
+                            _ops.options = this.options;
+                        return _ops;
                     },
                     api_GroupPara(GroupNo, cb) {
                         var _self = this;
@@ -398,7 +420,7 @@
                                         //tode
                                         break;
                                 }
- 
+
                             }
                         };
                         $.submitForm(_ajax);
@@ -411,6 +433,5 @@
     Vue.component('vue-selectize', _fn.Base());
     Vue.component('vue-selectize-dynquery', _fn.Bts_DynQuery());
     Vue.component('vue-selectize-group-para', _fn.GT_GroupPara());
- 
- }));
- 
+
+}));
