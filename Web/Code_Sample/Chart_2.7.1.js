@@ -426,6 +426,27 @@ let RWD = {
          return _obj;
       
    },
+   '?Dashboard'() {
+      var _note = `
+         <pre>
+         在這個工作需求中,原本是想要利用 Flex 自動配置高度的機制,
+            讓圖表可以自動填滿,並自適應,但實作時發現,寛度可以實現這樣的需求 ,
+            但高度怎麼試就是沒辦法.
+         最後只能退而求次,用 動態計算高度的方式,來解決這個自動填滿的問題
+         </pre>
+         `;
+      var _obj = {
+         _vue: {
+            template: `
+               <div>
+                  ${_note}
+   
+               </div>
+               `
+         }
+      };
+      return _obj;
+   },
 }
 let QA = {
    'template整合應用'() {
