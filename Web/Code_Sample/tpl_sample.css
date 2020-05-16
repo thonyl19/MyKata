@@ -87,9 +87,10 @@ li.over-fun a{
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.mk.block span{
-  width: 1em;
-  height: 1em;
+.mk.block span,
+.mk.block div{
+  line-height: 3em;
+  display: inline;
   margin: 5px;
   padding: 5px;
 }
