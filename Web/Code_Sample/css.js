@@ -207,7 +207,7 @@ let views = {
       template: `
                 <div>
                     <input type="checkbox" v-model="set" />fa-fw <br />
-                    {{range}}<input type="range" min="1" max="10" v-model="range" class="slider" id="myRange">
+                    <input type="range" min="1" max="10" v-model="range" >{{range}}
                     <div  :style="{fontSize:range +'rem' }">
                         <div><i class="fa fa-edit" :class="{'fa-fw':set}" style="background:DodgerBlue"></i></div>
                         <div><i class="fa fa-remove" :class="{'fa-fw':set}" style="background:SkyBlue"></i></div>

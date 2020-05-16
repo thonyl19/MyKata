@@ -260,7 +260,136 @@ let utilities = {
 		};
 		return _obj;
 	},
+   'clearfix'() {
+       var _note = `
+          <pre>
+          https://bootstrap.hexschool.com/docs/4.2/utilities/clearfix/
+          1.演示如何使用清除浮動。不使用清除浮動，外層 div 將不會包覆按鈕而導致跑版
+          2.還有 Sass mixin 應用
+          </pre>
+          `;
+       var _obj = {
+          _vue: {
+             template: `
+                <div>
+                   ${_note}
+                   <input type="checkbox" v-model="clearfix" />clearfix<br />
+                   <div class="bg-info " :class="[clearfix?'clearfix':'']">
+                     <button type="button" class="btn btn-secondary float-left">Example Button floated left</button>
+                     <button type="button" class="btn btn-secondary float-right">Example Button floated right</button>
+                  </div>
+                </div>
+                `,
+             data(){
+                return {
+                  clearfix:false
+               }
+             } 
+          }
+       };
+       return _obj;
+    },
+      'Close icon'() {
+        var _note = `
+           <pre>
+           https://bootstrap.hexschool.com/docs/4.2/utilities/close-icon/
+           1.預設會將 圖示浮動到最右邊
+           </pre>
+           `;
+        var _obj = {
+           _vue: {
+              template: `
+                 <div>
+                    ${_note}
+                    <button type="button" class="close" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                     </button>
+                 </div>
+                 `,
+              data(){
+                 return {
+                }
+              } 
+           }
+        };
+        return _obj;
+      },
+      'Color'() {
+         var _note = `
+            <pre>
+            https://bootstrap.hexschool.com/docs/4.2/utilities/colors/#color
+            1.text-? 文字類
+            2.bg-? 背景類
+            3.背景漸層 需搭配 sass
+            </pre>
+            `;
+         var _obj = {
+            _vue: {
+               template: `
+                  <div>
+                     ${_note}
+                     <div class="mk block">
+                        <div class="text-primary">.text-primary</div>
+                        <div class="text-secondary">.text-secondary</div>
+                        <div class="text-success">.text-success</div>
+                        <div class="text-danger">.text-danger</div>
+                        <div class="text-warning">.text-warning</div>
+                        <div class="text-info">.text-info</div>
+                        <div class="text-light bg-dark">.text-light</div>
+                        <div class="text-dark">.text-dark</div>
+                        <div class="text-body">.text-body</div>
+                        <div class="text-muted">.text-muted</div>
+                        <div class="text-white bg-dark">.text-white</div>
+                        <div class="text-black-50">.text-black-50</div>
+                        <div class="text-white-50 bg-dark">.text-white-50</div>
 
+                        <h1>背景色</h1>
+                        <div class="mb-2 bg-primary text-white">.bg-primary</div>
+                        <div class="mb-2 bg-secondary text-white">.bg-secondary</div>
+                        <div class="mb-2 bg-success text-white">.bg-success</div>
+                        <div class="mb-2 bg-danger text-white">.bg-danger</div>
+                        <div class="mb-2 bg-warning text-dark">.bg-warning</div>
+                        <div class="mb-2 bg-info text-white">.bg-info</div>
+                        <div class="mb-2 bg-light text-dark">.bg-light</div>
+                        <div class="mb-2 bg-dark text-white">.bg-dark</div>
+                        <div class="mb-2 bg-white text-dark">.bg-white</div>
+                        <div class="mb-2 bg-transparent text-dark">.bg-transparent</div>
+
+                        <br/>
+                        <div class="mb-2 bg-dark text-white bg-gradient-primary">.bg-gradient-primary</div>
+                     </div>
+                  </div>
+                  `,
+               data(){
+                  return {
+                  }
+               } 
+            }
+         };
+         return _obj;
+      },
+      '*Display 屬性'() {
+          var _note = `
+             <pre>
+             </pre>
+             `;
+          var _obj = {
+             _vue: {
+                template: `
+                   <div>
+                     ${_note}
+                     <div class="d-inline p-2 bg-primary text-white">d-inline</div>
+                     <div class="d-inline p-2 bg-dark text-white">d-inline</div>
+                   </div>
+                   `,
+                data(){
+                   return {
+                  }
+                } 
+             }
+          };
+          return _obj;
+       },
 }
 window.sample = { 
 	Grid ,元件 , utilities
