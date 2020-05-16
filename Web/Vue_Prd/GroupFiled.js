@@ -4,7 +4,6 @@
     } else if (typeof exports === 'object') {
         module.exports = factory(require('jquery'), require('Vue'));
     } else {
-        debugger
         root.returnExports = factory(root.jQuery, root.Vue,root._);
     }
 }(this, function ($, Vue, _) {
