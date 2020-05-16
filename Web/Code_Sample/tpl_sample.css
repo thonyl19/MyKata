@@ -69,9 +69,10 @@ li.over-fun a{
   color: blue;
 }
 
-li.active {
+/*  跟 bts4 相衝,先取消  
+  li.active {
   background-color: #20ffa6;
-}
+} */
 .itme-main {
   background-color: lightblue;
   padding: 3px;
