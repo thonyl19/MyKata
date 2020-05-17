@@ -127,7 +127,7 @@ let 元件 = {
 	};
 	return _obj;
   },
-  "*Breadcrumb"() {
+  "Breadcrumb"() {
 	var _note = `
 			<pre>
 			麵包屑
@@ -157,7 +157,41 @@ let 元件 = {
 	};
 	return _obj;
   },
-  Button_base() {
+  '*Button_Base'() {
+	  var _note = `
+		 <pre>
+		 </pre>
+		 `;
+	  var _obj = {
+		  _css:``,
+		  _vue: {
+			  template: `
+				  <div>
+				  ${_note}
+				  <h3>基本樣式</h3>
+				  <bts-options bts_ver="4" :list="list" v-model="btn_sel" />
+				  <button class="btn" :class="['btn-'+btn_sel]">{{btn_sel}}</button>
+				  </div>
+			  `,
+			  data(){
+				  return {
+					  list:["primary" 	
+					  ,"secondary"	
+					  ,"success"	
+					  ,"danger"	
+					  ,"warning"	
+					  ,"info"		
+					  ,"light"		
+					  ,"dark"		
+					  ,"link"],
+					btn_sel:'primary'
+				  }
+			  } 
+			 }
+	  };
+	  return _obj;
+  },
+  '*Button_Group'() {
 	var _note = `
 			<pre>
 			https://bootstrap.hexschool.com/docs/4.2/components/button-group/
@@ -400,12 +434,21 @@ let utilities = {
 		};
 		return _obj;
 	},
-	'*Flex'() {
+	'Flex'() {
 		var _note = `
 		<pre>
 		https://bootstrap.hexschool.com/docs/4.2/utilities/flex/
 		1.方向性的語法
 			flex-{row|column}|{-reverse}
+			flex-{RWD}-{row|column}|{-reverse}
+		2.調整內容
+			justify-content-{start(def)|end | center | between| around }
+		3.對齊物件
+			align-items-{list}
+		4.自身對齊
+			align-self-{list}
+		5.填滿
+		6.伸縮值
 		</pre>
 		   `;
 
@@ -413,12 +456,12 @@ let utilities = {
 			_css:``,
 			_vue: {
 				template: `
-					<div>
+				<div>
 					${_note} 
 
 					<h3>方向性 flex-{{direction_sel}}</h3>
-						<bts-options bts_ver="4"  :list="direction" v-model="direction_sel"></bts-options>
-						<div class="mk">
+					<bts-options bts_ver="4"  :list="direction" v-model="direction_sel"></bts-options>
+					<div class="mk">
 						<div class="d-flex bd-highlight mb-3" :class="['flex-'+direction_sel]">
 						<div class="p-2 bd-highlight">Flex item 1</div>
 						<div class="p-2 bd-highlight">Flex item 2</div>
@@ -433,16 +476,52 @@ let utilities = {
 					</div>
 					
 					<h3>調整內容 justify-content-{{justify_sel}} </h3>
-						<bts-options name="grp1" :list="justify" v-model="justify_sel"></bts-options>
-						<div class="bd-example mk">
-							<div class="d-flex  bd-highlight mb-3" 
-								:class="['justify-content-'+justify_sel]">
-								<div class="p-2 bd-highlight">Flex item</div>
-								<div class="p-2 bd-highlight">Flex item</div>
-								<div class="p-2 bd-highlight">Flex item</div>
-							</div>
+					<bts-options name="grp1" :list="justify" v-model="justify_sel"></bts-options>
+					<div class="bd-example mk">
+						<div class="d-flex  bd-highlight mb-3" 
+							:class="['justify-content-'+justify_sel]">
+							<div class="p-2 bd-highlight">Flex item</div>
+							<div class="p-2 bd-highlight">Flex item</div>
+							<div class="p-2 bd-highlight">Flex item</div>
 						</div>
 					</div>
+
+					<h3>對齊物件 align-items-{{align_items_sel}}</h3>
+					<bts-options name="grp2" :list="align_items" v-model="align_items_sel"></bts-options>
+					<div class="d-flex start bd-highlight mb-3 mk border" style="height: 100px"
+						:class="['align-items-'+align_items_sel]">
+						<div class="p-2 bd-highlight">Flex item</div>
+						<div class="p-2 bd-highlight">Flex item</div>
+						<div class="p-2 bd-highlight">Flex item</div>
+					</div>
+
+					<h3>自身對齊 </h3>
+					<bts-options name="grp3" :list="align_items" v-model="align_self_sel"></bts-options>
+					<div class="d-flex bd-highlight mb-3 border mk" style="height: 100px">
+						<div class="p-2 bd-highlight">Flex item</div>
+						<div class="p-2 bd-highlight text-info"
+							:class="['align-self-'+align_self_sel]"
+							>align-self-{{align_self_sel}}</div>
+						<div class="p-2 bd-highlight">Flex item</div>
+					</div>
+
+					<h3>填滿</h3>
+					[flex_fill]<input type="checkbox" v-model="flex_fill_sel" /> 
+					<div class="d-flex bd-highlight mk border">
+						<div class="p-2 bd-highlight" :class="[flex_fill_sel?'flex-fill text-info':'']">Flex item with a lot of content</div>
+						<div class="p-2 bd-highlight" :class="[flex_fill_sel?'flex-fill text-info':'']">Flex item</div>
+						<div class="p-2 bd-highlight">Flex item</div>
+					</div>
+
+					<h3>flex-shrink</h3>
+					<div class="d-flex bd-highlight mk">
+						<div class="p-2 w-100 bd-highlight">w-100</div>
+						<div class="p-2 flex-shrink-1 bd-highlight">flex-shrink-1</div>
+					</div>
+				</div>
+					
+					
+
 				`,
 				data(){
 					return {
@@ -454,7 +533,15 @@ let utilities = {
 							"center",
 							"between",
 							"around"],
+						align_items:["start",
+							"end",
+							"center",
+							"baseline",
+							"stretch"],
+						align_items_sel:'',
+						align_self_sel:'',
 						justify_sel:'start',
+						flex_fill_sel:null
 					}
 				},
 			}
