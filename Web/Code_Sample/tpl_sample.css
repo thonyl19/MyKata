@@ -43,25 +43,25 @@ pre {
 }
  
 
-ul {
+ul.tpl {
   list-style-type: none;
   margin: 0;
   padding: 0.3em;
 }
 
-li {
+ul.tpl li {
   min-width: 5em;
   line-height: 1.39em;
   white-space: nowrap;
 }
 
-li.over-fun:hover {
+ul.tpl li.over-fun:hover {
   color: blue;
   font-weight: 400;
   cursor: pointer;
 }
 
-li.over-fun a{
+ul.tpl li.over-fun a{
   color: black;
 }
 

@@ -73,7 +73,7 @@ let 元件 = {
   Alert() {
 	var _note = `
 			<pre>
-				這裡是透過 jq plugin 來處理,所以目前試不出來.
+				需要搭配 util.js 來處理,所以目前試不出來.
 			</pre>
 			`;
 	var _obj = {
@@ -81,13 +81,17 @@ let 元件 = {
 		template: `
 					<div>
 						${_note}
-						<div class="alert alert-primary" role="alert">
-							A simple primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
+						<div class="alert alert-success" data-dismiss="alert" role="alert">
+						<h4 class="alert-heading">Well done!</h4>
+						<p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+						<hr>
+						<p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
 						</div>
 					</div>
 					`,
 		mounted() {
-		  $(".alert").alert();
+			var _obj = $(".alert");
+			_obj.alert();
 		},
 	  },
 	};
@@ -127,108 +131,320 @@ let 元件 = {
 	};
 	return _obj;
   },
-  "Breadcrumb"() {
-	var _note = `
-			<pre>
-			麵包屑
-			https://bootstrap.hexschool.com/docs/4.2/components/breadcrumb/
-			
-			</pre>
-			`;
-	var _obj = {
-	  _css: ``,
-	  _vue: {
-		template: `
-				<div>
-					${_note}
-					<nav aria-label="breadcrumb">
-						<ol class="breadcrumb">
-							<li class="breadcrumb-item"><a href="#">Home</a></li>
-							<li class="breadcrumb-item"><a href="#">Library</a></li>
-							<li class="breadcrumb-item active" aria-current="page">Data</li>
-						</ol>
-					</nav>
-				</div>
-				`,
-		data() {
-		  return {};
-		},
-	  },
-	};
-	return _obj;
-  },
-  '*Button_Base'() {
-	  var _note = `
-		 <pre>
-		 </pre>
-		 `;
-	  var _obj = {
-		  _css:``,
-		  _vue: {
-			  template: `
-				  <div>
-				  ${_note}
-				  <h3>基本樣式</h3>
-				  <bts-options bts_ver="4" :list="list" v-model="btn_sel" />
-				  <button class="btn" :class="['btn-'+btn_sel]">{{btn_sel}}</button>
-				  </div>
-			  `,
-			  data(){
-				  return {
-					  list:["primary" 	
-					  ,"secondary"	
-					  ,"success"	
-					  ,"danger"	
-					  ,"warning"	
-					  ,"info"		
-					  ,"light"		
-					  ,"dark"		
-					  ,"link"],
-					btn_sel:'primary'
-				  }
-			  } 
-			 }
-	  };
-	  return _obj;
-  },
-  '*Button_Group'() {
-	var _note = `
-			<pre>
-			https://bootstrap.hexschool.com/docs/4.2/components/button-group/
-			1. .btn-group 為基本的組合單位
-			2. 搭配 .btn-toolbar 可以再組合成為一個群單位           
-			</pre>
-			`;
-	var _obj = {
-	  _vue: {
-		template: `
+	"Breadcrumb"() {
+		var _note = `
+				<pre>
+				麵包屑
+				https://bootstrap.hexschool.com/docs/4.2/components/breadcrumb/
+				
+				</pre>
+				`;
+		var _obj = {
+		_css: ``,
+		_vue: {
+			template: `
 					<div>
 						${_note}
-						<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-							<div class="btn-group mr-2" role="group" aria-label="First group">
-								<button type="button" class="btn btn-secondary">1</button>
-								<button type="button" class="btn btn-secondary">2</button>
-								<button type="button" class="btn btn-secondary">3</button>
-								<button type="button" class="btn btn-secondary">4</button>
-							</div>
-							<div class="btn-group mr-2" role="group" aria-label="Second group">
-								<button type="button" class="btn btn-secondary">5</button>
-								<button type="button" class="btn btn-secondary">6</button>
-								<button type="button" class="btn btn-secondary">7</button>
-							</div>
-							<div class="btn-group" role="group" aria-label="Third group">
-								<button type="button" class="btn btn-secondary">8</button>
-							</div>
-						</div>
+						<nav aria-label="breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="#">Home</a></li>
+								<li class="breadcrumb-item"><a href="#">Library</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Data</li>
+							</ol>
+						</nav>
 					</div>
 					`,
-		data() {
-		  return {};
+			data() {
+			return {};
+			},
 		},
-	  },
-	};
-	return _obj;
-  },
+		};
+		return _obj;
+	},
+	'Button_Base'() {
+		var _note = `
+			<pre>
+			</pre>
+			`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+						<h3>基本樣式</h3>
+						<bts-options bts_ver="4" :list="list" v-model="btn_sel" />
+						<button class="btn" :class="['btn-'+btn_sel]">{{btn_sel}}</button>
+
+						<h3>外框按鈕 btn-outline-*</h3>
+						<button type="button" class="btn btn-outline-primary">Primary</button>
+
+						<h3>.btn-block</h3>
+						<div class="w-50">
+							<button type="button" class="btn btn-primary btn-block">Primary</button>
+						</div>
+					</div>
+
+				`,
+				data(){
+					return {
+						list:["primary" 	
+						,"secondary"	
+						,"success"	
+						,"danger"	
+						,"warning"	
+						,"info"		
+						,"light"		
+						,"dark"		
+						,"link"],
+						btn_sel:'primary'
+					}
+				} 
+				}
+		};
+		return _obj;
+	},
+	'Button_Group'() {
+		var _note = `
+				<pre>
+				https://bootstrap.hexschool.com/docs/4.2/components/button-group/
+				1. .btn-group 為基本的組合單位
+				2. 搭配 .btn-toolbar 可以再組合成為一個群單位           
+				</pre>
+				`;
+		var _obj = {
+		_vue: {
+			template: `
+						<div>
+							${_note}
+							<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+								<div class="btn-group mr-2" role="group" aria-label="First group">
+									<button type="button" class="btn btn-secondary">1</button>
+									<button type="button" class="btn btn-secondary">2</button>
+									<button type="button" class="btn btn-secondary">3</button>
+									<button type="button" class="btn btn-secondary">4</button>
+								</div>
+								<div class="btn-group mr-2" role="group" aria-label="Second group">
+									<button type="button" class="btn btn-secondary">5</button>
+									<button type="button" class="btn btn-secondary">6</button>
+									<button type="button" class="btn btn-secondary">7</button>
+								</div>
+								<div class="btn-group" role="group" aria-label="Third group">
+									<button type="button" class="btn btn-secondary">8</button>
+								</div>
+							</div>
+						</div>
+						`,
+			data() {
+			return {};
+			},
+		},
+		};
+		return _obj;
+	},
+	'Button_GroupMix'() {
+		var _note = `
+		<pre>
+		1.在試驗 btn-group-vertical 時發現了一個 bug ,當啟用 vertical 時,
+			會造成 input-group 中的 form-control 出現跑版的問題,
+			經測試確認,只要 取消 .form-control 的 height ,
+			就可以正確的自適應了,特此誌之.
+		</pre>
+		   `;
+		var _obj = {
+			_css:`
+				.form-control.fix{
+					height:auto;
+				}
+			`,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<input type="checkbox" v-model="set" />justify-content-between <br />
+					<input type="checkbox" v-model="set1" />btn-group-vertical
+					<input type="checkbox" v-model="set2" />解決跑版問題 
+					<div class="btn-toolbar mb-3 " role="toolbar" aria-label="Toolbar with button groups"
+						:class="[set?'justify-content-between':'']"
+						>
+						<div class="mr-2" role="group" aria-label="First group"
+							:class="[set1?'btn-group-vertical':'btn-group' ]"
+							>
+							<button type="button" class="btn btn-secondary">1</button>
+							<button type="button" class="btn btn-secondary">2</button>
+							<button type="button" class="btn btn-secondary">3</button>
+							<button type="button" class="btn btn-secondary">4</button>
+						</div>
+						<div class="input-group">
+							<div class="input-group-prepend">
+							<div class="input-group-text" id="btnGroupAddon">@</div>
+							</div>
+							<input type="text" class="form-control"
+								:class="[set2?'fix':'']"
+								 placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon">
+						</div>
+					</div>
+				</div>
+				`,
+				data(){
+					return {
+						set:false,
+						set1:false,
+						set2:false
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
+	'Card'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<h3>基本原型</h3>
+					<div class="card" style="width: 18rem;">
+						<img src="../img/head.png" class="card-img-top" alt="...">
+						<h5 class="card-header">card-header"</h5>
+						<div class="card-body">
+							<h5 class="card-title">card-title</h5>
+							<h6 class="card-subtitle mb-2 text-muted">card-subtitle</h6>
+							<p class="card-text">card-text</p>
+							<a href="#" class="card-link">card-link</a><br/>
+							<a href="#" class="btn btn-primary">btn-primary</a>
+						</div>
+						<div class="card-footer">card-footer</div>
+					</div>
+				</div>
+				`,
+				data(){
+					return {
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
+	'Card_導覽'() {
+		var _note = `
+		   <pre>
+		   https://bootstrap.hexschool.com/docs/4.2/components/card/#navigation
+		   1.經簡單修改後,己可套用 vue 做運作 
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+				${_note}
+					<div class="card text-center">
+						<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs">
+							<li class="nav-item">
+								<a class="nav-link" :class="[idx==1?'active':'']" href="#" @click="idx=1" >Active</a>
+							</li>
+							<li class="nav-item">
+							<a class="nav-link" :class="[idx==2?'active':'']" href="#" @click="idx=2">Link</a>
+							</li>
+							<li class="nav-item">
+							<a class="nav-link disabled" href="#"  tabindex="-1" aria-disabled="true">Disabled</a>
+							</li>
+						</ul>
+						</div>
+						<div class="card-body" v-show="idx==1">
+							<h5 class="card-title">Special title treatment (1)</h5>
+							<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+							<a href="#" class="btn btn-primary">Go somewhere</a>
+						</div>
+						<div class="card-body" v-show="idx==2">
+							<h5 class="card-title">Special title treatment (2)</h5>
+							<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+							<a href="#" class="btn btn-primary">Go somewhere</a>
+						</div>
+					</div>
+				</div>
+				`,
+				data(){
+					return {
+						idx:1
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
+	'Collapse'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+				${_note}
+				<div class="accordion" id="accordionExample">
+					<div class="card">
+						<div class="card-header" id="headingOne">
+						<h2 class="mb-0">
+							<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							Collapsible Group Item #1
+							</button>
+						</h2>
+						</div>
+
+						<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+						<div class="card-body">
+							Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+						</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header" id="headingTwo">
+						<h2 class="mb-0">
+							<button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							Collapsible Group Item #2
+							</button>
+						</h2>
+						</div>
+						<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+						<div class="card-body">
+							Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+						</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header" id="headingThree">
+						<h2 class="mb-0">
+							<button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+							Collapsible Group Item #3
+							</button>
+						</h2>
+						</div>
+						<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+						<div class="card-body">
+							Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+						</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				`,
+				mounted(){
+					$('.collapse').collapse()
+				} 
+			   }
+		};
+		return _obj;
+	},
 };
 let utilities = {
   Border() {

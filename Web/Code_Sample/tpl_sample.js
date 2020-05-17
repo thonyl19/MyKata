@@ -50,10 +50,10 @@
                 },
                 left: {
                     template: `
-                    <ul>
+                    <ul class="tpl">
                         <li v-for="(grp,main_key) in _sample" >
                             <a class="itme-main">{{main_key}}</a>
-                            <ul>
+                            <ul class="tpl">
                                 <li v-for="(item,item_key) in grp" class="over-fun" :class="[sel==item_key?'sel':'']" >
                                     <a @click="act(item,item_key)"> {{item_key}}</a>
                                 </li>
