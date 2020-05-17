@@ -408,60 +408,7 @@ let utilities = {
 			flex-{row|column}|{-reverse}
 		</pre>
 		   `;
-		var dyn = {
-			template: `
-			<div class="d-flex justify-content-start">
-				<div v-for="(item) in list" class="p-2">
- 
-					<input :type="type"  
-						:name="name"  
-						:value="item"
-						v-model="checked"  />
-					{{item}}
-				</div>
-			</div>
-			`,
-			props:{
-				type:{
-					type:String,
-					default:'radio'
-				},
-				name:{
-					type:String,
-					default:"grp"
-				},
-				value:{
-					type: [String,Array,Object],
-					default(){
-						return null;
-					}
-				},
-				list:{
-					type:Array
-				}
-			},
- 
-			computed:{
-				// selected:{
-				// 	get(){
-				// 		return this.value;
-				// 	},
-				// 	set(val){
-				// 		console.log([val,this.value]);
-				// 		this.$emit('input', val);
-				// 	}
-				// },
-				checked:{
-					get(){
-						return this.value;
-					},
-					set(val){
-						console.log([val,this.value]);
-						this.$emit('input', val);
-					}
-				}
-			}
-		}
+
 		var _obj = {
 			_css:``,
 			_vue: {
@@ -469,8 +416,8 @@ let utilities = {
 					<div>
 					${_note} 
 
-					<h3>方向性</h3>
-					<dyn  :list="direction" v-model="direction_sel"></dyn>
+					<h3>方向性 flex-{{direction_sel}}</h3>
+						<bts-options bts_ver="4"  :list="direction" v-model="direction_sel"></bts-options>
 						<div class="mk">
 						<div class="d-flex bd-highlight mb-3" :class="['flex-'+direction_sel]">
 						<div class="p-2 bd-highlight">Flex item 1</div>
@@ -486,7 +433,7 @@ let utilities = {
 					</div>
 					
 					<h3>調整內容 justify-content-{{justify_sel}} </h3>
-						<dyn name="grp1" :list="justify" v-model="justify_sel"></dyn>
+						<bts-options name="grp1" :list="justify" v-model="justify_sel"></bts-options>
 						<div class="bd-example mk">
 							<div class="d-flex  bd-highlight mb-3" 
 								:class="['justify-content-'+justify_sel]">
@@ -510,12 +457,6 @@ let utilities = {
 						justify_sel:'start',
 					}
 				},
-				components:{dyn},
-				// computed: {
-				// 	direction(){
-				// 		return this.set?'row':'column'
-				// 	}
-				// }, 
 			}
 		};
 		return _obj;
