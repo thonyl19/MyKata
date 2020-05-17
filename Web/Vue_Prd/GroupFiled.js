@@ -90,7 +90,79 @@
                 `
             });
         }
+        ,bts4_options(){
+            var _obj = {
+                template: `
+                <div :class="[classByVer(false)]">
+                    <div v-for="(item) in list" :class="[classByVer()]">
+                        <input :type="type"  
+                            :name="name"  
+                            :value="item"
+                            v-model="checked"  />
+                        {{item}}
+                    </div>
+                </div>
+                `,
+                props:{
+                    type:{
+                        type:String,
+                        default:'radio'
+                    },
+                    name:{
+                        type:String,
+                        default:"grp"
+                    },
+                    value:{
+                        type: [String,Array,Object],
+                        default(){
+                            return null;
+                        }
+                    },
+                    list:{
+                        type:Array
+                    },
+                    bts_ver:{
+                        type:[Number,String],
+                        default:3
+                    }
+                },
+                computed:{
+                    checked:{
+                        get(){
+                            return this.value;
+                        },
+                        set(val){
+                            //console.log([val,this.value]);
+                            this.$emit('input', val);
+                        }
+                    }
+                },
+                methods: {
+                    classByVer(isItems=true){
+                        var chk = `${this.bts_ver}${isItems?'B':'A'}`;
+                        var r = ""
+                        switch(chk){
+                            case "3A":
+                                r = "row";
+                                break;
+                            case "3B":
+                                r = "col-md-2";
+                                break;
+                            case "4A":
+                                r = "d-flex justify-content-start";
+                                break;
+                            case "4B":
+                                r = "p-2";
+                                break;
+                        }
+                        return r;
+                    },
+                },
+            }
+            return _obj;
+        }
     }
-    Vue.component('bts-grp-filed', _fn.bts_mode());
     Vue.component('el-grp-filed', _fn.el_mode());
+    Vue.component('bts-grp-filed', _fn.bts_mode());
+    Vue.component('bts-options', _fn.bts4_options());
 }));
