@@ -301,6 +301,32 @@ var Views = {
         return { _vue };
     },
 
+    'v-for'() {
+        var _note = `
+            <pre>
+            </pre>
+            `;
+        var _obj = {
+            _css:``,
+            _vue: {
+                template: `
+                <div>
+                    ${_note}
+                    {{list}}
+                    <ul>
+                        <li v-for="(item) in list" ><input type=text v-model="item.A" /></li>
+                    </ul>
+                </div>
+                `,
+                data(){
+                    return {
+                        list:[{A:1},{A:2}]
+                    }
+                }
+            }
+        };
+        return _obj;
+    },
     event案例() {
         var _obj = {
             template: `
