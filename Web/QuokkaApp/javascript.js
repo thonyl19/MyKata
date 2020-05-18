@@ -38,6 +38,30 @@ var fn = {
         */
 
     },
+    '模擬 MVVM 雙向綁定機制'(){
+        /*
+        https://jsfiddle.net/gary75952/edkrwx4q/28/?utm_source=website&utm_medium=embed&utm_campaign=edkrwx4q
+        */
+       var model = {}
+       let value = undefined
+     
+         Object.defineProperty(model, "value", {
+             get(){
+             return value;
+             },      
+             set(newVal) {    
+                 value = newVal;
+                 document.getElementById("input").value = newVal             
+                 document.getElementById("display").innerHTML = newVal
+             }
+         })
+         
+         document.getElementById("input").addEventListener("keyup", function (event) {
+             model.value = event.target.value;   
+             console.log("綁定的資料異動:",model.value)
+         })  
+        
+    },
     'resizable'() {
         //https://jsfiddle.net/Linusborg/xzjfw8gm/
     },
