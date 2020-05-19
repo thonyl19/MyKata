@@ -202,7 +202,7 @@
                             checkbox:'el-checkbox',
                             radio:'el-radio',
                             date:'el-date-picker',
-                            textarea:'el-input',
+                            textarea:'el-input-pw-ext',
                         }
                     }
                 },
@@ -257,26 +257,28 @@
                                     _base.type = _self.FiledMap.checkbox;
                                     break;
                                 case "object":
-                                    //val
-                                    //key
                                     if (_.isNull(val)){
-                                        //
                                     }else if (_.isArray(val)){
-                                        let [first=""] = val;
-                                        _base.val = first;
                                         _base.type = _self.FiledMap.select;
                                         _base.src= val;
+                                        if (val.length !=0){
+                                            _base.type +='-pw-ext';
+                                        }
                                     }else if (_.isDate(val)){
                                         _base.type = _self.FiledMap.date;
                                     }else if (_.isPlainObject(val)){
                                         let {checkbox,radio,textarea,select,src} = val;
                                         if (textarea!=null){
-                                            _base.type = 'textarea';
+                                            _base.type = _self.FiledMap.textarea    ;
                                             _base.val = textarea;
                                         }
                                         if (checkbox!=null){
                                             _base.type =_self.FiledMap.checkbox;
-                                            _base.val = checkbox;
+                                            _base.val 
+                                                = _.isArray(checkbox)
+                                                ? checkbox
+                                                : [checkbox]
+                                                ;
                                         }else if (radio!=null){
                                             _base.type =_self.FiledMap.radio;
                                             _base.val = radio;
@@ -306,21 +308,86 @@
 
             });
         },
-        power_form_el_radio(){
-            var _vue = {
-                    inheritAttrs:false,
+        power_form_el_options(arg){
+            if (_.isString(arg)){
+                arg = {
                     template: `
-                    <el-checkbox-group v-model="checkList">
-                        <el-checkbox v-for="(item) in list" :label="item" :key="item">{{item}}</el-checkbox>
-                    </el-checkbox-group>
+                    <el-${arg}-group v-model="val">
+                        <el-${arg} v-for="(item) in list" :label="item" :key="item" /> 
+                    </el-${arg}-group>
                     `,
-                    computed:{
-                        list(){
-                            let {src=[]} = this.ops;
-                            return src;
+                }
+            }
+            var _vue = _.merge({
+                inheritAttrs:false,
+                props:{
+                    value:{
+                        type:[Object,Array,String]
+                    },
+                    ops:{
+                        type:Object
+                    }
+                },
+                computed:{
+                    list(){
+                        let {src=[]} = this.ops;
+                        return src;
+                    },
+                    val:{
+                        get(){
+                            return this.value;
+                        },
+                        set(val){
+                            this.$emit('input',val);
                         }
                     }
-            } ;
+                }
+            }
+            ,arg) ;
+            return _vue;
+        },
+        power_form_el_select(){
+            var _vue =  _fn.power_form_el_options({
+                template: `
+                <el-select v-model="val" clearable placeholder="请选择">
+                    <el-option
+                        v-for="item in list"
+                        :key="item"
+                        :label="item"
+                        :value="item" />
+                </el-select>
+                `,
+            });
+            console.log(_vue);
+            return _vue ;
+        },
+        power_form_el_input(){
+            var _vue = {
+                inheritAttrs:false,
+                template:`
+                <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 4}"
+                    placeholder="请输入内容"
+                    v-model="val">
+                    </el-input>
+                `,
+                props:{
+                    value:{
+                        type:String
+                    },
+                },
+                computed:{
+                    val:{
+                        get(){
+                            return this.value;
+                        },
+                        set(val){
+                            this.$emit('input',val);
+                        }
+                    }
+                }
+            };
             return _vue;
         }
     }
@@ -328,6 +395,9 @@
     Vue.component('bts-grp-filed', _fn.bts_mode());
     Vue.component('bts-options', _fn.bts4_options());
     Vue.component('power-form-el', _fn.power_form_el());
-    Vue.component('el-radio-pw-ext', _fn.power_form_el_radio());
+    Vue.component('el-radio-pw-ext', _fn.power_form_el_options('radio'));
+    Vue.component('el-checkbox-pw-ext', _fn.power_form_el_options('checkbox'));
+    Vue.component('el-select-pw-ext', _fn.power_form_el_select());
+    Vue.component('el-input-pw-ext', _fn.power_form_el_input());
     
 }));

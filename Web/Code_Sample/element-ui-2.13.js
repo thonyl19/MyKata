@@ -717,18 +717,18 @@ let Vue_Prd = {
 					return {
 						quick:['A','B'],
 						form_base:{
-							//select:['A','B'],
-							// select_1:{src:['A','B'],select:'A'},
-							// text_s:'',
-							// text_i:1,
-							// text_i1:1.1,
-							// text_n:null,
-							//checkbox:true, //{checkbox:['A','B']}
-							//checkbox_1:{checkbox:'A',src:['A','B']}, //{checkbox:['A','B']}
+							select:['A','B'],
+							select_1:{src:['A','B'],select:'A'},
+							text_s:'',
+							text_i:1,
+							text_i1:1.1,
+							text_n:null,
+							checkbox:true, //{checkbox:['A','B']}
+							checkbox_1:{checkbox:['A'],src:['A','B']}, //{checkbox:['A','B']}
 							radio:{radio:'A',src:['A','B']},
 							date:new Date(),
-							// textarea:'~',
-							// textarea_1:{textarea:''},
+							textarea:'~',
+							textarea_1:{textarea:''},
 						},
 					}
 				}

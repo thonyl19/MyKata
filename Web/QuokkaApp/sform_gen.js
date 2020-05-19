@@ -188,10 +188,13 @@ var fn = {
 						if (src !=null){
 							_base.src = src;
 						}
-
+						
 						if (checkbox!=null){
 							_base.type ='checkbox';
-							_base.val = checkbox;
+							_base.val =                                                 = _.isArray(checkbox)
+								? checkbox
+								: [checkbox]
+								;
 						}else if (radio!=null){
 							_base.type ='radio';
 							_base.val = radio;
