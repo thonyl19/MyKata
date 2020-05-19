@@ -144,7 +144,7 @@ var test =  {
 	"WO_LINE": null
   }
 var fn = {
-    _gen(arg = test){
+    _gen(arg = smart){
         var arr = {}
         _.each(arg,(val,key)=>{
 			var _t = typeof(val);
@@ -162,8 +162,10 @@ var fn = {
 					//基於轉換處理的考量,先不自動把日期字段判斷為日期物件
 					//else if (isNaN(Date.parse(val))==false){}
 					break;
-				case "number":
+				// case "number":
+				// 	break;
 				case "boolean":
+					_base.type = 'checkbox';
 					break;
 				case "object":
 					//val
