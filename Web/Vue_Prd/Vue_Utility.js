@@ -13,6 +13,7 @@
                 validator(){
                     return true;
                 },
+                //type: [String,Boolean,Array,Object,Number,Function,Date],
                 default: def
             };
         },
