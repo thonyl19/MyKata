@@ -143,8 +143,51 @@ var test =  {
 	"WO_LINE_NO": null,
 	"WO_LINE": null
   }
+  var form_base = 	{
+	"表單類型": {
+		"label": "表單類型",
+		"type": "select",
+		"val":""
+	},
+	"檢驗對象": {
+		"label": "檢驗對象",
+		"type": "select",
+		"val":""
+	},
+	"表單編碼格式": {
+		"label": "表單編碼格式",
+		"type": "input",
+		"val":""
+	},
+	"表單負責單位": {
+		"label": "表單負責單位",
+		"type": "input",
+		"val":""
+	},
+	"判定結果設定": {
+		"label": "判定結果設定",
+		"type": "select",
+		"val":""
+	},
+	"ISO表單编號": {
+		"label": "ISO表單编號",
+		"type": "input",
+		"val":""
+	},
+	"抽樣計劃": {
+		"label": "抽樣計劃",
+		"type": "select",
+		"val":""
+	},
+	"說明": {
+		"label": "說明",
+		"type": "textarea",
+		"val":""
+	}
+}  
+
 var fn = {
-    _gen(arg = smart){
+    gen(arg = smart){
         var arr = {}
         _.each(arg,(val,key)=>{
 			var _t = typeof(val);
@@ -185,13 +228,11 @@ var fn = {
 							_base.type = 'textarea';
 							_base.val = textarea;
 						}
-						if (src !=null){
-							_base.src = src;
-						}
 						
 						if (checkbox!=null){
 							_base.type ='checkbox';
-							_base.val =                                                 = _.isArray(checkbox)
+							_base.val 
+								=_.isArray(checkbox)
 								? checkbox
 								: [checkbox]
 								;
@@ -202,6 +243,10 @@ var fn = {
 							_base.type ='select';
 							_base.val = select;
 						}
+						if (src !=null){
+							_base.src = src;
+						}
+
 					}
 
 					break;
@@ -212,7 +257,35 @@ var fn = {
         })
         console.log(arg);
     },
-     
+    _get1(arg=form_base){
+		var tpl = {
+			main(list){
+				return 
+				`<div class="form-horizontal gt-form">
+				 ${list.join('\n\t')}
+				</div>`
+			},
+			item(key,item){
+				var isBaseType =  (item.type=='input');
+				var _model = `v-model="form.${key}"`
+				return `
+				<bts-grp-filed label="${item.label}"
+					${isBaseType?_model:''}>${tpl.x(isBaseType,_model,item)}
+				</bts-grp-filed>
+				`
+			},
+			x(isBaseType,_model,item){
+				if (isBaseType) return "";
+				return `\n\t\t<${item.type} ${_model} />`
+			}
+		}
+		 ;
+		var list = []
+        _.each(arg,(val,key)=>{
+			list.push(tpl.item(key,val));
+		})
+		console.log( list[2]);
+	}
 }
 
 _.each(fn,(e,k)=>{

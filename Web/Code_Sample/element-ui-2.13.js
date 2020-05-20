@@ -699,7 +699,7 @@ let Vue_Prd = {
 	  };
 	  return _obj;
    	},
-	'*def'() {
+	'power-form'() {
 		var _note = `
 		<pre>
 		</pre>
@@ -707,10 +707,11 @@ let Vue_Prd = {
 		var _obj = {
 			_css:``,
 			_vue: {
+				//<power-form-el :form_base="form_base" /> 
 				template: `
 				<div>
 					${_note}
-					<power-form-el :form_base="form_base" />
+					<power-form-bts :form_base="form_base"  />
 				</div>
 				`,
 				data(){
@@ -729,6 +730,10 @@ let Vue_Prd = {
 							date:new Date(),
 							textarea:'~',
 							textarea_1:{textarea:''},
+							己轉換:{ "label": "textarea", "type": "el-input-pw-ext", "val": "~" },
+							//直接填入 tpl 取代掉
+							tpl:{ "label": "tpl", "type": {template:`<div>test</div>`}, "val": "~" }
+
 						},
 					}
 				}
@@ -737,4 +742,88 @@ let Vue_Prd = {
 		return _obj;
 	},
 }
-window.sample = {Views ,Row,Group ,Case,Fail,Vue_Prd};
+let Tool = {
+	'*power-form'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<el-tabs v-model="tab">
+					<el-tab-pane label="Note" name="A">${_note}</el-tab-pane>
+					<el-tab-pane label="Input" name="B">
+						<el-button type="primary" round @click="fn_quick">quick</el-button>
+						<el-button type="success" round @click="fn_simple">simple</el-button>
+						<el-input type="textarea" v-model="val">
+						</el-input>
+					</el-tab-pane>
+					<el-tab-pane label="View" name="C">
+						<power-form-bts ref="PwForm" :quick="quick" :form_base="form_base" />
+					</el-tab-pane>
+					<el-tab-pane label="Json" name="D" >
+						<el-button type="primary" round @click="fn_Json()">ReGen</el-button>
+						<el-button type="primary" round @click="fn_Json(true)">zip</el-button>
+						<el-input type="textarea" v-model="Json" />
+					</el-tab-pane>
+					<el-tab-pane label="Code" name="E" >
+						<el-input type="textarea" v-model="Code" />
+					</el-tab-pane>
+				</el-tabs>
+					
+				`,
+				data(){
+					return {
+						tab:'B',
+						val:'',
+						Json:'',
+						form_base:null,
+						quick:null,
+						Code:''
+					}
+				},
+				watch:{
+					tab(val){
+						switch(val){
+							case "D":
+								if (this.Json == null || this.Json == "") this.fn_Json();
+								break;
+							case "E":
+								this.fn_Code();
+								break;
+						}
+					}
+				},
+				methods:{
+					fn_quick(){
+						this.form_base = null
+						this.quick = this.val.split('\n');
+						this.tab = "C";
+					},
+					fn_simple(){
+						this.quick = null
+						this.form_base = JSON.parse(this.val);
+						this.tab = "C";
+					},
+					fn_Json(isZip=false){
+						var s = isZip 
+							?JSON.stringify(this.$refs.PwForm.form).replace(/\"/gi,"'")
+							:JSON.stringify(this.$refs.PwForm.form,null,'\t')
+							;
+						this.Json = s;
+					},
+					fn_Code(){
+						if (this.Json == null || this.Json == "") this.fn_Json();
+						var arg = JSON.parse(this.Json);
+						this.Code = this.$refs.PwForm.genCode(arg);
+						console.log(this.Code);
+					}
+				}
+			}
+		};
+		return _obj;
+	},
+}
+window.sample = {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd, };
