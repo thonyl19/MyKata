@@ -320,6 +320,54 @@
             return _fn.power_form_base({
                 template: `
                 <div class="form-horizontal gt-form">
+                    <div v-for="(item,key) in form">
+                        <bts-grp-filed 
+                            :label="item.label"
+                            :key=key
+                            v-model="item.val">
+                            <component
+                                :ops="item"
+                                :is="item.type"
+                                v-if="item.type!='input'"    
+                                v-model="item.val">
+                            </component>
+                        </bts-grp-filed>
+                    </div>
+                </div>
+                `,
+                methods:{
+                    genCode(arg){
+                        var tpl = {
+							main(list,_form){
+                                return `form:${JSON.stringify(_form,null,'\t')}
+<div class="form-horizontal gt-form">${list.join('')}
+</div>`;
+							},
+							item(key,item){
+								var isBaseType =  (item.type=='input');
+								var _model = `v-model="form.${key}"`;
+                                return `\n\t<bts-grp-filed label="${item.label}" ${isBaseType?_model:''}>${tpl.byType(isBaseType,_model,item)}</bts-grp-filed>`
+							},
+							byType(isBaseType,_model,item){
+								if (isBaseType) return "";
+								return `\n\t\t<${item.type} ${_model} />\n\t`
+							}
+						};
+                        var list = []
+                        var _form = {};
+						_.each(arg,(val,key)=>{
+                            list.push(tpl.item(key,val));
+                            _form[key]=key;
+						})
+                        return tpl.main(list,_form);
+                    }
+                }
+            });
+        },
+        power_form_bts_(){
+            return _fn.power_form_base({
+                template: `
+                <div class="form-horizontal gt-form">
                     <bts-grp-filed 
                         v-for="(item,key) in form"
                         :label="item.label"
