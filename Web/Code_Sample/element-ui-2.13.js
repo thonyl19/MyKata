@@ -755,8 +755,8 @@ let Tool = {
 				<el-tabs v-model="tab">
 					<el-tab-pane label="Note" name="A">${_note}</el-tab-pane>
 					<el-tab-pane label="Input" name="B">
-						<el-button type="primary" round @click="fn_quick">quick</el-button>
-						<el-button type="success" round @click="fn_simple">simple</el-button>
+						<el-button type="primary" size="small" round @click="fn_quick">quick</el-button>
+						<el-button type="success" size="small" round @click="fn_simple">simple</el-button>
 						<el-input type="textarea" v-model="val">
 						</el-input>
 					</el-tab-pane>
@@ -764,8 +764,8 @@ let Tool = {
 						<power-form-bts ref="PwForm" :quick="quick" :form_base="form_base" />
 					</el-tab-pane>
 					<el-tab-pane label="Json" name="D" >
-						<el-button type="primary" round @click="fn_Json()">ReGen</el-button>
-						<el-button type="primary" round @click="fn_Json(true)">zip</el-button>
+						<el-button type="primary" size="small" round @click="fn_Json()">ReGen</el-button>
+						<el-button type="primary" size="small" round @click="fn_Json(true)">zip</el-button>
 						<el-input type="textarea" v-model="Json" />
 					</el-tab-pane>
 					<el-tab-pane label="Code" name="E" >
@@ -777,7 +777,7 @@ let Tool = {
 				data(){
 					return {
 						tab:'B',
-						val:'',
+						val:'A\nB',
 						Json:'',
 						form_base:null,
 						quick:null,
