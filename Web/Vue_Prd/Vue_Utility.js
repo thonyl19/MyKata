@@ -10,7 +10,9 @@
     var PropDef = {
         FullType(def=null){
             return {
-                type: [String,Boolean,Array,Object,Number,Function],
+                validator(){
+                    return true;
+                },
                 default: def
             };
         },
