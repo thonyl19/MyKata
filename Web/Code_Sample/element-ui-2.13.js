@@ -764,8 +764,9 @@ let Tool = {
 						<power-form-bts ref="PwForm" :quick="quick" :form_base="form_base" />
 					</el-tab-pane>
 					<el-tab-pane label="Json" name="D" >
-						<el-button type="primary" size="small" round @click="fn_Json()">ReGen</el-button>
+						<el-button type="primary" size="small" round @click="fn_Json()">GenCode</el-button>
 						<el-button type="primary" size="small" round @click="fn_Json(true)">zip</el-button>
+						<el-button type="primary" size="small" round @click="fn_GenView()">GenView</el-button>
 						<el-input type="textarea" v-model="Json" />
 					</el-tab-pane>
 					<el-tab-pane label="Code" name="E" >
@@ -819,6 +820,10 @@ let Tool = {
 						var arg = JSON.parse(this.Json);
 						this.Code = this.$refs.PwForm.genCode(arg);
 						console.log(this.Code);
+					},
+					fn_GenView(){
+						this.val = this.Json;
+						this.fn_simple();
 					}
 				}
 			}
