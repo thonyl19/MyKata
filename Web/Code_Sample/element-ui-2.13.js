@@ -743,7 +743,7 @@ let Vue_Prd = {
 	},
 }
 let Tool = {
-	'*power-form'() {
+	'*jq-dtable'() {
 		var _note = `
 		<pre>
 		</pre>
@@ -752,7 +752,91 @@ let Tool = {
 			_css:``,
 			_vue: {
 				template: `
-				<el-tabs v-model="tab">
+				<el-tabs v-model="tab" type="border-card">
+					<el-tab-pane label="Note" name="A">${_note}</el-tab-pane>
+					<el-tab-pane label="Input" name="B">
+						<el-button type="primary" size="small" round @click="fn_quick">quick</el-button>
+						<el-button type="success" size="small" round @click="fn_simple">simple</el-button>
+						<el-input type="textarea" v-model="val">
+						</el-input>
+					</el-tab-pane>
+					<el-tab-pane label="View" name="C">
+						<demo-jq-dtable ref="jqDT" :auto_col="auto_col"></demo-jq-dtable>
+					</el-tab-pane>
+					<el-tab-pane label="Ops" name="D" >
+						<el-button type="primary" size="small" round @click="fn_Ops()">GenCode</el-button>
+						<el-button type="primary" size="small" round @click="fn_Ops(true)">zip</el-button>
+						<el-button type="primary" size="small" round @click="fn_GenView()">GenView</el-button>
+						<el-input type="textarea" v-model="Ops" />
+					</el-tab-pane>
+					<el-tab-pane label="Code" name="E" >
+						<el-input type="textarea" v-model="Code" />
+					</el-tab-pane>
+				</el-tabs>
+					
+				`,
+				data(){
+					return {
+						tab:'B',
+						val:'A\nB',
+						Ops:'',
+						auto_col:null,
+						quick:null,
+						Code:''
+					}
+				},
+				watch:{
+					tab(val){
+						switch(val){
+							case "D":
+								if (this.Ops == null || this.Ops == "") this.fn_Ops();
+								break;
+							case "E":
+								this.fn_Code();
+								break;
+						}
+					}
+				},
+				methods:{
+					fn_quick(){
+						this.form_base = null
+						this.auto_col = this.val.split('\n');
+						this.tab = "C";
+					},
+					fn_simple(){
+						this.quick = null
+						this.form_base = JSON.parse(this.val);
+						this.tab = "C";
+					},
+					fn_Ops(isZip=false){
+						debugger
+						this.Ops = this.$refs.jqDT.getOps(true,isZip);
+					},
+					fn_Code(){
+						if (this.Ops == null || this.Ops == "") this.fn_Ops();
+						var arg = JSON.parse(this.Ops);
+						this.Code = this.$refs.PwForm.genCode(arg);
+						console.log(this.Code);
+					},
+					fn_GenView(){
+						this.val = this.Ops;
+						this.fn_simple();
+					}
+				}
+			}
+		};
+		return _obj;
+	},
+	'power-form'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<el-tabs v-model="tab" type="border-card">
 					<el-tab-pane label="Note" name="A">${_note}</el-tab-pane>
 					<el-tab-pane label="Input" name="B">
 						<el-button type="primary" size="small" round @click="fn_quick">quick</el-button>
