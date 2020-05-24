@@ -436,6 +436,29 @@ var API = {
 	})
 	return _obj;
   },
+  '?Col ReSet'() {
+	  var _note = `
+		 <pre>
+		 
+		 </pre>
+		 `;
+	  var _obj = {
+		  _css:``,
+		  _vue: {
+			  template: `
+				  <div>
+				  ${_note}
+				  </div>
+			  `,
+			  data(){
+				  return {
+				  }
+			  } 
+			 }
+	  };
+	  return _obj;
+  },
+  
 };
 var Tool = {
  
