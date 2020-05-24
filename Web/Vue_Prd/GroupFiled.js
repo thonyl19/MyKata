@@ -368,55 +368,7 @@
                 }
             });
         },
-        power_form_bts_(){
-            return _fn.power_form_base({
-                template: `
-                <div class="form-horizontal gt-form">
-                    <bts-grp-filed 
-                        v-for="(item,key) in form"
-                        :label="item.label"
-                        :key=key
-                        v-model="item.val"
-                        >
-                        <component
-                            :ops="item"
-                            :is="item.type"
-                            v-if="item.type!='input'"    
-                            v-model="item.val"
-                            >
-                            </component>
-                        </bts-grp-filed>
-                </div>
-                `,
-                methods:{
-                    genCode(arg){
-                        var tpl = {
-							main(list,_form){
-                                return `form:${JSON.stringify(_form,null,'\t')}
-<div class="form-horizontal gt-form">${list.join('')}
-</div>`;
-							},
-							item(key,item){
-								var isBaseType =  (item.type=='input');
-								var _model = `v-model="form.${key}"`;
-                                return `\n\t<bts-grp-filed label="${item.label}" ${isBaseType?_model:''}>${tpl.byType(isBaseType,_model,item)}</bts-grp-filed>`
-							},
-							byType(isBaseType,_model,item){
-								if (isBaseType) return "";
-								return `\n\t\t<${item.type} ${_model} />\n\t`
-							}
-						};
-                        var list = []
-                        var _form = {};
-						_.each(arg,(val,key)=>{
-                            list.push(tpl.item(key,val));
-                            _form[key]=key;
-						})
-                        return tpl.main(list,_form);
-                    }
-                }
-            });
-        },
+
         power_form_el_options(arg){
             if (_.isString(arg)){
                 arg = {
@@ -499,8 +451,8 @@
             };
             return _vue;
         },
-        jqDataTables_def() {
-            return {
+        jqDataTables_def(useColumnDefs=false) {
+            var _arg = {
                 columns: [
                     { title: "工單編號", "data": "WO_SID" },
                     { title: "狀態", "data": "STATUS" },
@@ -512,17 +464,20 @@
                     { title: '未發放數量', "data": 'UNRELEASE_QUANTITY' },
                     { title: '建立日期', "data": 'CREATE_DATE', }
                 ],
-                columnDefs: [
+                responsive: true,
+                searching: false,
+            }
+            if (useColumnDefs){
+                _arg.columnDefs= [
                     {
                         className: 'e_click', "targets": [0, 4]
                         , createdCell(td, cellData, rowData, row, col) {
                             $(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
                         }
                     }
-                ],
-                responsive: true,
-                searching: false,
+                ]
             }
+            return _arg;
         },
         jqDataTables() {
             var _vue = {
@@ -567,7 +522,7 @@
                     }
 
                     if (_self.ops.set == null) {
-                        _self.ops.set = _fn.jqDataTables_def();
+                        _self.ops.set = _fn.jqDataTables_def(true);
                         if (_self.jdt_data != null && _self.jdt_data.lenth != 0) {
                             _self.ops.auto = false;
                             var _col = [];
@@ -577,16 +532,17 @@
                             _self.ops.set.columns = _col;
                         }
                     }
-                    _self.jqDT = $(_self.$refs.jqDT).DataTable(_self.ops.set);
-                    _self.render();
+                    _self.jqDT = $(_self.$refs.jqDT);
+                    _self.render(false);
                 },
                 watch:{
                     auto_col(){
-                        this.x();
+                        this.fn_AutoCol();
                     }
                 },
                 methods:{
-                    x(){
+                    fn_AutoCol(){
+                        if (this.auto_col == null) return ;
                         var _ops = _fn.jqDataTables_def();
                         var _col_count = _ops.columns.length-1;
                         var columns = [];
@@ -595,13 +551,30 @@
                             columns.push({title,data:_ops.columns[_idx].data})
                         });
                         this.ops.set = _.assign(_ops,{columns});
-                        this.order();
+                        this.render();
                     },
-                    render(){
+                    fn_jdt_set(){
+                        if (this.jdt_set == null) return;
+                        this.ops.set = this.jdt_set;
+                        this.render();
+                    },
+                    reset(){
                         this.jqDT
+                            .DataTable()
+                            .clear()
+                            .destroy();
+                        this.jqDT.empty();
+                    },
+                    render(need_reset = true){
+                        if (need_reset) this.reset();
+
+                        let {set,data} = this.ops;
+                        var _set = Object.assign({},set);
+                        this.jqDT
+                            .DataTable(_set)
                             .clear()
                             .rows
-                            .add(this.ops.data)
+                            .add(data)
                             .draw();
                     },
                     getOps(toString=false,ZipMode=false){
@@ -618,7 +591,18 @@
 							:JSON.stringify(set,null,'\t')
 							;
 						return s;
+                    },
+                    genCode(arg){
+                        var _code =`
+    var _set = ${JSON.stringify(arg,null,'\t')};
+    var jqDT = $(this.$refs.jqDT);
+    jqDT.DataTable(_set);
+
+    <table ref="jqDT" class="display" width="100%"></table>
+                        `;
+                        return _code;
                     }
+
                 }
             }
             return _vue;
