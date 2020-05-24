@@ -761,11 +761,11 @@ let Tool = {
 						</el-input>
 					</el-tab-pane>
 					<el-tab-pane label="View" name="C">
-						<demo-jq-dtable ref="jqDT" :auto_col="auto_col"></demo-jq-dtable>
+						<demo-jq-dtable ref="jqDT" :auto_col="auto_col" :jdt_set="jdt_set"></demo-jq-dtable>
 					</el-tab-pane>
 					<el-tab-pane label="Ops" name="D" >
-						<el-button type="primary" size="small" round @click="fn_Ops()">GenCode</el-button>
-						<el-button type="primary" size="small" round @click="fn_Ops(true)">zip</el-button>
+						<el-button type="primary" size="small" round @click="fn_Ops()">Ops</el-button>
+						<el-button type="primary" size="small" round @click="fn_Ops(true)">OpsZip</el-button>
 						<el-button type="primary" size="small" round @click="fn_GenView()">GenView</el-button>
 						<el-input type="textarea" v-model="Ops" />
 					</el-tab-pane>
@@ -781,7 +781,7 @@ let Tool = {
 						val:'A\nB',
 						Ops:'',
 						auto_col:null,
-						quick:null,
+						jdt_set:null,
 						Code:''
 					}
 				},
@@ -799,13 +799,13 @@ let Tool = {
 				},
 				methods:{
 					fn_quick(){
-						this.form_base = null
+						this.jdt_set = null
 						this.auto_col = this.val.split('\n');
 						this.tab = "C";
 					},
 					fn_simple(){
-						this.quick = null
-						this.form_base = JSON.parse(this.val);
+						this.auto_col = null
+						this.jdt_set = JSON.parse(this.val);
 						this.tab = "C";
 					},
 					fn_Ops(isZip=false){
@@ -815,7 +815,7 @@ let Tool = {
 					fn_Code(){
 						if (this.Ops == null || this.Ops == "") this.fn_Ops();
 						var arg = JSON.parse(this.Ops);
-						this.Code = this.$refs.PwForm.genCode(arg);
+						this.Code = this.$refs.jqDT.genCode(arg);
 						console.log(this.Code);
 					},
 					fn_GenView(){
@@ -848,8 +848,8 @@ let Tool = {
 						<power-form-bts ref="PwForm" :quick="quick" :form_base="form_base" />
 					</el-tab-pane>
 					<el-tab-pane label="Json" name="D" >
-						<el-button type="primary" size="small" round @click="fn_Json()">GenCode</el-button>
-						<el-button type="primary" size="small" round @click="fn_Json(true)">zip</el-button>
+						<el-button type="primary" size="small" round @click="fn_Json()">Json</el-button>
+						<el-button type="primary" size="small" round @click="fn_Json(true)">ZipJson</el-button>
 						<el-button type="primary" size="small" round @click="fn_GenView()">GenView</el-button>
 						<el-input type="textarea" v-model="Json" />
 					</el-tab-pane>
@@ -900,10 +900,11 @@ let Tool = {
 						this.Json = s;
 					},
 					fn_Code(){
+						this.tab = "E";
 						if (this.Json == null || this.Json == "") this.fn_Json();
 						var arg = JSON.parse(this.Json);
 						this.Code = this.$refs.PwForm.genCode(arg);
-						console.log(this.Code);
+						//console.log(this.Code);
 					},
 					fn_GenView(){
 						this.val = this.Json;
