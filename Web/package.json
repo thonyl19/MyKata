@@ -5,6 +5,7 @@
     "jquery": "^3.5.0",
     "jsdom-quokka-plugin": "^1.0.15",
     "lodash": "^4.17.15",
+    "mockjs": "^1.1.0",
     "split.js": "^1.5.11",
     "splitpanes": "^2.2.1",
     "vue-multipane": "^0.9.5",

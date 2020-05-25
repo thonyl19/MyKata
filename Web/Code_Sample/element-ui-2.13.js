@@ -746,6 +746,9 @@ let Tool = {
 	'*jq-dtable'() {
 		var _note = `
 		<pre>
+		1.auto_col
+			1-1.auto_data
+			1-2.byMock Set
 		</pre>
 		`;
 		var _obj = {
@@ -755,13 +758,18 @@ let Tool = {
 				<el-tabs v-model="tab" type="border-card">
 					<el-tab-pane label="Note" name="A">${_note}</el-tab-pane>
 					<el-tab-pane label="Input" name="B">
+						<input type=checkbox v-model="isMock"/>Mock
 						<el-button type="primary" size="small" round @click="fn_quick">quick</el-button>
 						<el-button type="success" size="small" round @click="fn_simple">simple</el-button>
 						<el-input type="textarea" v-model="val">
 						</el-input>
 					</el-tab-pane>
 					<el-tab-pane label="View" name="C">
-						<demo-jq-dtable ref="jqDT" :auto_col="auto_col" :jdt_set="jdt_set"></demo-jq-dtable>
+						<demo-jdt-table ref="jqDT" 
+							:auto_col="auto_col" 
+							:jdt_set="jdt_set"
+							:jdt_data="jdt_data"
+							:mock="mock"></demo-jdt-table>
 					</el-tab-pane>
 					<el-tab-pane label="Ops" name="D" >
 						<el-button type="primary" size="small" round @click="fn_Ops()">Ops</el-button>
@@ -772,17 +780,25 @@ let Tool = {
 					<el-tab-pane label="Code" name="E" >
 						<el-input type="textarea" v-model="Code" />
 					</el-tab-pane>
+					<el-tab-pane label="Mock" name="F" >
+						<el-button type="primary" size="small" round @click="fn_Mock">Exec</el-button>
+						<el-input type="textarea" v-model="MockCode" />
+					</el-tab-pane>
 				</el-tabs>
 					
 				`,
 				data(){
 					return {
+						isMock:true,
 						tab:'B',
 						val:'A\nB',
 						Ops:'',
 						auto_col:null,
 						jdt_set:null,
-						Code:''
+						jdt_data:null,
+						Code:'',
+						mock:null,
+						MockCode:''
 					}
 				},
 				watch:{
@@ -795,12 +811,27 @@ let Tool = {
 								this.fn_Code();
 								break;
 						}
+					},
+					isMock(val){
+						if (val==false) this.mock = null;
 					}
 				},
 				methods:{
+					fn_Mock(){
+						this.mock = JSON.parse(this.MockCode);
+						this.tab = "C";
+					},
 					fn_quick(){
-						this.jdt_set = null
+						this.jdt_set = null;
 						this.auto_col = this.val.split('\n');
+						if (this.isMock){
+							var _obj = {};
+							_.each(this.auto_col,(el)=>{
+								_obj[el] = '@name';
+							});
+							this.mock = {'data|5': [ _obj]};
+							this.MockCode = JSON.stringify(this.mock,null,'\t');
+						}
 						this.tab = "C";
 					},
 					fn_simple(arg=this.val){
