@@ -766,7 +766,7 @@ let Tool = {
 					<el-tab-pane label="Ops" name="D" >
 						<el-button type="primary" size="small" round @click="fn_Ops()">Ops</el-button>
 						<el-button type="primary" size="small" round @click="fn_Ops(true)">OpsZip</el-button>
-						<el-button type="primary" size="small" round @click="fn_GenView()">GenView</el-button>
+						<el-button type="primary" size="small" round @click="fn_GenView()">TryView</el-button>
 						<el-input type="textarea" v-model="Ops" />
 					</el-tab-pane>
 					<el-tab-pane label="Code" name="E" >
@@ -803,9 +803,9 @@ let Tool = {
 						this.auto_col = this.val.split('\n');
 						this.tab = "C";
 					},
-					fn_simple(){
+					fn_simple(arg=this.val){
 						this.auto_col = null
-						this.jdt_set = JSON.parse(this.val);
+						this.jdt_set = JSON.parse(arg);
 						this.tab = "C";
 					},
 					fn_Ops(isZip=false){
@@ -819,8 +819,7 @@ let Tool = {
 						console.log(this.Code);
 					},
 					fn_GenView(){
-						this.val = this.Ops;
-						this.fn_simple();
+						this.fn_simple(this.Ops);
 					}
 				}
 			}

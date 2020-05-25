@@ -542,6 +542,7 @@
                 },
                 methods:{
                     fn_AutoCol(){
+                        debugger
                         if (this.auto_col == null) return ;
                         var _ops = _fn.jqDataTables_def();
                         var _col_count = _ops.columns.length-1;
