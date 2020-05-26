@@ -64,7 +64,7 @@ var fn = {
         var x =  Mock.mock(_op);
         x;
     },
-    _A03() {
+    A03() {
         var x =  [{a:1}, ...Mock.mock({
             'data|5': [{
                 p: '@name'
@@ -88,6 +88,20 @@ var fn = {
                 mail: '@EMAIL',
             }]
         });
+    },
+    _x(){
+        var z = Mock.mock({
+            "array|1-10": [
+              {
+                "name|+1": [
+                  "Hello",
+                  "Mock.js",
+                  "!"
+                ]
+              }
+            ]
+          });
+        z
     }
 }
 

@@ -56,7 +56,9 @@ var Vue_Prd = {
                    ${_note}
                    <div>[values]{{values}}</div><button @click="fn_change">Change</button>
                    [readonly]<input type=checkbox v-model="readonly" />
-                   <vue-selectize v-model="values" :options="options"  
+                   <vue-selectize v-model="values" 
+                        placeholder="Search..."
+                        :options="options"  
                         :selectize_ops="x_ops"
                         :readonly="readonly"
                         ref="ddl"

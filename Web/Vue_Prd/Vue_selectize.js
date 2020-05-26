@@ -48,6 +48,7 @@
         },
         Base() {
             return {
+                inheritAttrs: false,
                 props: {
                     value: {
                         type: [String, Array],
@@ -98,7 +99,13 @@
                     if (_self.id != null) {
                         console.log({ id: _self.id, 'select:mounted': opt })
                     }
-                    _self.sel = $('select', _self.$el)
+
+                    var $el = $('select', _self.$el);
+                    _.each(_self.$attrs,(el,key)=>{
+                        $el.attr(key,el);
+                    })
+                    
+                    _self.sel = $el
                         .selectize(opt)[0]
                         .selectize;
 
@@ -428,7 +435,7 @@
                 }
             });
             return _obj;
-        }
+        },
     }
     Vue.component('vue-selectize', _fn.Base());
     Vue.component('vue-selectize-dynquery', _fn.Bts_DynQuery());

@@ -827,7 +827,7 @@ let Tool = {
 						if (this.isMock){
 							var _obj = {};
 							_.each(this.auto_col,(el)=>{
-								_obj[el] = '@name';
+								_obj[`${el}|+1`] = ['@name','@id','@integer(60, 100)','@@datetime'];
 							});
 							this.mock = {'data|5': [ _obj]};
 							this.MockCode = JSON.stringify(this.mock,null,'\t');
