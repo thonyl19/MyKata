@@ -38,7 +38,7 @@ var fn = {
         })
         x;
     },
-    '@title'() {
+    '_@title'() {
         /*
         1.使用 @title 參數,亂數產生 10資料
         2.使用 @title(n) 函數,亂數產生 1筆 n個字組的資料
@@ -46,9 +46,9 @@ var fn = {
         */
         var x = Mock.mock({
             'arr|10': ['@TITLE']
-        });
+        });     
         x
-        var x1 = Mock.mock('@title(5)');
+        var x1 = Mock.mock({'A|+1':['@title','@string']});
         x1
     },
     A021() {
@@ -101,7 +101,7 @@ var fn = {
               }
             ]
           });
-        z
+        z 
     }
 }
 

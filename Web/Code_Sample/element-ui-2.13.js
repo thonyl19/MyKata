@@ -743,6 +743,139 @@ let Vue_Prd = {
 	},
 }
 let Tool = {
+	'pw-mock'() {
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<el-table
+					:data="tableData"
+					style="width: 100%">
+						<el-table-column
+							prop="name"
+							label="欄位名稱"
+							width="180">
+						</el-table-column>
+						<el-table-column
+							label="選項"
+							>
+							<template slot-scope="scope">
+								{{ scope.row.ops }}
+							</template>
+						</el-table-column>
+						<el-table-column
+							label="demo"
+							width="250">
+							<template slot-scope="scope">
+								<span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
+							</template>
+						</el-table-column>
+					</el-table>
+				`,
+				props:['cols','row','mock'],
+				watch:{
+					cols(){
+						this.bind_cols();
+					},
+					row(){
+						this.bind_row();
+					},
+					// 	type:Object,
+					// 	validator(){
+					// 	}
+					// mock:{
+					// 	type:Object,
+					// 	validator(){
+					// 		this.bind_mock();
+					// 	}
+					// },
+					
+				},
+				data(){
+					return {
+						tableData:[
+							{
+								name:"A",
+								ops:['@name'],
+								demo:'test',
+								get code(){
+									var _code = {};
+									_code[`${this.name}|+1`] = this.ops;
+									return _code;
+								},
+								mock(){
+									this.demo = Mock.mock(this.code)[this.name];
+									return this.demo;
+								}
+							}
+						],
+						map:{
+							"string":["@name"],
+							"boolean":"",
+							"number":["@integer(60, 100)"],
+							"date": ["@datetime"],
+							"symbol":["@id"],
+							"object":["@id"],
+						}
+					}
+				},
+				computed:{
+
+				},
+				methods:{
+					genCode(toSting=false,isZip=false){
+
+					},
+					//動態刷新
+					renew(row){
+
+						var _mock = Mock.mock();
+						//row.demo
+						return row;
+					},
+					getOps(val){
+						var _t = typeof(val);
+						
+					},
+					genObj(name,ops){
+						var _r = {
+							name,
+							ops,
+							get code(){
+								var _code = {};
+								_code[`${this.name}|+1`] = this.ops;
+								return _code;
+							},
+							mock(){
+								this.demo = Mock.mock(this.code)[this.name];
+								return this.demo;
+							}
+						};
+						_r.mock();
+						return _r;
+					},
+					bind_cols(){
+						var _self = this;
+						var _r = [];
+						_.each(this.cols,(name,idx)=>{
+							_r.push(_self.genObj(name,['@name']));
+						})
+						_self.tableData = _r;
+					},
+					bind_row(){
+						var _self = this;
+						var _r = [];
+						_.each(this.cols,(val,name)=>{
+							var ops = _self.map[$.type(val)];
+							_r.push(_self.genObj(name,ops));
+						})
+						_self.tableData = _r;
+					}
+				}
+			}
+		};
+		return _obj;
+	},
 	'*jq-dtable'() {
 		var _note = `
 		<pre>
@@ -751,6 +884,7 @@ let Tool = {
 			1-2.byMock Set
 		</pre>
 		`;
+		var pw_mock = Tool['pw-mock']()._vue;
 		var _obj = {
 			_css:``,
 			_vue: {
@@ -784,11 +918,17 @@ let Tool = {
 						<el-button type="primary" size="small" round @click="fn_Mock">Exec</el-button>
 						<el-input type="textarea" v-model="MockCode" />
 					</el-tab-pane>
+					<el-tab-pane label="Mock1" name="G" >
+					{{auto_col}}
+						<pw_mock :row="row"></pw_mock>
+					</el-tab-pane>
 				</el-tabs>
 					
 				`,
+				components:{pw_mock},
 				data(){
 					return {
+						row:{B:2,A:'A'},
 						isMock:true,
 						tab:'B',
 						val:'A\nB',

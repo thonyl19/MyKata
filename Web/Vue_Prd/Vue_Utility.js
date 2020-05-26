@@ -75,6 +75,8 @@
         }
     }
 
+    
+
     if (Vue != null) {
         Vue.prototype.$PropDef = PropDef;
         Vue.prototype.$URL = _URL;
