@@ -847,7 +847,9 @@ let Tool = {
 						this.MockCode = this.genCode(true,this.mock_zip);
 					},
 					genMockData(toSting=false,isZip=false){
-						 var _r = Mock.mock(this.genCode()).data;
+						 var _r = ((this.MockData) && this.MockData !="")
+						 	?JSON.parse(this.MockData)
+							:Mock.mock(this.genCode()).data;
 						 if (toSting){
 							this.MockData = isZip
 								? JSON.stringify(_r)
