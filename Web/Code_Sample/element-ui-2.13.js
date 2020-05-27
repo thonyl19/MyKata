@@ -748,51 +748,72 @@ let Tool = {
 			_css:``,
 			_vue: {
 				template: `
-				<el-table
-					:data="tableData"
-					style="width: 100%">
-						<el-table-column
-							prop="name"
-							label="欄位名稱"
-							width="180">
-						</el-table-column>
-						<el-table-column
-							label="選項"
-							>
-							<template slot-scope="scope">
-								{{ scope.row.ops }}
-							</template>
-						</el-table-column>
-						<el-table-column
-							label="demo"
-							width="250">
-							<template slot-scope="scope">
-								<span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
-							</template>
-						</el-table-column>
-					</el-table>
+				<el-tabs type="border-card" v-model="tab">
+					<el-tab-pane label="List" name="A" >
+						<el-table
+						:data="tableData"
+						style="width: 100%">
+							<el-table-column
+								prop="name"
+								label="欄位名稱"
+								width="180">
+							</el-table-column>
+							<el-table-column
+								label="選項"
+								>
+								<template slot-scope="scope">
+									{{ scope.row.ops }}
+								</template>
+							</el-table-column>
+							<el-table-column
+								label="demo"
+								width="250">
+								<template slot-scope="scope">
+									<span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
+								</template>
+							</el-table-column>
+						</el-table>
+					</el-tab-pane>
+					<el-tab-pane label="Code" name="B" >
+						mock_zip<input type=checkbox v-model="mock_zip" @change="mock_chg" />
+						<el-input type="textarea" v-model="MockCode" />
+					</el-tab-pane>
+					<el-tab-pane label="MockData" name="C" >
+						mock_zip<input type=checkbox v-model="data_zip" @change="genMockData(true,data_zip)" />
+						<el-input type="textarea" v-model="MockData" />
+					</el-tab-pane>
+				</el-tabs>
+				
 				`,
 				props:['cols','row','mock'],
 				watch:{
+					tab(val){
+						switch(val){
+							case "B":
+								this.mock_chg();
+								break;
+							case "C":
+								this.genMockData(true,this.mock_zip);
+								break;
+						}
+					},
 					cols(){
 						this.bind_cols();
 					},
-					row(){
-						this.bind_row();
+					row:{
+						immediate: true, // makes the watcher fire on first render, too.
+						handler(){
+							this.bind_row();
+						}
 					},
-					// 	type:Object,
-					// 	validator(){
-					// 	}
-					// mock:{
-					// 	type:Object,
-					// 	validator(){
-					// 		this.bind_mock();
-					// 	}
-					// },
+
 					
 				},
 				data(){
 					return {
+						tab:'A',
+						data_zip:false,
+						mock_zip:false,
 						tableData:[
 							{
 								name:"A",
@@ -811,31 +832,44 @@ let Tool = {
 						],
 						map:{
 							"string":["@name"],
-							"boolean":"",
+							"boolean":["Y","N"],
 							"number":["@integer(60, 100)"],
 							"date": ["@datetime"],
 							"symbol":["@id"],
 							"object":["@id"],
 						}
+						,MockCode:''
+						,MockData:''
 					}
 				},
-				computed:{
-
-				},
 				methods:{
+					mock_chg(){
+						this.MockCode = this.genCode(true,this.mock_zip);
+					},
+					genMockData(toSting=false,isZip=false){
+						 var _r = Mock.mock(this.genCode()).data;
+						 if (toSting){
+							this.MockData = isZip
+								? JSON.stringify(_r)
+								: JSON.stringify(_r,null,'\t');
+							return this.MockData ;
+						 }
+						 return _r;
+					},
+ 
 					genCode(toSting=false,isZip=false){
-
-					},
-					//動態刷新
-					renew(row){
-
-						var _mock = Mock.mock();
-						//row.demo
-						return row;
-					},
-					getOps(val){
-						var _t = typeof(val);
-						
+						var _obj = {};
+						_.each(this.tableData,(item)=>{
+							_obj = _.merge(_obj,item.code);
+						})
+						var _r = {'data|5':[_obj]};
+						if (toSting){
+							var s = isZip
+								? JSON.stringify(_r)
+								: JSON.stringify(_r,null,'\t');
+							return s;
+						}
+						return _r;
 					},
 					genObj(name,ops){
 						var _r = {
@@ -865,7 +899,7 @@ let Tool = {
 					bind_row(){
 						var _self = this;
 						var _r = [];
-						_.each(this.cols,(val,name)=>{
+						_.each(this.row,(val,name)=>{
 							var ops = _self.map[$.type(val)];
 							_r.push(_self.genObj(name,ops));
 						})
@@ -915,12 +949,8 @@ let Tool = {
 						<el-input type="textarea" v-model="Code" />
 					</el-tab-pane>
 					<el-tab-pane label="Mock" name="F" >
-						<el-button type="primary" size="small" round @click="fn_Mock">Exec</el-button>
-						<el-input type="textarea" v-model="MockCode" />
-					</el-tab-pane>
-					<el-tab-pane label="Mock1" name="G" >
-					{{auto_col}}
-						<pw_mock :row="row"></pw_mock>
+						<el-button type="primary" size="small" round @click="fn_BindMockData">BindMockData</el-button>
+						<pw_mock ref="pw_mock" :cols="auto_col" :row="row"></pw_mock>
 					</el-tab-pane>
 				</el-tabs>
 					
@@ -928,9 +958,10 @@ let Tool = {
 				components:{pw_mock},
 				data(){
 					return {
-						row:{B:2,A:'A'},
+						row:{B:2,A:'A',C:new Date(),E:true,F:{}},
 						isMock:true,
 						tab:'B',
+						tab_F:'F1',
 						val:'A\nB',
 						Ops:'',
 						auto_col:null,
@@ -938,7 +969,7 @@ let Tool = {
 						jdt_data:null,
 						Code:'',
 						mock:null,
-						MockCode:''
+						mock_zip:false
 					}
 				},
 				watch:{
@@ -952,13 +983,19 @@ let Tool = {
 								break;
 						}
 					},
+
 					isMock(val){
 						if (val==false) this.mock = null;
 					}
 				},
 				methods:{
-					fn_Mock(){
-						this.mock = JSON.parse(this.MockCode);
+					fn_BindMockData(){
+						debugger
+						var _r = this.$refs.pw_mock.MockCode;
+						if (!_r){
+							_r = this.$refs.pw_mock.genMockData(true);
+						}
+						this.jdt_data = JSON.parse(_r);
 						this.tab = "C";
 					},
 					fn_quick(){
