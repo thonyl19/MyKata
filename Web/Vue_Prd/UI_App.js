@@ -503,22 +503,12 @@
                     },
                 },
                 mounted() {
-                    var _self = this;
-                    _self.ops =  {
-                        data: _self.jdt_data,
-                        set: _self.jdt_set,
-                    }
-
-                    if (_self.ops.set == null) {
-                        _self.ops.set = _fn.jqDataTables_def(true);
-                    }
-                    _self.jqDT = $(_self.$refs.jqDT);
-                    _self.render(false);
+                    this.Render();
                 },
                 watch:{
                     jdt_data(val){
                         this.ops.data = val;
-                        this.render(false);
+                        this.Render();
                     },
                 },
                 methods:{
@@ -529,10 +519,28 @@
                             .destroy();
                         this.jqDT.empty();
                     },
-                    render(need_reset = true){
-                        if (need_reset) this.reset();
+                    /* 
+                    這裡的考慮點是在於 ,不希望讓 jdt_set 的異動太過於方便以致於過於隨便,
+                        所以採用以方法的方式,來實現這樣的功能需求 
+                    */
+                    Render(jdt_set=null){
+                        var _self = this;
+                        var isResetMode = jdt_set!=null;
+                        if (isResetMode){
+                            _self.reset();
+                            _self.ops.set = jdt_set;
+                        }else{
+                            _self.ops =  {
+                                data: _self.jdt_data??_data.WO,
+                                set: _self.jdt_set,
+                            }
+                            if (_self.ops.set == null) {
+                                _self.ops.set = _fn.jqDataTables_def(true);
+                            }
+                        } 
+                        _self.jqDT = $(_self.$refs.jqDT);
 
-                        let {set,data} = this.ops;
+                        let {set,data} = _self.ops;
                         var _set = Object.assign({},set);
                         this.jqDT
                             .DataTable(_set)
@@ -545,28 +553,10 @@
             }
             return _vue;
         },
-        jqDataTables() {
+ 
+        jqDataTables_demo() {
             var _vue = {
-                template: `
-                    <table ref="jqDT" class="display" width="100%"></table>
-                    `,
-                data() {
-                    return {
-                        jqDT: {},
-                        ops: {}
-                    }
-                },
                 props: {
-                    //jqDataTables 原生設定, 沒傳入採 jqDataTables_def()
-                    jdt_set: {
-                        type: Object,
-                        default: null
-                    },
-                    //基本數據, 沒傳入採 _data.WO
-                    jdt_data: {
-                        type: Array,
-                        default: null
-                    },
                     //自動生成欄位 ['colA','colB'...] ,會依此自動產生欄位和數據,
                     // 但若 jdt_data !=null 則此參數不會作用
                     auto_col: {
@@ -607,10 +597,6 @@
                     _self.render(false);
                 },
                 watch:{
-                    jdt_data(val){
-                        this.ops.data = val;
-                        this.render(false);
-                    },
                     mock(){
                         this.ops.data = null;
                         this.genData();
@@ -707,7 +693,7 @@
 
                 }
             }
-            return _vue;
+            return _.merge(_fn.jqDataTables(), _vue);
         },
     }
     Vue.component('el-grp-filed', _fn.el_mode());
@@ -721,5 +707,5 @@
     Vue.component('el-input-pw-ext', _fn.power_form_el_input());
     Vue.component('demo-jdt-table', _fn.jqDataTables());
     Vue.component('jdt-table', _fn.jqDataTables());
-    Vue.component('jdt-table-demo', _fn.jqDataTables());
+    Vue.component('jdt-table-demo', _fn.jqDataTables_demo());
 }));

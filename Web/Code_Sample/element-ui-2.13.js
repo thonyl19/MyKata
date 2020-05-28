@@ -935,11 +935,12 @@ let Tool = {
 						</el-input>
 					</el-tab-pane>
 					<el-tab-pane label="View" name="C">
-						<demo-jdt-table ref="jqDT" 
-							:auto_col="auto_col" 
+						<jdt-table-demo ref="jqDT" 
 							:jdt_set="jdt_set"
 							:jdt_data="jdt_data"
-							:mock="mock"></demo-jdt-table>
+							:auto_col="auto_col" 
+							:mock="mock"
+							></jdt-table-demo>
 					</el-tab-pane>
 					<el-tab-pane label="Ops" name="D" >
 						<el-button type="primary" size="small" round @click="fn_Ops()">Ops</el-button>
