@@ -930,17 +930,17 @@ let Tool = {
 					<el-tab-pane label="Input" name="B">
 						<input type=checkbox v-model="isMock"/>Mock
 						<el-button type="primary" size="small" round @click="fn_quick">quick</el-button>
-						<el-button type="success" size="small" round @click="fn_simple">simple</el-button>
+						<el-button type="success" size="small" round @click="fn_simple(val)">simple</el-button>
 						<el-input type="textarea" v-model="val">
 						</el-input>
 					</el-tab-pane>
 					<el-tab-pane label="View" name="C">
-						<jdt-table-demo ref="jqDT" 
+						<jdt-table-ext ref="jqDT" 
 							:jdt_set="jdt_set"
 							:jdt_data="jdt_data"
 							:auto_col="auto_col" 
 							:mock="mock"
-							></jdt-table-demo>
+							></jdt-table-ext>
 					</el-tab-pane>
 					<el-tab-pane label="Ops" name="D" >
 						<el-button type="primary" size="small" round @click="fn_Ops()">Ops</el-button>
@@ -1014,9 +1014,10 @@ let Tool = {
 						}
 						this.tab = "C";
 					},
-					fn_simple(arg=this.val){
+					fn_simple(arg){
 						this.auto_col = null
 						this.jdt_set = JSON.parse(arg);
+						this.$refs.jqDT.Render(this.jdt_set);
 						this.tab = "C";
 					},
 					fn_Ops(isZip=false){

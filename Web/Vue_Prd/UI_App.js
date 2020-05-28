@@ -554,7 +554,7 @@
             return _vue;
         },
  
-        jqDataTables_demo() {
+        jqDataTables_ext() {
             var _vue = {
                 props: {
                     //自動生成欄位 ['colA','colB'...] ,會依此自動產生欄位和數據,
@@ -569,6 +569,9 @@
                     }
                 },
                 mounted() {
+                    this.genData();
+                    this.Render();
+                    /*
                     var _self = this;
                     _self.ops =  {
                         data: _self.jdt_data,
@@ -595,6 +598,7 @@
 
                     _self.jqDT = $(_self.$refs.jqDT);
                     _self.render(false);
+                    */
                 },
                 watch:{
                     mock(){
@@ -639,13 +643,6 @@
                         if (this.jdt_set == null) return;
                         this.ops.set = this.jdt_set;
                         this.render();
-                    },
-                    reset(){
-                        this.jqDT
-                            .DataTable()
-                            .clear()
-                            .destroy();
-                        this.jqDT.empty();
                     },
                     render(need_reset = true){
                         if (need_reset) this.reset();
@@ -707,5 +704,5 @@
     Vue.component('el-input-pw-ext', _fn.power_form_el_input());
     Vue.component('demo-jdt-table', _fn.jqDataTables());
     Vue.component('jdt-table', _fn.jqDataTables());
-    Vue.component('jdt-table-demo', _fn.jqDataTables_demo());
+    Vue.component('jdt-table-ext', _fn.jqDataTables_ext());
 }));
