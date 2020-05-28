@@ -487,7 +487,7 @@
                 data() {
                     return {
                         jqDT: {},
-                        ops: {}
+                        ops: {},
                     }
                 },
                 props: {
@@ -503,15 +503,25 @@
                     },
                 },
                 mounted() {
-                    this.Render();
+                    this.init();
+                    this.load();
                 },
                 watch:{
                     jdt_data(val){
                         this.ops.data = val;
-                        this.Render();
+                        this.load();
                     },
                 },
                 methods:{
+                    load(){
+                        if (this.ops.data==null || this.ops.data.length == 0) return ;
+                        this.jqDT
+                            .DataTable()
+                            .clear()
+                            .rows
+                            .add(this.ops.data)
+                            .draw();
+                    },
                     reset(){
                         this.jqDT
                             .DataTable()
@@ -519,36 +529,16 @@
                             .destroy();
                         this.jqDT.empty();
                     },
-                    /* 
-                    這裡的考慮點是在於 ,不希望讓 jdt_set 的異動太過於方便以致於過於隨便,
-                        所以採用以方法的方式,來實現這樣的功能需求 
-                    */
-                    Render(jdt_set=null){
-                        var _self = this;
-                        var isResetMode = jdt_set!=null;
-                        if (isResetMode){
-                            _self.reset();
-                            _self.ops.set = jdt_set;
-                        }else{
-                            _self.ops =  {
-                                data: _self.jdt_data??_data.WO,
-                                set: _self.jdt_set,
-                            }
-                            if (_self.ops.set == null) {
-                                _self.ops.set = _fn.jqDataTables_def(true);
-                            }
-                        } 
-                        _self.jqDT = $(_self.$refs.jqDT);
-
-                        let {set,data} = _self.ops;
-                        var _set = Object.assign({},set);
-                        this.jqDT
-                            .DataTable(_set)
-                            .clear()
-                            .rows
-                            .add(data)
-                            .draw();
-                    } 
+                    init(){
+                        this.jqDT = $(this.$refs.jqDT);
+                        this.ops =  {
+                            set : this.jdt_set ,
+                            data: this.jdt_data
+                        };
+                        var _set = Object.assign({},this.ops.set);
+                        this.jqDT.DataTable(_set);
+                    },
+  
                 }
             }
             return _vue;
@@ -569,36 +559,8 @@
                     }
                 },
                 mounted() {
-                    this.genData();
-                    this.Render();
-                    /*
-                    var _self = this;
-                    _self.ops =  {
-                        data: _self.jdt_data,
-                        set: _self.jdt_set,
-                        auto: _self.auto_col != null
-                    }
-
-                    if (_self.ops.set == null) {
-                        _self.ops.set = _fn.jqDataTables_def(true);
-                        if (_self.jdt_data != null && _self.jdt_data.lenth != 0) {
-                            _self.ops.auto = false;
-                            var _col = [];
-                            _.each(_self.jdt_data[0], (val, key) => {
-                                _col.push({ title: key, data: key });
-                            })
-                            _self.ops.set.columns = _col;
-                        }
-                    }
-
-                    _self.genData();
-                    // if (this.ops.data == null) {
-                    //     this.ops.data = _data.WO;
-                    // }
-
-                    _self.jqDT = $(_self.$refs.jqDT);
-                    _self.render(false);
-                    */
+                    this.init();
+                    this.load();
                 },
                 watch:{
                     mock(){
@@ -606,24 +568,59 @@
                         this.genData();
                     },
                     auto_col(){
-                        this.fn_AutoCol();
+                        this.ops.set =this.fn_AutoCol();
                     },
                 },
                 methods:{
-                    genData(){
-                        debugger
-                        if (this.ops.data == null) {
-                            if (this.mock != null && Mock != null){
-                                this.ops.data = Mock.mock(this.mock).data;
-                                this.fn_AutoCol();
-                                return ;
-                            }
-                            this.ops.data = _data.WO;
+                    /*
+                    1.jdt_set> auto_col > jqDataTables_def()
+                    2.jdt_data> mock > _data.WO
+                    3.jdt_set 下只有 mock 跟 jdt_data 才會填值,否則為空表格
+                    4.可以資料反推產生 設定,但要由設定自動產生資料
+                        4-1.jdt_data , mock 在獨立情境下,自動產生資料和欄位 
+                        4-2.jdt_set ,auto_col 不會自動產生資料
+                        4-3.這樣的設定,是為了避免程式過度設計
+                    */
+                    init(){
+                        this.jqDT = $(this.$refs.jqDT);
+                        var set  = this.jdt_set ,
+                            data =  this.jdt_data;
+
+                        var isGenSet = set==null ,
+                            isGenData = data==null,
+                            isAutoCol = this.auto_col != null,
+                            isMock = this.mock !=null;
+                        if (isGenData && isMock ){
+                            data =  Mock.mock(this.mock).data;
                         }
+
+                        if (isGenSet){
+                            if (data!=null && data.length!=0){
+                                set =  this.genOpsByDataRow(data[0]);
+                            }else if (isAutoCol){
+                                set = this.fn_AutoCol();
+                            }
+                        }
+
+                        if ((!set) && (!data)){
+                            set = _fn.jqDataTables_def(true);
+                            data = _data.WO;
+                        }
+
+                        this.ops =  {set,data}
+                        var _set = Object.assign({},set);
+                        this.jqDT.DataTable(_set);
+                    },
+                    genOpsByDataRow(row_data){
+                        var _ops = _fn.jqDataTables_def();
+                        var columns = [];
+                        _.each(row_data,(val,title)=>{
+                            columns.push({title,data:title})
+                        });
+                        return _.assign(_ops,{columns});
                     },
                     fn_AutoCol(){
-                        debugger
-                        if (this.auto_col == null) return ;
+                        //jdt_set 優先於 auto_col
                         var _ops = _fn.jqDataTables_def();
                         var _col_count = _ops.columns.length-1;
                         var isMockMode = this.mock !=null;
@@ -636,28 +633,54 @@
                                 ;
                             columns.push({title,data})
                         });
-                        this.ops.set = _.assign(_ops,{columns});
-                        this.render();
+                        return _.assign(_ops,{columns});
+                    },
+                                      /* 
+                    這裡的考慮點是在於 ,不希望讓 jdt_set 的異動太過於方便以致於過於隨便,
+                        所以採用以方法的方式,來實現這樣的功能需求 
+                    */
+                   Render_x(jdt_set=null){
+                    var _self = this;
+                    var isResetMode = jdt_set!=null && this.isRendered;
+                    if (isResetMode){
+                        _self.reset();
+                        _self.ops.set = jdt_set;
+                    }else{
+                        _self.ops =  {
+                            data: _self.jdt_data??_data.WO,
+                            set: _self.jdt_set,
+                        }
+                        if (_self.ops.set == null) {
+                            _self.ops.set = _fn.jqDataTables_def(true);
+                        }
+                    } 
+
+                    let {set,data} = _self.ops;
+                    var _set = Object.assign({},set);
+                    this.jqDT
+                        .DataTable(_set)
+                        .clear()
+                        .rows
+                        .add(data)
+                        .draw();
+                    this.isRendered = true;
+                } ,
+                    genData(){
+                        debugger
+                        if (this.ops.data == null) {
+                            if (this.mock != null && Mock != null){
+                                this.ops.data = Mock.mock(this.mock).data;
+                                return ;
+                            }
+                            this.ops.data = _data.WO;
+                        }
                     },
                     fn_jdt_set(){
                         if (this.jdt_set == null) return;
                         this.ops.set = this.jdt_set;
                         this.render();
                     },
-                    render(need_reset = true){
-                        if (need_reset) this.reset();
-
-                        let {set,data} = this.ops;
-                        var _set = Object.assign({},set);
-                        console.log(_set);
-                        //_set.retrieve = true;
-                        this.jqDT
-                            .DataTable(_set)
-                            .clear()
-                            .rows
-                            .add(data)
-                            .draw();
-                    },
+                    
                     getOps(toString=false,ZipMode=false){
                         debugger
                         let {set=null} = this.ops;

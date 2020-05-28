@@ -743,6 +743,109 @@ let Vue_Prd = {
 	},
 }
 let Tool = {
+	'*def'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			
+			/*
+								<h3>base auto inin</h3>
+					<jdt-table-ext ></jdt-table-ext>
+					<h3>jdt_set</h3>
+					<jdt-table-ext :jdt_set="baseSet"></jdt-table-ext>
+					<h3>jdt_set , mock </h3>
+					<jdt-table-ext :jdt_set="baseSet" :mock="mock"></jdt-table-ext>		
+					<h3>auto_col</h3>
+					<jdt-table-ext :auto_col="auto_col"></jdt-table-ext>
+
+			
+			*/
+					
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<h3>mock</h3>
+					<jdt-table-ext :mock="mock"></jdt-table-ext>
+
+					<h3>jdt_data</h3>
+					<jdt-table-ext :jdt_data="mock_data"></jdt-table-ext>
+				</div>
+				`,
+				data(){
+					return {
+						auto_col:['A','B'],
+						baseSet: {
+							"columns": [
+								{
+									"title": "表單類型",
+									"data": "表單類型",
+									"sTitle": "表單類型",
+									"mData": "表單類型"
+								},
+								{
+									"title": "表單代碼",
+									"data": "表單代碼",
+									"sTitle": "表單代碼",
+									"mData": "表單代碼"
+								},
+								{
+									"title": "表單名稱",
+									"data": "表單名稱",
+									"sTitle": "表單名稱",
+									"mData": "表單名稱"
+								},
+								{
+									"title": "檢驗對象",
+									"data": "檢驗對象",
+									"sTitle": "檢驗對象",
+									"mData": "檢驗對象"
+								},
+								{
+									"title": "表單負責單位",
+									"data": "表單負責單位",
+									"sTitle": "表單負責單位",
+									"mData": "表單負責單位"
+								}
+							],
+							"responsive": true,
+							"searching": false,
+							columnDefs: [
+								{
+									className: 'e_click', "targets": [1]
+									, createdCell(td, cellData, rowData, row, col) {
+										$(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
+									}
+								}
+							],
+						},
+						mock: {
+							"data|5": [
+								{
+									"表單類型|1": ["IPQC"],
+									"表單代碼|+1": ["@@id"],
+									"表單名稱|+1": ["表單名稱A", "表單名稱A"],
+									"檢驗對象|1": ["LOT"],
+									"表單負責單位|+1": ["製造", "品管"]
+								}
+							]
+						}
+					}
+				} ,
+				computed:{
+					mock_data(){
+						var x = Mock.mock(this.mock).data;
+						console.log(x);
+						return x;
+					}
+				}
+			}
+		};
+		return _obj;
+	},
 	'pw-mock'() {
 		var _obj = {
 			_css:``,
@@ -912,7 +1015,7 @@ let Tool = {
 		};
 		return _obj;
 	},
-	'*jq-dtable'() {
+	'jq-dtable'() {
 		var _note = `
 		<pre>
 		1.auto_col
