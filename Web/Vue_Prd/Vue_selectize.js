@@ -28,22 +28,43 @@
         render_sty: {
             GTMES(arg) {
                 var _base = {
+                    tpl_tag(data, tagField, escape) {
+                        if (!tagField) return '';
+                        return `<span class="label label-primary">${escape(data[tagField])}</span>`;
+                    },
                     render: {
                         option(data, escape) {
-                            let { labelField, valueField } = this.settings;
+                            let { labelField, valueField, tagField, tpl_tag } = this.settings;
                             return `
-                            <div class="option">
-                            <span class="label label-primary">${escape(data[valueField])}</span> ${escape(data[labelField])}
-                            </div>
-                        `;
+                                <div class="option">${tpl_tag(data, tagField, escape)}${escape(data[labelField])}</div>
+                            `;
                         },
                         item(data, escape) {
-                            let { labelField, valueField } = this.settings;
-                            return `<div class="item"><span class="label label-primary">${escape(data[valueField])}</span> ${escape(data[labelField])}</div>`;
+                            let { labelField, valueField, tagField, tpl_tag } = this.settings;
+                            return `<div class="item">${tpl_tag(data, tagField, escape)}${escape(data[labelField])}</div>`;
                         }
                     }
                 }
                 return _.merge(_base, arg)
+            },
+            GTMES_VER(arg) {
+                var _base = {
+                    tpl_def: `<i class="fa fa-flag text-info"/>`,
+                    render: {
+                        item(data, escape) {
+                            let { labelField } = this.settings;
+                            return `<div class="item">${escape(data[labelField])}</div>`;
+                        },
+                        option(data, escape) {
+                            let { labelField, valueField, tpl_def } = this.settings;
+                            let { DEFAULT_FLAG = "F" } = data;
+                            return `
+                                <div class="option">${escape(data[labelField])} ${DEFAULT_FLAG == 'T' ? tpl_def : ''}</div>
+                            `;
+                        },
+                    }
+                }
+                return _.merge(_base, arg);
             }
         },
         Base() {
@@ -89,7 +110,7 @@
                 mounted() {
                     var _self = this;
 
-                    var opt = _self._init_ops();
+                    var ops = _self._init_ops();
                     if (_self.render_sty != null) {
                         let render = _fn.render_sty[_self.render_sty];
                         if (render != null) {
@@ -97,16 +118,16 @@
                         }
                     }
                     if (_self.id != null) {
-                        console.log({ id: _self.id, 'select:mounted': opt })
+                        console.log({ id: _self.id, 'select:mounted': ops })
                     }
 
                     var $el = $('select', _self.$el);
-                    _.each(_self.$attrs,(el,key)=>{
-                        $el.attr(key,el);
+                    _.each(_self.$attrs, (el, key) => {
+                        $el.attr(key, el);
                     })
-                    
+
                     _self.sel = $el
-                        .selectize(opt)[0]
+                        .selectize(ops)[0]
                         .selectize;
 
                     _self.sel.on("change", _self.fn_change);
