@@ -26,40 +26,40 @@
          * 特殊 render 程序 
          */
         render_sty: {
-            GTMES(arg) {
+            GTIMES(arg) {
                 var _base = {
                     tpl_tag(data, tagField, escape) {
                         if (!tagField) return '';
-                        return `<span class="label label-primary">${escape(data[tagField])}</span>`;
+                        return `<span class="label label-primary">${escape(data[tagField])}</span> `;
                     },
                     render: {
                         option(data, escape) {
                             let { labelField, valueField, tagField, tpl_tag } = this.settings;
                             return `
-                                <div class="option">${tpl_tag(data, tagField, escape)}${escape(data[labelField])}</div>
+                                <div class="option"><H5>${tpl_tag(data, tagField, escape)}${escape(data[labelField])}</H5></div>
                             `;
                         },
                         item(data, escape) {
                             let { labelField, valueField, tagField, tpl_tag } = this.settings;
-                            return `<div class="item">${tpl_tag(data, tagField, escape)}${escape(data[labelField])}</div>`;
+                            return `<div class="item"><H5>${tpl_tag(data, tagField, escape)}${escape(data[labelField])}</H5></div>`;
                         }
                     }
                 }
                 return _.merge(_base, arg)
             },
-            GTMES_VER(arg) {
+            GTIMES_VER(arg) {
                 var _base = {
                     tpl_def: `<i class="fa fa-flag text-info"/>`,
                     render: {
                         item(data, escape) {
                             let { labelField } = this.settings;
-                            return `<div class="item">${escape(data[labelField])}</div>`;
+                            return `<div class="item"><h5>${escape(data[labelField])}</h5></div>`;
                         },
                         option(data, escape) {
                             let { labelField, valueField, tpl_def } = this.settings;
                             let { DEFAULT_FLAG = "F" } = data;
                             return `
-                                <div class="option">${escape(data[labelField])} ${DEFAULT_FLAG == 'T' ? tpl_def : ''}</div>
+                                <div class="option"><h5>${escape(data[labelField])} ${DEFAULT_FLAG == 'T' ? tpl_def : ''}</h5></div>
                             `;
                         },
                     }
@@ -92,6 +92,10 @@
                         default: false
                     },
                     readonly: {
+                        type: Boolean,
+                        default: false
+                    },
+                    disabled: {
                         type: Boolean,
                         default: false
                     },
@@ -146,6 +150,14 @@
                     if (_self.readonly) {
                         _self.sel.lock();
                     }
+
+
+                    if (_self.disabled) {
+                        this.sel.disable();
+                        //這是測試項目
+                        //this.sel.setTextboxValue('33333333333333333');
+                    }
+
                     _self.__mounted_after();
                 },
                 watch: {
@@ -157,6 +169,13 @@
                             this.sel.lock();
                         } else {
                             this.sel.unlock();
+                        }
+                    },
+                    disabled(val) {
+                        if (val) {
+                            this.sel.disable();
+                        } else {
+                            this.sel.enable();
                         }
                     },
                     value(val) {
