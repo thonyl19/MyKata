@@ -75,10 +75,26 @@
         }
     }
 
-    
+    var _UT = {
+        JsonCode(val,isZip=false){
+            var _r ={
+                isObj:false,
+                isZip,
+                val
+            }
+            try {
+                _r.val = JSON.parse(val);
+                _r.isObj = true;
+            } catch (error) {
+                
+            }
+            return _r;
+        }
+    }
 
     if (Vue != null) {
         Vue.prototype.$PropDef = PropDef;
         Vue.prototype.$URL = _URL;
+        Vue.prototype.$UT = _UT;
     }
 }));
