@@ -748,9 +748,9 @@ let Tool = {
 			_vue: {
 				template: `
 				<div>
-					<el-button type="info" size="small" v-if="exec!=false" round @click="_exec.fn">Exec</el-button>
-					<el-button type="info" size="small" v-if="GenConfig!=false" round @click="GenConfig(JsonCode)">GenConfig</el-button>
-					<el-button v-if="renew!=false" size="small" round @click="renew(zip_json)">重新產生數據</el-button>
+					<el-button type="warning" size="small" v-if="SyncBack!=false" round @click="SyncBack(JsonCode)">SyncBack</el-button>
+					<el-button type="success" size="small" v-if="Exec!=false" round @click="Exec(JsonCode)">Exec</el-button>
+					<el-button type="primary" size="small" v-if="Renew!=false" round @click="Renew(zip_json)">重新產生數據</el-button>
 					<slot :JsonCode="JsonCode" :zip_json="zip_json" />
 					<el-checkbox v-if="JsonCode.isObj" v-model="zip_json" @change="fn_ZipJson">zip_json</el-checkbox>
 					<div style="position:relative">
@@ -777,13 +777,13 @@ let Tool = {
 						type:String,
 					},
 					//沒設定則不顯示
-					exec:Vue.prototype.$PropDef.FunEnable(),
+					Exec:Vue.prototype.$PropDef.FunEnable(),
 					/*
 					v1:應考慮由原生 的 fun 中,做預設不切換為宜
 					v0:預設的定義是,不會觸發頁籤切換行為 ,故而會傳入一個 false 
 					*/
-					renew:Vue.prototype.$PropDef.FunEnable(),
-					GenConfig:Vue.prototype.$PropDef.FunEnable(),
+					Renew:Vue.prototype.$PropDef.FunEnable(),
+					SyncBack:Vue.prototype.$PropDef.FunEnable(),
 					isJsonType:{
 						type:Boolean,
 						default:false
@@ -927,7 +927,7 @@ let Tool = {
 		};
 		return _obj;
 	},
-	'*pw-mock'() {
+	'pw-mock'() {
 		var pw_input = Tool['pw-input']()._vue;
 		var _obj = {
 			_css:``,
@@ -935,9 +935,10 @@ let Tool = {
 				template: `
 				<el-tabs :type="tab_type" v-model="tab">
 					<el-tab-pane label="Input" name="A" v-if="Input_show">
-						<pw_input v-model="Input" :GenConfig="GenConfig" />
+						<pw_input v-model="Input" :Exec="GenConfig" />
 					</el-tab-pane>
 					<el-tab-pane label="Config" name="B">
+					<el-button type="danger" size="small" round @click="RestMockCode">RestMockCode</el-button>
 						<el-table
 							:data="tableData"
 							style="width: 100%">
@@ -966,16 +967,13 @@ let Tool = {
 						<el-tabs v-model="tabC">
 							<el-tab-pane label="Code" name="C0" >
 								<pw_input ref="MockCode" v-model="MockCode" 
-									:renew="renew_MockCode">
-									<template v-slot:default="slotProps">
-										<el-button type="warning" size="small"   round 
-											@click="GenConfig_Mock(slotProps.JsonCode)">ReConfig</el-button>
-									</template>
+									:Renew="renew_MockCode"
+									:SyncBack="GenConfig_Mock">
 								</pw_input>
 1							</el-tab-pane>
 							<el-tab-pane label="Data" name="C1" >
 								<pw_input ref="MockData" v-model="MockData" 
-									:renew="renew_MockData"/>
+									:Renew="renew_MockData"/>
 							</el-tab-pane>
 						</el-tabs>
 					</el-tab-pane>
@@ -1083,7 +1081,19 @@ let Tool = {
 					}
 				},
 				methods:{
- 
+					RestMockCode(){
+						this.$confirm('此動作將直接覆寫掉現在的MockCode?', '提示', {
+							confirmButtonText: 'yes',
+							cancelButtonText: 'cancel',
+							type: 'warning'
+						  }).then(() => {
+							this.MockCode = "";
+							this.MockData = "";
+							this.tab = "C";
+							this.tabC = "C1";
+						  }).catch(() => {
+						  });
+					},
 					switch_TabC(val=this.tabC){
 						switch(val){
 							case "C0":
@@ -1108,8 +1118,6 @@ let Tool = {
 							this.tab = "B";
 							this.tabC = "C1"	
 						} 
-						// var _val = this.Input;
-						// if (!_val) return ;
 						if (!JsonCode.val) return ;
 						if (JsonCode.isObj){
 							this.bind_row(JsonCode.val);
