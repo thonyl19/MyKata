@@ -1,0 +1,46 @@
+<ul class="main"><li><A href=#>
+    <div><h4>置換文字</h4>
+    <el-form ref="form" size="mini" label-width="80px" class="form-area">
+		<el-form-item label="Old">
+		    <el-input v-model="UiSet.置換文字.Old"></el-input>
+		</el-form-item> 
+		<el-form-item label="New">
+		    <el-input v-model="UiSet.置換文字.New"></el-input>
+		</el-form-item> 
+		<el-form-item>
+		    <el-button type="primary" @click="Exec1(UiSet.置換文字)" >Exec</el-button>
+		</el-form-item> 
+    </el-form></div></A></li>
+<li><A href=#>
+    <div><h4>FormatTab</h4>
+    <el-form ref="form" size="mini" label-width="80px" class="form-area">
+		<el-form-item label="tabs">
+		    <el-input v-model="UiSet.FormatTab.tabs"></el-input>
+		</el-form-item> 
+		<el-form-item>
+		    <el-button type="primary" @click="Exec1(UiSet.FormatTab)" >Exec</el-button>
+		</el-form-item> 
+    </el-form></div></A></li>
+<li><A href=#>
+    <div><h4>條件換行</h4>
+    <el-form ref="form" size="mini" label-width="80px" class="form-area">
+		<el-form-item label="SplitWord">
+		    <el-input v-model="UiSet.條件換行.SplitWord"></el-input>
+		</el-form-item> 
+		<el-form-item label="isKeepSplitWord">
+		    <el-checkbox v-model="UiSet.條件換行.isKeepSplitWord"></el-checkbox>
+		</el-form-item> 
+		<el-form-item>
+		    <el-button type="primary" @click="Exec1(UiSet.條件換行)" >Exec</el-button>
+		</el-form-item> 
+    </el-form></div></A></li>
+<li><A href=#>
+    <div><h4>清前後空白</h4>
+    <el-form ref="form" size="mini" label-width="80px" class="form-area">
+		<el-form-item label="isAutoJoin">
+		    <el-checkbox v-model="UiSet.清前後空白.isAutoJoin"></el-checkbox>
+		</el-form-item> 
+		<el-form-item>
+		    <el-button type="primary" @click="Exec1(UiSet.清前後空白)" >Exec</el-button>
+		</el-form-item> 
+    </el-form></div></A></li></ul>
