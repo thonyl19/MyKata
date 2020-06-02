@@ -20,28 +20,42 @@ var list_number = [
     '-10%',
     '-10.1%',
 ];
-var map_crud={
-    c:'post',
-    r:'get',
-    u:'patch',
-    d:'delete'
-}
-var _model = {
-    C(rootGrp){
-        _.each(rootGrp,(root,rootName)=>{
-            _model.B(rootName,root);
+
+var KoaRouterApp = {
+    map_crud:{
+        c:'post',
+        r:'get',
+        u:'patch',
+        d:'delete'
+    },
+    Mode_A(_modeA){
+        _.each(_modeA,(grp)=>{
+            _.each(grp,(Funs,verb)=>{
+                _.each(Funs,(fn,url)=>{
+                    console.log(`${verb}-${url}`)
+                    //router[verb](`/api/${url}`,fn);
+                })
+            })
         })
     },
-    B(rootName,root){
-        _.each(root,_model.Ctrs(rootName))
+    Mode_C(rootGrp){
+        _.each(rootGrp,(root,rootName)=>{
+            KoaRouterApp.Mode_B(rootName,root);
+        })
+    },
+    Mode_B(rootName,root){
+        switch(rootName){
+            case "/api/":
+                _.each(root,KoaRouterApp.Ctrs(rootName))
+                break;
+            case "/page/":
+                _.each(root,KoaRouterApp.Verbs(rootName,""))
+                break;
+        }
     },
     Ctrs(rootName){
         return (ctrs,ctrName)=>{
-            if (rootName == "/page/"){
-                //_.each(ctrs,_model.bindVerb(_url));
-            }else{
-                _.each(ctrs,_model.Verbs(rootName,ctrName));
-            }
+            _.each(ctrs,KoaRouterApp.Verbs(rootName,ctrName));
         }
     },
     Verbs(rootName,ctrName){
@@ -50,59 +64,70 @@ var _model = {
             if (_.isFunction(Verbs)){
                 switch(rootName){
                     case "/api/":
-                        _model.bindVerb(_url)(Verbs,"c");
-                        //console.log(`post:${_url}`);
+                        KoaRouterApp.bindVerb(_url)(Verbs,"c");
                         break;
                     case "/page/":
-                        _model.bindVerb(_url)(Verbs,"r");
+                        KoaRouterApp.bindVerb(_url)(Verbs,"r");
                         break;
                 }
             }else{
-                _.each(Verbs,_model.bindVerb(_url))
+                _.each(Verbs,KoaRouterApp.bindVerb(_url))
             }
         }
     },
     bindVerb(_url){
         return (fn,crud)=>{
-            var _verb =  map_crud[crud];
+            var _verb =  KoaRouterApp.map_crud[crud];
             //router[_verb](_url,fn);
             console.log(`${_verb}:${_url}`);
         }
     }
 }
 
-var _modelC = {
-    init(grpFn){
-        _.each(grpFn,_modelC.root);
-    },
-    root(rootObj,root){
-        _.each(rootObj,_modelC.rootObj(root))
-    },
-    rootObj(root){
-        return ()=>{
-            _.each()
-        }
-    },
-    
-}
-
 var fn = {
-    gen(reg,list=list_number){
-        var arr = []
-        _.each(list,(e)=>{
-           arr.push({val:e,test:e.match(reg)});
-        })
-        arr;
+    'Router_modelA'(){
+        /*
+            mode A 的用法,是以 Verb 做為確定的分類,再往下展開個 urlpath 和對應程序,
+            這樣的工作最直接 好處是,Verb 的定義明確,但是缺點就是 urlpath 會大量的重覆,
+            例如 同樣是 user/id/:id 有 get/delete ,就必須分開寫, 過於重工
+        */
+        var x = [
+            {
+                get:{'employe'(){}},
+                post:{'id/:id'(){
+                    }
+                }
+            }
+        ]
+        KoaRouterApp.Mode_A(x);
     },
     '_Router_modelC'(){
-        var x = {
-            '/api/':{employe:{''(){},'id/:id':{c(){},r(){}}}},
-            '/page/':{''(){},'id/:id'(){}}
+        /*
+            mode B 主要的改量,就是在模組內, 以 urlPath 做為基礎,
+                再往下展開 Verbs , 為了使處理便進一步簡化,就直接以 CRUD 的方式,
+                直接做對應綁定相應的 Ver ,讓 Codeing 可以更有效率的展開,
+                也降低 Key 錯的可能性
+            mode C 的用法,是在 B 的基礎上,加上 Ctr [Controll] 的配置,
+        */
+       var employe = {
+            ''(){},
+            'id/:id':{
+                c(){},
+                r(){}
+            }
         }
-        // _model.B('/api/',x['/page/']);
-        //_model.B('/page/',x['/page/']);
-        _model.C(x);
-    },
+        var page = {
+            ''(){}
+            ,async 'id/:id'(){
+                return await {};
+            }
+        }
+        var _router = {
+            '/api/':{employe},
+            '/page/':page
+        };
+        KoaRouterApp.Mode_C(_router);
+    }
 }
 
 _.each(fn,(e,k)=>{

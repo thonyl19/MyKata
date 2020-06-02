@@ -13,11 +13,19 @@
             var _obj = {
                     template: `
                     <div>
-                        <el-button type="warning" size="small" v-if="SyncBack!=false" round @click="SyncBack(JsonCode)">SyncBack</el-button>
-                        <el-button type="success" size="small" v-if="Exec!=false" round @click="Exec(JsonCode)">Exec</el-button>
-                        <el-button type="primary" size="small" v-if="Renew!=false" round @click="Renew(zip_json)">重新產生數據</el-button>
+                        <el-button type="warning" size="small" round 
+                            v-if="SyncBack!=false" 
+                            @click="SyncBack(JsonCode)">SyncBack</el-button>
+                        <el-button type="success" size="small" round
+                            v-if="Exec!=false"  
+                            @click="Exec(JsonCode)">Exec</el-button>
+                        <el-button type="primary" size="small" round
+                            v-if="Renew!=false"  
+                            @click="Renew(zip_json)">重新產生數據</el-button>
                         <slot :JsonCode="JsonCode" :zip_json="zip_json" />
-                        <el-checkbox v-if="JsonCode.isObj" v-model="zip_json" @change="fn_ZipJson">zip_json</el-checkbox>
+                        <el-checkbox v-model="zip_json" 
+                            v-if="JsonCode.isObj" 
+                            @change="fn_ZipJson">zip_json</el-checkbox>
                         <div style="position:relative">
                             <h5 v-if="JsonCode.isObj"><span class="label label-info" style="position:absolute;right:0px;z-index:999;opacity:0.7;">JsonType</span></h5>
                             <el-input type="textarea" v-model="Input_Src" />
@@ -126,7 +134,7 @@
                                 <el-tab-pane label="Code" name="C0" >
                                     <pw-input ref="MockCode" v-model="MockCode" 
                                         :Renew="renew_MockCode"
-                                        :SyncBack="GenConfig_Mock"/>
+                                        :SyncBack="SyncBack_Config"/>
                                 </el-tab-pane>
                                 <el-tab-pane label="Data" name="C1" >
                                     <pw-input ref="MockData" v-model="MockData" 
@@ -276,9 +284,9 @@
                             } 
                             if (!JsonCode.val) return ;
                             if (JsonCode.isObj){
-                                this.bind_row(JsonCode.val);
+                                this.parse_row(JsonCode.val);
                             }else{
-                                this.bind_cols(JsonCode.val);
+                                this.parse_cols(JsonCode.val);
                             }
                         },
                         renew_MockCode(isChgTab=false){
@@ -296,11 +304,11 @@
                             let _JsonCode = Object.assign({},this.o_MockCode.JsonCode);
                             _JsonCode.isZip = zip_json;
                             
-                            this.MockData = this.parseMockData
+                            this.MockData = this.parse_MockData
                                 (_JsonCode
                                 ,true);
                         },
-                        parseMockData(JsonType, toSting=false){
+                        parse_MockData(JsonType, toSting=false){
                             let {isObj=false,val,isZip=false} = JsonType;
                             if (isObj){
                                 var _mockdata = Mock.mock(val).data;
@@ -327,7 +335,7 @@
                             }
                             return _mockCode;
                         },
-                        GenConfig_Mock(JsonType,isChgTab=true){
+                        SyncBack_Config(JsonType,isChgTab=true){
                             if (isChgTab){
                                 this.tab = "B";
                             }
@@ -335,7 +343,7 @@
                                 var _self = this;
                                 let [key0=null] = _.keys(JsonType.val);
                                 if (key0==null || _.isArray(JsonType.val[key0])==false){
-                                    console.error('GenConfig_Mock()-解析不到正確資料');
+                                    console.error('SyncBack_Config()-解析不到正確資料');
                                     return;
                                 }
                                 var cols=[];
@@ -366,7 +374,7 @@
                             _r.mock();
                             return _r;
                         },
-                        bind_cols(string_val){
+                        parse_cols(string_val){
                             var _self = this;
                             var _r = [];
                             var _arr = string_val.split('\n');
@@ -376,7 +384,7 @@
                             _self.tableData = _r;
                         },
      
-                        bind_row(jsonObj){
+                        parse_row(jsonObj){
                             var _self = this;
                             var _r = [];
                             _.each(jsonObj,(val,name)=>{
@@ -418,7 +426,6 @@
 				<el-tabs v-model="tab" type="border-card">
 					<el-tab-pane label="Input" name="B">
 						<pw-input v-model="input_val" />
-						
 					</el-tab-pane>
 					<el-tab-pane label="Config" name="C">
 						<el-tabs v-model="tabC">
