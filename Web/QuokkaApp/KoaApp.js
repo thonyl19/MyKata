@@ -37,7 +37,11 @@ var _model = {
     },
     Ctrs(rootName){
         return (ctrs,ctrName)=>{
-            _.each(ctrs,_model.Verbs(rootName,ctrName))
+            if (rootName == "/page/"){
+                //_.each(ctrs,_model.bindVerb(_url));
+            }else{
+                _.each(ctrs,_model.Verbs(rootName,ctrName));
+            }
         }
     },
     Verbs(rootName,ctrName){
