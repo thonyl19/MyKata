@@ -1,7 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+ï»¿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 	<head>
-		<title>¸ê®Æ®wÀ³¥Î</title>
+		<title>è³‡æ–™åº«æ‡‰ç”¨</title>
 		<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
 		<meta content="VisualStudio.HTML" name="ProgId">
 		<meta content="Microsoft Visual Studio .NET 7.1" name="Originator">
@@ -15,14 +15,14 @@ textarea
 	<body>
 		<form name="TForm" method="post" action="_derived/nortbots.htm" target="_New" ID="Form1">
 			<PRE>
-<input type="radio"  Name=OP1 onclick=BeRun(1,0) ID="Radio1" VALUE="Radio1">SqlCmd ®æ¦¡¤Æ(¥ş§@·~)			--SqlCmdFormat()
-<input type="radio"  Name=OP1 onclick=BeRun(2,0) ID="Radio2" VALUE="Radio2">SqlCmd ¼Ğ·Ç¤Æ				--SqlCmdDataSTD()
-<input type="radio"  Name=OP1 onclick=BeRun(3,0) ID="Radio3" VALUE="Radio2">SQL ªº©R¥O¦r¤¸Âà¦¨¤j¼g			--SqlCmdUpWord()
-<input type="radio"  Name=OP1 onclick=BeRun(4,0) ID="Radio4" VALUE="Radio2">±NUPDATE «ü¥OÂà¦¨ SELET ±ø¥ó		--Update2Select()
-<input type="radio"  Name=OP1 onclick=BeRun(5,0) ID="Radio5" VALUE="Radio2">±NSELECT «ü¥OÂà¦¨ UPDATE ªºµ{¦¡»yªk	--Select2UpdatePG()
-<input type="checkbox"  Name=CB1 onclick=BeRun(99,0) checked >±N SELECT, UPDATE ªº¶µ¥Ø´«¦æ		--FiledFormat()
-<input type="radio"  Name=OP1 onclick=BeRun(6,0) ID="Radio6" VALUE="Radio2">±N SQL »yªk¨î¦¨ string Array		--BeStringArray()
-<input type="radio"  Name=OP1 onclick=BeRun(7,0) ID="Radio7" VALUE="Radio2">±N string Array ¤Ï¸Ñ¦¨ SQL »yªk		--BeStringArrayAnalysis()
+<input type="radio"  Name=OP1 onclick=BeRun(1,0) ID="Radio1" VALUE="Radio1">SqlCmd æ ¼å¼åŒ–(å…¨ä½œæ¥­)			--SqlCmdFormat()
+<input type="radio"  Name=OP1 onclick=BeRun(2,0) ID="Radio2" VALUE="Radio2">SqlCmd æ¨™æº–åŒ–				--SqlCmdDataSTD()
+<input type="radio"  Name=OP1 onclick=BeRun(3,0) ID="Radio3" VALUE="Radio2">SQL çš„å‘½ä»¤å­—å…ƒè½‰æˆå¤§å¯«			--SqlCmdUpWord()
+<input type="radio"  Name=OP1 onclick=BeRun(4,0) ID="Radio4" VALUE="Radio2">å°‡UPDATE æŒ‡ä»¤è½‰æˆ SELET æ¢ä»¶		--Update2Select()
+<input type="radio"  Name=OP1 onclick=BeRun(5,0) ID="Radio5" VALUE="Radio2">å°‡SELECT æŒ‡ä»¤è½‰æˆ UPDATE çš„ç¨‹å¼èªæ³•	--Select2UpdatePG()
+<input type="checkbox"  Name=CB1 onclick=BeRun(99,0) checked >å°‡ SELECT, UPDATE çš„é …ç›®æ›è¡Œ		--FiledFormat()
+<input type="radio"  Name=OP1 onclick=BeRun(6,0) ID="Radio6" VALUE="Radio2">å°‡ SQL èªæ³•åˆ¶æˆ string Array		--BeStringArray()
+<input type="radio"  Name=OP1 onclick=BeRun(7,0) ID="Radio7" VALUE="Radio2">å°‡ string Array åè§£æˆ SQL èªæ³•		--BeStringArrayAnalysis()
 <INPUT type="button" value="Button" ID="Button1" NAME="Button1" onclick=tesst()>
 </PRE>
 			<table border="1" width="920" ID="Table1">
@@ -33,22 +33,22 @@ textarea
  
  SELECT 
 			B0.document_id,B0.serno,B1.pic_serno,B0.trantoprod_no
-		 	,B1.pic_ask_date 	AS »İ¨D¤é´Á
-		 	, B0.prod_splycode	AS ¼t°Ó¸É³f½X
-		 	, B0.prod_pdid		AS ­ì¼t«~½s
-		 	, P1.prod_cname		AS °Ó«~¦WºÙ
+		 	,B1.pic_ask_date 	AS éœ€æ±‚æ—¥æœŸ
+		 	, B0.prod_splycode	AS å» å•†è£œè²¨ç¢¼
+		 	, B0.prod_pdid		AS åŸå» å“ç·¨
+		 	, P1.prod_cname		AS å•†å“åç¨±
 		 	, case 	B1.pic_type 
-		 		when 'A' then 'ºô­¶' 
-		 		when 'B' then '¥­­±' 
-		 		end ¹ÏÀÉÃş«¬
-		 	,B2.reason_name		AS ¹ÏÀÉ¤£¦X®æ­ì¦] 
-			,(B1.pic_serno -1 )AS ¤£¦X®æ¦¸¼Æ
+		 		when 'A' then 'ç¶²é ' 
+		 		when 'B' then 'å¹³é¢' 
+		 		end åœ–æª”é¡å‹
+		 	,B2.reason_name		AS åœ–æª”ä¸åˆæ ¼åŸå›  
+			,(B1.pic_serno -1 )AS ä¸åˆæ ¼æ¬¡æ•¸
   FROM 	b2b_newprod_pretreat B0
 		 	LEFT JOIN b2b_newproduct_pictreat B1
 		 		ON B0.document_id = B1.document_id 
 		 		AND B0.serno = B1.serno 
 		 		AND B1.pic_serno = f_get_b2bpic_maxserno(b0.document_id,b0.serno)
-		 	--±a«e¦¸ pic_serno
+		 	--å¸¶å‰æ¬¡ pic_serno
 		 	LEFT JOIN b2b_newproduct_pictreat B11
 		 		ON B11.document_id = B0.document_id 
 		 		AND B11.serno = B0.serno 
@@ -72,17 +72,17 @@ textarea
 						</textarea></td>
 				</tr>
 				<tr>
-					<td width="650" onclick="BeLeft()">¡Õ=</td>
+					<td width="650" onclick="BeLeft()">ï¼œ=</td>
 				</tr>
 				<tr>
 					<td width="650"><textarea rows="5" name="T002"  cols=120 ID="Textarea2" onfocus="SmartTAreaUStyle(this,'height=300pt;')"></textarea></td>
 				</tr>
 			</table>
 			<PRE>
-¥H form ¬°°_©l¤¤¼Ï ³B²z§¹ select °Ï¶¡«á¡A¦A¦^ÀY³B²z from ¡B where 
+ä»¥ form ç‚ºèµ·å§‹ä¸­æ¨ è™•ç†å®Œ select å€é–“å¾Œï¼Œå†å›é ­è™•ç† from ã€ where 
 
 
-¨C¦¸²£¥Í¡A³£­nµø¬°»s§@·sªºª«¥ó(¦]¬°¦pªG¬Û¦P¡Aª½±µ½Æ»s¶Ç¦^¤£´N±o¤F)
+æ¯æ¬¡ç”¢ç”Ÿï¼Œéƒ½è¦è¦–ç‚ºè£½ä½œæ–°çš„ç‰©ä»¶(å› ç‚ºå¦‚æœç›¸åŒï¼Œç›´æ¥è¤‡è£½å‚³å›ä¸å°±å¾—äº†)
 
 select
 	(select from where)
@@ -91,28 +91,28 @@ from
 where 
 	aa in (select from)
 
-**¥¿½T¸ÑªR SQL 
+**æ­£ç¢ºè§£æ SQL 
 
-§â select Âà¦¨
-	Äæ¦ì¸ê®Æ
-		¸ÑªR¥X¬DÀÉÄæ¦ì 
-			--XX,¥H ¸ê®Æ®w³sµ²,¶Ç¦^¹ê»Ú¸ê®Æ«á,¦A¶i¦æÂà´«,¥Î¤å¦r¤ÀªR¨ì¦n,´X¥G¤£¤Ó¥i¯à
+æŠŠ select è½‰æˆ
+	æ¬„ä½è³‡æ–™
+		è§£æå‡ºæŒ‘æª”æ¬„ä½ 
+			--XX,ä»¥ è³‡æ–™åº«é€£çµ,å‚³å›å¯¦éš›è³‡æ–™å¾Œ,å†é€²è¡Œè½‰æ›,ç”¨æ–‡å­—åˆ†æåˆ°å¥½,å¹¾ä¹ä¸å¤ªå¯èƒ½
 						
-	update »yªk
+	update èªæ³•
 	store procdure
-		©Ô¦n­n²£¥ÍªºÄæ¦ì¡BÃö³s¤Î±ø¥ó
-		Âà´«¦¨ procdure
+		æ‹‰å¥½è¦ç”¢ç”Ÿçš„æ¬„ä½ã€é—œé€£åŠæ¢ä»¶
+		è½‰æ›æˆ procdure
 
 </PRE>
 		</form>
-		<FONT face="·s²Ó©úÅé"></FONT>
-		<P><FONT face="·s²Ó©úÅé">±N update ªº«ü¥O¡AÂà´«¦¨¬d¸ß»yªk--¥i§Ö³tªº½T»{§ó·s¬O§_¦¨¥\ </FONT>
+		<FONT face="æ–°ç´°æ˜é«”"></FONT>
+		<P><FONT face="æ–°ç´°æ˜é«”">å°‡ update çš„æŒ‡ä»¤ï¼Œè½‰æ›æˆæŸ¥è©¢èªæ³•--å¯å¿«é€Ÿçš„ç¢ºèªæ›´æ–°æ˜¯å¦æˆåŠŸ </FONT>
 		</P>
-		<P><FONT face="·s²Ó©úÅé">±N&nbsp;select &nbsp;ªº«ü¥O¡AÂà´«¦¨§ó·s(§R°£)»yªk--¥iºë½Tªº§¹¦¨§ó·s(§R°£)ªº°Ê§@</FONT></P>
-		<P><FONT face="·s²Ó©úÅé">¸ÑªR¥\¯à--¯à§Ö³tªº±NSQL»yªk°µ¸ÑªR¡B¾ã²z¤ÎÁY±Æ¡C</FONT></P>
+		<P><FONT face="æ–°ç´°æ˜é«”">å°‡&nbsp;select &nbsp;çš„æŒ‡ä»¤ï¼Œè½‰æ›æˆæ›´æ–°(åˆªé™¤)èªæ³•--å¯ç²¾ç¢ºçš„å®Œæˆæ›´æ–°(åˆªé™¤)çš„å‹•ä½œ</FONT></P>
+		<P><FONT face="æ–°ç´°æ˜é«”">è§£æåŠŸèƒ½--èƒ½å¿«é€Ÿçš„å°‡SQLèªæ³•åšè§£æã€æ•´ç†åŠç¸®æ’ã€‚</FONT></P>
 <script language="javascript">
 
-Update2Select00(" UPDATE 	b2b_quoted SET  	prod_splycode	= 'C0666' 	,quoted_qty    	= 1 	,quoted_sprice 	= 0 	,quoted_price  	= 420 	,quoted_memo 	= '¶Â¦â¥N½X#C0666;¥Õ¦â¥N½X#9357' 	,prodstate_no 	= 'A' 	,quoted_indate 	= '0951206'");
+Update2Select00(" UPDATE 	b2b_quoted SET  	prod_splycode	= 'C0666' 	,quoted_qty    	= 1 	,quoted_sprice 	= 0 	,quoted_price  	= 420 	,quoted_memo 	= 'é»‘è‰²ä»£ç¢¼#C0666;ç™½è‰²ä»£ç¢¼#9357' 	,prodstate_no 	= 'A' 	,quoted_indate 	= '0951206'");
 var VT1=document.all('T001')
 var VT2=document.all('T002')
 var flgT001	= false;
@@ -127,13 +127,13 @@ function BeLeft()
 	VT1.value	= VT2.value;
 }
 
-///==¥\¯àµ{§Ç========================================================================================================
+///==åŠŸèƒ½ç¨‹åº========================================================================================================
 
 /*
-¸ê®Æ³W®æ¤Æ
-NOTE:©Ò¿×ªº³W®æ¤Æ¡A¬O§â©Ò¦³¸ê®Æ¶°¦X°_¨Ó¡A¥H«K°µ«áÄòªº³B²z¤ÀªR
-		1.­ç°£´«¦æ²Å¸¹
-		2.¨ú±o°ò¥»key word
+è³‡æ–™è¦æ ¼åŒ–
+NOTE:æ‰€è¬‚çš„è¦æ ¼åŒ–ï¼Œæ˜¯æŠŠæ‰€æœ‰è³‡æ–™é›†åˆèµ·ä¾†ï¼Œä»¥ä¾¿åšå¾ŒçºŒçš„è™•ç†åˆ†æ
+		1.å‰”é™¤æ›è¡Œç¬¦è™Ÿ
+		2.å–å¾—åŸºæœ¬key word
 */
 function SqlCmdDataSTD(as_SqlCmd)
 {
@@ -205,8 +205,8 @@ function FiledFormat1(ai_goArrIndex)
 
 
 /*
-SQL ªº©R¥O¦r¤¸Âà¦¨¤j¼g
-NOTE:³B²z¤£»İ­n½ÆÂø¤Æ¡A¦pªG¹J¨ì¤£¯à³B²zªº¡A­×§ïµø±¡§Î½Õ¾ã¨Ó·½´N¦n¤F
+SQL çš„å‘½ä»¤å­—å…ƒè½‰æˆå¤§å¯«
+NOTE:è™•ç†ä¸éœ€è¦è¤‡é›œåŒ–ï¼Œå¦‚æœé‡åˆ°ä¸èƒ½è™•ç†çš„ï¼Œä¿®æ”¹è¦–æƒ…å½¢èª¿æ•´ä¾†æºå°±å¥½äº†
 */
 function SqlCmdUpWord(as_SqlCmd)
 {
@@ -254,13 +254,13 @@ function SqlCmdUpWord(as_SqlCmd)
 	return tmpData;
 }
 
-//±N SELECT, UPDATE ªºÄæ¦ì´«¦æ ¥Dµ{§Ç
+//å°‡ SELECT, UPDATE çš„æ¬„ä½æ›è¡Œ ä¸»ç¨‹åº
 /*SPEC.
-	¥H SET ¸ò SELECT ¬°³æ¦ì
-	³v¤@¦r¦ê¤ñ¹ï
-		­Y¦³ '(' «h­p¼Æ +1  
-		­Y¦³ ')' «h­p¼Æ -1  
-		­Y¹J¨ì ',' ¥B ­p¼Æ = 0 «h´«¦æ  
+	ä»¥ SET è·Ÿ SELECT ç‚ºå–®ä½
+	é€ä¸€å­—ä¸²æ¯”å°
+		è‹¥æœ‰ '(' å‰‡è¨ˆæ•¸ +1  
+		è‹¥æœ‰ ')' å‰‡è¨ˆæ•¸ -1  
+		è‹¥é‡åˆ° ',' ä¸” è¨ˆæ•¸ = 0 å‰‡æ›è¡Œ  
 */
 function FiledFormat(as_SqlCmd)
 {
@@ -319,7 +319,7 @@ function FiledFormat(as_SqlCmd)
 
 //
 /*
-±N SELECT, UPDATE ªºÄæ¶µ¨Ì³r¸¹´«¦æ
+å°‡ SELECT, UPDATE çš„æ¬„é …ä¾é€—è™Ÿæ›è¡Œ
 SPEC:
 
 /
@@ -332,22 +332,22 @@ function FiledSplit(as_Data)
 
 
 /*
-±NUPDATE «ü¥OÂà¦¨ SELET ±ø¥ó
+å°‡UPDATE æŒ‡ä»¤è½‰æˆ SELET æ¢ä»¶
 SPEC:
-1.¥ı±N Update §ï¦¨ from
-2.³B²z set §ï¦¨¬Û¹ï select 
-	§â­ì¥ı value ­È  AS ¦¨Äæ¦ì¦WºÙ 
+1.å…ˆå°‡ Update æ”¹æˆ from
+2.è™•ç† set æ”¹æˆç›¸å° select 
+	æŠŠåŸå…ˆ value å€¼  AS æˆæ¬„ä½åç¨± 
 */
 
 function Update2Select(as_SqlCmd)
 {
 	var TmpData	= SqlCmdDataSTD(as_SqlCmd);
 	TmpData	= SqlCmdUpWord(TmpData);
-	//1.¥ı±N Update §ï¦¨ from
+	//1.å…ˆå°‡ Update æ”¹æˆ from
 	reg_SqlCmd	= new RegExp("\\bUPDATE\\s","gi");
 	TmpData	= TmpData.replace(reg_SqlCmd,"FROM\t");
 
-	//2.³B²z set §ï¦¨¬Û¹ï select 
+	//2.è™•ç† set æ”¹æˆç›¸å° select 
 	reg_SqlCmd	= new RegExp("\\bSET.+","gi");
 	matched = TmpData.match(reg_SqlCmd);
 	if (matched) 
@@ -355,7 +355,7 @@ function Update2Select(as_SqlCmd)
 			//ls_Select	= matched[0].replace(new RegExp("=","gi")," AS ");
 			ls_Select	= Update2Select00(matched[0]);
 			//alert(TmpData);
-			//²M±¼­ì set ±ø¥ó
+			//æ¸…æ‰åŸ set æ¢ä»¶
 			TmpData	= TmpData.replace(matched[0]+"\n","");  
 			TmpData	= ls_Select.replace(new RegExp("\\bSET\\s","gi"),"SELECT\t") 	+ TmpData;
 	}	
@@ -363,8 +363,8 @@ function Update2Select(as_SqlCmd)
 }
 
 /*
-³B²z Set ªº¸ê®Æ¡A±N¤§³B²z¦¨ select ¥¿½Tªº»yªk
-¡A¥H±Æ°£ Âà´«¦¨ AS «á¡A¥N¦WºÙ¬°¼Æ¦r¦Ó³y¦¨»yªk¿ù»~ªº°İÃD
+è™•ç† Set çš„è³‡æ–™ï¼Œå°‡ä¹‹è™•ç†æˆ select æ­£ç¢ºçš„èªæ³•
+ï¼Œä»¥æ’é™¤ è½‰æ›æˆ AS å¾Œï¼Œä»£åç¨±ç‚ºæ•¸å­—è€Œé€ æˆèªæ³•éŒ¯èª¤çš„å•é¡Œ
 */
 function Update2Select00(as_Data)
 {
@@ -372,7 +372,7 @@ function Update2Select00(as_Data)
 	var arr_TmpB	;
 	var ls_Tmp		;
 	var li_LenTmpB	= 0;
-	// [i=1]­ç°£²Ä¤@­Ó¤£¥Î³B²z
+	// [i=1]å‰”é™¤ç¬¬ä¸€å€‹ä¸ç”¨è™•ç†
 	for (i = 1 ; i < arr_TmpA.length ; i++)
 	{
 		arr_TmpB	= arr_TmpA[i].split(',');
@@ -382,9 +382,9 @@ function Update2Select00(as_Data)
 		{
 			case 1:
 			case 2:
-				//@¨ú±o³r¸¹«eªº¸ê®Æ  EX:['C0666' 	,quoted_qty]
+				//@å–å¾—é€—è™Ÿå‰çš„è³‡æ–™  EX:['C0666' 	,quoted_qty]
 				ls_Tmp	= trim(arr_TmpB[0]);
-				//@§PÂ_­Y ¤£¬°³r¸¹ «h¦Û°Ê³B²z¦¨ 'data'
+				//@åˆ¤æ–·è‹¥ ä¸ç‚ºé€—è™Ÿ å‰‡è‡ªå‹•è™•ç†æˆ 'data'
 				if (ls_Tmp.substr(0,1) != "'")
 				{
 					arr_TmpB[0]	= "'" + ls_Tmp + "'";
@@ -393,7 +393,7 @@ function Update2Select00(as_Data)
 				
 				break;
 			default:
-				alert('µo²{²§±`:' + as_Data);
+				alert('ç™¼ç¾ç•°å¸¸:' + as_Data);
 				break;
 		}
 	}
@@ -402,18 +402,18 @@ function Update2Select00(as_Data)
 
 
 /*
-±N SELET ±ø¥ó Âà¦¨ UPDATE µ{¦¡«ü¥O
+å°‡ SELET æ¢ä»¶ è½‰æˆ UPDATE ç¨‹å¼æŒ‡ä»¤
 SPEC:
-1.³B²z select §ï¦¨ set   
-	§â­ì¥ı ¦¨Äæ¦ì¦WºÙ  ³]¦¨ ÅÜ¼Æ¦WºÙ 
-2.¥ı±N  from  §ï¦¨ Update 
+1.è™•ç† select æ”¹æˆ set   
+	æŠŠåŸå…ˆ æˆæ¬„ä½åç¨±  è¨­æˆ è®Šæ•¸åç¨± 
+2.å…ˆå°‡  from  æ”¹æˆ Update 
 */
 function Select2UpdatePG(as_SqlCmd)
 {
 	var TmpData	= SqlCmdDataSTD(as_SqlCmd);
 	TmpData	= SqlCmdUpWord(TmpData);
 
-	//1.³B²z select  §ï¦¨¬Û¹ï  set
+	//1.è™•ç† select  æ”¹æˆç›¸å°  set
 	reg_SqlCmd	= new RegExp("\\bSELECT.+","gi");
 	matched = TmpData.match(reg_SqlCmd);
 	if (matched) 
@@ -433,12 +433,12 @@ function Select2UpdatePG(as_SqlCmd)
 						break;
 				}
 			}
-			//²M±¼­ì select ±ø¥ó
+			//æ¸…æ‰åŸ select æ¢ä»¶
 			TmpData	= TmpData.replace(matched[0]+"\n","");  
 			TmpData	= "SET\t" + ls_SET.substring(1) + TmpData;
 	}
 	
-	//2.¥ı±N from §ï¦¨ Update
+	//2.å…ˆå°‡ from æ”¹æˆ Update
 	reg_SqlCmd	= new RegExp("\\bFROM.+\\s","gi");
 	matched = TmpData.match(reg_SqlCmd);
 	if (matched) 
@@ -450,7 +450,7 @@ function Select2UpdatePG(as_SqlCmd)
 }
 
 
-//±N SQL »yªk¨î¦¨ string Array
+//å°‡ SQL èªæ³•åˆ¶æˆ string Array
 function BeStringArray(as_Data)
 {
 	var VS_return="";
@@ -484,7 +484,7 @@ function BeStringArray(as_Data)
 	return VS_return + "\t\t\t};\n\t\t\treturn string.Join(\"\\n\",SqlCmd);"
 }
 
-//±N string Array ¤Ï¸Ñ¦¨ SQL »yªk
+//å°‡ string Array åè§£æˆ SQL èªæ³•
 function BeStringArrayAnalysis(as_Data)
 {
 	var ls_Return="";
@@ -498,9 +498,9 @@ function BeRegExpUseArray(arr_Data,as_chgData)
 
 }
 
-//¨ú±o ChkeckBox ©M RADIO ª«¥ó³Q®Ö¿ïªº±¡§Î
-//SObjGrp=ChkeckBox(¶Ç¦^ ³Q®Ö¿ïªºª«¥óÁ`¼Æ)
-//SObjGrp=RADIO(¶Ç¦^ ²Ä´X­Óª«¥ó³Q®Ö¿ï¡F­Y¶Ç¤JªºSObjGrp ¨ä¹ê¥u¦³¤@­Óª«¥ó¡A«h¥H {+:¦³¿ï¨ú -:¥¼¿ï¨ú}ªí¥Ü®Ö¿ïª¬ºA)
+//å–å¾— ChkeckBox å’Œ RADIO ç‰©ä»¶è¢«æ ¸é¸çš„æƒ…å½¢
+//SObjGrp=ChkeckBox(å‚³å› è¢«æ ¸é¸çš„ç‰©ä»¶ç¸½æ•¸)
+//SObjGrp=RADIO(å‚³å› ç¬¬å¹¾å€‹ç‰©ä»¶è¢«æ ¸é¸ï¼›è‹¥å‚³å…¥çš„SObjGrp å…¶å¯¦åªæœ‰ä¸€å€‹ç‰©ä»¶ï¼Œå‰‡ä»¥ {+:æœ‰é¸å– -:æœªé¸å–}è¡¨ç¤ºæ ¸é¸ç‹€æ…‹)
 function CChked(SObjGrp)
 {
 	var Chked_N=0
@@ -552,7 +552,7 @@ function DBSign()
 	return '"'  + this + '"';
 }
 
-//¦]¬°vb ©M java ªº°}¦C¤£¯à¤¬³q¡A©Ò¥H±o¥ı§â¸ê®Æ°e¹L¨Ó³B²z¦¨ java ®æ¦¡ªº°}¦C¡A¦A°µ«áÄò³B²z
+//å› ç‚ºvb å’Œ java çš„é™£åˆ—ä¸èƒ½äº’é€šï¼Œæ‰€ä»¥å¾—å…ˆæŠŠè³‡æ–™é€éä¾†è™•ç†æˆ java æ ¼å¼çš„é™£åˆ—ï¼Œå†åšå¾ŒçºŒè™•ç†
 function BeJavaSplit(VS_Data,VS_SW)
 {
 	return VS_Data.split(VS_SW)
@@ -563,23 +563,23 @@ function SmartTAreaUStyle(ao_SObj,as_Style)
 {
 	var tmpblur		= ao_SObj.onblur;
 	//var tmpfocus	= ao_SObj.onfocus;
-	//­Y tmpblur ¨ú±o¬OªÅ¨Æ¥ó¡A«h¥N¤@­ÓªÅªº¨Æ¥óµ¹¥¦ 
+	//è‹¥ tmpblur å–å¾—æ˜¯ç©ºäº‹ä»¶ï¼Œå‰‡ä»£ä¸€å€‹ç©ºçš„äº‹ä»¶çµ¦å®ƒ 
 	if (tmpblur	 == null){tmpblur	= function(){return true;}};
-	//±NÅÜ°Êªºµ{§Ç¥[¦b­ì¦³ªº function ¤§«á
+	//å°‡è®Šå‹•çš„ç¨‹åºåŠ åœ¨åŸæœ‰çš„ function ä¹‹å¾Œ
 	ao_SObj.onblur	= function(){tmpblur();event.srcElement.style.cssText = "";}; 
 	ao_SObj.style.cssText	= as_Style;
 }
 
 
-///==¨Æ¥óµ{§Ç========================================================================================================
-// SqlCmd ®æ¦¡¤Æ(¥ş§@·~)
+///==äº‹ä»¶ç¨‹åº========================================================================================================
+// SqlCmd æ ¼å¼åŒ–(å…¨ä½œæ¥­)
 function SqlCmdFormat(as_SqlCmd)
 {
 	//Form1.CB1.checked
 	//SObj	= document.all("CB1");
-	//@¸ê®Æ¼Ğ·Ç¤Æ(±N¸ê®Æ¥ş³¡¤£´«¦æ¶°µ²)
+	//@è³‡æ–™æ¨™æº–åŒ–(å°‡è³‡æ–™å…¨éƒ¨ä¸æ›è¡Œé›†çµ)
 	var TmpData	= SqlCmdDataSTD(as_SqlCmd);
-	//@¸ê®Æ¸ÑªR³B²z(±N©R¥O¦r¤¸ °µ¤j¼gÂà´«¤Î¤j³¡´«¦æ³B²z)
+	//@è³‡æ–™è§£æè™•ç†(å°‡å‘½ä»¤å­—å…ƒ åšå¤§å¯«è½‰æ›åŠå¤§éƒ¨æ›è¡Œè™•ç†)
 	TmpData	= SqlCmdUpWord(TmpData);
 	if (Form1.CB1.checked)
 	{
@@ -588,7 +588,7 @@ function SqlCmdFormat(as_SqlCmd)
 	return TmpData;
 }
 
-//³B²z T001 ¥ş¿ïªº¥\¯à¡AÁ×§K¤@ª½­«ÂĞ ¥ş¿ï 
+//è™•ç† T001 å…¨é¸çš„åŠŸèƒ½ï¼Œé¿å…ä¸€ç›´é‡è¦† å…¨é¸ 
 function BeT001_Select()
 {
 	if (flgT001 == false)

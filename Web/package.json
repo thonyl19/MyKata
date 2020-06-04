@@ -3,6 +3,8 @@
   "devDependencies": {},
   "dependencies": {
     "@types/node": "^14.0.6",
+    "adodb": "0.0.16",
+    "child_process": "^1.0.2",
     "jquery": "^3.5.0",
     "jsdom-quokka-plugin": "^1.0.15",
     "lodash": "^4.17.15",
@@ -12,9 +14,11 @@
     "require": "^2.4.20",
     "split.js": "^1.5.11",
     "splitpanes": "^2.2.1",
+    "sqlite3": "^4.2.0",
     "vue-multipane": "^0.9.5",
     "vue-resize-split-pane": "^0.1.5",
     "vue-split-panel": "^1.0.4",
-    "vue-splitpane": "^1.0.6"
+    "vue-splitpane": "^1.0.6",
+    "winax": "^1.19.0"
   }
 }

@@ -1,4 +1,7 @@
-﻿const ADODB = require('node-adodb');
+﻿(()=>{
+
+
+const ADODB = require('node-adodb');
 var _ = require('lodash');
 
 const util = require('util');
@@ -54,3 +57,4 @@ var DAO = {
 
 let g= DAO.test();
 g; 
+})()
