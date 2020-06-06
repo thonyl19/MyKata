@@ -4,6 +4,7 @@
   "dependencies": {
     "@types/node": "^14.0.6",
     "adodb": "0.0.16",
+    "alasql": "^0.6.2",
     "child_process": "^1.0.2",
     "jquery": "^3.5.0",
     "jsdom-quokka-plugin": "^1.0.15",
@@ -19,6 +20,7 @@
     "vue-resize-split-pane": "^0.1.5",
     "vue-split-panel": "^1.0.4",
     "vue-splitpane": "^1.0.6",
-    "winax": "^1.19.0"
+    "winax": "^1.19.0",
+    "xlsx": "^0.16.1"
   }
 }

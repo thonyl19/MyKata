@@ -4,7 +4,7 @@ var winax = require('winax');
     const path = require("path");
     var _filePath = path.join(__dirname,'./_demo.mdb');
     const connStr 
-        //= `rovider=Microsoft.Jet.OLEDB.4.0;Data Source=${_filePath}`; 
+        //= `Provider=Microsoft.Jet.OLEDB.4.0;;Data Source=${_filePath}`; 
         =`Provider=Microsoft.ACE.OLEDB.12.0;Data Source=${_filePath};Persist Security Info=False;`;
         //=`DBQ=${_filePath};DRIVER={Microsoft Access Driver (*.mdb)};`
     var conn = new ActiveXObject("ADODB.Connection"); 
