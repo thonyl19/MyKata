@@ -13,25 +13,51 @@ const ADODB = require('adodb');
 const path = require("path");
 var _ = require('lodash');
 (async()=>{
-	
-    var _filePath = path.join(__dirname,'./_demo.mdb');
-    _filePath
-    const connStr 
-        = `rovider=Microsoft.Jet.OLEDB.4.0;Data Source=${_filePath}`; 
-        //=`Provider=Microsoft.ACE.OLEDB.12.0;Data Source=${_filePath};Persist Security Info=False;`;
-     
-    const pool = ADODB.createPool(connStr);
-    //const pool = ADODB.createConnection(connStr);
-    //pool.schema(20)
-    //pool
-    pool.query('select * from Log', (err, data) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log(data);
-        }
-    
-        pool.end();
-    });
 
+    var fn = {
+        'base'(){
+            ADODB;
+            var _filePath = path.join(__dirname,'./_demo.mdb');
+            _filePath
+            const connStr 
+                = `rovider=Microsoft.Jet.OLEDB.4.0;Data Source=${_filePath}`; 
+                //=`Provider=Microsoft.ACE.OLEDB.12.0;Data Source=${_filePath};Persist Security Info=False;`;
+            
+            const pool = ADODB.createPool(connStr);
+            //const pool = ADODB.createConnection(connStr);
+            //pool.schema(20)
+            //pool
+            pool.query('select * from Log', (err, data) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log(data);
+                }
+            
+                pool.end();
+            });
+        },
+        '_A'(){
+            var sql = `
+                select  *
+                from    sql
+                where   a = :a
+                        And b = :b
+
+            `
+            var values = {
+                a:1,
+                b:'a'
+            };
+            var x = ADODB.utils.queryFormat(sql,values);
+            x;
+        },
+        '_'(){},
+    }
+	
+    _.each(fn,(e,k)=>{
+        if (k.substr(0,1)=="_"){
+            e();
+        }
+    })
 })()
