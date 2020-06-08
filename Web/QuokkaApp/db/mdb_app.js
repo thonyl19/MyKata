@@ -222,6 +222,8 @@ var t = {
 	async '_C1'(){
 		mdb_demo;
 		var z = await mdb_demo.Log.Select().exec();
+
+		
 		console.log({z});
 		
 	}
