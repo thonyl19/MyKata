@@ -7,8 +7,43 @@
         root.returnExports = factory(root.jQuery, root.Vue,root._,root.Mock);
     }
 }(this, function ($, Vue, _,Mock) {
- 
+var _note = {
+    jdt_table_cfg:`
+
+
+    `   
+
+};
     var _fn = {
+        mock_map:{
+            "string":["@name"],
+            "boolean":["Y","N"],
+            "number":["@integer(60, 100)"],
+            "date": ["@datetime"],
+            "symbol":["@id"],
+            "object":["@id"],
+        },
+        parse_cols(string_val,genObj,split=','){
+            var _self = this;
+            var _r = [];
+            var _arr = string_val.split('\n');
+            _.each(_arr,(val,idx)=>{
+                let [one,two,three=""] = val.split(split); 
+                three = eval(three);
+                _r.push(genObj(one,two,three));
+            })
+            return _r;
+        },
+
+        parse_row(jsonObj,genObj){
+            var _self = this;
+            var _r = [];
+            _.each(jsonObj,(val,name)=>{
+                _r.push(genObj(name,name,val));
+            })
+            return _r;
+        },
+
         pw_input() {
             var _obj = {
                     template: `
@@ -96,6 +131,11 @@
             };
             return _obj;
         },
+        
+        /*
+        把 pw_mock_cfg 另外再拆出來,主要是為了讓 pw_mock 可以更單純
+            的被其他開發應用需求 調用.
+        */
         pw_mock_cfg(){
             var _obj = {
                     template: `
@@ -230,15 +270,7 @@
                                         return this.demo;
                                     }
                                 }
-                            ],
-                            map:{
-                                "string":["@name"],
-                                "boolean":["Y","N"],
-                                "number":["@integer(60, 100)"],
-                                "date": ["@datetime"],
-                                "symbol":["@id"],
-                                "object":["@id"],
-                            }
+                            ]
                             ,MockCode:''
                             ,MockData:''
                             ,Input_Src:'A\nB'
@@ -423,9 +455,13 @@
         jdt_table_cfg(){
             var _vue = {
 				template: `
-				<el-tabs v-model="tab" type="border-card">
+                <el-tabs v-model="tab" type="border-card">
+                    <el-tab-pane label="Note" name="A">
+<pre>${_note.jdt_table_cfg}</pre>
+					</el-tab-pane>
 					<el-tab-pane label="Input" name="B">
-						<pw-input v-model="input_val" />
+                        <pw-input v-model="input_val" :Exec="GenConfig"/>
+                        
 					</el-tab-pane>
 					<el-tab-pane label="Config" name="C">
 						<el-tabs v-model="tabC">
@@ -474,6 +510,7 @@
 				`,
 				data(){
 					return {
+                        jdt_code:'',
 						grid_src:[],
 						input_val:'A\nB',
 						row:{B:2,A:'A',C:new Date(),E:true,F:{}},
@@ -493,6 +530,9 @@
 				watch:{
 					tab(val){
 						switch(val){
+                            case "C":
+                                //if (this.jdt_code !="") 
+                                break;
 							case "D":
 								if (this.Ops == null || this.Ops == "") this.fn_Ops();
 								break;
@@ -507,31 +547,36 @@
 					}
 				},
 				methods:{
-					GenConfig(JsonType,isChgTab=true){
-						debugger
+					GenConfig(JsonCode,isChgTab=true){
+                        debugger
 						if (isChgTab){
 							this.tab = "C";
 							this.tabB = "C1"	
 						} 
-						var _val = this.input_val;
-						if (!_val) return ;
-						if (JsonType.is){
-							this.bind_row(JsonType.obj);
-						}else{
-							this.bind_cols(_val);
-						}
-					},
-					bind_cols(string_val){
+                        if (!JsonCode.val) return ;
+                        //let {parse_cols,parse_row} = _fn;
+                        var _act = JsonCode.isObj
+                                ? _fn.parse_row
+                                : _fn.parse_cols
+                                ;
+                        this.grid_src = _act (JsonCode.val , this.genObj);
+                    },
+					parse_cols(string_val){
 						var _self = this;
 						var _r = [];
 						var _arr = string_val.split('\n');
-						_.each(_arr,(name,idx)=>{
-							_r.push(_self.genObj(name,name,['@name']));
+						_.each(_arr,(val,idx)=>{
+                            let [one,two=null,three=""]= val.split('\t')
+							_r.push(_self.genObj(one,two,['@name']));
 						})
 						_self.grid_src = _r;
-					},
-					genObj(title,data,mock_ops){
-						//{ title: "Name" }
+                    },
+ 
+
+					genObj(title, data , data_val = ""){
+                        data = data ?? title;
+                        //let _val = eval(data_val);
+                        var mock_ops = _fn.mock_map[$.type(data_val)];
 						var _r = {
 							title,
 							data,
