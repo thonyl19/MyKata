@@ -296,6 +296,16 @@ let Views = {
 	}
 	return _obj;
   },
+  'Hide Column'() {
+	var _obj = Views.DataBase_Json(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 Hide 欄位(第0欄-id)</pre>`);
+	_obj._baseSet.columnDefs =  [
+		{
+			"targets": [ 0 ],
+			"visible": false
+		}
+	];
+	return _obj;
+  },
   x(){
 	var ops = {
 	  dom: 'Pfrtip',
