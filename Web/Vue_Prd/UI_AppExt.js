@@ -23,6 +23,16 @@ var _note = {
             "symbol":["@id"],
             "object":["@id"],
         },
+        /*
+        text:
+        json:......
+        fn:.......
+        radio:[-1,0,1...]
+        check:[-1,0,1...]
+        */
+        parse_Exten(val,note,input_ops){
+            Exten
+        },
         parse_cols(string_val,genObj,split=','){
             var _self = this;
             var _r = [];
@@ -606,7 +616,11 @@ var _note = {
                         Config:{
                             input_Code:'',
                             grid_Col:[],
-                            grid_Exten:[],
+                            grid_Exten:{
+                                // responsive:[true,'自適應折行'],
+                                // paging: false,
+			                    // fixedColumns: true,
+                            }
                         },
                         Mock:{
                             input_Code:'',
@@ -681,9 +695,19 @@ var _note = {
                         var _JsonCode = this.$UT.JsonCode(_cfg) 
                         this.$refs.cfg_Code.fn_ZipJson(_JsonCode);
                     },
-                    Exec_ConfigCode(){
+                    Exec_ConfigCode(JsonCode){
+                        if (!JsonCode.isObj) return;
+                        var _self = this;
+                        _self.tabC = "C1";
 
-
+                        //TODO:Exten
+                        let {columns=[]} = JsonCode.val;
+                        let _cols = [];
+                        _.each(columns,(el)=>{
+                            let {title,data} = el;
+                            _cols.push(_self.genObj(title,data));
+                        })
+                        _self.Config.grid_Col = _cols;
                     },
 					genObj(title, data , data_val = ""){
                         data = data ?? title;
