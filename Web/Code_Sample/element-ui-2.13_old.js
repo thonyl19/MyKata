@@ -741,6 +741,123 @@ let Vue_Prd = {
 		};
 		return _obj;
 	},
+	'*jdt-table'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<jdt-table :jdt_set="jdt_set" 
+						:jdt_data="jdt_data"
+						:act_item="act_item"
+						/>
+					<el-dialog width="50%"
+						:visible.sync="dialog_edit"
+						append-to-body>
+						{{jdt_data}}
+						<div class="form-horizontal gt-form">
+							<bts-grp-filed label="表單類型" v-model="dialog_edit_src.表單類型"></bts-grp-filed>
+							<bts-grp-filed label="表單代碼" v-model="dialog_edit_src.表單代碼"></bts-grp-filed>
+							<bts-grp-filed label="表單名稱" v-model="dialog_edit_src.表單名稱"></bts-grp-filed>
+							<bts-grp-filed label="檢驗對象" v-model="dialog_edit_src.檢驗對象"></bts-grp-filed>
+							<bts-grp-filed label="表單負責單位" v-model="dialog_edit_src.表單負責單位"></bts-grp-filed>
+						</div>
+						<div class="clearfix hidden-xs"></div>
+						</el-dialog>
+				</div>
+				`,
+				data(){
+					return {
+						dialog_edit:false,
+						dialog_edit_src:{},
+						jdt_set: {
+							"columns": [
+								{
+									"title": "表單類型",
+									"data": "表單類型",
+									"sTitle": "表單類型",
+									"mData": "表單類型"
+								},
+								{
+									"title": "表單代碼",
+									"data": "表單代碼",
+									"sTitle": "表單代碼",
+									"mData": "表單代碼"
+								},
+								{
+									"title": "表單名稱",
+									"data": "表單名稱",
+									"sTitle": "表單名稱",
+									"mData": "表單名稱"
+								},
+								{
+									"title": "檢驗對象",
+									"data": "檢驗對象",
+									"sTitle": "檢驗對象",
+									"mData": "檢驗對象"
+								},
+								{
+									"title": "表單負責單位",
+									"data": "表單負責單位",
+									"sTitle": "表單負責單位",
+									"mData": "表單負責單位"
+								}
+							],
+							"responsive": true,
+							"searching": false,
+							columnDefs: [
+								{
+									className: 'e_click', "targets": [1]
+									, createdCell(td, cellData, rowData, row, col) {
+										$(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
+									}
+								}
+							],
+						},
+						mock: {
+							"data|5": [
+								{
+									"表單類型|1": ["IPQC"],
+									"表單代碼|+1": ["@id"],
+									"表單名稱|+1": ["表單名稱A", "表單名稱A"],
+									"檢驗對象|1": ["LOT"],
+									"表單負責單位|+1": ["製造", "品管"]
+								}
+							]
+						}
+						,jdt_data:Mock.mock({"data|5": [
+							{
+								"表單類型|1": ["IPQC"],
+								"表單代碼|+1": ["@id"],
+								"表單名稱|+1": ["表單名稱A", "表單名稱A"],
+								"檢驗對象|1": ["LOT"],
+								"表單負責單位|+1": ["製造", "品管"]
+							}
+						]}).data
+					}
+				},
+				methods:{
+					act_item(filed, data) {
+						switch (filed) {
+							case "表單代碼":
+								let { 表單代碼 } = data;
+								let _item = _.find(this.jdt_data,(el)=>{return el.表單代碼 == 表單代碼});
+								console.log({_item});
+								this.dialog_edit = true;
+								this.dialog_edit_src = data;
+								break;
+						}
+					},
+				}
+			}
+		};
+		return _obj;
+	},
 }
 let Tool = {
 	'*def'() {

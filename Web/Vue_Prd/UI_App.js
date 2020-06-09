@@ -501,15 +501,37 @@
                         type: Array,
                         default: null
                     },
+                    act_item: {
+                        type: Function,
+                        default(filed, data) {
+                            console.log({ filed, data });
+                        }
+                    }
                 },
                 mounted() {
                     this.init();
                     this.load();
+                    
+                    var _self = this;
+                    var _jqDT = this.jqDT.DataTable();
+                    var _db_body = _jqDT.table();//.body(); // v3
+                    _db_body.on('click', '.e_click a', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        let _filed = _jqDT.column(this.offsetParent).dataSrc();
+                        var _data = _jqDT.row(this.offsetParent).data();
+                        _self.act_item(_filed, _data);
+                    });
                 },
                 watch:{
-                    jdt_data(val){
-                        this.ops.data = val;
-                        this.load();
+                    jdt_data:{
+                        handler(val, oldName) {
+                            this.ops.data = val;
+                            this.load();
+                        },
+                        // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
+                        immediate: false,
+                        deep: true
                     },
                 },
                 methods:{
