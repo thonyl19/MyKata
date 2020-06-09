@@ -75,19 +75,82 @@
         }
     }
 
+    var _base = {
+        JsonCode:{
+            v20200609(val,isZip=false){
+                var _r ={
+                    _:null,
+                    isObj:_.isPlainObject(val),
+                    isZip,
+                    get val(){
+
+                    },
+                    set val(o){
+                        this._ = o;
+                        try {
+                            if (_r.isObj==false && _.isString(val)){
+                                this._ = JSON.parse(val);
+                            }
+                        } catch (error) {
+                            
+                        }
+                        this.isObj = _.isPlainObject(this._);
+                    }
+                }
+                
+                return _r;
+            }
+        }
+    }
+
     var _UT = {
         JsonCode(val,isZip=false){
             var _r ={
-                isObj:false,
+                isObj:_.isPlainObject(val),
                 isZip,
                 val
             }
             try {
-                _r.val = JSON.parse(val);
-                _r.isObj = true;
+                if (_r.isObj==false && _.isString(val)){
+                    _r.val = JSON.parse(val);
+                    _r.isObj = true;
+                }
             } catch (error) {
                 
             }
+            return _r;
+        },
+        JsonCodeV2(val,isZip=false){
+            var _r ={
+                _:null,
+                isObj:false,
+                isZip,
+                get val(){
+                    return this._;
+                },
+                set val(o){
+                    this._ = o;
+                    try {
+                        if (_.isString(o)){
+                            this._ = JSON.parse(o);
+                            this._
+                        }
+                    } catch (error) {
+                        
+                    }
+                    this.isObj = _.isPlainObject(this._);
+                },
+                toJsonStr(isZip=this.isZip){
+                    if (this.isObj){
+                        var _r  = isZip
+                            ? JSON.stringify(this._)
+                            : JSON.stringify(this._,null,'\t');
+                        return _r;
+                    }
+                    return null;
+                }
+            }
+            _r.val = val;
             return _r;
         }
     }

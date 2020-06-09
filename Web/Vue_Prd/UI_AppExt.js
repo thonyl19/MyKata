@@ -60,7 +60,7 @@ var _note = {
                         <slot :JsonCode="JsonCode" :zip_json="zip_json" />
                         <el-checkbox v-model="zip_json" 
                             v-if="JsonCode.isObj" 
-                            @change="fn_ZipJson">zip_json</el-checkbox>
+                            @change="fn_ZipJson(JsonCode)">zip_json</el-checkbox>
                         <div style="position:relative">
                             <h5 v-if="JsonCode.isObj"><span class="label label-info" style="position:absolute;right:0px;z-index:999;opacity:0.7;">JsonType</span></h5>
                             <el-input type="textarea" v-model="Input_Src" />
@@ -115,16 +115,17 @@ var _note = {
                             var _act = this[name];
                             if (_.isFunction(_act)) this
                         },
-                        fn_ZipJson(){
-                            if (this.JsonCode.isObj){
+                        fn_ZipJson(JsonCode){
+                            debugger;
+                            if (JsonCode.isObj){
                                 this.Input_Src = this.zip_json
-                                    ? JSON.stringify(this.JsonCode.val)
-                                    : JSON.stringify(this.JsonCode.val,null,'\t');
+                                    ? JSON.stringify(JsonCode.val)
+                                    : JSON.stringify(JsonCode.val,null,'\t');
                             }
                         },
                         chk_Json(val){
                             //console.log({chk_Json:val});
-                            this.JsonCode = this.$UT.JsonCode(val);
+                            this.JsonCode = this.$UT.JsonCode(val,this.zip_json);
                             return this.JsonCode.isObj;
                         }
                     }
@@ -132,6 +133,96 @@ var _note = {
             return _obj;
         },
         
+        pw_input2() {
+            var _obj = {
+                    template: `
+                    <div>
+                        <el-button type="warning" size="small" round 
+                            v-if="SyncBack!=false" 
+                            @click="SyncBack(JsonCode)">SyncBack</el-button>
+                        <el-button type="success" size="small" round
+                            v-if="Exec!=false"  
+                            @click="Exec(JsonCode)">Exec</el-button>
+                        <el-button type="primary" size="small" round
+                            v-if="Renew!=false"  
+                            @click="Renew(zip_json)">重新產生數據</el-button>
+                        <slot :JsonCode="JsonCode" :zip_json="zip_json" />
+                        <el-checkbox v-model="zip_json" 
+                            v-if="JsonCode.isObj" 
+                            @change="fn_ZipJson(JsonCode)">zip_json</el-checkbox>
+                        <div style="position:relative">
+                            <h5 v-if="JsonCode.isObj"><span class="label label-info" style="position:absolute;right:0px;z-index:999;opacity:0.7;">JsonType</span></h5>
+                            <el-input type="textarea" v-model="Input_Src" />
+                        </div>
+                    </div>
+                    `,
+                    data(){
+                        return {
+                            _exec:{
+                                type:'info',
+                                fn(){}
+                            },
+                            zip_json:false,
+                            JsonCode:{
+                                isObj:false,
+                                val:null,
+                            }
+                        }
+                    },
+                    props:{
+                        value:{
+                            type:Object,
+                            default(){
+                                return {val};
+                            }
+                        },
+                        //沒設定則不顯示
+                        Exec:Vue.prototype.$PropDef.FunEnable(),
+                        /*
+                        v1:應考慮由原生 的 fun 中,做預設不切換為宜
+                        v0:預設的定義是,不會觸發頁籤切換行為 ,故而會傳入一個 false 
+                        */
+                        Renew:Vue.prototype.$PropDef.FunEnable(),
+                        SyncBack:Vue.prototype.$PropDef.FunEnable(),
+                        isJsonType:{
+                            type:Boolean,
+                            default:false
+                        }
+                    },
+                    computed:{
+                        Input_Src:{
+                            get(){
+                                return this.value;
+                            },
+                            set(val){
+                                this.chk_Json(val,this.zip_json);
+                                this.$emit('input',val);
+                            }
+                        },
+                        
+                    },
+                    methods:{
+                        act(name){
+                            var _act = this[name];
+                            if (_.isFunction(_act)) this
+                        },
+                        fn_ZipJson(JsonCode){
+                            debugger;
+                            if (JsonCode.isObj){
+                                this.Input_Src = this.zip_json
+                                    ? JSON.stringify(JsonCode.val)
+                                    : JSON.stringify(JsonCode.val,null,'\t');
+                            }
+                        },
+                        chk_Json(val){
+                            //console.log({chk_Json:val});
+                            this.JsonCode = this.$UT.JsonCode(val,this.zip_json);
+                            return this.JsonCode.isObj;
+                        }
+                    }
+            };
+            return _obj;
+        },
         /*
         把 pw_mock_cfg 另外再拆出來,主要是為了讓 pw_mock 可以更單純
             的被其他開發應用需求 調用.
@@ -466,11 +557,13 @@ var _note = {
 					<el-tab-pane label="Config" name="C">
 						<el-tabs v-model="tabC">
 							<el-tab-pane label="Code" name="C0">
-								<pw-input  :isJsonType="true"/>
+                                <pw-input ref="cfg_Code" v-model="Config.input_Code" 
+                                    :isJsonType="true" 
+                                    :Exec="Exec_ConfigCode" />
 							</el-tab-pane>
 							<el-tab-pane label="Columns" name="C1">
 								<el-table
-									:data="grid_src"
+									:data="Config.grid_Col"
 									style="width: 100%">
 									<el-table-column
 										prop="title"
@@ -510,9 +603,18 @@ var _note = {
 				`,
 				data(){
 					return {
+                        Config:{
+                            input_Code:'',
+                            grid_Col:[],
+                            grid_Exten:[],
+                        },
+                        Mock:{
+                            input_Code:'',
+                            input_Data:'',
+                        },
                         jdt_code:'',
-						grid_src:[],
 						input_val:'A\nB',
+                        input_ConfigCode:'',
 						row:{B:2,A:'A',C:new Date(),E:true,F:{}},
 						isMock:true,
 						tab:'B',
@@ -541,7 +643,13 @@ var _note = {
 								break;
 						}
 					},
-
+                    tabC(val){
+                        switch(val){
+                            case "C0":
+                                this.Act_ConfigCode();
+                                break;
+						}
+                    },
 					isMock(val){
 						if (val==false) this.mock = null;
 					}
@@ -554,28 +662,31 @@ var _note = {
 							this.tabB = "C1"	
 						} 
                         if (!JsonCode.val) return ;
-                        //let {parse_cols,parse_row} = _fn;
                         var _act = JsonCode.isObj
                                 ? _fn.parse_row
                                 : _fn.parse_cols
                                 ;
-                        this.grid_src = _act (JsonCode.val , this.genObj);
+                        this.Config.grid_Col = _act (JsonCode.val , this.genObj);
                     },
-					parse_cols(string_val){
-						var _self = this;
-						var _r = [];
-						var _arr = string_val.split('\n');
-						_.each(_arr,(val,idx)=>{
-                            let [one,two=null,three=""]= val.split('\t')
-							_r.push(_self.genObj(one,two,['@name']));
-						})
-						_self.grid_src = _r;
+                    Act_ConfigCode(){
+                        if (this.Config.input_Code!='') return ;
+                        var _cfg = {
+                            columns:[]
+                        };
+                        //TODO:Exten
+                        _.each(this.Config.grid_Col,(el)=>{
+                            let {title,data}=el;
+                            _cfg.columns.push({title,data});
+                        })
+                        var _JsonCode = this.$UT.JsonCode(_cfg) 
+                        this.$refs.cfg_Code.fn_ZipJson(_JsonCode);
                     },
- 
+                    Exec_ConfigCode(){
 
+
+                    },
 					genObj(title, data , data_val = ""){
                         data = data ?? title;
-                        //let _val = eval(data_val);
                         var mock_ops = _fn.mock_map[$.type(data_val)];
 						var _r = {
 							title,
@@ -605,25 +716,6 @@ var _note = {
 							_r = this.$refs.pw_mock.genMockData(true);
 						}
 						this.jdt_data = JSON.parse(_r);
-						this.tab = "C";
-					},
-					fn_quick(){
-						this.jdt_set = null;
-						this.auto_col = this.val.split('\n');
-						if (this.isMock){
-							var _obj = {};
-							_.each(this.auto_col,(el)=>{
-								_obj[`${el}|+1`] = ['@name','@id','@integer(60, 100)','@@datetime'];
-							});
-							this.mock = {'data|5': [ _obj]};
-							this.MockCode = JSON.stringify(this.mock,null,'\t');
-						}
-						this.tab = "C";
-					},
-					fn_simple(arg){
-						this.auto_col = null
-						this.jdt_set = JSON.parse(arg);
-						this.$refs.jqDT.Render(this.jdt_set);
 						this.tab = "C";
 					},
 					fn_Ops(isZip=false){
