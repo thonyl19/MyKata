@@ -31,7 +31,7 @@ var _note = {
         check:[-1,0,1...]
         */
         parse_Exten(val,note,input_ops){
-            Exten
+            //Exten
         },
         parse_cols(string_val,genObj,split=','){
             var _self = this;
@@ -53,7 +53,23 @@ var _note = {
             })
             return _r;
         },
-
+        simple_tpl(template,immediate=false){
+            var _vue = {
+                template,
+                props:['value'],
+				watch:{
+					value:{
+						handler(val, oldName) {
+                            this.$emit('input',val);
+                        },
+                        deep: true,
+                        immediate,
+					}
+				}
+            }
+            return _vue;
+        },
+        
         pw_input() {
             var _obj = {
                     template: `
@@ -66,11 +82,11 @@ var _note = {
                             @click="Exec(JsonCode)">Exec</el-button>
                         <el-button type="primary" size="small" round
                             v-if="Renew!=false"  
-                            @click="Renew(zip_json)">重新產生數據</el-button>
-                        <slot :JsonCode="JsonCode" :zip_json="zip_json" />
-                        <el-checkbox v-model="zip_json" 
+                            @click="Renew(JsonCode.isZip)">重新產生數據</el-button>
+                        <slot :JsonCode="JsonCode" />
+                        <el-checkbox v-model="JsonCode.isZip" 
                             v-if="JsonCode.isObj" 
-                            @change="fn_ZipJson(JsonCode)">zip_json</el-checkbox>
+                            @change="Input_Src=JsonCode.toJsonStr()">zip_json</el-checkbox>
                         <div style="position:relative">
                             <h5 v-if="JsonCode.isObj"><span class="label label-info" style="position:absolute;right:0px;z-index:999;opacity:0.7;">JsonType</span></h5>
                             <el-input type="textarea" v-model="Input_Src" />
@@ -83,11 +99,7 @@ var _note = {
                                 type:'info',
                                 fn(){}
                             },
-                            zip_json:false,
-                            JsonCode:{
-                                isObj:false,
-                                val:null,
-                            }
+                            JsonCode:Vue.prototype.$UT.JsonCode(null)
                         }
                     },
                     props:{
@@ -102,19 +114,16 @@ var _note = {
                         */
                         Renew:Vue.prototype.$PropDef.FunEnable(),
                         SyncBack:Vue.prototype.$PropDef.FunEnable(),
-                        isJsonType:{
-                            type:Boolean,
-                            default:false
-                        }
+
                     },
                     computed:{
                         Input_Src:{
                             get(){
-                                this.chk_Json(this.value,this.zip_json);
+                                this.chk_Json(this.value);
                                 return this.value;
                             },
                             set(val){
-                                this.chk_Json(val,this.zip_json);
+                                this.chk_Json(val);
                                 this.$emit('input',val);
                             }
                         },
@@ -126,7 +135,7 @@ var _note = {
                             if (_.isFunction(_act)) this
                         },
                         fn_ZipJson(JsonCode){
-                            debugger;
+                            //請改用 JsonCode.toJsonStr() 先保留 ,日後會移除 
                             if (JsonCode.isObj){
                                 this.Input_Src = this.zip_json
                                     ? JSON.stringify(JsonCode.val)
@@ -135,140 +144,29 @@ var _note = {
                         },
                         chk_Json(val){
                             //console.log({chk_Json:val});
-                            this.JsonCode = this.$UT.JsonCode(val,this.zip_json);
+                            this.JsonCode = this.$UT.JsonCode(val,this.JsonCode.isZip);
                             return this.JsonCode.isObj;
                         }
                     }
             };
             return _obj;
         },
-        
-        pw_input2() {
-            var _obj = {
-                    template: `
-                    <div>
-                        <el-button type="warning" size="small" round 
-                            v-if="SyncBack!=false" 
-                            @click="SyncBack(JsonCode)">SyncBack</el-button>
-                        <el-button type="success" size="small" round
-                            v-if="Exec!=false"  
-                            @click="Exec(JsonCode)">Exec</el-button>
-                        <el-button type="primary" size="small" round
-                            v-if="Renew!=false"  
-                            @click="Renew(zip_json)">重新產生數據</el-button>
-                        <slot :JsonCode="JsonCode" :zip_json="zip_json" />
-                        <el-checkbox v-model="zip_json" 
-                            v-if="JsonCode.isObj" 
-                            @change="fn_ZipJson(JsonCode)">zip_json</el-checkbox>
-                        <div style="position:relative">
-                            <h5 v-if="JsonCode.isObj"><span class="label label-info" style="position:absolute;right:0px;z-index:999;opacity:0.7;">JsonType</span></h5>
-                            <el-input type="textarea" v-model="Input_Src" />
-                        </div>
-                    </div>
-                    `,
-                    data(){
-                        return {
-                            _exec:{
-                                type:'info',
-                                fn(){}
-                            },
-                            zip_json:false,
-                            JsonCode:{
-                                isObj:false,
-                                val:null,
-                            }
-                        }
-                    },
-                    props:{
-                        value:{
-                            type:Object,
-                            default(){
-                                return {val};
-                            }
-                        },
-                        //沒設定則不顯示
-                        Exec:Vue.prototype.$PropDef.FunEnable(),
-                        /*
-                        v1:應考慮由原生 的 fun 中,做預設不切換為宜
-                        v0:預設的定義是,不會觸發頁籤切換行為 ,故而會傳入一個 false 
-                        */
-                        Renew:Vue.prototype.$PropDef.FunEnable(),
-                        SyncBack:Vue.prototype.$PropDef.FunEnable(),
-                        isJsonType:{
-                            type:Boolean,
-                            default:false
-                        }
-                    },
-                    computed:{
-                        Input_Src:{
-                            get(){
-                                return this.value;
-                            },
-                            set(val){
-                                this.chk_Json(val,this.zip_json);
-                                this.$emit('input',val);
-                            }
-                        },
-                        
-                    },
-                    methods:{
-                        act(name){
-                            var _act = this[name];
-                            if (_.isFunction(_act)) this
-                        },
-                        fn_ZipJson(JsonCode){
-                            debugger;
-                            if (JsonCode.isObj){
-                                this.Input_Src = this.zip_json
-                                    ? JSON.stringify(JsonCode.val)
-                                    : JSON.stringify(JsonCode.val,null,'\t');
-                            }
-                        },
-                        chk_Json(val){
-                            //console.log({chk_Json:val});
-                            this.JsonCode = this.$UT.JsonCode(val,this.zip_json);
-                            return this.JsonCode.isObj;
-                        }
-                    }
-            };
-            return _obj;
-        },
+
         /*
         把 pw_mock_cfg 另外再拆出來,主要是為了讓 pw_mock 可以更單純
             的被其他開發應用需求 調用.
         */
         pw_mock_cfg(){
             var _obj = {
+                    components:{'pw-mock-cfg-col':_fn.pw_mock_cfg_col()},
                     template: `
                     <el-tabs :type="tab_type" v-model="tab">
                         <el-tab-pane label="Input" name="A" v-if="Input_show">
                             <pw-input v-model="Input" :Exec="GenConfig" />
                         </el-tab-pane>
                         <el-tab-pane label="Config" name="B">
-                        <el-button type="danger" size="small" round @click="RestMockCode">RestMockCode</el-button>
-                            <el-table
-                                :data="tableData"
-                                style="width: 100%">
-                                <el-table-column
-                                    prop="name"
-                                    label="欄位名稱"
-                                    width="180">
-                                </el-table-column>
-                                <el-table-column
-                                    label="選項"
-                                    >
-                                    <template slot-scope="scope">
-                                        {{ scope.row.ops }}
-                                    </template>
-                                </el-table-column>
-                                <el-table-column
-                                    label="demo"
-                                    width="250">
-                                    <template slot-scope="scope">
-                                        <span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
-                                    </template>
-                                </el-table-column>
-                            </el-table>
+                            <el-button type="danger" size="small" round @click="RestMockCode">RestMockCode</el-button>
+                            <pw-mock-cfg-col v-model="tableData" />
                         </el-tab-pane>
                         <el-tab-pane label="Mock" name="C" >
                             <el-tabs v-model="tabC">
@@ -356,22 +254,7 @@ var _note = {
                             tabC:"C1",
                             data_zip:false,
                             mock_zip:false,
-                            tableData:[
-                                {
-                                    name:"A",
-                                    ops:['@name'],
-                                    demo:'test',
-                                    get code(){
-                                        var _code = {};
-                                        _code[`${this.name}|+1`] = this.ops;
-                                        return _code;
-                                    },
-                                    mock(){
-                                        this.demo = Mock.mock(this.code)[this.name];
-                                        return this.demo;
-                                    }
-                                }
-                            ]
+                            tableData:[]
                             ,MockCode:''
                             ,MockData:''
                             ,Input_Src:'A\nB'
@@ -416,11 +299,11 @@ var _note = {
                                 this.tabC = "C1"	
                             } 
                             if (!JsonCode.val) return ;
-                            if (JsonCode.isObj){
-                                this.parse_row(JsonCode.val);
-                            }else{
-                                this.parse_cols(JsonCode.val);
-                            }
+                            let _act = JsonCode.isObj
+                                ? _fn.parse_row
+                                : _fn.parse_cols
+                                ;
+                            _act(JsonCode.val,this.genObj);
                         },
                         renew_MockCode(isChgTab=false){
                             //if (isChgTab) this.tab = "B";
@@ -455,19 +338,27 @@ var _note = {
                             return null;
                         },
                         genMockCode(toSting=false,isZip=false){
+                            return this.parse_MockCode
+                                    (this.tableData,
+                                    toSting,
+                                    isZip);
+                        },
+                        parse_MockCode(ColObj,toSting,isZip = this.o_MockCode){
                             var _obj = {};
-                            _.each(this.tableData,(item)=>{
-                                _obj = _.merge(_obj,item.code);
+                            _.each(ColObj,(item)=>{
+                                let {code={}} = item;
+                                _obj = _.merge(_obj,code);
                             })
                             var _mockCode = {'data|5':[_obj]};
                             if (toSting){
-                                var _code = isZip
+                                var _code = this.o_MockCode.isZip
                                     ? JSON.stringify(_mockCode)
                                     : JSON.stringify(_mockCode,null,'\t');
                                 return _code;
                             }
                             return _mockCode;
                         },
+
                         SyncBack_Config(JsonType,isChgTab=true){
                             if (isChgTab){
                                 this.tab = "B";
@@ -490,7 +381,7 @@ var _note = {
                             }
                         },
     
-                        genObj(name,ops){
+                        genObj(name,pass,ops){
                             var _r = {
                                 name,
                                 ops,
@@ -517,18 +408,45 @@ var _note = {
                             _self.tableData = _r;
                         },
      
-                        parse_row(jsonObj){
-                            var _self = this;
-                            var _r = [];
-                            _.each(jsonObj,(val,name)=>{
-                                var ops = _self.map[$.type(val)];
-                                _r.push(_self.genObj(name,ops));
-                            })
-                            _self.tableData = _r;
-                        }
+                        // parse_row(jsonObj){
+                        //     var _self = this;
+                        //     var _r = [];
+                        //     _.each(jsonObj,(val,name)=>{
+                        //         var ops = _self.map[$.type(val)];
+                        //         _r.push(_self.genObj(name,ops));
+                        //     })
+                        //     _self.tableData = _r;
+                        // }
                     }
             };
             return _obj;
+        },
+        pw_mock_cfg_col(){
+            return _fn.simple_tpl(`
+                <el-table
+                    :data="value"
+                    style="width: 100%">
+                    <el-table-column
+                        prop="name"
+                        label="欄位名稱"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        label="選項"
+                        >
+                        <template slot-scope="scope">
+                            {{ scope.row.ops }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="demo"
+                        width="250">
+                        <template slot-scope="scope">
+                            <span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            `);
         },
         pw_mock(){
             var _obj = {
@@ -555,6 +473,9 @@ var _note = {
         },
         jdt_table_cfg(){
             var _vue = {
+                components:{
+                    'jdt-table-cfg-col': _fn.jdt_table_cfg_col()
+                },
 				template: `
                 <el-tabs v-model="tab" type="border-card">
                     <el-tab-pane label="Note" name="A">
@@ -562,51 +483,27 @@ var _note = {
 					</el-tab-pane>
 					<el-tab-pane label="Input" name="B">
                         <pw-input v-model="input_val" :Exec="GenConfig"/>
-                        
 					</el-tab-pane>
 					<el-tab-pane label="Config" name="C">
 						<el-tabs v-model="tabC">
 							<el-tab-pane label="Code" name="C0">
                                 <pw-input ref="cfg_Code" v-model="Config.input_Code" 
-                                    :isJsonType="true" 
-                                    :Exec="Exec_ConfigCode" />
+                                    :Exec="Exec_ConfigCode"
+                                    :Renew="()=>{Config.input_Code='';Act_ConfigCode();}"
+                                    />
 							</el-tab-pane>
-							<el-tab-pane label="Columns" name="C1">
-								<el-table
-									:data="Config.grid_Col"
-									style="width: 100%">
-									<el-table-column
-										prop="title"
-										label="欄位名稱"
-										width="180">
-									</el-table-column>
-									<el-table-column
-										prop="data"
-										label="對應欄位"
-										/>
-									<el-table-column
-										label="Mock選項"
-										>
-										<template slot-scope="scope">
-											{{ scope.row.mock_ops }}
-										</template>
-									</el-table-column>
-									<el-table-column
-										label="demo"
-										width="250">
-										<template slot-scope="scope">
-											<span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
-										</template>
-									</el-table-column>
-								</el-table>
+                            <el-tab-pane label="Columns" name="C1">
+                                <jdt-table-cfg-col v-model="Config.grid_Col" />
 							</el-tab-pane>
 							<el-tab-pane label="Exten" name="C2">
-								<pw-input  :isJsonType="true"/>
+                                <pw-input v-model="Config.Exten" />
 							</el-tab-pane>
 						</el-tabs>
 					</el-tab-pane>
 					<el-tab-pane label="Mock" name="D" >
-						<pw-mock tab_type="" />
+                        <pw-mock tab_type="" ref="oMock"
+                            :input_src.sync="Mock.Code"
+                            :mock.sync="Mock.Data" />
 					</el-tab-pane>
 				</el-tabs>
 					
@@ -616,16 +513,16 @@ var _note = {
                         Config:{
                             input_Code:'',
                             grid_Col:[],
-                            grid_Exten:{
-                                // responsive:[true,'自適應折行'],
-                                // paging: false,
-                                // fixedColumns: true,
-                                //ordering
-                            }
+                            Exten:`{
+                                "responsive":true,
+                                "paging": false,
+                                "fixedColumns": true,
+                                "ordering":true
+                            }`
                         },
                         Mock:{
-                            input_Code:'',
-                            input_Data:'',
+                            Code:'',
+                            Data:'',
                         },
                         jdt_code:'',
 						input_val:'A\nB',
@@ -651,7 +548,7 @@ var _note = {
                                 //if (this.jdt_code !="") 
                                 break;
 							case "D":
-								if (this.Ops == null || this.Ops == "") this.fn_Ops();
+								this.Act_MockData();
 								break;
 							case "E":
 								this.fn_Code();
@@ -683,17 +580,21 @@ var _note = {
                                 ;
                         this.Config.grid_Col = _act (JsonCode.val , this.genObj);
                     },
-                    Act_ConfigCode(){
+                    Act_ConfigCode(zip_json=false){
+                        debugger
                         if (this.Config.input_Code!='') return ;
                         var _cfg = {
                             columns:[]
                         };
-                        //TODO:Exten
                         _.each(this.Config.grid_Col,(el)=>{
                             let {title,data}=el;
                             _cfg.columns.push({title,data});
                         })
-                        var _JsonCode = this.$UT.JsonCode(_cfg) 
+                        var _ext_JsonCode = this.$UT.JsonCode(this.Config.Exten);
+                        if (_ext_JsonCode.isObj){
+                            _cfg = _.merge(_cfg,_ext_JsonCode.val);
+                        }
+                        var _JsonCode = this.$UT.JsonCode(_cfg,zip_json) 
                         this.$refs.cfg_Code.fn_ZipJson(_JsonCode);
                     },
                     Exec_ConfigCode(JsonCode){
@@ -701,7 +602,7 @@ var _note = {
                         var _self = this;
                         _self.tabC = "C1";
 
-                        //TODO:Exten
+                        //TODO:Exten - 先不處理回溯的功能
                         let {columns=[]} = JsonCode.val;
                         let _cols = [];
                         _.each(columns,(el)=>{
@@ -709,6 +610,26 @@ var _note = {
                             _cols.push(_self.genObj(title,data));
                         })
                         _self.Config.grid_Col = _cols;
+                    },
+                    Act_MockData(){
+                        debugger
+                        if ((!this.Mock.Data)==false) return ;
+                        if (this.Mock.Code==""){
+                            var _code = this.gen_MockCode();
+                            // this.renew_MockCode
+                            //     (this.o_MockData.zip_json
+                            //     ,false);
+                            // //issue:沒這麼處理,會造成 mockdata 產生異常
+                            // this.o_MockCode.chk_Json(this.MockCode);
+                        }
+                        this.renew_MockData();
+                    },
+                    renew_MockCode(){
+
+                    },
+                    gen_MockCode(){
+                        debugger;
+                        return this.$refs.oMock.parse_MockCode(this.Config.grid_Col);
                     },
 					genObj(title, data , data_val = ""){
                         data = data ?? title;
@@ -759,11 +680,78 @@ var _note = {
 				}
             }
             return _vue;
-        }
+        },
+        jdt_table_cfg_col(){
+            return _fn.simple_tpl(
+                `<el-table
+                    :data="value"
+                    style="width: 100%">
+                    <el-table-column
+                        prop="title"
+                        label="欄位名稱"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="data"
+                        label="對應欄位"
+                        />
+                    <el-table-column
+                        label="Mock選項"
+                        >
+                        <template slot-scope="scope">
+                            {{ scope.row.mock_ops }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="demo"
+                        width="250">
+                        <template slot-scope="scope">
+                            <span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                `);
+        },
+        jdt_table_cfg_ext(){
+            /*
+            responsive:[true,'自適應折行'],
+            paging: false,
+            fixedColumns: true,
+            ordering
+                                */
+            return _fn.simple_tpl( `
+                <el-table
+                    :data="value"
+                    style="width: 100%">
+                    <el-table-column
+                        prop="title"
+                        label="欄位名稱"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="data"
+                        label="對應欄位"
+                        />
+                    <el-table-column
+                        label="Mock選項"
+                        >
+                        <template slot-scope="scope">
+                            {{ scope.row.mock_ops }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                        label="demo"
+                        width="250">
+                        <template slot-scope="scope">
+                            <span class="" @click="scope.row.mock()">{{ scope.row.demo }}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                `);
+        },
     }
     Vue.component('pw-input', _fn.pw_input());
     Vue.component('pw-mock', _fn.pw_mock());
     Vue.component('pw-mock-cfg', _fn.pw_mock_cfg());
     Vue.component('jdt-table-cfg', _fn.jdt_table_cfg());
-
 }));

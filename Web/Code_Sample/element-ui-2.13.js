@@ -741,7 +741,7 @@ let Vue_Prd = {
 		};
 		return _obj;
 	},
-	'*jdt-table'() {
+	'jdt-table'() {
 		var _note = `
 		<pre>
 		</pre>
@@ -869,16 +869,11 @@ let Vue_Prd = {
 }
 let Tool = {
 	'*jdt-table-cfg'() {
-		var _note = `
-		<pre>
-		</pre>
-		`;
 		var _obj = {
 			_css:``,
 			_vue: {
 				template: `
 				<div>
-					${_note}
 					<jdt-table-cfg></jdt-table-cfg>
 				</div>
 				`,

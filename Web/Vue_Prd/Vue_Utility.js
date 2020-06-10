@@ -108,7 +108,15 @@
             var _r ={
                 isObj:_.isPlainObject(val),
                 isZip,
-                val
+                val,
+                toJsonStr(isZip=this.isZip){
+                    if (this.isObj){
+                        return  isZip
+                            ? JSON.stringify(this.val)
+                            : JSON.stringify(this.val,null,'\t');
+                    }
+                    return null;
+                }
             }
             try {
                 if (_r.isObj==false && _.isString(val)){
