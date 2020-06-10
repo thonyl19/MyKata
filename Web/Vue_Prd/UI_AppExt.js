@@ -619,7 +619,8 @@ var _note = {
                             grid_Exten:{
                                 // responsive:[true,'自適應折行'],
                                 // paging: false,
-			                    // fixedColumns: true,
+                                // fixedColumns: true,
+                                //ordering
                             }
                         },
                         Mock:{

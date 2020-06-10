@@ -752,13 +752,29 @@ let Vue_Prd = {
 				template: `
 				<div>
 					${_note}
+					{{jdt_data}}
 					<jdt-table :jdt_set="jdt_set" 
-						:jdt_data="mock_data" />
+						:jdt_data="jdt_data"
+						:act_item="act_item" />
+						<el-dialog width="50%"
+						:visible.sync="dialog_edit"
+						append-to-body>
+						
+					<div class="form-horizontal gt-form">
+							<bts-grp-filed label="表單類型" v-model="dialog_edit_src.表單類型"></bts-grp-filed>
+							<bts-grp-filed label="表單代碼" v-model="dialog_edit_src.表單代碼"></bts-grp-filed>
+							<bts-grp-filed label="表單名稱" v-model="dialog_edit_src.表單名稱"></bts-grp-filed>
+							<bts-grp-filed label="檢驗對象" v-model="dialog_edit_src.檢驗對象"></bts-grp-filed>
+							<bts-grp-filed label="表單負責單位" v-model="dialog_edit_src.表單負責單位"></bts-grp-filed>
+						</div>
+						<div class="clearfix hidden-xs"></div>
+						</el-dialog>
 				</div>
 				`,
 				data(){
 					return {
-						jdt_set:{},
+						dialog_edit:false,
+						dialog_edit_src:{},
 						jdt_set: {
 							"columns": [
 								{
@@ -792,6 +808,7 @@ let Vue_Prd = {
 									"mData": "表單負責單位"
 								}
 							],
+							"ordering": false,
 							"responsive": true,
 							"searching": false,
 							columnDefs: [
@@ -814,6 +831,15 @@ let Vue_Prd = {
 								}
 							]
 						}
+						,jdt_data:Mock.mock({"data|5": [
+							{
+								"表單類型|1": ["IPQC"],
+								"表單代碼|+1": ["@id"],
+								"表單名稱|+1": ["表單名稱A", "表單名稱A"],
+								"檢驗對象|1": ["LOT"],
+								"表單負責單位|+1": ["製造", "品管"]
+							}
+						]}).data
 					}
 				},
 				computed:{
@@ -822,6 +848,19 @@ let Vue_Prd = {
 						console.log(x);
 						return x;
 					}
+				},
+				methods:{
+					act_item(filed, data) {
+						switch (filed) {
+							case "表單代碼":
+								let { 表單代碼 } = data;
+								let _item = _.find(this.jdt_data,(el)=>{return el.表單代碼 == 表單代碼});
+								console.log({_item});
+								this.dialog_edit = true;
+								this.dialog_edit_src = _item;
+								break;
+						}
+					},
 				}
 			}
 		};
