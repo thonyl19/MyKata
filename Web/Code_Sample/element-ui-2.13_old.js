@@ -636,7 +636,7 @@ var Row = {
 }
 
 let Vue_Prd = {
-  	'bts-grp-filed'() {
+  	'*bts-grp-filed'() {
 	  var _note = `
 		 <pre>bts-grp-filed 的用例
 		 1.基本型

@@ -4,6 +4,74 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 
 let Views = {
+	'巢狀 el-tabs 範例'() {
+		var _note = `
+		   <pre>
+		   此範例為 pw-tabs poc ,
+		   </pre>
+		   `;
+		var dyn = {
+			template:`
+				<el-tabs>
+                        <el-tab-pane
+                            v-for="(tab,key,idx) in tabs" 
+                            :label="key" 
+                            :name="key" 
+                            :key="idx"
+                            >
+                            <component
+                                v-model="tabs[key]"
+                                :is="tab.is"
+                                />
+                        </el-tab-pane>
+                    </el-tabs>
+			`,
+			props:['value'],
+			computed:{
+				tabs(){
+					let {tabs=[]} = this.value;
+					return tabs;
+				},
+			},
+		};
+		var _obj = {
+			_css:``,
+			_vue: {
+				components:{'pw-tabs-z':dyn},
+				template: `
+					<div>
+					${_note}
+					<pw-tabs-z v-model="tabs1" />
+					<pw-tabs-z v-model="tabs2" />
+					</div>
+				`,
+				data(){
+					return {
+						tabs1:{
+							tabs:{
+								Input:{},
+								Config:{},
+							}
+						}
+						,tabs2:{
+							tabs:{
+								Input:{},
+								Config:{
+									is:'pw-tabs',
+									tabs:{
+										AAAAA:{},
+										BBBB:{},
+									}
+								},
+							}
+						}
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
+
   "自定義 el-select 項目圖示"() {
 	var _css = `
 			img {
@@ -636,6 +704,43 @@ var Row = {
 }
 
 let Vue_Prd = {
+	'power_form_el_options'() {
+		var _note = `
+		   	<pre>
+		   	演示以 power_form_el_options 為基礎,所實作出的 
+			   pw-el-checkbox
+			   pw-el-radio
+		   	</pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					{{cfg}}
+					<pw-el-checkbox v-model="cfg"/>
+					{{cfg1}}
+					<pw-el-radio-pw v-model="cfg1"/>
+					</div>
+				`,
+				data(){
+					return {
+						cfg:{
+							ops:['A','B'],
+							//必須設為 array 型別才能正確取得值
+							value:[]
+						},
+						cfg1:{
+							ops:['A','B'],
+							value:[]
+						}
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
   	'bts-grp-filed'() {
 	  var _note = `
 		 <pre>bts-grp-filed 的用例
@@ -710,8 +815,9 @@ let Vue_Prd = {
 				//<power-form-el :form_base="form_base" /> 
 				template: `
 				<div>
-					${_note}
-					<power-form-bts :form_base="form_base"  />
+				${_note}
+					<power-form-bts-ext :quick="quick"  />
+					<power-form-bts-ext :form_base="form_base"  />
 				</div>
 				`,
 				data(){
@@ -868,7 +974,153 @@ let Vue_Prd = {
 	},
 }
 let Tool = {
-	'*jdt-table-cfg'() {
+	'def'() {
+		var _note = `
+		   <pre>
+
+		   </pre>
+		   `;
+		var _obj = {
+			_css:`
+			.el-row.ext {
+				margin-bottom: 20px;
+				margin-right:3px !important;
+				border: #ccc 1px solid;
+				border-radius: 4px;
+			}
+			.el-col {
+				border-radius: 4px;
+			}
+
+			.grid-content {
+				border-radius: 4px;
+				min-height: 36px;
+				border: #ccc 1px solid;
+			}
+			
+			.el-row.ext .el-button-group{
+				display:none;
+			}
+			.el-row.ext:hover   .el-button-group{
+				display: inline-block;;
+			}
+			.el-button-group.ext{
+				position:absolute;
+				left:.7rem;
+				top:-3.1rem;
+				padding: 0 .7rem .7rem 0;
+				width:50%;
+				opacity:0.25;
+			}
+			.el-button-group.ext:hover{
+				opacity:1 !important;
+			}
+			.el-button-group.ext .el-button{
+				padding: 7px;
+			}
+
+			`,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					<el-row class="ext" :gutter="3"style="position:relative;">
+						<el-button-group class="ext" >
+							<el-button type="primary" icon="el-icon-circle-plus" @click="Add"></el-button>
+							<el-button type="primary" icon="el-icon-s-tools"></el-button>
+						</el-button-group>
+						<el-col :span="item.A" v-for="(item) in list" >
+							<div class="grid-content bg-purple">{{item.A}}</div>
+						</el-col>
+						<br/>
+					</el-row>
+					</div>
+				`,
+				data(){
+					return {
+						list:[],
+					}
+				},
+				methods:{
+					Add(){
+						this.list.push({A:4});
+					}
+				} 
+			}
+		};
+		return _obj;
+	},
+	'*def'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		/*
+		*/
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					{{tabs1}}
+					<pw-tabs v-model="tabs1"></pw-tabs>
+					{{tabs2}}
+					<pw-tabs v-model="tabs2"></pw-tabs>
+					
+					</div>
+				`,
+				data(){
+					return {
+						tabs1:{
+							tabs:{
+								Input:{
+									is:'pw-input'
+								},
+								Config:{},
+							}
+						}
+						,tabs2:{
+							tabs:{
+								InputA:{},
+								ConfigA:{
+									is:'pw-tabs',
+									tabs:{
+										AAAAA:{},
+										BBBB:{},
+									}
+								},
+							}
+						}
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
+	'power-form-cfg'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					<power-form-cfg></power-form-cfg>
+					</div>
+				`,
+				data(){
+					return {
+					}
+				} 
+			}
+		};
+		return _obj;
+	},
+	'jdt-table-cfg'() {
 		var _obj = {
 			_css:``,
 			_vue: {

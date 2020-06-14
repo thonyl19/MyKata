@@ -83,6 +83,41 @@ let API = {
 
 }
 var Views = {
+    '*dblclick'() {
+		var _note = `
+           <pre>
+            實現 dblclick 的功能,這裡碰到了以下幾個問題
+            1.當如果使用 原生 Html Tag 時, 必須使用 v-on:dblclick ,
+                如果用 v-on:dblclick.native 就會在 console 出現 的異常
+                The .native modifier for v-on is only valid on components but it was used on <span>.
+            2.但如果是要在經過 封裝後的 components 物件,就必得用 v-on:dblclick.native
+            總結來說, v-on:dblclick 是可以 work 的,但只能用在 原生的 html tag ,
+                就是因為如此,所以 components 要用就得加上 native
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+						<span v-on:dblclick.native="add">{{counts}}</span>
+					</div>
+				`,
+				data(){
+					return {
+						counts:0
+					}
+				},
+				methods:{
+					add(){
+						this.counts++;
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
     '.number .lazy'() {
         //https://medium.com/pierceshih/vue-js-%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-day2-v-model%E8%B3%87%E6%96%99%E9%9B%99%E5%90%91%E7%B6%81%E5%AE%9A-9d54a82e23e5
        var _note = `

@@ -719,7 +719,7 @@ let Case = {
 		};
 		return _obj;
 	},
-	'*percentage-circle-1'() {
+	'percentage-circle-1'() {
 		var _note = `
 		   <pre>
 		   待完成,預計以迴圈的方式,將 p?? 組成陣列字組,
@@ -984,6 +984,116 @@ let Layout = {
 	 return _obj;
   },
 }
+var Position = {
+	'*浮動工具'() {
+		var _note = `
+		   <pre>
+		   實現 浮動 toolbox 基礎和 動態調試的功能 
+		   </pre>
+		   `;
+		var _obj = {
+			_css:`
+			.base {
+				position:relative;
+				margin-bottom: 20px;
+				margin-right:3px !important;
+				border: #ccc 1px solid;
+				border-radius: 4px;
+				height:5em;
+			}
+ 
+			
+			.base.ext .toolbox.hide{
+				display:none;
+			}
+			.base.ext:hover .toolbox{
+				display: inline-block;;
+			}
+			.toolbox{
+				border: #ccc 1px solid;
+				height:3em;
+				position:absolute;
+				/*
+				left:.7rem;
+				top:-3.1rem;*/
+				padding: 0 .7rem .7rem 0;
+				/*避免移動時產生自動隱藏的issue*/
+				width:50%;
+				opacity:1;
+				z-index:-1;
+			}
+			.toolbox:hover{
+				opacity:1 !important;
+			}
+			.toolbox  {
+				padding: 7px;
+			}
+			
+			`,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					<div class="base ext">
+						<div class="toolbox" :class="[class_hide]" :style="sty_pos">
+							
+						</div>
+						[hide]<input type="checkbox" v-model="hide" /><br/>
+						<div>
+							<input type="text" v-model="pos1.val" />
+							<span v-for="op in pos1.ops" >
+								<input type="radio" v-model="pos1.checked" 
+									:value="op" 
+									:checked="pos1.checked==op"  />
+								{{op}}
+								</span>
+						</div>
+						<div>
+							<input type="text" v-model="pos2.val" />
+							<span v-for="op in pos2.ops" >
+								<input type="radio" v-model="pos2.checked" 
+									:value="op" 
+									:checked="pos2.checked==op"  />
+								{{op}}
+								</span>
+						</div>
+						[sty_pos]{{sty_pos}}
+					</div>
+					</div>
+				`,
+				data(){
+					return {
+						hide:false,
+						pos1:{
+							ops:['left','right'],
+							checked:"left",
+							val:'.7rem'
+						},
+						pos2:{
+							ops:['top','bottom'],
+							checked:"top",
+							val:'-3.1rem'
+						}
+					}
+				},
+				computed:{
+					class_hide(){
+						return this.hide?"":"hide";
+					},
+					sty_pos(){
+						var _css = {}
+						_css[this.pos1.checked]=this.pos1.val;
+						_css[this.pos2.checked]=this.pos2.val;
+						return _css;
+					}
+				} 
+			}
+		};
+		return _obj;
+	},
+
+}
+
 window.sample = { views ,
-  Case,Table,Layout
+  Case,Table,Layout,Position
 };

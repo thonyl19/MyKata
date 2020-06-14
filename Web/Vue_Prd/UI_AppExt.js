@@ -23,6 +23,16 @@ var _note = {
             "symbol":["@id"],
             "object":["@id"],
         },
+        FiledMap:{
+            old:{
+                input:'input',
+                select:'el-select',
+                checkbox:'el-checkbox',
+                radio:'el-radio',
+                date:'el-date-picker',
+                textarea:'el-input-pw-ext',
+            }
+        },
         /*
         text:
         json:......
@@ -53,6 +63,8 @@ var _note = {
             })
             return _r;
         },
+        /* 改用 pw_baseModel,會比較符合官方規範和更好擴展 
+         */
         simple_tpl(template,immediate=false){
             var _vue = {
                 template,
@@ -69,7 +81,20 @@ var _note = {
             }
             return _vue;
         },
-        
+        pw_baseModel(immediate=true){
+            return {
+                props:['value'],
+                watch:{
+                    value:{
+                        handler(val, oldName) {
+                            this.$emit('input',val);
+                        },
+                        immediate,
+                        deep: true
+                    }
+                }
+            }
+        },
         pw_input() {
             var _obj = {
                     template: `
@@ -151,7 +176,142 @@ var _note = {
             };
             return _obj;
         },
+        x_component:{
+            v20200614(){
+                return {
+                    mixins:[_fn.pw_baseModel()],
+                    template:`
+                        <component 
+                            v-model="val"
+                            :is="is"
+                            :tabs="tabs"
+                        />
+                    `,
+                    // props:{
+                    //     cfg:{
+                    //         type:Object,
+                    //         default(){return {}}
+                    //     }
+                    // },
+                    computed:{
+                        is(){
+                            let {is=""} = this.value;
+                            return is;
+                        },
+                        val:{
+                            get(){
+                                switch(this.is){
+                                    case "pw-tabs":
+                                        let {tabs={}} = this.value;
+                                        return tabs;
+                                        break;
+                                }
+                                let {val=""} = this.value;
+                                return val;
+                            },
+                            set(val){
+                                switch(this.is){
+                                    case "pw-tabs":
+                                        this.value.tabs = val;
+                                        break;
+                                    default:
+                                        this.value.val = val;
+                                        break;
+                                }
+                            }
+                        },
+                        // tabs(){
+                        //     let {tabs={}} = this.value;
+                        //     return tabs;
+                        // },
+                    },
+                    // watch:{
+                    //     cfg:{
+                    //         handler(val, oldName) {
+                    //             this.$emit('update:cfg',val);
+                    //         },
+                    //         // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
+                    //         immediate: false,
+                    //         deep: true
+                    //     }
+                                        
+                    // }
+                }
+            }
+        },
+        pw_tabs:{
+            /*
+            <el-tabs :type="tab_type" v-model="tab">
+                        <component
+                            v-for="(tab,key,idx) in tabs" 
+                            v-model="tabs[key]"
+                            :is="is(tab)"
+                            :label="key" 
+                            :name="key" 
+                            :key="idx"
+                            />
+                    </el-tabs>
 
+                            <x-component :cfg.sync="tabs[key]" />
+                            
+                
+            */
+            v20200614(){
+                return {
+                    mixins:[_fn.pw_baseModel(false)],
+                    template:`
+                    <el-tabs :type="tab_type" v-model="tab_key">
+                        <el-tab-pane
+                            v-for="(tab,key,idx) in tabs" 
+                            :label="key" 
+                            :name="key" 
+                            :key="idx"
+                            >
+                            <x-component v-model="tabs[key]" />
+                        </el-tab-pane>
+                    </el-tabs>
+                    `,
+                    data(){
+                        return {
+                            tab:''
+                        }
+                    },
+                    computed:{
+                        tabs(){
+                            let {tabs={}} = this.value;
+                            return tabs;
+                        },
+                        tab_type(){
+                            let {tab_type='border-card'} = this.value;
+                            return tab_type;
+                        },
+                        tab_key:{
+                            get(){
+                                let {tab_key=""} = this.value;
+                                if (tab_key=="") {
+                                     let [idx0=""]= Object.keys(this.tabs);
+                                     tab_key = idx0;
+                                     if (_.isPlainObject(this.value)){
+                                         this.$set(this.value,'tab_key',tab_key);
+                                     }
+                                }
+                                return tab_key;
+                            },
+                            set(val){
+                                this.value.tab_key = val;
+                            }
+                        }
+                    },
+                    
+                    methods:{
+                        is(val){
+                            let {is='el-tab-pane'} = val;
+                            return is ;
+                        }
+                    }
+                }
+            }
+        },
         /*
         把 pw_mock_cfg 另外再拆出來,主要是為了讓 pw_mock 可以更單純
             的被其他開發應用需求 調用.
@@ -398,15 +558,15 @@ var _note = {
                             _r.mock();
                             return _r;
                         },
-                        parse_cols(string_val){
-                            var _self = this;
-                            var _r = [];
-                            var _arr = string_val.split('\n');
-                            _.each(_arr,(name,idx)=>{
-                                _r.push(_self.genObj(name,['@name']));
-                            })
-                            _self.tableData = _r;
-                        },
+                        // parse_cols(string_val){
+                        //     var _self = this;
+                        //     var _r = [];
+                        //     var _arr = string_val.split('\n');
+                        //     _.each(_arr,(name,idx)=>{
+                        //         _r.push(_self.genObj(name,['@name']));
+                        //     })
+                        //     _self.tableData = _r;
+                        // },
      
                         // parse_row(jsonObj){
                         //     var _self = this;
@@ -749,9 +909,307 @@ var _note = {
                 </el-table>
                 `);
         },
+        power_form_base:{
+            20200614(){
+
+            },
+            old(arg){
+                var _vue = {
+                    inheritAttrs:false,
+                    props:{
+                        quick:{
+                            type:Array,
+                        },
+                        form_base:{
+                            type:Object,
+                        },
+                        filed_map:{
+                            type:Object
+                        },
+                        debug:{
+                            default:false
+                        }
+                    },   
+                    data(){
+                        return {
+                            form:{},
+                            FiledMap:_fn.FiledMap.old
+                        }
+                    },
+                    mounted(){
+                        if (this.filed_map !=undefined){
+                            this.FiledMap = _.merge(this.FiledMap,this.filed_map);
+                        }
+                        this.__mode_quick();
+                        this.__mode_std();
+                    },
+                    watch: {
+                        quick(){
+                            this.__mode_quick();
+                        },
+                        form_base(){
+                            this.__mode_std();
+                        }
+                    },
+                    methods:{
+                        __mode_quick(){
+                            if (this.quick ==undefined || this.form_base != undefined ) return ;
+                            var _r = {};
+                            _.each(this.quick,(label)=>{
+                                var _base = {
+                                    label,
+                                    type:this.FiledMap.input,
+                                    val:''
+                                }
+                                if (this.debug) _base.val = label;
+                                _r[label]=_base;
+                            })
+                            this.form = _r;
+                        },
+                        __mode_std(){
+                            if (this.form_base == undefined ) return ;
+                            var _self = this;
+                            var _r = {};
+                            _.each(this.form_base,(val,label)=>{
+                                var _t = typeof(val);
+                                var _base = {
+                                    label,
+                                    type:_self.FiledMap.input,
+                                    val
+                                }
+                                switch(_t){
+                                    case "string":
+                                        if (val.substr(0,1) == '~'){
+                                            _base.type = _self.FiledMap.textarea;
+                                        }
+                                        //基於轉換處理的考量,先不自動把日期字段判斷為日期物件
+                                        //else if (isNaN(Date.parse(val))==false){}
+                                        break;
+                                    // case "number":break;
+                                    case "boolean":
+                                        _base.type = _self.FiledMap.checkbox;
+                                        break;
+                                    case "object":
+                                        if (_.isNull(val)){
+                                        }else if (_.isArray(val)){
+                                            _base.type = _self.FiledMap.select;
+                                            _base.src= val;
+                                            if (val.length !=0){
+                                                _base.type +='-pw-ext';
+                                            }
+                                        }else if (_.isDate(val)){
+                                            _base.type = _self.FiledMap.date;
+                                        }else if (_.isPlainObject(val)){
+                                            let {checkbox,radio,textarea,select,src,type,label} = val;
+                                            if (type != null && label != null){
+                                                console.log(val);
+                                                _base = val;
+                                                break;
+                                            } 
+                                            if (textarea!=null){
+                                                _base.type = _self.FiledMap.textarea    ;
+                                                _base.val = textarea;
+                                            }
+                                            if (checkbox!=null){
+                                                _base.type =_self.FiledMap.checkbox;
+                                                _base.val 
+                                                    = _.isArray(checkbox)
+                                                    ? checkbox
+                                                    : [checkbox]
+                                                    ;
+                                            }else if (radio!=null){
+                                                _base.type =_self.FiledMap.radio;
+                                                _base.val = radio;
+                                            }else if (select!=null){
+                                                _base.type =_self.FiledMap.select;
+                                                _base.val = select;
+                                            }
+                                            if (src !=null){
+                                                _base.src = src;
+                                                _base.type +="-pw-ext";
+                                            }
+                                        }
+                                        break;
+                                }
+                                _r[label]= _base;
+                            })
+                            this.form = _r;
+                        }
+                    }
+                }
+                return _vue;
+            }
+        }
+        ,pw_form_el_ext(){
+            return {
+                mixins:[_fn.power_form_base.old()],
+                template: `
+                <el-row>
+                    <el-grp-filed 
+                        v-for="(item,key) in form"
+                        :label="item.label"
+                        :key=key
+                        v-model="item.val"
+                        >
+                        <component
+                            :ops="item"
+                            :is="item.type"
+                            v-if="item.type!='input'"    
+                            v-model="item.val"
+                            >
+                            </component>
+                        </el-grp-filed>
+                </el-row>
+                `,
+            };
+        },
+        pw_form_bts_ext:{
+            old(){
+                return {
+                    mixins:[_fn.power_form_base.old()],
+                    template: `
+                    <div class="form-horizontal gt-form">
+                        <div v-for="(item,key) in form">
+                            <bts-grp-filed 
+                                :label="item.label"
+                                :key=key
+                                v-model="item.val">
+                                <component
+                                    :ops="item"
+                                    :is="item.type"
+                                    v-if="item.type!='input'"    
+                                    v-model="item.val">
+                                </component>
+                            </bts-grp-filed>
+                        </div>
+                    </div>
+                    `,
+                    methods:{
+                        genCode(arg){
+                            var tpl = {
+                                main(list,_form){
+                                    return `form:${JSON.stringify(_form,null,'\t')}
+    <div class="form-horizontal gt-form">${list.join('')}
+    </div>`;
+                                },
+                                item(key,item){
+                                    var isBaseType =  (item.type=='input');
+                                    var _model = `v-model="form.${key}"`;
+                                    return `\n\t<bts-grp-filed label="${item.label}" ${isBaseType?_model:''}>${tpl.byType(isBaseType,_model,item)}</bts-grp-filed>`
+                                },
+                                byType(isBaseType,_model,item){
+                                    if (isBaseType) return "";
+                                    return `\n\t\t<${item.type} ${_model} />\n\t`
+                                }
+                            };
+                            var list = []
+                            var _form = {};
+                            _.each(arg,(val,key)=>{
+                                list.push(tpl.item(key,val));
+                                _form[key]=key;
+                            })
+                            return tpl.main(list,_form);
+                        }
+                    }
+                };
+            }
+        },
+        pw_form_cfg:{
+            /*<el-tab-pane label="Config" name="B">
+                        <el-button type="danger" size="small" round @click="RestMockCode">RestMockCode</el-button>
+                        <pw-mock-cfg-col v-model="tableData" />
+                    </el-tab-pane>
+                    <el-tab-pane label="Mock" name="C" >
+                        <el-tabs v-model="tabC">
+                            <el-tab-pane label="Code" name="C0" >
+                                <pw-input ref="MockCode" v-model="MockCode" 
+                                    :Renew="renew_MockCode"
+                                    :SyncBack="SyncBack_Config"/>
+                            </el-tab-pane>
+                            <el-tab-pane label="Data" name="C1" >
+                                <pw-input ref="MockData" v-model="MockData" 
+                                    :Renew="renew_MockData"/>
+                            </el-tab-pane>
+                        </el-tabs>
+                    </el-tab-pane>*/
+            v20200614(){
+                return { 
+                    template: `
+                        <el-tabs :type="tab_type"  >
+                            <el-tab-pane label="Input" name="A" >
+                                <pw-input  />
+                            </el-tab-pane>
+                        </el-tabs>
+                        `,
+                    props:{
+                        tab_type:{
+                            type:String,
+                            default:'border-card'
+                        },
+                    }
+                }
+            }
+        },
+        power_form_el_options(op_type){
+            return {
+                template:`
+                <el-${op_type}-group v-model="val">
+                    <el-${op_type} v-for="(item) in ops_src" 
+                        :label="item" 
+                        :key="item"
+                         /> 
+                </el-${op_type}-group>`,
+                inheritAttrs:false,
+                props:{
+                    value:{
+                        type:[Object],
+                        default(){
+                            return {
+                                //選項列表
+                                ops:[],
+                                //選取值,如果是 checkbox 複選,需傳入 array 型態的變數
+                                val:[],
+                            }
+                        }
+
+                    }
+                },
+                computed:{
+                    ops_src(){
+                        let {ops=[]} = this.value;
+                        return ops;
+                    },
+                    val:{
+                        get(){
+                            //if (_.isBoolean(this.value)) return this.value;
+                            //let {val=false} = this.value;
+                            return this.value.val;
+                        },
+                        set(val){
+                            // if (_.isBoolean(this.value)) {
+                                
+                            // }
+                            //  this.value;
+                            this.value.val = val;
+                            this.$emit('input',this.value);
+                        }
+                    }
+                }
+            };
+        },
     }
+    Vue.component('jdt-table-cfg', _fn.jdt_table_cfg());
+    
     Vue.component('pw-input', _fn.pw_input());
     Vue.component('pw-mock', _fn.pw_mock());
     Vue.component('pw-mock-cfg', _fn.pw_mock_cfg());
-    Vue.component('jdt-table-cfg', _fn.jdt_table_cfg());
+    Vue.component('pw-el-radio', _fn.power_form_el_options('radio'));
+    Vue.component('pw-el-checkbox', _fn.power_form_el_options('checkbox'));
+    Vue.component('power-form-bts-ext', _fn.pw_form_bts_ext.old());
+    Vue.component('power-form-el-ext', _fn.pw_form_el_ext());
+    Vue.component('power-form-cfg', _fn.pw_form_cfg.v20200614());
+    Vue.component('pw-tabs', _fn.pw_tabs.v20200614());
+    Vue.component('x-component', _fn.x_component.v20200614());
+
+
 }));
