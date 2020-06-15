@@ -5,7 +5,7 @@
 */
  
 let API = {
-    '*searchpanes'() {
+    'searchpanes'() {
         /**
          * https://datatables.net/reference/api/#searchpanes
          * 
@@ -336,7 +336,7 @@ var Views = {
         return { _vue };
     },
 
-    'v-for'() {
+    '*v-for'() {
         var _note = `
             <pre>
             </pre>
@@ -347,15 +347,21 @@ var Views = {
                 template: `
                 <div>
                     ${_note}
-                    {{list}}
+                    {{list}}{{count}}
                     <ul>
-                        <li v-for="(item) in list" ><input type=text v-model="item.A" /></li>
+                        <li v-for="(item) in list"  ><input type=text v-model="item.A" /></li>
                     </ul>
                 </div>
                 `,
                 data(){
                     return {
-                        list:[{A:1},{A:2}]
+                        list:[{A:1},{A:2}],
+                        count:0
+                    }
+                },
+                methods:{
+                    Add(val){
+                        this.count +=val;
                     }
                 }
             }
@@ -1087,7 +1093,7 @@ var Props = {
         };
         return _obj;
     },
-    '*def'() {
+    'def'() {
        var _note = `
           <pre>
           Q:Prop 的資料,在 beforeCreate 是否可以被取用
@@ -1296,7 +1302,7 @@ var Slot = {
         };
         return _obj;
 	},
-	'*Case02'() {
+	'Case02'() {
         var _note = `
 		<pre>
 		https://cn.vuejs.org/v2/guide/components-slots.html
