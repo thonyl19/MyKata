@@ -180,39 +180,42 @@ var _note = {
             v20200614(){
                 return {
                     mixins:[_fn.pw_baseModel()],
+                    //props:['dyn_prop'],
                     template:`
                         <component 
-                            v-model="val"
                             :is="is"
-                            :tabs="tabs"
-                        />
+                            v-model="val"
+                            v-bind="dyn_prop"
+                        ></component>
                     `,
-                    // props:{
-                    //     cfg:{
-                    //         type:Object,
-                    //         default(){return {}}
-                    //     }
-                    // },
                     computed:{
+                        dyn_prop(){
+                            let {dyn_prop={}} = this.value;
+                            return dyn_prop;
+                        },
                         is(){
-                            let {is=""} = this.value;
+                            let {is="",tabs=null} = this.value;
+                            if (is == "" && tabs !=null) is = 'pw-tabs'
                             return is;
                         },
                         val:{
                             get(){
+                                let {val=null} = this.value;
+                                //自動補上 val 參數
+                                if (val == null && _.isPlainObject(this.value)){
+                                    this.$set(this.value,'val',"");
+                                }
                                 switch(this.is){
                                     case "pw-tabs":
-                                        let {tabs={}} = this.value;
-                                        return tabs;
+                                        return this.value;
                                         break;
                                 }
-                                let {val=""} = this.value;
-                                return val;
+                                return this.value.val;
                             },
                             set(val){
                                 switch(this.is){
                                     case "pw-tabs":
-                                        this.value.tabs = val;
+                                        this.value = val;
                                         break;
                                     default:
                                         this.value.val = val;
@@ -220,47 +223,16 @@ var _note = {
                                 }
                             }
                         },
-                        // tabs(){
-                        //     let {tabs={}} = this.value;
-                        //     return tabs;
-                        // },
                     },
-                    // watch:{
-                    //     cfg:{
-                    //         handler(val, oldName) {
-                    //             this.$emit('update:cfg',val);
-                    //         },
-                    //         // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
-                    //         immediate: false,
-                    //         deep: true
-                    //     }
-                                        
-                    // }
                 }
             }
         },
         pw_tabs:{
-            /*
-            <el-tabs :type="tab_type" v-model="tab">
-                        <component
-                            v-for="(tab,key,idx) in tabs" 
-                            v-model="tabs[key]"
-                            :is="is(tab)"
-                            :label="key" 
-                            :name="key" 
-                            :key="idx"
-                            />
-                    </el-tabs>
-
-                            <x-component :cfg.sync="tabs[key]" />
-                            
-                
-            */
             v20200614(){
                 return {
                     mixins:[_fn.pw_baseModel(false)],
                     template:`
-                    <el-tabs :type="tab_type" v-model="tab_key">
+                    <el-tabs :type="tab_type" v-model="val">
                         <el-tab-pane
                             v-for="(tab,key,idx) in tabs" 
                             :label="key" 
@@ -285,30 +257,20 @@ var _note = {
                             let {tab_type='border-card'} = this.value;
                             return tab_type;
                         },
-                        tab_key:{
+                        val:{
                             get(){
-                                let {tab_key=""} = this.value;
-                                if (tab_key=="") {
+                                let {val=""} = this.value;
+                                if (val=="") {
                                      let [idx0=""]= Object.keys(this.tabs);
-                                     tab_key = idx0;
-                                     if (_.isPlainObject(this.value)){
-                                         this.$set(this.value,'tab_key',tab_key);
-                                     }
+                                     val = idx0;
                                 }
-                                return tab_key;
+                                return val;
                             },
                             set(val){
-                                this.value.tab_key = val;
+                                this.value.val = val;
                             }
                         }
                     },
-                    
-                    methods:{
-                        is(val){
-                            let {is='el-tab-pane'} = val;
-                            return is ;
-                        }
-                    }
                 }
             }
         },

@@ -1056,6 +1056,11 @@ let Tool = {
 		   </pre>
 		   `;
 		/*
+		{{tabs2}}
+					<pw-tabs v-model="tabs2"></pw-tabs>
+					{{tabs1}}
+					<pw-tabs v-model="tabs1"></pw-tabs>
+					
 		*/
 		var _obj = {
 			_css:``,
@@ -1063,35 +1068,45 @@ let Tool = {
 				template: `
 					<div>
 					${_note}
-					{{tabs1}}
-					<pw-tabs v-model="tabs1"></pw-tabs>
 					{{tabs2}}
-					<pw-tabs v-model="tabs2"></pw-tabs>
-					
+					<x-component v-model="tabs2" />
 					</div>
 				`,
 				data(){
 					return {
 						tabs1:{
+							is:'pw-tabs',
 							tabs:{
 								Input:{
-									is:'pw-input'
+									is:'pw-input',
 								},
 								Config:{},
 							}
 						}
 						,tabs2:{
+							is:'pw-tabs',
 							tabs:{
 								InputA:{},
 								ConfigA:{
 									is:'pw-tabs',
 									tabs:{
 										AAAAA:{},
-										BBBB:{},
+										BBBB:{
+											is:'pw-input',
+											dyn_prop:{
+												Exec(){
+													alert('test');
+												}
+											}
+										},
 									}
 								},
 							}
-						}
+						},tabs3:{
+							tabs:{
+								AAAAA:{},
+								BBBB:{},
+							}}
 					}
 				} 
 			   }
