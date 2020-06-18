@@ -43,23 +43,30 @@ var _note = {
         parse_Exten(val,note,input_ops){
             //Exten
         },
-        parse_cols(string_val,genObj,split=','){
+        parse_cols(string_val,filedObj,split=','){
             var _self = this;
             var _r = [];
             var _arr = string_val.split('\n');
             _.each(_arr,(val,idx)=>{
-                let [one,two,three=""] = val.split(split); 
-                three = eval(three);
-                _r.push(genObj(one,two,three));
+                /*
+                這裡預設規劃為3個欄位
+                1.欄位抬頭
+                2.欄位綁定對應,類似實際對應欄位 
+                3.欄位值,以此做為欄位型別判斷
+                */
+                
+                let [col_title,col_bind,col_val] = val.split(split); 
+                col_val = eval(col_val);
+                _r.push(filedObj(col_title,col_bind,col_val));
             })
             return _r;
         },
 
-        parse_row(jsonObj,genObj){
+        parse_row(jsonObj,filedObj){
             var _self = this;
             var _r = [];
             _.each(jsonObj,(val,name)=>{
-                _r.push(genObj(name,name,val));
+                _r.push(filedObj(name,name,val));
             })
             return _r;
         },
@@ -81,9 +88,24 @@ var _note = {
             }
             return _vue;
         },
+        /*
+        pw_debug(){
+            return {
+                props:['debug'],
+                components:{
+                    pw_debug:{
+                        template:`<div v-if="debug!=false">{{debug}}</div>`
+                    }
+                } 
+            }
+        },
+         */
+        /*
+        新增 支援 debug 模式,應用請參見 pw_tabs
+        */
         pw_baseModel(immediate=true){
             return {
-                props:['value'],
+                props:['value','debug'],
                 watch:{
                     value:{
                         handler(val, oldName) {
@@ -91,7 +113,7 @@ var _note = {
                         },
                         immediate,
                         deep: true
-                    }
+                    },
                 }
             }
         },
@@ -232,16 +254,19 @@ var _note = {
                 return {
                     mixins:[_fn.pw_baseModel(false)],
                     template:`
-                    <el-tabs :type="tab_type" v-model="val">
-                        <el-tab-pane
-                            v-for="(tab,key,idx) in tabs" 
-                            :label="key" 
-                            :name="key" 
-                            :key="idx"
-                            >
-                            <x-component v-model="tabs[key]" />
-                        </el-tab-pane>
-                    </el-tabs>
+                    <div>
+                        <div v-if="debug!=false">{{debug}}</div>
+                        <el-tabs :type="tab_type" v-model="val">
+                            <el-tab-pane
+                                v-for="(tab,key,idx) in tabs" 
+                                :label="key" 
+                                :name="key" 
+                                :key="idx"
+                                >
+                                <x-component v-model="tabs[key]" />
+                            </el-tab-pane>
+                        </el-tabs>
+                    </div>
                     `,
                     data(){
                         return {
@@ -416,6 +441,7 @@ var _note = {
                             }
                         },
                         GenConfig(JsonCode,isChgTab=true){
+                            debugger
                             if (isChgTab){
                                 this.tab = "B";
                                 this.tabC = "C1"	
@@ -425,7 +451,7 @@ var _note = {
                                 ? _fn.parse_row
                                 : _fn.parse_cols
                                 ;
-                            _act(JsonCode.val,this.genObj);
+                            this.tableData =  _act(JsonCode.val,this.filedObj);
                         },
                         renew_MockCode(isChgTab=false){
                             //if (isChgTab) this.tab = "B";
@@ -497,19 +523,20 @@ var _note = {
                                 _.each(_mock,(ops,key)=>{
                                     debugger
                                     let [col_name] = key.split('\|');
-                                    cols.push(_self.genObj(col_name,ops));
+                                    cols.push(_self.filedObj(col_name,ops));
                                 })
                                 _self.tableData = cols;
                             }
                         },
     
-                        genObj(name,pass,ops){
+                        filedObj(name,pass,data_val=""){
+                            var mock_ops = _fn.mock_map[$.type(data_val)];
                             var _r = {
                                 name,
-                                ops,
+                                mock_ops,
                                 get code(){
                                     var _code = {};
-                                    _code[`${this.name}|+1`] = this.ops;
+                                    _code[`${this.name}|+1`] = this.mock_ops;
                                     return _code;
                                 },
                                 mock(){
@@ -520,25 +547,7 @@ var _note = {
                             _r.mock();
                             return _r;
                         },
-                        // parse_cols(string_val){
-                        //     var _self = this;
-                        //     var _r = [];
-                        //     var _arr = string_val.split('\n');
-                        //     _.each(_arr,(name,idx)=>{
-                        //         _r.push(_self.genObj(name,['@name']));
-                        //     })
-                        //     _self.tableData = _r;
-                        // },
-     
-                        // parse_row(jsonObj){
-                        //     var _self = this;
-                        //     var _r = [];
-                        //     _.each(jsonObj,(val,name)=>{
-                        //         var ops = _self.map[$.type(val)];
-                        //         _r.push(_self.genObj(name,ops));
-                        //     })
-                        //     _self.tableData = _r;
-                        // }
+                        
                     }
             };
             return _obj;
@@ -557,7 +566,7 @@ var _note = {
                         label="選項"
                         >
                         <template slot-scope="scope">
-                            {{ scope.row.ops }}
+                            {{ scope.row.mock_ops }}
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -1094,6 +1103,60 @@ var _note = {
                             </el-tab-pane>
                         </el-tabs>
                     </el-tab-pane>*/
+            /*
+            全新架構,以 dyn_cfg 基礎做動態生成
+            */
+            v20200618(){
+                return {
+                    template:`<pw-tabs v-model="base" :debug="debug"></pw-tabs>`,
+                    data(){
+                        var _self= this;
+                        return {
+                            base:{
+                                val:'',
+                                tabs:{
+                                    InputA:{
+                                        is:'pw-input',
+                                        dyn_prop:{
+                                            Exec:_self.InputA_Exec
+                                        }
+                                    },
+                                    View:{
+                                        is:'power-form-bts-ext',
+                                        dyn_prop:{
+                                            quick:[]
+                                        }
+                                    },
+                                    Json:{
+
+                                    },
+                                    Code:{
+
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    computed:{
+                        main_tab(){
+                            return this.base.tabs;
+                        },
+                        tab_View(){
+                            return this.main_tab.View;
+                        },
+                        debug(){
+                            //return false;
+                            return this.base;
+                        },
+                    },
+                    methods:{
+                        InputA_Exec(){
+                            this.tab_View.dyn_prop.quick = ["A","B"];
+                            this.base.val = "View";
+                        }
+                    }
+                }
+            },
             v20200614(){
                 return { 
                     template: `
@@ -1169,7 +1232,7 @@ var _note = {
     Vue.component('pw-el-checkbox', _fn.power_form_el_options('checkbox'));
     Vue.component('power-form-bts-ext', _fn.pw_form_bts_ext.old());
     Vue.component('power-form-el-ext', _fn.pw_form_el_ext());
-    Vue.component('power-form-cfg', _fn.pw_form_cfg.v20200614());
+    Vue.component('power-form-cfg', _fn.pw_form_cfg.v20200618());
     Vue.component('pw-tabs', _fn.pw_tabs.v20200614());
     Vue.component('x-component', _fn.x_component.v20200614());
 

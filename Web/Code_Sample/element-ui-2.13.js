@@ -704,6 +704,69 @@ var Row = {
 }
 
 let Vue_Prd = {
+	'x-component'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		/*
+		{{tabs2}}
+					<pw-tabs v-model="tabs2"></pw-tabs>
+					{{tabs1}}
+					<pw-tabs v-model="tabs1"></pw-tabs>
+					
+		*/
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					{{tabs2}}
+					<x-component v-model="tabs2" />
+					</div>
+				`,
+				data(){
+					return {
+						tabs1:{
+							is:'pw-tabs',
+							tabs:{
+								Input:{
+									is:'pw-input',
+								},
+								Config:{},
+							}
+						}
+						,tabs2:{
+							is:'pw-tabs',
+							tabs:{
+								InputA:{},
+								ConfigA:{
+									is:'pw-tabs',
+									tabs:{
+										AAAAA:{},
+										BBBB:{
+											is:'pw-input',
+											dyn_prop:{
+												Exec(){
+													alert('test');
+												}
+											}
+										},
+									}
+								},
+							}
+						},tabs3:{
+							tabs:{
+								AAAAA:{},
+								BBBB:{},
+							}}
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
 	'power_form_el_options'() {
 		var _note = `
 		   	<pre>
@@ -1050,70 +1113,8 @@ let Tool = {
 		};
 		return _obj;
 	},
-	'*def'() {
-		var _note = `
-		   <pre>
-		   </pre>
-		   `;
-		/*
-		{{tabs2}}
-					<pw-tabs v-model="tabs2"></pw-tabs>
-					{{tabs1}}
-					<pw-tabs v-model="tabs1"></pw-tabs>
-					
-		*/
-		var _obj = {
-			_css:``,
-			_vue: {
-				template: `
-					<div>
-					${_note}
-					{{tabs2}}
-					<x-component v-model="tabs2" />
-					</div>
-				`,
-				data(){
-					return {
-						tabs1:{
-							is:'pw-tabs',
-							tabs:{
-								Input:{
-									is:'pw-input',
-								},
-								Config:{},
-							}
-						}
-						,tabs2:{
-							is:'pw-tabs',
-							tabs:{
-								InputA:{},
-								ConfigA:{
-									is:'pw-tabs',
-									tabs:{
-										AAAAA:{},
-										BBBB:{
-											is:'pw-input',
-											dyn_prop:{
-												Exec(){
-													alert('test');
-												}
-											}
-										},
-									}
-								},
-							}
-						},tabs3:{
-							tabs:{
-								AAAAA:{},
-								BBBB:{},
-							}}
-					}
-				} 
-			   }
-		};
-		return _obj;
-	},
-	'power-form-cfg'() {
+
+	'*power-form-cfg'() {
 		var _note = `
 		   <pre>
 		   </pre>
