@@ -1050,7 +1050,7 @@ let Tool = {
 		};
 		return _obj;
 	},
-	'*def'() {
+	'def'() {
 		var _note = `
 		   <pre>
 		   </pre>
@@ -1110,6 +1110,27 @@ let Tool = {
 					}
 				} 
 			   }
+		};
+		return _obj;
+	},
+	'*String Tpl'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					
+				</div>
+				`,
+				data(){
+					return {}
+				}
+			}
 		};
 		return _obj;
 	},
