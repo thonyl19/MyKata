@@ -5,7 +5,7 @@
 */
  
 let API = {
-    '*searchpanes'() {
+    'searchpanes'() {
         /**
          * https://datatables.net/reference/api/#searchpanes
          * 
@@ -25,6 +25,48 @@ let API = {
           }
        };
        return _obj;
+    },
+    'directive'() {
+        var _note = `
+           <pre>
+           </pre>
+           `;
+        Vue.directive('demo', {
+            bind: function (el, binding, vnode) {
+                var s = JSON.stringify
+                el.innerHTML =
+                    'name: '       + s(binding.name) + '<br>' +
+                    'value: '      + s(binding.value) + '<br>' +
+                    'expression: ' + s(binding.expression) + '<br>' +
+                    'argument: '   + s(binding.arg) + '<br>' +
+                    'modifiers: '  + s(binding.modifiers) + '<br>' +
+                    'vnode keys: ' + Object.keys(vnode).join(', ')
+            },
+        })
+        Vue.directive('debug', {
+            componentUpdated(el, binding, vnode){
+                let {arg=''} = binding;
+                console.log({arg,el, binding, vnode});
+            }
+        })
+        var _obj = {
+            _css:``,
+            _vue: {
+                template: `
+                    <div>
+                    ${_note}
+                        <input type='text' v-model="message" />
+                        <div id="hook-arguments-example" v-debug v-demo:foo.a.b.zz="message"></div>
+                    </div>
+                `,
+                data(){
+                    return {
+                        message: 'hello!'
+                    }
+                } 
+               }
+        };
+        return _obj;
     },
     __def() {
         /*
@@ -83,7 +125,7 @@ let API = {
 
 }
 var Views = {
-    '*dblclick'() {
+    'dblclick'() {
 		var _note = `
            <pre>
             實現 dblclick 的功能,這裡碰到了以下幾個問題
@@ -1087,7 +1129,7 @@ var Props = {
         };
         return _obj;
     },
-    '*def'() {
+    'def'() {
        var _note = `
           <pre>
           Q:Prop 的資料,在 beforeCreate 是否可以被取用
@@ -1296,7 +1338,7 @@ var Slot = {
         };
         return _obj;
 	},
-	'*Case02'() {
+	'Case02'() {
         var _note = `
 		<pre>
 		https://cn.vuejs.org/v2/guide/components-slots.html

@@ -187,7 +187,7 @@ var test =  {
 }  
 
 var fn = {
-    gen(arg = smart){
+    _gen(arg = smart){
         var arr = {}
         _.each(arg,(val,key)=>{
 			var _t = typeof(val);
@@ -257,7 +257,7 @@ var fn = {
         })
         console.log(arg);
     },
-    _get1(arg=form_base){
+    get1(arg=form_base){
 		var tpl = {
 			main(list){
 				return 

@@ -63,13 +63,23 @@ Inpu 切換到下一頁,
 		只是外殼層加上 slot 的處理
 	power-form-ext L1
 		:type{bts|el}
-		:cfg
+		:cfg{col|dataRow}
 	power-form-cfg L2
 		Input
 		Config
 			code
-			view
+				"表單類型": {
+					"label": "表單類型",
+					"type": "select",
+					"val":""
+				},
+			grid
+				以表格型式呈現 格式設定
+		View
+			檢視 power-form-ext 實際呈現
 		Code
+### pw-debug
+	提供 點撃後,可以快速的簽入當前的程序,直接調試 $data
 
 ### cfg
 	{

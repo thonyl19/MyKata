@@ -14,8 +14,15 @@ var _note = {
     `   
 
 };
+    Vue.directive('debug', {
+        // 当被绑定的元素插入到 DOM 中时……
+        update: function (el) {
+        // 聚焦元素
+        el.focus()
+        }
+    })
     var _fn = {
-        mock_map:{
+        map_mock:{
             "string":["@name"],
             "boolean":["Y","N"],
             "number":["@integer(60, 100)"],
@@ -23,6 +30,45 @@ var _note = {
             "symbol":["@id"],
             "object":["@id"],
         },
+        map_DataType:{
+            string:{
+                mock:["@name"],
+                ui:['input']
+            },
+            boolean:{
+                mock:["Y","N"],
+                ui:['checkbox']
+            },
+            number:{
+                mock:["@integer(60, 100)"],
+                ui:['input']
+            },
+            date:{
+                mock: ["@datetime"],
+                ui:['el-date-picker']
+            },
+            array:{
+                mock: ["@datetime"],
+                ui:['select']
+            },
+            symbol:{
+                mock:["@id"],
+                ui:['input']
+            },
+            object:{
+                mock:["@id"],
+                ui:['input']
+            }
+            // old:{
+            //     input:'input',
+            //     select:'el-select',
+            //     checkbox:'el-checkbox',
+            //     radio:'el-radio',
+            //     date:'el-date-picker',
+            //     textarea:'el-input-pw-ext',
+            // }
+        },
+        /*先保留 日後移除  */
         FiledMap:{
             old:{
                 input:'input',
@@ -88,18 +134,17 @@ var _note = {
             }
             return _vue;
         },
-        /*
-        pw_debug(){
-            return {
-                props:['debug'],
+        
+        pw_debug:{
+            v20200619:{
                 components:{
-                    pw_debug:{
-                        template:`<div v-if="debug!=false">{{debug}}</div>`
+                    'pw-debug':{
+                        template:`<div>{{debug}}</div>`,
+                        props:['debug'],
                     }
                 } 
             }
         },
-         */
         /*
         新增 支援 debug 模式,應用請參見 pw_tabs
         */
@@ -252,7 +297,7 @@ var _note = {
         pw_tabs:{
             v20200614(){
                 return {
-                    mixins:[_fn.pw_baseModel(false)],
+                    mixins:[_fn.pw_baseModel(false),_fn.pw_debug.v20200619],
                     template:`
                     <div>
                         <div v-if="debug!=false">{{debug}}</div>
@@ -530,7 +575,7 @@ var _note = {
                         },
     
                         filedObj(name,pass,data_val=""){
-                            var mock_ops = _fn.mock_map[$.type(data_val)];
+                            var mock_ops = _fn.map_mock[$.type(data_val)];
                             var _r = {
                                 name,
                                 mock_ops,
@@ -764,7 +809,7 @@ var _note = {
                     },
 					genObj(title, data , data_val = ""){
                         data = data ?? title;
-                        var mock_ops = _fn.mock_map[$.type(data_val)];
+                        var mock_ops = _fn.map_mock[$.type(data_val)];
 						var _r = {
 							title,
 							data,
@@ -1085,6 +1130,29 @@ var _note = {
                 };
             }
         },
+        'pw_form_cfg_col'() {
+            return _fn.simple_tpl(
+                `<el-table
+                    :data="value"
+                    style="width: 100%">
+                    <el-table-column
+                        prop="title"
+                        label="欄位抬頭"
+                        width="180">
+                    </el-table-column>
+                    <el-table-column
+                        prop="data"
+                        label="欄位型別"
+                        />
+                    <el-table-column
+                        label="demo"
+                        width="250">
+                        <template slot-scope="scope">
+                        </template>
+                    </el-table-column>
+                </el-table>
+                `);
+        },
         pw_form_cfg:{
             /*<el-tab-pane label="Config" name="B">
                         <el-button type="danger" size="small" round @click="RestMockCode">RestMockCode</el-button>
@@ -1121,6 +1189,17 @@ var _note = {
                                             Exec:_self.InputA_Exec
                                         }
                                     },
+                                    Config:{
+                                        tabs:{
+                                            code:{
+                                                is:'pw-input',
+                                            },
+                                            grid:{
+                                                is:'pw-form-cfg-col',
+                                                val:[],
+                                            }
+                                        }
+                                    },
                                     View:{
                                         is:'power-form-bts-ext',
                                         dyn_prop:{
@@ -1153,7 +1232,31 @@ var _note = {
                         InputA_Exec(){
                             this.tab_View.dyn_prop.quick = ["A","B"];
                             this.base.val = "View";
-                        }
+                        },
+                        genFiled(title, ui_type , data_val = ""){
+                            data = data ?? title;
+                            var _map = _fn.map_DataType[$.type(data_val)];
+                            var _r = {
+                                title,
+                                data,
+                                mock_ops: _map,
+                                get col_code(){
+                                    let {title,data} = this;
+                                    return {title,data};
+                                },
+                                get mock_code(){
+                                    var _code = {};
+                                    _code[`${this.data}|+1`] = this.mock_ops;
+                                    return _code;
+                                },
+                                mock(){
+                                    this.demo = Mock.mock(this.mock_code)[this.data];
+                                    return this.demo;
+                                }
+                            };
+                            _r.mock();
+                            return _r;
+                        },
                     }
                 }
             },
@@ -1233,8 +1336,10 @@ var _note = {
     Vue.component('power-form-bts-ext', _fn.pw_form_bts_ext.old());
     Vue.component('power-form-el-ext', _fn.pw_form_el_ext());
     Vue.component('power-form-cfg', _fn.pw_form_cfg.v20200618());
+    Vue.component('pw-form-cfg-col', _fn.pw_form_cfg_col());
+    
     Vue.component('pw-tabs', _fn.pw_tabs.v20200614());
     Vue.component('x-component', _fn.x_component.v20200614());
-
+    
 
 }));
