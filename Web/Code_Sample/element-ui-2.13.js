@@ -1114,7 +1114,7 @@ let Tool = {
 		return _obj;
 	},
 
-	'*power-form-cfg'() {
+	'*pw-form-cfg'() {
 		var _note = `
 		   <pre>
 		   </pre>
@@ -1125,7 +1125,7 @@ let Tool = {
 				template: `
 					<div>
 					${_note}
-					<power-form-cfg></power-form-cfg>
+					<pw-form-cfg></pw-form-cfg>
 					</div>
 				`,
 				data(){
@@ -1133,6 +1133,36 @@ let Tool = {
 					}
 				} 
 			}
+		};
+		return _obj;
+	},
+	'pw-form'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					[基本應用]
+					<pw-form >
+					<div class="form-group col-lg-6 col-sm-12"><label class="col-lg-4 col-sm-4 control-label">text_s</label> <div class="col-lg-8 col-sm-8"><input type="text" class="form-control"></div></div><div class="form-group col-lg-6 col-sm-12"><label class="col-lg-4 col-sm-4 control-label">text_s</label> <div class="col-lg-8 col-sm-8"><input type="text" class="form-control"></div></div>
+					</pw-form>
+					[quick]
+					<pw-form :quick="quick1" >
+					</pw-form>
+					</div>
+				`,
+				data(){
+					return {
+						quick1:['A','B'],
+						quick2:{}
+					}
+				} 
+			   }
 		};
 		return _obj;
 	},

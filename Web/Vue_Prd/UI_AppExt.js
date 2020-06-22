@@ -37,7 +37,7 @@ var _note = {
             },
             boolean:{
                 mock:["Y","N"],
-                ui:['checkbox']
+                ui:['el-checkbox']
             },
             number:{
                 mock:["@integer(60, 100)"],
@@ -267,14 +267,21 @@ var _note = {
                         },
                         val:{
                             get(){
-                                let {val=null} = this.value;
+                                let {val=null,chgTab=null} = this.value;
                                 //自動補上 val 參數
                                 if (val == null && _.isPlainObject(this.value)){
                                     this.$set(this.value,'val',"");
                                 }
                                 switch(this.is){
                                     case "pw-tabs":
-                                        return this.value;
+                                        var _tabObj = this.value;
+                                        if (chgTab==null){
+                                            this.$set(_tabObj,'chgTab',(name)=>{
+                                                _tabObj.val = name;
+                                                return _tabObj.tabs[name];
+                                            });
+                                        }
+                                        return _tabObj;
                                         break;
                                 }
                                 return this.value.val;
@@ -329,10 +336,17 @@ var _note = {
                         },
                         val:{
                             get(){
-                                let {val=""} = this.value;
+                                let {val="",chgTab =null} = this.value;
                                 if (val=="") {
                                      let [idx0=""]= Object.keys(this.tabs);
                                      val = idx0;
+                                }
+                                var _tabObj = this.value;
+                                if (chgTab==null){
+                                    this.$set(_tabObj,'chgTab',(name)=>{
+                                        _tabObj.val = name;
+                                        return _tabObj.tabs[name];
+                                    });
                                 }
                                 return val;
                             },
@@ -1141,36 +1155,53 @@ var _note = {
                         width="180">
                     </el-table-column>
                     <el-table-column
-                        prop="data"
+                        prop="ui_type"
                         label="欄位型別"
                         />
                     <el-table-column
                         label="demo"
                         width="250">
                         <template slot-scope="scope">
+                            <x-component :is="scope.row.ui_type"/>
                         </template>
                     </el-table-column>
                 </el-table>
                 `);
         },
-        pw_form_cfg:{
-            /*<el-tab-pane label="Config" name="B">
-                        <el-button type="danger" size="small" round @click="RestMockCode">RestMockCode</el-button>
-                        <pw-mock-cfg-col v-model="tableData" />
-                    </el-tab-pane>
-                    <el-tab-pane label="Mock" name="C" >
-                        <el-tabs v-model="tabC">
-                            <el-tab-pane label="Code" name="C0" >
-                                <pw-input ref="MockCode" v-model="MockCode" 
-                                    :Renew="renew_MockCode"
-                                    :SyncBack="SyncBack_Config"/>
-                            </el-tab-pane>
-                            <el-tab-pane label="Data" name="C1" >
-                                <pw-input ref="MockData" v-model="MockData" 
-                                    :Renew="renew_MockData"/>
-                            </el-tab-pane>
-                        </el-tabs>
-                    </el-tab-pane>*/
+        'pw_form_ext':{
+            v20200622(){
+                return {
+                    template:`
+                    <x-component :is="is">
+                        <slot></slot>
+                    </x-component>
+                    `,
+                    props:{
+                        //{bts|el}
+                        type:{
+                            type:String,
+                            default:'bts'
+                        },
+                        //{col|dataRow}
+		                quick:{
+                            type:[String,Array,Object]
+                        },
+		                schema:{
+                            type:[Object]
+                        },
+                        mock:{
+                            type:[Object]
+                        }
+                    },
+                    computed: {
+                        is(){
+                            return `power-form-${this.type}`
+                        }
+                    },
+                }
+            }
+        },
+        'pw_form_cfg':{
             /*
             全新架構,以 dyn_cfg 基礎做動態生成
             */
@@ -1183,11 +1214,12 @@ var _note = {
                             base:{
                                 val:'',
                                 tabs:{
-                                    InputA:{
+                                    Input:{
                                         is:'pw-input',
                                         dyn_prop:{
                                             Exec:_self.InputA_Exec
-                                        }
+                                        },
+                                        val:"A,,true\nB,,\nC,,['A']"
                                     },
                                     Config:{
                                         tabs:{
@@ -1223,23 +1255,33 @@ var _note = {
                         tab_View(){
                             return this.main_tab.View;
                         },
+                        tab_Config(){
+                            return this.main_tab.Config;
+                        },
                         debug(){
                             //return false;
                             return this.base;
                         },
                     },
                     methods:{
-                        InputA_Exec(){
-                            this.tab_View.dyn_prop.quick = ["A","B"];
-                            this.base.val = "View";
+                        InputA_Exec(JsonCode){
+                            var x = [];
+                            var _parse = JsonCode.isObj
+                                ? _fn.parse_row
+                                : _fn.parse_cols
+                                ;
+                            var _tab = this.base
+                                    .chgTab('Config')
+                                    .chgTab('grid');
+                            _tab.val = _parse(JsonCode.val,this.genFiled);
                         },
                         genFiled(title, ui_type , data_val = ""){
-                            data = data ?? title;
+                            //data = data ?? title;
                             var _map = _fn.map_DataType[$.type(data_val)];
                             var _r = {
                                 title,
-                                data,
-                                mock_ops: _map,
+                                ui_type:_map.ui[0],
+                                mock_ops: _map.mock,
                                 get col_code(){
                                     let {title,data} = this;
                                     return {title,data};
@@ -1335,7 +1377,9 @@ var _note = {
     Vue.component('pw-el-checkbox', _fn.power_form_el_options('checkbox'));
     Vue.component('power-form-bts-ext', _fn.pw_form_bts_ext.old());
     Vue.component('power-form-el-ext', _fn.pw_form_el_ext());
-    Vue.component('power-form-cfg', _fn.pw_form_cfg.v20200618());
+
+    Vue.component('pw-form', _fn.pw_form_ext.v20200622());
+    Vue.component('pw-form-cfg', _fn.pw_form_cfg.v20200618());
     Vue.component('pw-form-cfg-col', _fn.pw_form_cfg_col());
     
     Vue.component('pw-tabs', _fn.pw_tabs.v20200614());
