@@ -983,9 +983,44 @@ let Layout = {
 	 };
 	 return _obj;
   },
+  '*仿element-ui 官網'() {
+	  var _note = `
+		 <pre>
+		 </pre>
+		 `;
+	  var _obj = {
+		  _css:`
+		 .main{
+			 height:100%;
+			 overflow-y:hidden;
+			 display:block;
+			 margin:0px;
+		 }
+		 .f-row dd div
+		 {
+			height:100%;
+			 
+		 } 
+		  `,
+		  _vue: {
+			  template: `
+				  <div style="height:100%">
+				  ${_note}
+				  <div class="main area-mk">
+				  </div>
+				  </div>
+			  `,
+			  data(){
+				  return {
+				  }
+			  } 
+			 }
+	  };
+	  return _obj;
+  },
 }
 var Position = {
-	'*浮動工具'() {
+	'浮動工具'() {
 		var _note = `
 		   <pre>
 		   實現 浮動 toolbox 基礎和 動態調試的功能 

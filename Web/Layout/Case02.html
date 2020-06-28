@@ -1,0 +1,556 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>組件</title>
+
+    <style type="text/css">
+        @font-face {
+            font-family: 'rbicon';
+            src: url(chrome-extension://dipiagiiohfljcicegpgffpbnjmgjcnf/fonts/rbicon.woff2) format("woff2");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .mk {
+            border: 1px solid red;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        header{
+            position: fixed;
+            width: 100%;
+            left: 0;
+            top: 0;
+            z-index: 1500;
+        }
+
+        .page-scroll{
+            /*
+            修飾頁面高度,以保留 headerWrapper 的空間
+            */
+            height: calc(100% - 80px);
+            margin-top: 80px;
+        }
+        .main-body{
+            padding: 0;
+            margin-top: 0;
+            height: 100%;
+            min-height: auto;
+        }
+        .of-hied{
+            overflow: hidden;
+        }
+
+        .left{
+            width: 240px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            margin-top: 80px;
+            transition: padding-top .3s;
+        }
+        .main{
+            padding-left: 270px;
+            padding-bottom: 100px;
+            box-sizing: border-box;
+            
+        }  
+        iframe{
+            width: 100%;
+            height: 100%;
+            
+            overflow:auto;
+            display: block;       /* iframes are inline by default */
+            background: #000;
+            border: none;  
+        }
+        .scroll_view{
+            overflow: scroll;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="of-hied">
+    <div id="app" class="of-hied">
+        <header class="mk">
+            <div class="container">
+                <h1><a  href="#/zh-CN" class="router-link-active"></a>
+                    <img alt="logo" />
+                </h1>   
+            </div>
+        </header>
+        <div class="part-A mk">
+            <div class="page-scroll of-hied">
+                <div class="left mk"></div>
+                <div class="main mk">
+                    <pre class="scroll_view">
+                    C#
+維基百科，自由的百科全書
+跳至導覽跳至搜尋
+Disambig gray.svg  此條目介紹的是微軟開發的程式設計語言。關於音樂上的音名，請見「C♯ (音名)」。
+C#
+C Sharp wordmark.svg
+編程範型	結構化、物件導向、泛型
+語言家族	C
+設計者	微軟
+實作者	微軟
+面市時間	2000年，​20年前
+穩定版本	
+8.0[1] （2019年9月23日，​9個月前 ）
+作業系統	Windows、Linux、Mac OS X 、 Android
+許可證	CLR Proprietary
+副檔名	.cs
+網站	C# Language
+主要實作產品
+.NET Framework、Mono、DotGNU
+衍生副語言
+Cω、Spec#、Polyphonic C#
+啟發語言
+C++、Java、Eiffel、Modula-3、Object Pascal
+影響語言
+Clojure、[2] D語言、F#、Java 5、Nemerle、Vala
+C#是微軟推出的一種基於.NET框架的、物件導向的進階程式語言。C#是一種由C和C++衍生出來的物件導向的程式語言。它在繼承C和C++強大功能的同時去掉了一些它們的複雜特性，使其成為C語言家族中的一種高效強大的程式語言。C#以.NET框架類別館作為基礎，擁有類似Visual Basic的快速開發能力。C#由安德斯·海爾斯伯格主持開發，微軟在2000年發布了這種語言，希望藉助這種語言來取代Java。C#已經成為Ecma國際和國際標準組織的標準規範。
+
+
+目錄
+1	命名
+2	設計目標
+3	歷史
+3.1	版本
+4	語言特性
+5	C# 2.0的特性
+5.1	分部類別
+5.2	泛型
+5.3	靜態類別
+5.4	疊代器
+5.5	匿名方法
+5.6	委託的協變和逆變
+5.7	屬性存取器可以被單獨設定存取級別
+5.8	可空類型
+5.9	??運算子
+6	C# 3.0的特性
+6.1	Linq
+6.2	類型初始化器
+6.3	集合初始化器
+6.4	匿名類型
+6.5	局部變數類型推斷
+6.6	Lambda表達式
+6.7	自動化屬性
+6.8	擴充方法
+6.9	分部方法
+7	C# 4.0的特性
+7.1	動態查閱
+7.2	具名參數與可選參數
+7.3	與COM組件互動
+7.4	泛型的協變和逆變
+8	C# 5.0的特性
+9	C# 6.0的特性
+10	C# 7.0的特性
+11	C# 7.1的特性
+12	C# 7.2的特性
+13	C# 8.0的特性
+14	程式的執行
+15	標準化
+16	C# 的Hello World程式
+17	實現
+18	參考文獻
+19	外部連結
+命名
+C#的發音為「C sharp」，「#」讀作「sharp」（/ʃɑːp/），命名啟發於音樂上的音名「C♯」，在音樂中「C♯」表示C升半音，為比C高一點的音節，且「#」形似4個加號，微軟藉助這樣的命名，以表示C#在一些語言特性方面對C++的提升的意思。
+
+由於顯示器（標準字體、瀏覽器等）的技術限制，且大部分的鍵盤配置上不存在升記號（♯），所以井號（#）被用於此程式語言的名稱中，約定在ECMA-334 C#語言規範中[3]。
+
+設計目標
+ECMA標準列出的C#設計目標：
+
+C#旨在設計成為一種「簡單、現代、通用」，以及物件導向的程式設計語言
+此種語言的實現，應提供對於以下軟體工程要素的支援：強型別檢查、陣列維度檢查、未初始化的變數參照檢測、自動垃圾收集（Garbage Collection，指一種記憶體自動釋放技術）。軟體必須做到強大、持久，並具有較強程式開發的生產力。
+此種語言為在分散式環境中的開發提供適用的組件開發應用。
+為使程式設計師容易遷移到這種語言，原始碼的可移植性十分重要，尤其是對於那些已熟悉C和C++的程式設計師而言。
+對國際化的支援非常重要。
+C#適合為獨立和嵌入式的系統編寫程式，從使用複雜作業系統的大型系統到特定應用的小型系統均適用。
+雖然C#程式在儲存和操作能力需求方面具備經濟性，但此種語言在某些情況下並不能在效能和程式大小方面與C語言相抗衡。[來源請求]
+歷史
+原Borland公司的首席研發設計師安德斯·海爾斯伯格（Anders Hejlsberg）在微軟開發了Visual J++ 1.0，很快的Visual J++由1.1版本升級到6.0版。SUN公司認為Visual J++ 違反了Java開發平台的中立性，對微軟提出了訴訟。2000年6月26日微軟在奧蘭多舉行的「職業開發人員技術大會」（PDC 2000）上，發表新的語言C#。C#語言取代了Visual J++，語言本身深受Visual Basic、Java、C和C++ 的影響。
+
+版本
+版本	語言規格	日期	.NET框架的版本	Visual Studio的版本
+ECMA	ISO/IEC	Microsoft
+C# 1.0	2002年12月	2003年4月	2002年1月	2002年1月	.NET Framework 1.0	Visual Studio .NET 2002
+C# 1.1
+C# 1.2	2003年10月	2003年4月	.NET Framework 1.1	Visual Studio .NET 2003
+C# 2.0	2006年6月	2006年9月	2005年9月	2005年11月	.NET Framework 2.0	Visual Studio 2005
+C# 3.0	否	2007年8月	2007年11月	
+.NET Framework 2.0 (Except LINQ)[4]
+.NET Framework 3.0 (Except LINQ)[4]
+.NET Framework 3.5
+
+Visual Studio 2008
+Visual Studio 2010
+C# 4.0	2010年4月	2010年4月	.NET Framework 4	Visual Studio 2010
+C# 5.0	2017年12月	2018年12月	2013年6月	2012年8月	.NET Framework 4.5	Visual Studio 2012
+Visual Studio 2013
+C# 6.0	否	草案	2015年7月	.NET Framework 4.6	Visual Studio 2015
+C# 7.0	否	2017年3月	.NET Framework 4.6.2	Visual Studio 2017
+C# 7.1	否	否	否	2017年8月	.NET Framework 4.7	Visual Studio 2017 version 15.3[5]
+C# 7.2	否	否	否	2017年11月	.NET Framework 4.7.1	Visual Studio 2017 version 15.5[6]
+C# 7.3	否	否	否	2018年5月	.NET Framework 4.7.2	Visual Studio 2017 version 15.7[6]
+C# 8.0	否	否	否	2019年9月	.NET Framework 4.8	Visual Studio 2019 version 16.3[6]
+語言特性
+相對於C和C++，這個語言在許多方面進行了限制和增強：
+
+指標（Pointer）只能用於不安全模式之中。大多數物件存取通過安全的參照實現，以避免無效的調用，並且有許多演算法用於檢查溢位，指標只能用於調用值類型，以及受垃圾收集控制的代管物件。
+物件不能被顯式釋放，代替為當不存在被參照時通過垃圾回收器回收。
+只允許單一繼承（single inheritance），但是一個類可以實現多個介面（interfaces）。
+C#比C++更加類型安全。預設的安全轉換是隱含轉換，例如由短整型轉換為長整型和從衍生類轉換為基類。而介面布林數同整型，及列舉型同整型不允許隱含轉換，非空指標（通過參照相似物件）同用戶定義類型的隱含轉換欄位被顯式的確定，不同於C++的複製構造函式。
+陣列宣告的語法不同（"int[] a = new int[5]"而不是"int a[5]"）。
+列舉位於其所在的命名空間中。
+C#中沒有模版（Template），但是在C# 2.0中引入了泛型（Generic programming），並且支援一些C++模版不支援的特性。比如泛型參數中的類型約束。另一方面，表達式不能像C++模版中被用於類型參數。
+屬性支援，使用類似存取成員的方式調用。
+完整的反射支援。
+C# 2.0的特性
+針對於.NET SDK 2.0（相對應於ECMA-334標準第三版），C# 的新特性有：
+
+分部類別
+分部類別將類別的實現分在多個檔案中。該概念於C# 中首次出現，除了能將一個類別的成員分開存放，還使ASP.NET中的代碼後置得以實現。代碼後置實現了HTML代碼和後台互動代碼的分離。
+
+file1.cs:
+
+public partial class MyClass1
+{
+    public void MyMethod1()
+    {
+        // implementation
+    }
+}
+file2.cs:
+
+public partial class MyClass1
+{
+    public void MyMethod2()
+    {
+        // implementation
+    }
+}
+分部類別這個特性允許將一個類別的編寫工作分配給多個人，一人寫一個檔案，便於版本控制。它又可以隔離自動生成的代碼和人工書寫的代碼，例如設計表單應用程式時。
+
+泛型
+泛型，或參數化類型，是被C#支援的.NET 2.0特性。不同於C++模版，.NET參數化類型是在執行時被實例化，而不是編譯時，因此它可以跨語言，而C++模版卻不行。它支援的一些特性並不被C++模版直接支援，比如約束泛型參數實現一個介面。另一方面，C# 不支援無類型的泛型參數。不像Java中的泛型，在CLI虛擬機器中，.NET generics使用具化生成泛型參數，它允許最佳化和儲存類型資訊。[7]
+
+靜態類別
+靜態類別它不能被實例化，並且只能有靜態成員。這同很多過程語言中的模組概念相類似。
+
+疊代器
+一種新形式的疊代器它提供了函式語言程式設計中的generator，使用yield return
+
+類似於Python中使用的yield
+
+// Method that takes an iterable input (possibly an array)
+// and returns all even numbers.
+public static IEnumerable<int> GetEven(IEnumerable<int> numbers)
+{
+    foreach(int i in numbers)
+    {
+        if (i % 2 == 0) yield return i;
+    }
+}
+匿名方法
+匿名方法類似於函式語言程式設計中的閉包。[8]
+
+public void Foo(object parameter)
+{
+    // ...
+
+    ThreadPool.QueueUserWorkItem(delegate
+    {
+        // anonymous delegates have full access to local variables of the enclosing method
+        if(parameter == ...)
+        { 
+            // ... 
+        }
+
+        // ...
+    });
+}
+委託的協變和逆變
+委託簽章的協變和逆變,[9]
+
+屬性存取器可以被單獨設定存取級別
+例子：
+
+string status = string.Empty;
+
+public string Status
+{
+    get { return status; }             // anyone can get value of this property,
+    protected set { status = value; }  // but only derived classes can change it
+}
+可空類型
+可空類型（跟個問號，如int? i = null;）允許設定null給任何類類型。
+
+int? i = null;
+object o = i;
+if(o == null)
+    Console.WriteLine("Correct behaviour - runtime version from September 2005 or later");
+else
+    Console.WriteLine("Incorrect behaviour - pre-release runtime (from before September 2005)");
+??運算子
+（??）用於如果類別不為空值時回傳它自身，如果為空值則返回之後的操作
+
+object nullObj = null; 
+object obj = new Object(); 
+return nullObj ?? obj; // returns obj
+主要用作將一個可空類型賦值給不可空類型的簡便語法
+
+int? i = null;
+int j = i ?? 0; // Unless i is null, initialize j to i. Else (if i is null), initialize j to 0.
+C# 3.0的特性
+C# 3.0發布於2007年10月17日，是.NET Framework 3.5的一部分，它的新特性靈感來自於函式語言程式設計語言，如：Haskell和ML，並廣泛地引入了Language Integrated Query（LINQ）模式到通用語言運行庫中e.[10]
+
+Linq
+語言整合查詢（英語：Language Integrated Query，縮寫：LINQ）：[11] 上下文相關關鍵字"from, where, select"可用於查詢SQL、XML、集合等。這些識別碼在LINQ上下文中被作為關鍵字，但是它們的增加不會破壞原有的名為from、where或select的變數。
+
+類型初始化器
+Customer c = new Customer();
+c.Name = "James";
+可寫作：
+
+Customer c = new Customer() { Name="James" };
+集合初始化器
+MyList list = new MyList();
+list.Add(1);
+list.Add(2);
+可寫作
+
+MyList list = new MyList { 1, 2 };
+假設MyList實現了System.Collections.IEnumerable且有一個Add方法method[12]
+
+匿名類型
+var x = new { Name="James" };
+局部變數類型推斷
+局部變數類型推斷：
+
+var x = new Dictionary<string, List<float>>();
+等同於
+
+Dictionary<string, List<float>> x = new Dictionary<string, List<float>>();
+它只是一個語法糖，這個特性被匿名類型聲明時所需要
+
+Lambda表達式
+Lambda表達式（無函式名稱的物件方法在程式語言中的表達語法）:
+
+listOfFoo.Where(
+    delegate(Foo x)
+    {
+        return x.Size > 10; 
+    }
+)
+可寫作
+listOfFoo.Where(x => x.Size > 10);
+編譯器翻譯Lambda表達式為強型別委託或強型別表達式樹.
+
+自動化屬性
+編譯器將自動生成私有變數和適當的getter（get存取器）和setter（set存取器），如：
+
+public string Name
+{
+    get; 
+    set; 
+}
+擴充方法
+擴充方法指，一個靜態類包含this關鍵字作為方法的第一參數時，這個方法將被添加到該this的類型中：
+
+public static class IntExtensions
+{
+    public static void PrintPlusOne(this int x) 
+    {
+        Console.WriteLine(x + 1);
+    }
+}
+ 
+int foo = 0;
+foo.PrintPlusOne();
+分部方法
+允許碼產生器生成方法聲明作為擴充點，如果有人在另一個部分類實現了它才會被包含於原代碼編譯。[13]
+
+分部方法（Partial methods）必須定義在分部類（partial classes）中
+定義分部方法需要用partial做修飾詞
+分部方法不一定總是有執行內容的，也就是說定義的方法可以一句操作語句都沒有
+分部方法返回值必須是void
+分部方法可以是靜態（static）方法
+分部方法可以包含參數，參數可以包含以下修飾詞：this,ref,params
+分部方法必須是私有（private）方法
+例子：
+
+partial class C
+{
+    static partial void M(int i); // defining declaration
+}
+partial class C
+{
+    static partial void M(int i)
+    {
+        dosomething();
+    }
+}
+C# 4.0的特性
+動態查閱
+C# 4.0新增dynamic關鍵字，提供動態編程（dynamic programming），把既有的靜態物件標記為動態物件，類似javascript, Python或Ruby。
+
+dynamic關鍵字標記的欄位被處理成一個特殊包裝的object物件，它取消了CLI的編譯時型別檢查
+
+dynamic calc = GetCalculator();
+int sum = calc.Add(10, 20);
+具名參數與可選參數
+public StreamReader OpenFile(
+    string path,
+    int bufferSize = 1024)
+{
+...
+}
+呼叫OpenFile時，順序可以完全顛倒：
+
+OpenFile(bufferSize: 4096, path: "foo.txt");
+與COM組件互動
+在C#中打開一個Word檔案：
+
+static void Main(string[] args) {
+    Word.Application wordApplication = new   
+       Word.Application() {Visible = true};     
+    wordApplication.Documents.Open(@"C:\plant.docx",   
+       ReadOnly: true);  
+}
+在C#中指定Excel的某一格文字：
+
+excelObj.Cells[5, 5].Value = "This is sample text";
+泛型的協變和逆變
+C# 4.0支援協變和逆變，例如在泛型介面可以加上in、out修饰字。
+
+  public interface IComparer<in T>  
+  {  
+    int Compare(T left, T right);  
+  }
+
+  public interface IEnumerable<out T> : IEnumerable
+  {
+    IEnumerator<T> GetEnumerator();
+  }
+C# 5.0的特性
+C# Evolution Matrix
+Async Feature （補充： async和await是一對語法糖，允許開發人員非常輕鬆的呼叫基於TASK的非同步編程）async-await關鍵字並不會真的建立一個執行緒池任務，完成這個動作依賴於被呼叫方法中的函式。這一點在許多C#的中文教程中被忽略，導致許多學習的新手誤以為await關鍵字會直接建立一個新的執行緒池任務。
+Caller Information
+C# 6.0的特性
+唯讀 Auto 屬性
+Auto 屬性初始設定式
+具有運算式主體的函式成員：
+使用靜態
+Null - 條件運算子
+字串插值
+例外狀況篩選條件
+nameof 運算式
+Catch 和 Finally 區塊中的 Await
+索引初始設定式
+集合初始設定式的擴充方法
+改進的多載解析
+C# 7.0的特性
+加入 out 變數；能夠直接宣告一個變數在它要傳入的地方，當成一個 out 的引數[14]
+
+C# 7.1的特性
+async``Main方法
+default常值運算式
+推斷的 tuple 項目名稱
+C# 7.2的特性
+具備實值型別的參考語意
+無後置具名引數
+數值常值中的前置底線
+private protected 存取修飾詞
+C# 8.0的特性
+可空參照類型
+await yield return可非同步返回的疊代器
+Index 索引類型和Range區間類型
+允許在聲明介面時為介面成員提供預設實現
+遞迴的模式匹配
+表達式形式的Switch關鍵字
+在編譯器可做類型推斷的情況下，允許進一步省略類型聲明
+程式的執行
+C#通常不被編譯成為能夠直接在電腦上執行的二進位本地代碼。與Java類似，它被編譯成為中間代碼（Microsoft Intermediate Language），然後通過.NET Framework的虛擬機器——被稱為通用語言執行層——執行。
+
+所有的.Net程式語言都被編譯成這種被稱為通用中間語言的中間代碼。因此雖然最終的程式在表面上仍然與傳統意義上的可執行檔都具有「.exe」的字尾名。如果電腦上沒有安裝.Net Framework，那麼這些程式會彈出對話方塊，要求用戶下載.net framework。
+
+在程式執行時，.Net Framework將中間代碼翻譯成為二進位機器碼，從而使它得到正確的執行。最終的二進位代碼被儲存在一個緩衝區（Buffer）中。所以一旦程式使用了相同的代碼，那麼將會呼叫緩衝區中的版本。這樣如果一個.Net程式第二次被執行，那麼這種翻譯不需要進行第二次，速度明顯加快。
+
+標準化
+微軟公司已經向ECMA申請將C#作為一種標準。在2001年12月，ECMA發布了ECMA-334 C#語言規範。C#在2003年成為一個ISO標準（ISO/IEC 23270）。現在有一些獨立的實現正在進行，包括：
+
+自由軟體基金會的dotGNU Portable.NET
+Mono
+Baltie - C# IDE for children and young Baltie
+C# 的Hello World程式
+下面是一個在命令提示字元上輸出Hello World的小程式，這種程式通常作為開始學習程式語言的第一個步驟：
+
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+        }
+    }
+}
+實現
+C# 有5個著名的編譯器（compilers）:
+
+最標準的C# 的實作當屬微軟自己推出、並被包含在.NET Framework內的C# 編譯器。
+微軟的轉軸專案（Rotor Project，目前稱為Shared Source Common Language Infrastructure），提供了通用語言執行層（Common Language Runtime）的實作與C# 編譯器。但是Shared Source Common Language Infrastructure在2006年的2.0版後就停止了。
+由Novell贊助的Mono 專案提供了C# 編譯器，同時也接近百分之百地實作了.NET Framework類別庫。而Mono後來衍伸出由微軟認可的第三方套件Xamarin。
+Dot GNU 專案也提供了另一個自由版本的C# 編譯器，也提供了.NET Framework類別庫的實作。
+Borland提供了專案級的C# 整合開發環境，內部所使用的編譯器仍是微軟.NET Framework所提供的C# 編譯器（這也意味著你仍須安裝微軟的.NET Framework）。產品：C# Builder（商業版本），Turbo C# Explorer（免費版本）。
+參考文獻
+ What's new in C# 8.
+ Rich Hickey Q&A by Michael Fogus. [2017-01-11].
+ C# Language Specification (PDF) 4th. Ecma International. June 2006 [2012-01-26]. （原始內容 (PDF)存檔於2012-12-02）.
+ Using C# 3.0 from .NET 2.0. Danielmoth.com. 2007-05-13 [2012年10月4日].
+ https://www.visualstudio.com/en-us/news/releasenotes/vs2017-relnotes-v15.3#cs71
+ https://www.visualstudio.com/en-us/news/releasenotes/vs2017-relnotes
+ An Introduction to C# Generics
+ Anonymous Methods (C#)
+ Covariance and Contravariance in Delegates (C#)
+ Tim Anderson. C# pulling ahead of Java - Lead architect paints rosy C# picture. Reg Developer. The Register. 2006-11-14 [2007-01-20].
+ LINQ. Microsoft MSDN. 2007 [2007-08-13]. （原始內容存檔於2007-01-16） （英語）.
+ The Mellow Musings of Dr. T : What is a collection?
+ Partial Methods. [2007-10-06].
+ 一覽 C# 7.0 中的新功能. [2016-09-14].
+外部連結
+（英文）C# Language Specification (MSDN)
+（英文）ECMA-334 C# Language Specification (.pdf)
+（英文）ISO/IEC 23270:2003 C# Language Specification
+Visual C# .NET入門 (MSDN)
+MCS: Mono C# 編譯器
+Visual Studio Express首頁
+Visual C# Logo
+C#教學
+[顯示]閱論編
+程式語言分類
+[顯示]閱論編
+.NET Framework
+[顯示]閱論編
+ISO標準
+規範控制 編輯維基數據鏈接	
+BNF: cb13614817q (data)GND: 4616843-6LCCN: sh2001001705NKC: ph137696
+分類：.NET程式語言C語言家族物件導向的程式語言基於類的程式語言Ecma標準
+</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
