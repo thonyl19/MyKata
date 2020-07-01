@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 var x = {
     get test(){
         return "123"
@@ -137,3 +138,19 @@ var _r = {
   var zg = Object.keys(_r);
   var _l = ['WO','STATUS','PRODUCT','PARTNO','ROUTE','ROUTE_VER_SID','ROUTE_VERSION','QUANTITY','RELEASE_QUANTITY','UNRELEASE_QUANTITY','CREATE_DATE']
   zg
+
+   var _condition = [8,8,16,24,16,8,8]
+
+   var tt = {}
+   _total = 0;
+   _.each(_condition, (el, idx) => {
+        var floatFix = false;
+        _total += el;
+        if (_total > 24) {
+            floatFix = true;
+            _total = el;
+        }
+        tt[`A${idx}`] = {el,floatFix,_total}
+    });
+
+    tt;
