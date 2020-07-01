@@ -54,22 +54,54 @@ Inpu 切換到下一頁,
 		以陣列欄位型式來做快速的 UI 生成
 	:form_base
 		以定制的 json 格式語法,來實現 UI 動態生成
-	~新構想
+	~新構想(old)
 		應以 工具(pw-mock)的概念,先能快速的實現 UI 的結構,
-			在這個基礎上生成 json.config 或 template code
-		最終端最多只有支援使用 json.config , 沒有其他調試的功能 ,
-		讓 智財可得到最大限度的保障
-	power-form-{bts|el} L0
+			在這個基礎上生成 schema 或 template code
+		最終端最多只有支援使用 schema , 沒有其他調試的功能 ,
+			讓 智財可得到最大限度的保障
+	~構想(v2020622)
+		L0:
+			終端應用,只能使用 slot template
+		L1:
+			智能模式,進入智財層
+			支援 quick , schema ,mock 模式
+		L2:
+			GUI模式
+
+	[L0] power-form-{bts|el} 
 		只是外殼層加上 slot 的處理
-	power-form-ext L1
+	[L1] pw-form 
 		:type{bts|el}
-		:cfg
-	power-form-cfg L2
-		Input
+		:quick{col|dataRow}
+		:schema
+		規劃 以類似 x-component 的應用方式
+	[L2] pw-form-cfg 
+		Quick
 		Config
-			code
-			view
+			schema
+				text_s:'',
+					text_i:1,
+					text_i1:1.1,
+					text_n:null,
+				select:['A','B'],
+					select_1:{src:['A','B'],select:'A'},
+				checkbox:true, //{checkbox:['A','B']}
+					checkbox_1:{checkbox:'A',src:['A','B']}, //{checkbox:['A','B']}
+					radio:{radio:'A',src:['A','B']},
+				date:new Date(),
+				textarea:'~',
+				textarea_1:{textarea:''},
+				x(){}
+			grid
+				以表格型式呈現 格式設定
+		View
+			檢視 pw-form 實際呈現
 		Code
+			html
+			js
+			mock
+### pw-debug
+	提供 點撃後,可以快速的簽入當前的程序,直接調試 $data
 
 ### cfg
 	{

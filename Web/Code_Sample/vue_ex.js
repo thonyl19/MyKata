@@ -26,6 +26,48 @@ let API = {
        };
        return _obj;
     },
+    'directive'() {
+        var _note = `
+           <pre>
+           </pre>
+           `;
+        Vue.directive('demo', {
+            bind: function (el, binding, vnode) {
+                var s = JSON.stringify
+                el.innerHTML =
+                    'name: '       + s(binding.name) + '<br>' +
+                    'value: '      + s(binding.value) + '<br>' +
+                    'expression: ' + s(binding.expression) + '<br>' +
+                    'argument: '   + s(binding.arg) + '<br>' +
+                    'modifiers: '  + s(binding.modifiers) + '<br>' +
+                    'vnode keys: ' + Object.keys(vnode).join(', ')
+            },
+        })
+        Vue.directive('debug', {
+            componentUpdated(el, binding, vnode){
+                let {arg=''} = binding;
+                console.log({arg,el, binding, vnode});
+            }
+        })
+        var _obj = {
+            _css:``,
+            _vue: {
+                template: `
+                    <div>
+                    ${_note}
+                        <input type='text' v-model="message" />
+                        <div id="hook-arguments-example" v-debug v-demo:foo.a.b.zz="message"></div>
+                    </div>
+                `,
+                data(){
+                    return {
+                        message: 'hello!'
+                    }
+                } 
+               }
+        };
+        return _obj;
+    },
     __def() {
         /*
         Vue.directive('numberOnly', {
@@ -83,7 +125,7 @@ let API = {
 
 }
 var Views = {
-    '*dblclick'() {
+    'dblclick'() {
 		var _note = `
            <pre>
             實現 dblclick 的功能,這裡碰到了以下幾個問題

@@ -704,6 +704,69 @@ var Row = {
 }
 
 let Vue_Prd = {
+	'x-component'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		/*
+		{{tabs2}}
+					<pw-tabs v-model="tabs2"></pw-tabs>
+					{{tabs1}}
+					<pw-tabs v-model="tabs1"></pw-tabs>
+					
+		*/
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					{{tabs2}}
+					<x-component v-model="tabs2" />
+					</div>
+				`,
+				data(){
+					return {
+						tabs1:{
+							is:'pw-tabs',
+							tabs:{
+								Input:{
+									is:'pw-input',
+								},
+								Config:{},
+							}
+						}
+						,tabs2:{
+							is:'pw-tabs',
+							tabs:{
+								InputA:{},
+								ConfigA:{
+									is:'pw-tabs',
+									tabs:{
+										AAAAA:{},
+										BBBB:{
+											is:'pw-input',
+											dyn_prop:{
+												Exec(){
+													alert('test');
+												}
+											}
+										},
+									}
+								},
+							}
+						},tabs3:{
+							tabs:{
+								AAAAA:{},
+								BBBB:{},
+							}}
+					}
+				} 
+			   }
+		};
+		return _obj;
+	},
 	'power_form_el_options'() {
 		var _note = `
 		   	<pre>
@@ -1055,61 +1118,20 @@ let Tool = {
 		   <pre>
 		   </pre>
 		   `;
-		/*
-		{{tabs2}}
-					<pw-tabs v-model="tabs2"></pw-tabs>
-					{{tabs1}}
-					<pw-tabs v-model="tabs1"></pw-tabs>
-					
-		*/
 		var _obj = {
 			_css:``,
 			_vue: {
 				template: `
 					<div>
 					${_note}
-					{{tabs2}}
-					<x-component v-model="tabs2" />
+					<pw-form-cfg></pw-form-cfg>
 					</div>
 				`,
 				data(){
 					return {
-						tabs1:{
-							is:'pw-tabs',
-							tabs:{
-								Input:{
-									is:'pw-input',
-								},
-								Config:{},
-							}
-						}
-						,tabs2:{
-							is:'pw-tabs',
-							tabs:{
-								InputA:{},
-								ConfigA:{
-									is:'pw-tabs',
-									tabs:{
-										AAAAA:{},
-										BBBB:{
-											is:'pw-input',
-											dyn_prop:{
-												Exec(){
-													alert('test');
-												}
-											}
-										},
-									}
-								},
-							}
-						},tabs3:{
-							tabs:{
-								AAAAA:{},
-								BBBB:{},
-							}}
 					}
 				} 
-			   }
+			}
 		};
 		return _obj;
 	},
@@ -1145,14 +1167,22 @@ let Tool = {
 				template: `
 					<div>
 					${_note}
-					<power-form-cfg></power-form-cfg>
+					[基本應用]
+					<pw-form >
+					<div class="form-group col-lg-6 col-sm-12"><label class="col-lg-4 col-sm-4 control-label">text_s</label> <div class="col-lg-8 col-sm-8"><input type="text" class="form-control"></div></div><div class="form-group col-lg-6 col-sm-12"><label class="col-lg-4 col-sm-4 control-label">text_s</label> <div class="col-lg-8 col-sm-8"><input type="text" class="form-control"></div></div>
+					</pw-form>
+					[quick]
+					<pw-form :quick="quick1" >
+					</pw-form>
 					</div>
 				`,
 				data(){
 					return {
+						quick1:['A','B'],
+						quick2:{}
 					}
 				} 
-			}
+			   }
 		};
 		return _obj;
 	},
