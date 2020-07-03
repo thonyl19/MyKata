@@ -1,4 +1,13 @@
-﻿
+﻿/*
+https://datatables.net/
+	官網
+https://dotblogs.com.tw/shadow/2018/04/03/033936
+	[jQuery] jQuery DataTables Server Side模式整合ASP.net MVC 的查詢、分頁和排序 Part2
+https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side-integration/
+
+	*/
+
+
 var dataSet = [
   ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
   ["Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750"],
@@ -555,10 +564,54 @@ var Case = {
 	return _obj;
   },
 }
+
+var Options = {
+	'Ajax Function'() {
+		var _note = `
+		<pre>
+		這個範例 只要是演示 datatables - ajax call API 取得資料的機制,
+			以及其換頁控制處理機制.
+		因為並沒有真正的API 可以 call ,所以此處只是模擬 ajax 取得資料後的處理程序,
+			以及關鍵處理程序.
+		</pre>
+		`;
+		var _obj = Views.DataBase_Json(_note);
+
+		$.extend(_obj._baseSet,{
+			serverSide: true, //此參數是設定資料使用 ajax call API 方式取得
+			ordering: false ,
+			deferLoading: 0, //初始化DataTable時，不發出ajax
+			ajax(data, callback, settings){
+				let {draw} = data;
+				var _len = window.tmpData.mydata.length;
+				let _ApiBack = {
+					/*必要,如果 server 端沒有回傳這個參數,就要此處補上,
+						不然頁面不會刷新 
+					*/
+					draw,
+					data: window.tmpData.mydata,
+					recordsTotal :_len,
+					recordsFiltered :_len,
+				}
+				//必須要執行這一段 callback ,資料才會刷新 
+				callback(_ApiBack);
+			}
+		});
+
+		_obj._vue.methods = {
+			//將 load 程序改成使用 draw , 以觸發 ajax 處理程序
+			Load(){
+				this.jqDT.draw();
+			}
+		}
+		return _obj;
+	},
+}
 window.sample = {
   Views,
+  Options,
   API,
   Tool,
   Case
-  , def: 'x'
+  
 };
