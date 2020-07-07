@@ -4,6 +4,32 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 
 let Views = {
+	'*def'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<el-checkbox v-model="checked1" label="备选项1" true-label="A" false-label="B" border></el-checkbox>
+					<el-checkbox v-model="checked2" label="备选项2" border></el-checkbox>
+					{{[checked1,checked2]}}
+				</div>
+				`,
+				data(){
+					return {
+						checked1: "",
+        				checked2: false,
+					}
+				}
+			}
+		};
+		return _obj;
+	},
 	'巢狀 el-tabs 範例'() {
 		var _note = `
 		   <pre>
@@ -1113,8 +1139,7 @@ let Tool = {
 		};
 		return _obj;
 	},
-
-	'*pw-form-cfg'() {
+	'def'() {
 		var _note = `
 		   <pre>
 		   </pre>
@@ -1136,7 +1161,28 @@ let Tool = {
 		};
 		return _obj;
 	},
-	'pw-form'() {
+	'String Tpl'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					
+				</div>
+				`,
+				data(){
+					return {}
+				}
+			}
+		};
+		return _obj;
+	},
+	'power-form-cfg'() {
 		var _note = `
 		   <pre>
 		   </pre>

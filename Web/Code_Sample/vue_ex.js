@@ -378,7 +378,7 @@ var Views = {
         return { _vue };
     },
 
-    'v-for'() {
+    '*v-for'() {
         var _note = `
             <pre>
             </pre>
@@ -389,15 +389,21 @@ var Views = {
                 template: `
                 <div>
                     ${_note}
-                    {{list}}
+                    {{list}}{{count}}
                     <ul>
-                        <li v-for="(item) in list" ><input type=text v-model="item.A" /></li>
+                        <li v-for="(item) in list"  ><input type=text v-model="item.A" /></li>
                     </ul>
                 </div>
                 `,
                 data(){
                     return {
-                        list:[{A:1},{A:2}]
+                        list:[{A:1},{A:2}],
+                        count:0
+                    }
+                },
+                methods:{
+                    Add(val){
+                        this.count +=val;
                     }
                 }
             }
