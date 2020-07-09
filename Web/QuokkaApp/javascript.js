@@ -6,6 +6,7 @@ https://regexr.com/
 */
 
 import * as _ from "lodash";
+import { abort } from "process";
 var list_number = [
   "100.11",
   "100",
@@ -65,7 +66,7 @@ var fn = {
 	resizable() {
 		//https://jsfiddle.net/Linusborg/xzjfw8gm/
 	},
-  	"_call , apply , bind , Arrow Function"() {
+  	"call , apply , bind , Arrow Function"() {
     //https://medium.com/@realdennis/javascript-%E8%81%8A%E8%81%8Acall-apply-bind%E7%9A%84%E5%B7%AE%E7%95%B0%E8%88%87%E7%9B%B8%E4%BC%BC%E4%B9%8B%E8%99%95-2f82a4b4dd66
 		class TestClass {
 		constructor(name) {
@@ -182,6 +183,46 @@ var fn = {
 		_r;
 		 ;   // Hello I am  fongki
     //   boo.Case1(); // (1 sec...) Hi!, I am undefined
+	},
+	"物件觀念A"(){
+		/*
+		這是某次面試碰到題目,當下是解錯了, 特此誌之 , 當下不解的是,
+			為何 最後的結果會是 a,b 不同,明明 式2時, a,b 是同步等價的(傳址),
+			為何會出現 式3 的結果
+		但最後想通了,在 js 的架構中,物件是以址 的形式存在於變數,
+			所以 物件內的變動,對 a,b 而言,都還是取到同一個 址(以式2為例),
+		但是,以另一個 object 指給變數 a 時, 當下 a 所記錄的,就是新物件的址,
+			也因此就跟 b 脫勾了(以式4為例)
+		所以,才會出現 式3的結果
+		*/
+		//式1
+		var a = {N:1};
+		var b = a;
+		a
+		b
+		//式2
+		b.z = "1";
+		a
+		b
+		//式3
+		a.x = a = {N:2};
+		a
+
+		//式4
+		var c = a;
+		a = {N:3};
+		a
+		c
+		b
+	},
+	"物件觀念B"(){
+		var a = "abc"
+		var fn = ()=>{
+			var b="cde";
+			console.log(`${a} - ${b}`);
+		}
+		fn();
+		console.log(`${a} - ${b}`);
 	},
 	isEmptyObj() {
 		//_.isEmpty({});
