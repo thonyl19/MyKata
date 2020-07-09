@@ -1,6 +1,6 @@
 .flex,
-.flex dt,
-.flex dd {
+.flex > dt,
+.flex > dd {
   width: 100%;
   display: block;
   padding: 0px;
@@ -19,12 +19,12 @@ dl.flex {
   display: flex;
 }
 
-.flex dt {
+.flex > dt {
   flex: 0;
   font-weight:400;
 }
 
-.flex dd {
+.flex > dd {
   flex: 1;
 }
 
