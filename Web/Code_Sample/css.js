@@ -671,6 +671,75 @@ let views = {
    },
 };
 let Case = {
+	'*def'() {
+		var _note = `
+		<pre>
+		</pre>
+		`;
+		var _obj = {
+			_css:`
+			dl.sty-edc {
+				display: inline-table;
+				color: #fff;
+				margin-right: 5px;
+			}
+			
+			.sty-edc dd, .sty-edc dt {
+				display: table-cell;
+				padding: 1px 7px;
+			}
+			
+			.sty-edc dt {
+				background-color: #777;
+				border-radius: 5px 0 0 5px;
+			}
+			
+			.sty-edc dd {
+				background-color: #5cb85c;
+			}
+			
+			.sty-edc .bg-danger {
+				background-color: #d9534f;
+			}
+			
+			.sty-edc dd:last-child {
+				border-radius: 0 5px 5px 0;
+			}
+
+			.sty-edc.fx dd{
+				background-color: #5bc0de;
+			}
+			.fx .green{
+				color:#5cb85c;
+			}
+			.fx .red{
+				color:#d9534f;
+			}
+			`,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<dl class="sty-edc">
+						<dt>UCL / LCL</dt>
+						<dd>150</dd>
+						<dd class="bg-danger">50</dd>
+					</dl>
+					<h3>本想另外試作不一樣的效果,但有點畫蛇添足了,故而取消</h3>
+					<dl class="sty-edc fx">
+						<dt>UCL / LCL</dt>
+						<dd class="green">150</dd>
+						<dd class="red">50</dd>
+					</dl>
+				</div>
+				`,
+				data(){
+					return {}
+				}
+			}
+		};
+		return _obj;
+	},
 	'percentage-circle'() {
 		var _note = `
 			<pre>
@@ -983,7 +1052,7 @@ let Layout = {
 	 };
 	 return _obj;
   },
-  '*仿element-ui 官網'() {
+  '仿element-ui 官網'() {
 	  var _note = `
 		 <pre>
 		 </pre>
