@@ -385,7 +385,39 @@ var Tool = {
 	},
 };
 let Group = {
-	'*label'() {
+	'*input-group'() {
+		var _note = `
+		<pre>
+		工作上,特殊的需求情境, .badge 和 input 為一組, 組與組之間要有 RWD 的效果,
+			試了很多方法,最後 確定 使用 .form-inline 來包 ,
+			最主要是使用其 inline-table 的效果, 以及其內部引用 .form-control 時,
+			不會造成 input 產生換行的問題
+		</pre>
+		`;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<span class="form-inline">
+						<div class="badge">A</div>
+						<input type="text"  class="form-control"/>
+					</span>
+					<span class="form-inline">
+						<div class="badge">B</div>
+						<input type="text"  class="form-control"/>
+					</span>
+				</div>
+				`,
+				data(){
+					return {}
+				}
+			}
+		};
+		return _obj;
+	},
+	'label'() {
 		var _note = `
 		<pre>
 		</pre>
