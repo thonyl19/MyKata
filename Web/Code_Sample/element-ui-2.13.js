@@ -213,6 +213,69 @@ let Views = {
 };
 
 let Case = {
+	'*el-switch active-value'() {
+		var _note = `
+		<pre>
+		在開發時碰到的一個案例,當下在處理 el-switch 時,怎麼操作都不無法正確反應,
+			最後發現問題的徵癥點在於 ,最終需要處理的數據 fixedTip 必須是 number,
+			但 active-value 如果沒有用 :active-value 設定的話,
+			最後傳入 fixedTip 的值一定會變成是 string ,
+			所以最後的解法 ,就是改用 :active-value 方式處理.
+		但很奇怪的是,在 這裡沒辦法複現沒有反應的這個問題,充其量只能呈現出,
+			兩個方法傳參數的格式差別而己
+		</pre>
+		`;
+		var dyn = {
+			
+				template: `
+					<el-switch v-model.num="fixedTip"
+						active-value=2
+						:inactive-value=1 />
+				`,
+				props: {
+					cfg: {
+						type: Object,
+						default() {
+							return {};
+						}
+					}
+				},
+				computed: {
+					fixedTip:{
+						get(){
+							let { fixedTip = 1 } = this.cfg;
+							return fixedTip;
+						},
+						set(val){
+							this.cfg.fixedTip = val;
+							this.$emit('update:cfg', this.cfg);
+						}
+					}
+				},
+		}
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+				<div>
+					${_note}
+					<dyn :cfg.sync="cfg"/>
+					{{cfg}}
+				</div>
+				`,
+				components:{dyn},
+				data(){
+					return {
+						cfg:{
+							fixedTip:"1"
+						}
+
+					}
+				} 
+			}
+		};
+		return _obj;
+	},
   'bts.form-control'() {
 	/*
 	在套用 form-control 之後 , element UI 的樣式會出現跑版的問題,

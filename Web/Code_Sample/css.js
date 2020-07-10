@@ -671,7 +671,8 @@ let views = {
    },
 };
 let Case = {
-	'*def'() {
+
+	'sty-edc'() {
 		var _note = `
 		<pre>
 		</pre>
