@@ -41,23 +41,38 @@ namespace CSharp.LinqEx
         [TestMethod]
 		public void t_List_Dictionary()
 		{
-			var s = "A,B,C";
-			var data = s.Split(',').Select(x =>{
-				return new Dictionary<string, string>() { { x, "" } };
-			}).ToList();
-
+			//以下程序,只是用於演示如何簡化產生值的語法
 			var z = new Dictionary<string, string>() { { "A", "" } };
-
-			var _data = new List<Dictionary<string, string>>
+        	var _data = new List<Dictionary<string, string>>
 			{
 				new Dictionary<string, string>() { { "Cat", "" } },
 				new Dictionary<string, string>() { { "Owl", "" } },
 				new Dictionary<string, string>() { { "Rat", "" } },
 				new Dictionary<string, string>() { { "Bat", "" } },
 			};
-			//new FileApp().Write_SerializeJson(data, FileApp.ts_Log(@"t_.json"));
+            
+            
+            var s = "A,B,C";
+			var data = s.Split(',').Select(x =>{
+				return new Dictionary<string, string>() { { x, "" } };
+			}).ToList();
+
+
+            /*
+            以下這段 ,是承上接收後 ,要做解析處理的程序 , 也是需要一些眉角,
+                故特此誌之.
+                [{"A":""},{"B":""},{"C":""}]
+            */
+            List<object> valueList = new List<object>();
+			foreach (var dItem in _data)
+			{
+				var keys = dItem.Keys;
+				if (keys.Count == 0) continue;
+				var inputVal = dItem[keys.First()];
+				valueList.Add(inputVal);
+			}
 
 		}
-
+ 
     }
 }
