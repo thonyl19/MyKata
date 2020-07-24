@@ -7,50 +7,50 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 
 	*/
 
-
-var dataSet = [
-  ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
-  ["Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750"],
-  ["Ashton Cox", "Junior Technical Author", "San Francisco", "1562", "2009/01/12", "$86,000"],
-  ["Cedric Kelly", "Senior Javascript Developer", "Edinburgh", "6224", "2012/03/29", "$433,060"],
-  ["Airi Satou", "Accountant", "Tokyo", "5407", "2008/11/28", "$162,700"],
-  ["Brielle Williamson", "Integration Specialist", "New York", "4804", "2012/12/02", "$372,000"],
-  ["Herrod Chandler", "Sales Assistant", "San Francisco", "9608", "2012/08/06", "$137,500"],
-  ["Rhona Davidson", "Integration Specialist", "Tokyo", "6200", "2010/10/14", "$327,900"],
-  ["Colleen Hurst", "Javascript Developer", "San Francisco", "2360", "2009/09/15", "$205,500"],
-  ["Sonya Frost", "Software Engineer", "Edinburgh", "1667", "2008/12/13", "$103,600"],
-  ["Jena Gaines", "Office Manager", "London", "3814", "2008/12/19", "$90,560"],
-  ["Quinn Flynn", "Support Lead", "Edinburgh", "9497", "2013/03/03", "$342,000"],
-  ["Charde Marshall", "Regional Director", "San Francisco", "6741", "2008/10/16", "$470,600"],
-  ["Haley Kennedy", "Senior Marketing Designer", "London", "3597", "2012/12/18", "$313,500"],
-  ["Tatyana Fitzpatrick", "Regional Director", "London", "1965", "2010/03/17", "$385,750"],
-  ["Michael Silva", "Marketing Designer", "London", "1581", "2012/11/27", "$198,500"],
-  ["Paul Byrd", "Chief Financial Officer (CFO)", "New York", "3059", "2010/06/09", "$725,000"],
-  ["Gloria Little", "Systems Administrator", "New York", "1721", "2009/04/10", "$237,500"],
-  ["Bradley Greer", "Software Engineer", "London", "2558", "2012/10/13", "$132,000"],
-  ["Dai Rios", "Personnel Lead", "Edinburgh", "2290", "2012/09/26", "$217,500"],
-  ["Jenette Caldwell", "Development Lead", "New York", "1937", "2011/09/03", "$345,000"],
-  ["Yuri Berry", "Chief Marketing Officer (CMO)", "New York", "6154", "2009/06/25", "$675,000"],
-  ["Caesar Vance", "Pre-Sales Support", "New York", "8330", "2011/12/12", "$106,450"],
-  ["Doris Wilder", "Sales Assistant", "Sydney", "3023", "2010/09/20", "$85,600"],
-  ["Angelica Ramos", "Chief Executive Officer (CEO)", "London", "5797", "2009/10/09", "$1,200,000"],
-  ["Gavin Joyce", "Developer", "Edinburgh", "8822", "2010/12/22", "$92,575"],
-  ["Jennifer Chang", "Regional Director", "Singapore", "9239", "2010/11/14", "$357,650"],
-  ["Brenden Wagner", "Software Engineer", "San Francisco", "1314", "2011/06/07", "$206,850"],
-  ["Fiona Green", "Chief Operating Officer (COO)", "San Francisco", "2947", "2010/03/11", "$850,000"],
-  ["Shou Itou", "Regional Marketing", "Tokyo", "8899", "2011/08/14", "$163,000"],
-  ["Michelle House", "Integration Specialist", "Sydney", "2769", "2011/06/02", "$95,400"],
-  ["Suki Burks", "Developer", "London", "6832", "2009/10/22", "$114,500"],
-  ["Prescott Bartlett", "Technical Author", "London", "3606", "2011/05/07", "$145,000"],
-  ["Gavin Cortez", "Team Leader", "San Francisco", "2860", "2008/10/26", "$235,500"],
-  ["Martena Mccray", "Post-Sales support", "Edinburgh", "8240", "2011/03/09", "$324,050"],
-  ["Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675"]
-];
-let Views = {
-  HtmlBase(_note = "",ops={}) {
-	var _obj = {
-	  _vue: {
-		template: `
+(() => {
+	var dataSet = [
+		["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
+		["Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750"],
+		["Ashton Cox", "Junior Technical Author", "San Francisco", "1562", "2009/01/12", "$86,000"],
+		["Cedric Kelly", "Senior Javascript Developer", "Edinburgh", "6224", "2012/03/29", "$433,060"],
+		["Airi Satou", "Accountant", "Tokyo", "5407", "2008/11/28", "$162,700"],
+		["Brielle Williamson", "Integration Specialist", "New York", "4804", "2012/12/02", "$372,000"],
+		["Herrod Chandler", "Sales Assistant", "San Francisco", "9608", "2012/08/06", "$137,500"],
+		["Rhona Davidson", "Integration Specialist", "Tokyo", "6200", "2010/10/14", "$327,900"],
+		["Colleen Hurst", "Javascript Developer", "San Francisco", "2360", "2009/09/15", "$205,500"],
+		["Sonya Frost", "Software Engineer", "Edinburgh", "1667", "2008/12/13", "$103,600"],
+		["Jena Gaines", "Office Manager", "London", "3814", "2008/12/19", "$90,560"],
+		["Quinn Flynn", "Support Lead", "Edinburgh", "9497", "2013/03/03", "$342,000"],
+		["Charde Marshall", "Regional Director", "San Francisco", "6741", "2008/10/16", "$470,600"],
+		["Haley Kennedy", "Senior Marketing Designer", "London", "3597", "2012/12/18", "$313,500"],
+		["Tatyana Fitzpatrick", "Regional Director", "London", "1965", "2010/03/17", "$385,750"],
+		["Michael Silva", "Marketing Designer", "London", "1581", "2012/11/27", "$198,500"],
+		["Paul Byrd", "Chief Financial Officer (CFO)", "New York", "3059", "2010/06/09", "$725,000"],
+		["Gloria Little", "Systems Administrator", "New York", "1721", "2009/04/10", "$237,500"],
+		["Bradley Greer", "Software Engineer", "London", "2558", "2012/10/13", "$132,000"],
+		["Dai Rios", "Personnel Lead", "Edinburgh", "2290", "2012/09/26", "$217,500"],
+		["Jenette Caldwell", "Development Lead", "New York", "1937", "2011/09/03", "$345,000"],
+		["Yuri Berry", "Chief Marketing Officer (CMO)", "New York", "6154", "2009/06/25", "$675,000"],
+		["Caesar Vance", "Pre-Sales Support", "New York", "8330", "2011/12/12", "$106,450"],
+		["Doris Wilder", "Sales Assistant", "Sydney", "3023", "2010/09/20", "$85,600"],
+		["Angelica Ramos", "Chief Executive Officer (CEO)", "London", "5797", "2009/10/09", "$1,200,000"],
+		["Gavin Joyce", "Developer", "Edinburgh", "8822", "2010/12/22", "$92,575"],
+		["Jennifer Chang", "Regional Director", "Singapore", "9239", "2010/11/14", "$357,650"],
+		["Brenden Wagner", "Software Engineer", "San Francisco", "1314", "2011/06/07", "$206,850"],
+		["Fiona Green", "Chief Operating Officer (COO)", "San Francisco", "2947", "2010/03/11", "$850,000"],
+		["Shou Itou", "Regional Marketing", "Tokyo", "8899", "2011/08/14", "$163,000"],
+		["Michelle House", "Integration Specialist", "Sydney", "2769", "2011/06/02", "$95,400"],
+		["Suki Burks", "Developer", "London", "6832", "2009/10/22", "$114,500"],
+		["Prescott Bartlett", "Technical Author", "London", "3606", "2011/05/07", "$145,000"],
+		["Gavin Cortez", "Team Leader", "San Francisco", "2860", "2008/10/26", "$235,500"],
+		["Martena Mccray", "Post-Sales support", "Edinburgh", "8240", "2011/03/09", "$324,050"],
+		["Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675"]
+	];
+	let Views = {
+		HtmlBase(_note = "", ops = {}) {
+			var _obj = {
+				_vue: {
+					template: `
 			<div>
 			  ${_note}
 			  <table  ref="jqDT" class="display" style="width:100%"> 
@@ -60,34 +60,34 @@ let Views = {
 			  </table>
 			</div>
 			`,
-		data(){
-		  return {
-			jqDT: {}
-		  }
-		},
-		mounted() {
-		  this.jqDT =  $(this.$refs.jqDT).DataTable(ops);
-		},
+					data() {
+						return {
+							jqDT: {}
+						}
+					},
+					mounted() {
+						this.jqDT = $(this.$refs.jqDT).DataTable(ops);
+					},
 
-	  }
-	};
-	return _obj;
-  },
-  'DataBase_Array'(_note = "") {
-	var _obj = {
-	  _baseSet: {
-		data: dataSet,
-		columns: [
-		  { title: "Name" },
-		  { title: "Position" },
-		  { title: "Office" },
-		  { title: "Extn." },
-		  { title: "Start date" },
-		  { title: "Salary" }
-		]
-	  },
-	  _vue: {
-		template: `
+				}
+			};
+			return _obj;
+		},
+		'DataBase_Array'(_note = "") {
+			var _obj = {
+				_baseSet: {
+					data: dataSet,
+					columns: [
+						{ title: "Name" },
+						{ title: "Position" },
+						{ title: "Office" },
+						{ title: "Extn." },
+						{ title: "Start date" },
+						{ title: "Salary" }
+					]
+				},
+				_vue: {
+					template: `
 		  <div>
 			${_note}
 			<table ref="jqDT" class="display" width="100%">
@@ -104,23 +104,23 @@ let Views = {
 			</table>
 		  </div>
 		  `,
-		data() {
-		  return {
-			jqDT: {}
-		  }
+					data() {
+						return {
+							jqDT: {}
+						}
+					},
+					mounted() {
+						this.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+					},
+				}
+			};
+			return _obj;
 		},
-		mounted() {
-		  this.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
-		},
-	  }
-	};
-	return _obj;
-  },
-  'DataBase_LoadArray'() {
-	var _obj = Views.DataBase_Array();
-	delete _obj._baseSet.data;
-	_obj._vue = Object.assign(_obj._vue, {
-	  template: `
+		'DataBase_LoadArray'() {
+			var _obj = Views.DataBase_Array();
+			delete _obj._baseSet.data;
+			_obj._vue = Object.assign(_obj._vue, {
+				template: `
 		<div>
 		  <pre>這個範列是以 [DataBase_Array] 為基底,演示如何動態加載資料.</pre>
 		  <button @click="Load">Load</button>
@@ -128,94 +128,94 @@ let Views = {
 		  </table>
 		</div>
 		`,
-	  methods: {
-		Load() {
-		  this.jqDT
-			.clear()
-			.rows
-			.add(dataSet)
-			.draw();
+				methods: {
+					Load() {
+						this.jqDT
+							.clear()
+							.rows
+							.add(dataSet)
+							.draw();
 
-		  // 另一種比較麻煩的資料載入方式
-		  // var length = Object.keys(dataSet).length;
-		  // for (var i = 1; i < dataSet.length; i++) {
-		  //     var row = dataSet[i];
-		  //     $dt.row.add(row);
-		  // }
-		  // $dt.draw();
-		}
-	  },
-	})
-	return _obj;
-  },
-  'DataBase_Json'(_note = "") {
-	var _obj = {
-	  _baseSet: {
-		columns: [
-		  { "title": "id", "data": "id" },
-		  { "title": "invdate", "data": "invdate" },
-		  { "title": "name", "data": "name" },
-		  { "title": "note", "data": "note" },
-		  { "title": "amount", "data": "amount" },
-		  { "title": "tax", "data": "tax" },
-		  { "title": "total", "data": "total" }
-		]
-	  },
-	  _vue: {
-		template: `
+						// 另一種比較麻煩的資料載入方式
+						// var length = Object.keys(dataSet).length;
+						// for (var i = 1; i < dataSet.length; i++) {
+						//     var row = dataSet[i];
+						//     $dt.row.add(row);
+						// }
+						// $dt.draw();
+					}
+				},
+			})
+			return _obj;
+		},
+		'DataBase_Json'(_note = "") {
+			var _obj = {
+				_baseSet: {
+					columns: [
+						{ "title": "id", "data": "id" },
+						{ "title": "invdate", "data": "invdate" },
+						{ "title": "name", "data": "name" },
+						{ "title": "note", "data": "note" },
+						{ "title": "amount", "data": "amount" },
+						{ "title": "tax", "data": "tax" },
+						{ "title": "total", "data": "total" }
+					]
+				},
+				_vue: {
+					template: `
 			<div>
 			  ${_note}
 			  <button @click="Load">Load</button>
 			  <table ref="jqDT"  class="display" width="100%"></table>
 			</div>
 			`, data() {
-		  return {
-			jqDT: {}
-		  }
+						return {
+							jqDT: {}
+						}
+					},
+					mounted() {
+						this.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+					},
+					methods: {
+						Load() {
+							this.jqDT
+								.clear()
+								.rows
+								.add(window.tmpData.mydata)
+								.draw();
+						}
+					},
+				}
+			};
+			return _obj;
 		},
-		mounted() {
-		  this.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
-		},
-		methods: {
-		  Load() {
-			this.jqDT
-			  .clear()
-			  .rows
-			  .add(window.tmpData.mydata)
-			  .draw();
-		  }
-		},
-	  }
-	};
-	return _obj;
-  },
 
 
-  'Responsive-自適應折行'(_note=null) {
+		'Responsive-自適應折行'(_note = null) {
 
-	_note = _note ?? `<pre>[Ref]https://datatables.net/extensions/rowreorder/examples/initialisation/responsive.html
+			_note = _note ?? `<pre>[Ref]https://datatables.net/extensions/rowreorder/examples/initialisation/responsive.html
 	1.rowReorder
 	2.responsive
 	</pre>`;
-	var _obj = {
-	  _baseSet:{
-		data: dataSet,
-		columns: [
-		  { title: "Name" },
-		  { title: "Position" },
-		  { title: "Office" },
-		  { title: "Extn." },
-		  { title: "Start date" },
-		  { title: "Salary" }
-		],
-		rowReorder: {
-		  selector: 'td:nth-child(2)'
-		},
-		responsive: true,
-	  },
-	  
-	  _vue: {
-		template: `
+			var _obj = {
+				_baseSet: {
+					data: dataSet,
+					columns: [
+						{ title: "Name" },
+						{ title: "Position" },
+						{ title: "Office" },
+						{ title: "Extn." },
+						{ title: "Start date" },
+						{ title: "Salary" }
+					],
+					rowReorder: {
+						selector: 'td:nth-child(2)'
+					},
+					responsive: true,
+				},
+
+				_vue: {
+					template: `
 			<div >${_note}
 			  <button @click="Switch=!Switch">switch</button>
 			  <div class="row">
@@ -229,24 +229,24 @@ let Views = {
 			  </div>
 			</div>
 			 `,
-		data(){
-		  return {
-			jqDT:{},
-			Switch:false
-		  }
+					data() {
+						return {
+							jqDT: {},
+							Switch: false
+						}
+					},
+					mounted() {
+						this.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+					}
+				}
+			};
+			return _obj;
 		},
-		mounted() {
-		  this.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
-		}
-	  }
-	};
-	return _obj;
-  },
-  'Complex_headers'() {
-	var _obj = {
-	  //https://datatables.net/extensions/fixedcolumns/examples/styling/rowspan.html
-	  _vue: {
-		template: `
+		'Complex_headers'() {
+			var _obj = {
+				//https://datatables.net/extensions/fixedcolumns/examples/styling/rowspan.html
+				_vue: {
+					template: `
 		   <div class="row">
 			 <div class="col-lg-12">
 			   <div class="panel panel-default">
@@ -264,81 +264,81 @@ let Views = {
 			 </div>
 		   </div>
 			`,
-		mounted() {
-		  $('#example').DataTable(
-			{
-			  data: dataSet,
-			  columns: [
-				{ title: "Name" },
-				{ title: "Position" },
-				{ title: "Office" },
-				{ title: "Extn." },
-				{ title: "Start date" },
-				{ title: "Salary" }
-			  ],
-			  rowReorder: {
-				selector: 'td:nth-child(2)'
-			  },
-			  responsive: true,
-			  scrollY: "300px",
-			  scrollX: true,
-			  scrollCollapse: true,
-			  paging: false,
-			  fixedColumns: true,
-			  buttons: [
-				{ extend: 'copy', className: 'btn-sm' },
-				{ extend: 'csv', className: 'btn-sm' },
-				{ extend: 'excel', className: 'btn-sm', title: 'XLS-File' },
-				{ extend: 'pdf', className: 'btn-sm', title: $('title').text() },
-				{ extend: 'print', className: 'btn-sm' }
-			  ]
-			});
-		}
-	  }
-	};
-	return _obj;
-  },
-  'Cell href'() {
-	var _obj = Views.DataBase_Json(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 cell 欄位做加工處理.</pre>`);
-	_obj._baseSet.columns[0].createdCell = (td, cellData, rowData, row, col) => {
-	  $(td).html(`<a href=#  onclick="alert('${cellData}');" >${cellData}</a>`)
-	}
-	return _obj;
-  },
-  'Hide Column'() {
-	var _obj = Views.DataBase_Json(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 Hide 欄位(第0欄-id)</pre>`);
-	_obj._baseSet.columnDefs =  [
-		{
-			"targets": [ 0 ],
-			"visible": false
-		}
-	];
-	return _obj;
-  },
-  x(){
-	var ops = {
-	  dom: 'Pfrtip',
-	  columnDefs:[
-		  {
-			  searchPanes: {
-				  controls: true,
-			  },
-			  targets: [4]
-		  }
-	  ]
-	};
-	var _obj = Views.HtmlBase(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 cell 欄位做加工處理.</pre>`,ops);
-	
-	return _obj;
-  },
-  'Basic initialisation'() {
-	//https://datatables.net/extensions/buttons/examples/initialisation/simple.html
-  }
+					mounted() {
+						$('#example').DataTable(
+							{
+								data: dataSet,
+								columns: [
+									{ title: "Name" },
+									{ title: "Position" },
+									{ title: "Office" },
+									{ title: "Extn." },
+									{ title: "Start date" },
+									{ title: "Salary" }
+								],
+								rowReorder: {
+									selector: 'td:nth-child(2)'
+								},
+								responsive: true,
+								scrollY: "300px",
+								scrollX: true,
+								scrollCollapse: true,
+								paging: false,
+								fixedColumns: true,
+								buttons: [
+									{ extend: 'copy', className: 'btn-sm' },
+									{ extend: 'csv', className: 'btn-sm' },
+									{ extend: 'excel', className: 'btn-sm', title: 'XLS-File' },
+									{ extend: 'pdf', className: 'btn-sm', title: $('title').text() },
+									{ extend: 'print', className: 'btn-sm' }
+								]
+							});
+					}
+				}
+			};
+			return _obj;
+		},
+		'Cell href'() {
+			var _obj = Views.DataBase_Json(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 cell 欄位做加工處理.</pre>`);
+			_obj._baseSet.columns[0].createdCell = (td, cellData, rowData, row, col) => {
+				$(td).html(`<a href=#  onclick="alert('${cellData}');" >${cellData}</a>`)
+			}
+			return _obj;
+		},
+		'Hide Column'() {
+			var _obj = Views.DataBase_Json(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 Hide 欄位(第0欄-id)</pre>`);
+			_obj._baseSet.columnDefs = [
+				{
+					"targets": [0],
+					"visible": false
+				}
+			];
+			return _obj;
+		},
+		x() {
+			var ops = {
+				dom: 'Pfrtip',
+				columnDefs: [
+					{
+						searchPanes: {
+							controls: true,
+						},
+						targets: [4]
+					}
+				]
+			};
+			var _obj = Views.HtmlBase(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 cell 欄位做加工處理.</pre>`, ops);
 
-};
-var API = {
-  'Select Inputs'() {
-	var _obj = Views.DataBase_Array(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
+			return _obj;
+		},
+		'Basic initialisation'() {
+			//https://datatables.net/extensions/buttons/examples/initialisation/simple.html
+		}
+
+	};
+	var API = {
+		'Select Inputs'() {
+			var _obj = Views.DataBase_Array(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
 	  https://datatables.net/examples/api/multi_filter_select.html ,主要演示以下範例
 	  1. initComplete
 	  2. footer
@@ -346,66 +346,66 @@ var API = {
 		2.2 使用 appendTo 將 select 物件加入
 	  3. column.search() 應用
 	  4. column.data().unique().sort() 應用 </pre>`);
-	_obj._baseSet = Object.assign(_obj._baseSet, {
-	  initComplete() {
-		debugger
-		this.api().columns().every(function () {
-		  var column = this;
-		  var select = $('<select><option value=""></option></select>')
-			.appendTo($(column.footer()).empty())
-			.on('change', function () {
-			  var val = $.fn.dataTable.util.escapeRegex(
-				$(this).val()
-			  );
+			_obj._baseSet = Object.assign(_obj._baseSet, {
+				initComplete() {
+					debugger
+					this.api().columns().every(function () {
+						var column = this;
+						var select = $('<select><option value=""></option></select>')
+							.appendTo($(column.footer()).empty())
+							.on('change', function () {
+								var val = $.fn.dataTable.util.escapeRegex(
+									$(this).val()
+								);
 
-			  column
-				.search(val ? '^' + val + '$' : '', true, false)
-				.draw();
-			});
+								column
+									.search(val ? '^' + val + '$' : '', true, false)
+									.draw();
+							});
 
-		  column.data().unique().sort().each(function (d, j) {
-			select.append('<option value="' + d + '">' + d + '</option>')
-		  });
-		});
-	  }
-	})
-	return _obj;
-  },
-  'Row Selection'() {
-	var _obj = Views.DataBase_Json(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
+						column.data().unique().sort().each(function (d, j) {
+							select.append('<option value="' + d + '">' + d + '</option>')
+						});
+					});
+				}
+			})
+			return _obj;
+		},
+		'Row Selection'() {
+			var _obj = Views.DataBase_Json(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
 	  https://datatables.net/examples/api/select_row.html ,主要演示以下範例
 	  1. 觸發 selected 的機制 
 	  2. rows('.selected').data() 如何取得 實際選取資料的方法</pre>
 	  {{selected.length}}--{{selected}}
 	`);
-	_obj._vue = Object.assign(_obj._vue, {
-	  data(){
-		return {
-		  jqDT:{},
-		  selected:[]
-		}
-	  },
-	  mounted() {
-		var _self = this;
-		_self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
-		_self.jqDT.on( 'click', 'tr', function () {
-		  console.log(event);
-		  debugger
-		  $(this).toggleClass('selected');
-		  var _r = _self.jqDT.rows('.selected').data();
-		  var _arr = [];
-		  for(var i = 0 ; i < _r.length ; i++){
-			_arr.push(_r[i]);
-		  }
-		  _self.selected = _arr;
-		});
-	  },
-	   
-	})
-	return _obj;
-  },
-  'Cell Click'() {
-	var _obj = Views.DataBase_Json(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
+			_obj._vue = Object.assign(_obj._vue, {
+				data() {
+					return {
+						jqDT: {},
+						selected: []
+					}
+				},
+				mounted() {
+					var _self = this;
+					_self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+					_self.jqDT.on('click', 'tr', function () {
+						console.log(event);
+						debugger
+						$(this).toggleClass('selected');
+						var _r = _self.jqDT.rows('.selected').data();
+						var _arr = [];
+						for (var i = 0; i < _r.length; i++) {
+							_arr.push(_r[i]);
+						}
+						_self.selected = _arr;
+					});
+				},
+
+			})
+			return _obj;
+		},
+		'Cell Click'() {
+			var _obj = Views.DataBase_Json(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
 	  https://datatables.net/examples/api/select_row.html ,主要演示以下範例
 	  1. columnDefs 擴充定義樣式的設定 
 		  columnDefs 用法與 columns 雷同,但主要的差別在於 columnDefs 
@@ -418,114 +418,183 @@ var API = {
 	  </pre>
 	  <div>{{selected}}</div>
 	`);
-	_obj._baseSet.columnDefs = [
-	  { className: "cell_0", "targets": [ 0 ] },
-	  { className: "e_click", "targets": [ 2,3 ] 
-		,createdCell(td, cellData, rowData, row, col) {
-		  $(td).html(`<a href=#>${cellData}</a>`);
-		}}
-	];    
-	_obj._vue = Object.assign(_obj._vue, {
-	  data(){
-		return {
-		  jqDT:{},
-		  selected:[],
-		}
-	  },
-	  mounted() {
-		var _self = this;
-		_self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
-		_self.jqDT.on( 'click', '.cell_0', function () {
-		  debugger
-		  var _r = _self.jqDT.rows(this).data();
-		  //取得 cells , 但沒有實質效用
-		  var _c = _self.jqDT.cells(this);
-		  _self.selected = [_r[0]];
-		});
-		_self.jqDT.on( 'click', '.e_click', function () {
-		  //取得點撃來源的 綁定欄位名稱
-		  let filed = _self.jqDT.column(this).dataSrc();
-		  //取得點撃來源的 整欄資料
-		  var data = _self.jqDT.row(this).data();
-		  let _arr = [{filed,data}];
-		  _self.selected = _arr;
-		});
-	  },
-	   
-	})
-	return _obj;
-  },
-  '?Col ReSet'() {
-	  var _note = `
+			_obj._baseSet.columnDefs = [
+				{ className: "cell_0", "targets": [0] },
+				{
+					className: "e_click", "targets": [2, 3]
+					, createdCell(td, cellData, rowData, row, col) {
+						$(td).html(`<a href=#>${cellData}</a>`);
+					}
+				}
+			];
+			_obj._vue = Object.assign(_obj._vue, {
+				data() {
+					return {
+						jqDT: {},
+						selected: [],
+					}
+				},
+				mounted() {
+					var _self = this;
+					_self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+					_self.jqDT.on('click', '.cell_0', function () {
+						debugger
+						var _r = _self.jqDT.rows(this).data();
+						//取得 cells , 但沒有實質效用
+						var _c = _self.jqDT.cells(this);
+						_self.selected = [_r[0]];
+					});
+					_self.jqDT.on('click', '.e_click', function () {
+						//取得點撃來源的 綁定欄位名稱
+						let filed = _self.jqDT.column(this).dataSrc();
+						//取得點撃來源的 整欄資料
+						var data = _self.jqDT.row(this).data();
+						let _arr = [{ filed, data }];
+						_self.selected = _arr;
+					});
+				},
+
+			})
+			return _obj;
+		},
+		'?Col ReSet'() {
+			var _note = `
 		 <pre>
 		 
 		 </pre>
 		 `;
-	  var _obj = {
-		  _css:``,
-		  _vue: {
-			  template: `
+			var _obj = {
+				_css: ``,
+				_vue: {
+					template: `
 				  <div>
 				  ${_note}
 				  </div>
 			  `,
-			  data(){
-				  return {
-				  }
-			  } 
-			 }
-	  };
-	  return _obj;
-  },
-  
-};
-var Tool = {
- 
-	Json2Colums() {
-		var _note = `
+					data() {
+						return {
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+
+	};
+	var Tool = {
+		'jdt-table-ajax'() {
+			var _note = `
+			<pre>
+			原本為了 使用 Ajax 的程序,要另外建一個 jdt-table-ajax , 結果實作的過程發現,
+				原 table-ajax 只要 參考 [Ajax Function] 範例 ,設置 ajax 相關的程序和參數 ,
+				就可以直接套用了,根本無需再另外實作,特此誌之
+			</pre>
+			`;
+			var _obj = {
+				_css: ``,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<jdt-table :jdt_set="jdt_set" 
+									:jdt_data="jdt_data"	
+										></jdt-table>
+					</div>
+					`,
+					data() {
+						return {
+							jdt_set: {
+								columns: [
+									{ "title": "id", "data": "id" },
+									{ "title": "invdate", "data": "invdate" },
+									{ "title": "name", "data": "name" },
+									{ "title": "note", "data": "note" },
+									{ "title": "amount", "data": "amount" },
+									{ "title": "tax", "data": "tax" },
+									{ "title": "total", "data": "total" }
+								],
+								"responsive": true,
+								"searching": false,
+								columnDefs: [
+									{
+										className: 'e_click', "targets": [1]
+										, createdCell(td, cellData, rowData, row, col) {
+											$(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
+										}
+									}
+								],
+								serverSide: true, //此參數是設定資料使用 ajax call API 方式取得
+								ordering: false,
+								deferLoading: 0, //初始化DataTable時，不發出ajax
+								ajax(data, callback, settings) {
+									debugger
+									let { draw } = data;
+									var _len = window.tmpData.mydata.length;
+									let _ApiBack = {
+										/*必要,如果 server 端沒有回傳這個參數,就要此處補上,
+											不然頁面不會刷新 
+										*/
+										draw,
+										data: window.tmpData.mydata,
+										recordsTotal: _len,
+										recordsFiltered: _len,
+									}
+									//必須要執行這一段 callback ,資料才會刷新 
+									callback(_ApiBack);
+								}
+							},
+							jdt_data:window.tmpData.mydata
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+		Json2Colums() {
+			var _note = `
 		<pre>
 		將 Json 的物件,直接轉換 欄位格式
 		</pre>
 		`;
-		var _obj = {
-			_vue: {
-			template: `
+			var _obj = {
+				_vue: {
+					template: `
 				<div>
 				${_note}
 				JSON<input type=text v-model="json_code" /><BR />
 				<textarea v-model="code"></textarea>
 				</div>
 				`,
-				data(){
-				return {
-					json_code:'',
-					arr_code:[]
-				}
-				},
-				computed: {
-					code(){
-						try {
-						var _s = JSON.parse(this.json_code)
-						var _arr = [];
-						for(var i in _s){
-							_arr.push({title:i,data:i})
+					data() {
+						return {
+							json_code: '',
+							arr_code: []
 						}
-						this.arr_code = _arr;
-						} catch (error) {
-						var z = error;
-						}
+					},
+					computed: {
+						code() {
+							try {
+								var _s = JSON.parse(this.json_code)
+								var _arr = [];
+								for (var i in _s) {
+									_arr.push({ title: i, data: i })
+								}
+								this.arr_code = _arr;
+							} catch (error) {
+								var z = error;
+							}
 
-						return JSON.stringify(this.arr_code).replace(/\},\{/g,'},\n{');
-					}
-				},
-			}
-		};
-		return _obj;
-	},
-}
-var Case = {
-  'href.click 衍生事件'() {
-	var _obj = Views['Responsive-自適應折行'](`<pre>這個範列是以 [Responsive-自適應折行] 為基底,以演示下面的問題
+							return JSON.stringify(this.arr_code).replace(/\},\{/g, '},\n{');
+						}
+					},
+				}
+			};
+			return _obj;
+		},
+	}
+	var Case = {
+		'href.click 衍生事件'() {
+			var _obj = Views['Responsive-自適應折行'](`<pre>這個範列是以 [Responsive-自適應折行] 為基底,以演示下面的問題
 	1.在自動折行的功能中, col[0] 的位置在點撃時,會觸發展開 隱藏欄位的功能
 	2.在應用情境中,該欄位設 href 以實現開啟子視窗的功能
 	現在的問題是,在觸發 功能2 時,會一併觸發 功能1,追查問題原因時發現,
@@ -534,40 +603,42 @@ var Case = {
 	最後是追查到 功能1 的實作底層時,研究它的事件綁定方式後才試出解法,
 	  和範例中所示, v1,v2 的取法,功能1 的事件都會先觸發,
 	  只有 v3 的取法才能讓 功能2 先觸發.</pre>`);
-	_obj._baseSet.columnDefs = [
-	  {className:'e_click' 
-		//指定那幾個欄位要套用這個功能
-		, "targets": [0,1]
-		,createdCell(td, cellData, rowData, row, col) {
-		  $(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
-		}}
-	];
+			_obj._baseSet.columnDefs = [
+				{
+					className: 'e_click'
+					//指定那幾個欄位要套用這個功能
+					, "targets": [0, 1]
+					, createdCell(td, cellData, rowData, row, col) {
+						$(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
+					}
+				}
+			];
 
-	_obj._vue = Object.assign(_obj._vue,{
-	  mounted() {
-		var _self = this;
-		_self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
-		var _jq 
-		  //= $(this.$refs.jqDT); //v1
-		  //= _self.jqDT.table().body(); //v2
-		  = $(_self.jqDT.table().body()); // v3
-		_jq.on('click', '.e_click a', function (e) {
-			e.preventDefault();
-			e.stopPropagation();
-			let _filed = _self.jqDT.column(this.offsetParent).dataSrc();
-			var _data = _self.jqDT.row(this.offsetParent).data();
-			console.log(_data);
-		  });
-	  }
-	})
-	
-	return _obj;
-  },
-}
+			_obj._vue = Object.assign(_obj._vue, {
+				mounted() {
+					var _self = this;
+					_self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+					var _jq
+						//= $(this.$refs.jqDT); //v1
+						//= _self.jqDT.table().body(); //v2
+						= $(_self.jqDT.table().body()); // v3
+					_jq.on('click', '.e_click a', function (e) {
+						e.preventDefault();
+						e.stopPropagation();
+						let _filed = _self.jqDT.column(this.offsetParent).dataSrc();
+						var _data = _self.jqDT.row(this.offsetParent).data();
+						console.log(_data);
+					});
+				}
+			})
 
-var Options = {
-	'Ajax Function'() {
-		var _note = `
+			return _obj;
+		},
+	}
+
+	var Options = {
+		'Ajax Function'() {
+			var _note = `
 		<pre>
 		這個範例 只要是演示 datatables - ajax call API 取得資料的機制,
 			以及其換頁控制處理機制.
@@ -575,43 +646,68 @@ var Options = {
 			以及關鍵處理程序.
 		</pre>
 		`;
-		var _obj = Views.DataBase_Json(_note);
+			var _obj = Views.DataBase_Json(_note);
 
-		$.extend(_obj._baseSet,{
-			serverSide: true, //此參數是設定資料使用 ajax call API 方式取得
-			ordering: false ,
-			deferLoading: 0, //初始化DataTable時，不發出ajax
-			ajax(data, callback, settings){
-				let {draw} = data;
-				var _len = window.tmpData.mydata.length;
-				let _ApiBack = {
-					/*必要,如果 server 端沒有回傳這個參數,就要此處補上,
-						不然頁面不會刷新 
-					*/
-					draw,
-					data: window.tmpData.mydata,
-					recordsTotal :_len,
-					recordsFiltered :_len,
+			$.extend(_obj._baseSet, {
+				serverSide: true, //此參數是設定資料使用 ajax call API 方式取得
+				ordering: false,
+				deferLoading: 0, //初始化DataTable時，不發出ajax
+				ajax(data, callback, settings) {
+					let { draw } = data;
+					var _len = window.tmpData.mydata.length;
+					let _ApiBack = {
+						/*必要,如果 server 端沒有回傳這個參數,就要此處補上,
+							不然頁面不會刷新 
+						*/
+						draw,
+						data: window.tmpData.mydata,
+						recordsTotal: _len,
+						recordsFiltered: _len,
+					}
+					//必須要執行這一段 callback ,資料才會刷新 
+					callback(_ApiBack);
 				}
-				//必須要執行這一段 callback ,資料才會刷新 
-				callback(_ApiBack);
-			}
-		});
+			});
 
-		_obj._vue.methods = {
-			//將 load 程序改成使用 draw , 以觸發 ajax 處理程序
-			Load(){
-				this.jqDT.draw();
+			_obj._vue.methods = {
+				//將 load 程序改成使用 draw , 以觸發 ajax 處理程序
+				Load() {
+					this.jqDT.draw();
+				}
 			}
-		}
-		return _obj;
-	},
-}
-window.sample = {
-  Views,
-  Options,
-  API,
-  Tool,
-  Case
-  
-};
+			return _obj;
+		},
+		'分頁選項'() {
+			var _note = `
+			<pre>
+			https://datatables.net/reference/option/language.lengthMenu
+			設定分頁選項的功能
+			</pre>
+			`;
+			var _obj = Views.DataBase_Json(_note);
+
+			$.extend(_obj._baseSet, {
+				"language": {
+					"lengthMenu": 'Display <select>'+
+					  '<option value="10">10</option>'+
+					  '<option value="20">20</option>'+
+					  '<option value="30">30</option>'+
+					  '<option value="40">40</option>'+
+					  '<option value="50">50</option>'+
+					  '<option value="-1">All</option>'+
+					  '</select> records'
+				  }
+			});
+ 
+			return _obj;
+		},
+	}
+	window.sample = {
+		Views,
+		Options,
+		API,
+		Tool,
+		Case
+
+	};
+})()
