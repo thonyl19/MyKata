@@ -19,6 +19,8 @@
                 labelField: 'Display',
                 valueField: 'No',
                 searchField: ['Display', 'No'],
+                //解決 父層如果為 overflow:hidden ,造成被遮蔽的問題
+                dropdownParent: 'body'
             }
             return _.merge(_base, ...args)
         },
