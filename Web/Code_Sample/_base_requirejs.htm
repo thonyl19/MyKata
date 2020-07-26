@@ -3,25 +3,12 @@
 
 <head runat="server">
     <title></title>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jss@10.1.1/dist/jss.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jss-preset-default@10.1.1/dist/jss-preset-default.min.js"></script>   
-    <script src="https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
-    <script src="https://unpkg.com/vuex@3.1.2/dist/vuex.js"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-    <!-- 
-        <link rel="stylesheet" href="" />
-        <script type="text/javascript" src=""></script>
-    -->
-    <script type="text/javascript" src="https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.8/dist/global/Rx.umd.js"></script>
     <script data-main="./_base_requirejs" src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="CSBody">
-    <div id="app">
+    <div id="app" v-cloak>
+        <el-button type="primary" @click="exec">Test</el-button>
     </div>
  </body>
 
