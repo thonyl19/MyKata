@@ -8,7 +8,7 @@
 		"eui-css":"https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index",
 		"lodash":'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min',
 		//示範載入
-		//'_data':"./_tmpData"
+		'_data':"./_tmpData"
 	},
 	map: {
 		"*": {
@@ -53,7 +53,10 @@ require(["jquery","lodash","vue","ELEMENT"], ($,_,Vue,ELEMENT)=> {
 		methods:{
 			exec(){
 				debugger
-				var tmpData = require("./_tmpData.js");
+				require(["_data"],(_data)=>{
+					debugger
+
+				});
  
 			},
 			exec1(){
