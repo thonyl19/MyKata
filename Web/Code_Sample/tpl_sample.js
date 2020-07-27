@@ -40,11 +40,15 @@
                                 <a>default</a>
                             </slot></li>
                         </div>
-                      </div>`
-                    , data() {
-                        return {
-                            i_width: 10,
-                            i_height: 10
+                      </div>`,
+                    props:{
+                        i_width:{
+                            type:Number,
+                            default:10
+                        },
+                        i_height:{
+                            type:Number,
+                            default:10
                         }
                     }
                 },
