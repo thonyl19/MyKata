@@ -9,14 +9,12 @@
 		"lodash": 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min',
 		//示範載入
 		'_data': "./_tmpData",
-
 		"bts45":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min",
 		"bts45-css":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min",
 	},
 	map: {
 		"*": {
 			css: "https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.10/css.min.js",
-			
 		},
 	},
 	//依賴
@@ -25,6 +23,7 @@
 		'bts45':{deps: ['css!bts45-css']},
 	}
 });
+
 require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 	debugger
 	ELEMENT.install(Vue);
@@ -76,6 +75,13 @@ require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 				debugger
 				require(["_data"], (_data) => {
 					debugger
+				});
+			},
+			exec4(){
+				//演示 使用 define 定義程序,和調用方式
+				require(['ex_define',"bts45"], function (math,bts45){
+					debugger
+				　　alert(math.add(1,1));
 				});
 			},
 			exec() {
