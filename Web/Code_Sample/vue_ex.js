@@ -5,6 +5,137 @@
 */
 (()=>{
     let API = {
+        '*render-case'() {
+            var _note = `
+            <pre>
+            https://juejin.im/post/5f18f3346fb9a07eb417d2d2
+            </pre>
+            `;
+            var dyn = {
+                props: {
+                    status: {
+                        type: Number,
+                        required: true
+                    }
+                },
+                render(createElement) {
+                    const innerHTML = ['未开始', '进行中', '可领取', '已领取'][this.status]
+                    return createElement('button', {
+                        class: {
+                            active: this.status
+                        },
+                        attrs: {
+                            id: 'btn'
+                        },
+                        domProps: {
+                            innerHTML
+                        },
+                        on: {
+                            click: () => console.log(this.status)
+                        }
+                    })
+                }
+            };
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                        ${_note}
+                        <dyn :status="status"></dyn>
+                        <button @click="status++">test</button>
+                    </div>
+                    `,
+                    components:{dyn},
+                    data(){
+                        return {status:0}
+                    }
+                }
+            };
+            return _obj;
+        },
+        'Vue.observable'() {
+            var _note = `
+            <pre>
+            https://juejin.im/post/5f18f3346fb9a07eb417d2d2
+            </pre>
+            `;
+            const state = Vue.observable({ count: 0 });
+            console.log(state);
+            var _obj = {
+                _css:``,
+                _vue: {
+                    //以下這段 是不 work,特此誌之
+                    // template: `
+                    // <div>
+                    //     ${_note}
+                    //     {{state.count}}
+                    //     <button @click="state.count++">test</button>
+                    // </div>
+                    // `,
+                    render(h) {
+                        return h('button', {
+                            on: { click: () => { state.count++ }}
+                        }, `count is: ${state.count}`)
+                    }
+                }
+            };
+            return _obj;
+        },
+        '@hook'() {
+            var _note = `
+            <pre>
+            https://juejin.im/post/5f18f3346fb9a07eb417d2d2
+            </pre>
+            `;
+            var dyn = {
+                template:`
+                <div>{{test}}
+                <button @click="test++">Add</button>
+                </div>
+                `,
+                props: ['value'],
+                computed:{
+                    test:{
+                        get(){
+                            return this.value;
+                        },
+                        set(val){
+                            this.$emit('input', val);
+                        }
+                    }
+                },
+            }
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                    <dyn
+                        v-model="test"
+                            @hook:mounted="log('mounted')"
+                            @hook:beforeUpdate="log('beforeUpdate')"
+                            @hook:updated="log('updated')"
+                        ></dyn>
+                    </div>
+                    `,
+                    components:{dyn},
+                    data(){
+                        return {
+                            test:0
+                        }
+                    },
+
+                    methods: {
+                        log(evName){
+                            console.log(evName);
+                        },
+                         
+                    },
+                }
+            };
+            return _obj;
+        },
         'searchpanes'() {
             /**
              * https://datatables.net/reference/api/#searchpanes
