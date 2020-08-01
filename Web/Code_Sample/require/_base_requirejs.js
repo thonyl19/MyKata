@@ -25,38 +25,10 @@
 });
 
 require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
-	debugger
 	ELEMENT.install(Vue);
-	let Views = {
-		std1() {
-			var _note = `
-					<pre>
-					</pre>
-					`;
-			var _obj = {
-				_vue: {
-					template: `
-							<div>
-								${_note}
-							</div>
-							`,
-					data() {
-						return {};
-					},
-				},
-			};
-			return _obj;
-		},
-	};
-
-	window.sample = {
-		Views,
-	};
-
 	new Vue({
 		el: '#app',
 		methods: {
-			
 			exec1() {
 				//此方法無實質效用
 				var js = ["./_base_requirejs_case1.js"];
@@ -71,24 +43,34 @@ require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 				var Employee = require("./_base_requirejs_case1.js");
 			},
 			exec3() {
-				//OK
-				debugger
+				/*
+				測試以 UMD 架構載入資料,可以 work
+				*/
 				require(["_data"], (_data) => {
 					debugger
 				});
 			},
 			exec4(){
-				//演示 使用 define 定義程序,和調用方式
-				require(['ex_define',"bts45"], function (math,bts45){
+				/*
+				演示 使用 define 定義程序--math ,
+					並實現測載入結果
+				*/
+				require(["bts45",'ex_define'], function (bts45,math){
 					debugger
 				　　alert(math.add(1,1));
 				});
 			},
-			exec() {
-				require(["bts45"], (bts45) => {
-					debugger
+ 			exec() {
+				 /*
+				演示 使用 define 定義程序-- ex_define1 ,
+					並實現測載入結果, 
+				其中一併 測試載入 css 的效果
+				*/
+				require(["ex_define1"], (fn) => {
+					fn.test();
 				});
 			},
+			 
 		}
 	});
 });
