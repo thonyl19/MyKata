@@ -1,4 +1,12 @@
-﻿define(['lodash','styled','vue'], function (_,styled,Vue) {
+﻿var req = [
+	'lodash',
+	'styled',
+	'vue',
+	"https://cdn.jsdelivr.net/npm/jss@10.1.1/dist/jss.min.js",
+	"https://cdn.jsdelivr.net/npm/jss-preset-default@10.1.1/dist/jss-preset-default.min"
+]
+
+define([], function (_,styled,Vue,jss) {
 	let Attrib = {
 		"text-shadow"() {
 			/* 用例說明

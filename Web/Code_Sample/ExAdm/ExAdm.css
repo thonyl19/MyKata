@@ -94,3 +94,58 @@ ul.tpl li.over-fun a{
   margin: 5px;
   padding: 5px;
 }
+
+
+@font-face {
+  font-family: 'rbicon';
+  src: url(chrome-extension://dipiagiiohfljcicegpgffpbnjmgjcnf/fonts/rbicon.woff2) format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.mk {
+  border: 1px solid red;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+header{
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1500;
+}
+.part-A{
+  /*
+  修飾頁面高度,以保留 headerWrapper 的空間
+  */
+  height: calc(100% - 80px);
+  margin-top: 80px;
+  position: relative;
+}
+
+/*
+修掉 x 軸的顯示
+*/
+.part-A .el-scrollbar__wrap,
+.left .el-scrollbar__wrap{
+  overflow-x: hidden;
+}
+
+#app .left{
+  width: 240px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  margin-top: 80px;
+  transition: padding-top .3s;
+}
+.main{
+  padding-left: 270px;
+  padding-bottom: 100px;
+  box-sizing: border-box;
+  word-wrap:break-word;
+  
+}  
+

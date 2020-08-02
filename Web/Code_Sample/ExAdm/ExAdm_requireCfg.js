@@ -5,10 +5,9 @@
 		jquery: "https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min",
 		vue: "https://cdn.jsdelivr.net/npm/vue/dist/vue",
 		vuex: "https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex",
-		//jss:"https://cdn.jsdelivr.net/npm/jss@10.1.1/dist/jss.min",
-		//"https://cdn.jsdelivr.net/npm/jss-preset-default@10.1.1/dist/jss-preset-default.min.js"></script>   
 		styled:"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min",
-	
+		fa_css:"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome",
+		
 		"ELEMENT": "https://unpkg.com/element-ui@2.13.0/lib/index",
 		"eui-css": "https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index",
 		"lodash": 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min',
@@ -30,7 +29,7 @@
 	shim: {
 		vuex:{deps:['vue']},
 		bts45:{deps: ['css!bts45-css']},
-		ELEMENT: { deps: ['vue', 'css!eui-css'] },
+		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
 		c3:{deps:['d3', 'css!c3_css'] }
 	}
 });
@@ -56,7 +55,6 @@ require
 	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled","CSS"]
 	, ($, _, Vue ,Vuex , ELEMENT, styled ,exFn) => {
 	Vue.use(Vuex);
-	//Vue.use(styled);
 	ELEMENT.install(Vue);
 	var tpl_sample = {
 		range: {
@@ -134,6 +132,72 @@ require
 			template: `<div>test</div>`
 		},
 		main: {
+			template: `<div>
+			<header class="mk">
+            <div class="container">
+                  
+            </div>
+        </header>
+        <el-scrollbar class="part-A " tag="div">
+            <el-scrollbar class="left" 
+                :noresize="false"
+            >
+                <x-tpl-sample-left :action.sync="currentTab"></x-tpl-sample-left>
+            </el-scrollbar>
+            <div class="main">
+                <div>
+                    <input type="button" value="Copy" @click="copy" />
+                    <input type="button" value="Copy Components" @click="copy_com" />
+                    <textarea v-model="Code" @blur="change()"></textarea>
+                    <component v-bind:is="currentComponent"
+                        ></component>
+                </div>
+            </div>
+		</el-scrollbar>
+		</div>
+			`,
+			data() {
+				return {
+					currentTab: 'tpl-sample-test',
+					Code: ''
+	
+				}
+			},
+			props:['exFn'],
+			computed: {
+				sample(){
+					var _self = this;
+					if (!_self.$store.state.exFn) return false;
+					return  _self.$store.state.exFn;
+				},
+				currentComponent() {
+					var isString = typeof (this.currentTab) == "string";
+					if (isString) {
+						return `x-${this.currentTab}`;
+					}
+					this.Code = this.currentTab;
+					var { _vue, _css } = this.currentTab();
+					if (_css != null) styled.injectGlobal`${_css}`;
+					return _vue;
+				}
+			},
+			methods: {
+				change() {
+					if (this.Code == null) return;
+					var _code = this.Code.toString();
+					_code = _code.replace(/\bfunction /gi, "");
+					eval('var _fn = function ' + _code);
+					this.currentTab = _fn;
+				},
+				copy() {
+	
+				},
+				copy_com() {
+	
+				}
+			},
+		},
+		main_v1: {
 			template: `
 			<dl class="flex f-row">
 				<dt>
@@ -207,25 +271,8 @@ require
 		new Vue({
 			el: '#app',
 			store,
-			methods: {
-				exec() {
-					require(["c3_0.7.15"], (fn) => {
-						debugger;
-					});
-				},
-			}
 		});
 	} else {
 		alert('找不到 sample object!')
 	}
-	// new Vue({
-	// 	el: '#app',
-	// 	methods: {
- 	// 		exec() {
-	// 			require(["c3_0.7.15"], (fn) => {
-	// 				debugger;
-	// 			});
-	// 		},
-	// 	}
-	// });
 });
