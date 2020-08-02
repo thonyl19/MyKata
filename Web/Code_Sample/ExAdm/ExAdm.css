@@ -1,0 +1,96 @@
+.flex,
+.flex > dt,
+.flex > dd {
+  width: 100%;
+  display: block;
+  padding: 0px;
+  margin: 0px;
+}
+
+.flex.f-col {
+  flex-flow: column;
+}
+
+.flex.f-row {
+  flex-flow: row;
+}
+
+dl.flex {
+  display: flex;
+}
+
+.flex > dt {
+  flex: 0;
+  font-weight:400;
+}
+
+.flex > dd {
+  flex: 1;
+}
+
+textarea {
+  width: 100%;
+  height: 15em;
+}
+
+pre {
+  border: 1px solid #CCCCCC;
+  width: 100%;
+  height: 100%;
+  background: #ffff0038;
+  margin-top: 0.5em;
+  overflow-y: auto;
+}
+ 
+
+ul.tpl {
+  list-style-type: none;
+  margin: 0;
+  padding: 0.3em;
+}
+
+ul.tpl li {
+  min-width: 5em;
+  line-height: 1.39em;
+  white-space: nowrap;
+}
+
+ul.tpl li.over-fun:hover {
+  color: blue;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+ul.tpl li.over-fun a{
+  color: black;
+}
+
+.over-fun.sel a{
+  color: blue;
+}
+
+/*  跟 bts4 相衝,先取消  
+  li.active {
+  background-color: #20ffa6;
+} */
+.itme-main {
+  background-color: lightblue;
+  padding: 3px;
+  border-radius: 7px;
+  padding: 3px 7px;
+}
+
+.area-mk,
+.mk div{
+  border:1px solid red;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.mk.block span,
+.mk.block div{
+  line-height: 3em;
+  display: inline;
+  margin: 5px;
+  padding: 5px;
+}

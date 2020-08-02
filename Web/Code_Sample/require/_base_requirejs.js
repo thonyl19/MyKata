@@ -23,7 +23,7 @@
 		'bts45':{deps: ['css!bts45-css']},
 	}
 });
-
+debugger
 require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 	ELEMENT.install(Vue);
 	new Vue({
@@ -60,7 +60,7 @@ require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 				　　alert(math.add(1,1));
 				});
 			},
- 			exec() {
+ 			exec5() {
 				 /*
 				演示 使用 define 定義程序-- ex_define1 ,
 					並實現測載入結果, 
@@ -70,7 +70,29 @@ require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 					fn.test();
 				});
 			},
-			 
+			exec() {
+				debugger
+				/*
+			   演示 使用 define 定義程序-- ex_define1 ,
+				   並實現測載入結果, 
+			   其中一併 測試載入 css 的效果
+			   */
+			  var cfg = {
+					paths: {
+						"ex_define21":"ex_define21",
+						d3:"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
+						c3:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
+						c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min"
+					},
+					shim: {
+						c3: { deps: ['d3', 'css!c3_css'] },
+						ex_define21:{deps:['c3']}
+					}
+				}
+			   require(cfg, ($,ex_define21) => {
+				   debugger
+			   });
+		   },
 		}
 	});
 });
