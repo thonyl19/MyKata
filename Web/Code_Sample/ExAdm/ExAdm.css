@@ -115,6 +115,7 @@ header{
   left: 0;
   top: 0;
   z-index: 1500;
+  border-bottom: 1px groove black;
 }
 .part-A{
   /*
