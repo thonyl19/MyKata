@@ -128,5 +128,6 @@ let Views = {
 };
 
 window.sample = {
+  c3char,
   Views,
 };
