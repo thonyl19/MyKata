@@ -110,7 +110,6 @@ ul.tpl li.over-fun a{
   box-sizing: border-box;
 }
 header{
-  position: fixed;
   width: 100%;
   left: 0;
   top: 0;
