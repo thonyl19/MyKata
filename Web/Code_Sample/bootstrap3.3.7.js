@@ -938,5 +938,38 @@ http://w3c.3306.biz/bootstrap_input_groups/show-35-123-1.html
 			return _obj;
 		},
 	}
-	window.sample = { Views, Tool, Group, Fail, Vue_Prd };
+	var Case = {
+		'*Label'() {
+			var _note = `
+			<pre>
+			</pre>
+			`;
+			var _obj = {
+				_css:`
+				.label.bevel {
+					padding-left: 1.7rem;
+					clip-path: polygon(8% 0%, 100% 0%, 100% 100%, 0% 100%);
+				}
+				.label.bevel-z {
+					padding-left: 1.7rem;
+					border-radius: 40px 10px 10px 10px;
+				}
+				`,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<h3 style="display:inline-block;margin-right:.3em;"><label class="label label-info bevel-z">變更上傳狀態</label></h3>
+						<h3 style="display:inline-block;margin-right:.3em;"><label class="label label-info bevel-z">變更</label></h3>
+					</div>
+					`,
+					data(){
+						return {}
+					}
+				}
+			};
+			return _obj;
+		},
+	}
+	window.sample = { Views, Tool, Group, Fail, Vue_Prd, Case };
 })()

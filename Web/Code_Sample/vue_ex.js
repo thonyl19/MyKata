@@ -201,7 +201,7 @@
             };
             return _obj;
         },
-        '*directive-case'() {
+        'directive-case'() {
             var _note = `
             <pre>
             [ref]
@@ -399,6 +399,53 @@
                             alert('test2 running');
                         }
                     }
+                }
+            };
+            return _obj;
+        },
+        '*$attrs_case'() {
+            var _note = `
+            <pre>
+             
+            </pre>
+            `;
+             
+            var dny1 = {
+                template:`
+                <div class="child-1" >
+                    <p>in child1:</p>
+                    
+                    <p>$attrs: {{$attrs}}</p>
+                    <hr>
+                </div>
+                `,
+                computed: {
+                    fn(){
+                        debugger;
+                        let {att1,att2} = this.$attrs;
+                        return {att1,att2};
+                    }
+                },
+                 
+            }
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                        ${_note}
+                        <child1
+                            p-child1="child--1"
+                            p-child2="child--2"
+                            p-child3="child--3"
+                            att1
+                            att2="att2"
+                             > 
+                        </child1>
+                    </div>
+                    `,
+                    components: { child1:dny1 },
+                     
                 }
             };
             return _obj;

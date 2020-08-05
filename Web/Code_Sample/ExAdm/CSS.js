@@ -711,7 +711,38 @@ define([], function (_,styled,Vue,jss) {
 		},
 	};
 	let Case = {
+		 
+		'Attrib'() {
+			var _note = `
+			<pre>
+			因應工作需求,需要使用 attrib 的方式綁定樣式,
+			此外,一併解決 input.focus 時,預設黑外框的問題
+			</pre>
+			`;
+			var _obj = {
+				_css:`
+				input{
+					outline: 0;
+				}
+				input[required]{
+					border: 1px solid #27c24c;
+				}
 
+				`,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<input  type="text" required />
+					</div>
+					`,
+					data(){
+						return {}
+					}
+				}
+			};
+			return _obj;
+		},
 		'sty-edc'() {
 			var _note = `
 			  <pre>
