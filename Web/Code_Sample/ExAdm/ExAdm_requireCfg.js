@@ -34,7 +34,8 @@
 	}
 });
 
-window.tmpData = {
+ 
+window.gEx = {
 	"mydata": [
 		{ "id": "1", "invdate": "2007-10-01", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
 		{ "id": "2", "invdate": "2007-10-02", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
@@ -47,13 +48,29 @@ window.tmpData = {
 		{ "id": "9", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
 		{ "id": "10", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
 		{ "id": "11", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" }
-	]
+	],
+	exList:[
+		'CSS',
+		'c3_0.7.15'
+	],
+	chgUrl(fnName){
+		var _url = new URL(location);
+		_url.hash = fnName;
+		window.history.pushState(null, null,_url.toString());
+	},
+	getCurrentEx(){
+		debugger
+		var _url = new URL(location);
+		var Ex = _url.hash;
+		return Ex != "" ? Ex.substr(1) :"CSS" ;
+	}
 }
 
 
 require
-	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled","CSS"]
+	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled",window.gEx.getCurrentEx()]
 	, ($, _, Vue ,Vuex , ELEMENT, styled ,exFn) => {
+	debugger
 	Vue.use(Vuex);
 	ELEMENT.install(Vue);
 	var tpl_sample = {
@@ -76,6 +93,43 @@ require
 				i_height:{
 					type:Number,
 					default:10
+				}
+			}
+		},
+		switch:{
+			template: `
+			<div>
+				<el-button type="text" @click="centerDialogVisible = true">点击打开 Dialog</el-button>
+				<el-dialog
+					:visible.sync="centerDialogVisible"
+					width="70%"
+					:append-to-body="true"
+					center>
+					<ul>
+						<li v-for="(item) in list" @click=chg(item) >{{item}}</li>
+					</ul>
+				</el-dialog>
+			</div>
+			`,
+			data(){
+				return {
+					centerDialogVisible:true
+					
+				}
+			},
+			computed:{
+				list(){
+					return window.gEx.exList;
+				}
+			},
+			methods:{
+				chg(item){
+					var _self =this;
+					window.gEx.chgUrl(item);
+					require([item],(exFn) => {
+						debugger
+						_self.$store.state.exFn = exFn;
+					});
 				}
 			}
 		},
@@ -133,11 +187,9 @@ require
 		},
 		main: {
 			template: `<div>
-			<header class="mk">
-            <div class="container">
-                  
-            </div>
-        </header>
+			<header>
+				<x-tpl-sample-switch></x-tpl-sample-switch>
+			</header>
         <el-scrollbar class="part-A " tag="div">
             <el-scrollbar class="left" 
                 :noresize="false"
@@ -163,7 +215,6 @@ require
 	
 				}
 			},
-			props:['exFn'],
 			computed: {
 				sample(){
 					var _self = this;
@@ -197,64 +248,6 @@ require
 				}
 			},
 		},
-		main_v1: {
-			template: `
-			<dl class="flex f-row">
-				<dt>
-					<x-tpl-sample-left :action.sync="currentTab"></x-tpl-sample-left>
-				</dt>
-				<dd style="height:95vh ;">
-					<div>
-						<input type="button" value="Copy" @click="copy" />
-						<input type="button" value="Copy Components" @click="copy_com" />
-						<textarea v-model="Code" @blur="change()"></textarea>
-						<component v-bind:is="currentComponent"
-							></component>
-					</div>
-				</dd>
-			</dl>
-			`,
-			data() {
-				return {
-					currentTab: 'tpl-sample-test',
-					Code: ''
-	
-				}
-			},
-			props:['exFn'],
-			computed: {
-				sample(){
-					var _self = this;
-					if (!_self.$store.state.exFn) return false;
-					return  _self.$store.state.exFn;
-				},
-				currentComponent() {
-					var isString = typeof (this.currentTab) == "string";
-					if (isString) {
-						return `x-${this.currentTab}`;
-					}
-					this.Code = this.currentTab;
-					var { _vue, _css } = this.currentTab();
-					if (_css != null) styled.injectGlobal`${_css}`;
-					return _vue;
-				}
-			},
-			methods: {
-				change() {
-					if (this.Code == null) return;
-					var _code = this.Code.toString();
-					_code = _code.replace(/\bfunction /gi, "");
-					eval('var _fn = function ' + _code);
-					this.currentTab = _fn;
-				},
-				copy() {
-	
-				},
-				copy_com() {
-	
-				}
-			},
-		}
 	}
 	if (exFn) {
 		for (var name in tpl_sample) {

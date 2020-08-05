@@ -8,7 +8,7 @@ https://regexr.com/
 import * as _ from 'lodash';
 
 var fn = {
-    '_Base'(){
+    'Base'(){
         let githubURL = new URL('https://github.com/search?test=1');
         githubURL
         var searchParams1 = new URLSearchParams('q=react&type=Code');
@@ -45,6 +45,19 @@ var fn = {
         var g = typeof({});
         g
     }, 
+    '_'(){
+        let githubURL = new URL('https://github.com/');
+        //產生 #exa
+        githubURL.hash = "exa";
+        githubURL
+        
+        // const state = { 'page_id': 1, 'user_id': 5 }
+        // const title = ''
+        // const url = 'hello-world.html'
+
+        // history.pushState(state, title, url)
+       
+    },
     'MVC 中的應用程序'(){
         var _URL = {
             get baseURL() {
