@@ -150,6 +150,7 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 		},
 		'DataBase_Json'(_note = "") {
 			var _obj = {
+				_data : window.tmpData.mydata,
 				_baseSet: {
 					columns: [
 						{ "title": "id", "data": "id" },
@@ -168,7 +169,7 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 			  <button @click="Load">Load</button>
 			  <table ref="jqDT"  class="display" width="100%"></table>
 			</div>
-			`, data() {
+			`		, data() {
 						return {
 							jqDT: {}
 						}
@@ -178,10 +179,11 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 					},
 					methods: {
 						Load() {
+							debugger
 							this.jqDT
 								.clear()
 								.rows
-								.add(window.tmpData.mydata)
+								.add(_obj._data)
 								.draw();
 						}
 					},
@@ -702,12 +704,50 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 			return _obj;
 		},
 	}
+	var PlugIns = {
+		'datetime'() {
+			var _note = `
+			<pre>
+			https://datatables.net/plug-ins/dataRender/datetime
+			因應工作需求 ,需要做日期資料格式的轉換顯示 ,
+			經實測的結果,其處理是應用 moment.js 來做轉換 ,
+			重點是轉換時,是採用 moment({from},{to}) 的方式,
+			所以 {from} 必須得要跟原始資料的格式一致,這樣才有辦法順利做 format 的動作
+			格式可以參考
+				http://momentjs.cn/docs/#/displaying/format/
+			</pre>
+			`;
+			var _obj = Views.DataBase_Json(_note);
+			_obj._data = [{"SID":"326c3575-00b4-41c6-b09e-04c050545efc","LOT_SID":"GTI19061310370703456","LOT":"Gti-20190613-05","OUTPUT_QTY":null,"ROUTE_VER_OPER_SID":"GTI19041123550700964","STATUS":"Create","OPERATION_SID":"GTI19041123373400918","OPERATION":"設備進站","ACTION":"CalculatWorkHour","APPLICATION_NAME":"StationCheckOut","ACTION_LINK_SID":"GTI20071514082626209","ACTION_LINK_SID_TRACE":"GTI20071514082626209","WO_SID":"Gtimes2019Demo","WO":"Gtimes2019Demo","LINE_SID":null,"LINE_NO":null,"SHIFT_SID":"GTI20071015443415664","SHIFT_NO":"MorningShift","SHIFT":"早班","REPORT_TYPE":"ActualWorkingHours","REPORT_USER_NUM":3.0,"WORK_TOTAL":159550.0,"WORK_DATE":null,"EQUIPMENT_LIST":null,"EQUIPMENT_TOTAL":null,"CREATE_USER":"Joseph","CREATE_DATE":"2020-07-15 00:00:00","UPDATE_USER":"Joseph","UPDATE_DATE":"2020-07-15 00:00:00"},{"SID":"54c7134f-fc06-4b79-b960-0b5c6ee1d6ef","LOT_SID":"GTI19061310370703457","LOT":"Gti-20190613-06","OUTPUT_QTY":null,"ROUTE_VER_OPER_SID":"GTI19041123550700964","STATUS":"Create","OPERATION_SID":"GTI19041123373400918","OPERATION":"設備進站","ACTION":"CalculatWorkHour","APPLICATION_NAME":"StationCheckOut","ACTION_LINK_SID":"GTI20072211244640681","ACTION_LINK_SID_TRACE":"GTI20072211244640681","WO_SID":"Gtimes2019Demo","WO":"Gtimes2019Demo","LINE_SID":null,"LINE_NO":null,"SHIFT_SID":"GTI20071015443415664","SHIFT_NO":"MorningShift","SHIFT":"早班","REPORT_TYPE":"ActualWorkingHours","REPORT_USER_NUM":2.0,"WORK_TOTAL":0.0,"WORK_DATE":null,"EQUIPMENT_LIST":null,"EQUIPMENT_TOTAL":0.0,"CREATE_USER":"Joseph","CREATE_DATE":"2020-07-22 00:00:00","UPDATE_USER":"Joseph","UPDATE_DATE":"2020-07-22 00:00:00"},{"SID":"e64bfed6-695a-40b4-8299-1f4238b078df","LOT_SID":"GTI19061310370703472","LOT":"Gti-20190613-21","OUTPUT_QTY":null,"ROUTE_VER_OPER_SID":"GTI19041123550700964","STATUS":"Create","OPERATION_SID":"GTI19041123373400918","OPERATION":"設備進站","ACTION":"CalculatWorkHour","APPLICATION_NAME":"StationCheckOut","ACTION_LINK_SID":"GTI20072213302640885","ACTION_LINK_SID_TRACE":"GTI20072213302640885","WO_SID":"Gtimes2019Demo","WO":"Gtimes2019Demo","LINE_SID":null,"LINE_NO":null,"SHIFT_SID":"GTI20071015443415664","SHIFT_NO":"MorningShift","SHIFT":"早班","REPORT_TYPE":"ActualWorkingHours","REPORT_USER_NUM":2.0,"WORK_TOTAL":0.0,"WORK_DATE":null,"EQUIPMENT_LIST":null,"EQUIPMENT_TOTAL":0.0,"CREATE_USER":"Joseph","CREATE_DATE":"2020-07-22 00:00:00","UPDATE_USER":"Joseph","UPDATE_DATE":"2020-07-22 00:00:00"},{"SID":"c68c5153-bfee-4e63-9c57-a0d638c248b8","LOT_SID":"GTI19061310370703460","LOT":"Gti-20190613-09","OUTPUT_QTY":25.0,"ROUTE_VER_OPER_SID":"GTI19041123550700964","STATUS":"Create","OPERATION_SID":"GTI19041123373400918","OPERATION":"設備進站","ACTION":"CalculatWorkHour","APPLICATION_NAME":"StationCheckOut","ACTION_LINK_SID":"GTI20081111575883131","ACTION_LINK_SID_TRACE":"GTI20081111575883131","WO_SID":"Gtimes2019Demo","WO":"Gtimes2019Demo","LINE_SID":null,"LINE_NO":null,"SHIFT_SID":"GTI20071015443415664","SHIFT_NO":"MorningShift","SHIFT":"早班","REPORT_TYPE":"ActualWorkingHours","REPORT_USER_NUM":1.0,"WORK_TOTAL":0.0,"WORK_DATE":"2020-08-11 00:00:00","EQUIPMENT_LIST":null,"EQUIPMENT_TOTAL":0.0,"CREATE_USER":"Joseph","CREATE_DATE":"2020-08-11 00:00:00","UPDATE_USER":"Joseph","UPDATE_DATE":"2020-08-11 00:00:00"},{"SID":"d2652077-eb9a-4990-b8e8-72f8cf1f0b49","LOT_SID":"GTI19061310370703461","LOT":"Gti-20190613-10","OUTPUT_QTY":30.0,"ROUTE_VER_OPER_SID":"GTI19041123550700964","STATUS":"Create","OPERATION_SID":"GTI19041123373400918","OPERATION":"設備進站","ACTION":"CalculatWorkHour","APPLICATION_NAME":"StationCheckOut","ACTION_LINK_SID":"GTI20081112141783229","ACTION_LINK_SID_TRACE":"GTI20081112141783229","WO_SID":"Gtimes2019Demo","WO":"Gtimes2019Demo","LINE_SID":null,"LINE_NO":null,"SHIFT_SID":"GTI20071015443415664","SHIFT_NO":"MorningShift","SHIFT":"早班","REPORT_TYPE":"ActualWorkingHours","REPORT_USER_NUM":1.0,"WORK_TOTAL":0.0,"WORK_DATE":"2020-08-11 00:00:00","EQUIPMENT_LIST":"Stepper_001","EQUIPMENT_TOTAL":0.0,"CREATE_USER":"Joseph","CREATE_DATE":"2020-08-11 00:00:00","UPDATE_USER":"Joseph","UPDATE_DATE":"2020-08-11 00:00:00"},{"SID":"6f632908-6a3c-4d07-83d7-f83770617e13","LOT_SID":"GTI19061310370703465","LOT":"Gti-20190613-14","OUTPUT_QTY":30.0,"ROUTE_VER_OPER_SID":"GTI19041123550700964","STATUS":"Create","OPERATION_SID":"GTI19041123373400918","OPERATION":"設備進站","ACTION":"CalculatWorkHour","APPLICATION_NAME":"StationCheckOut","ACTION_LINK_SID":"GTI20081317053187896","ACTION_LINK_SID_TRACE":"GTI20081317053187896","WO_SID":"Gtimes2019Demo","WO":"Gtimes2019Demo","LINE_SID":null,"LINE_NO":null,"SHIFT_SID":"GTI20071015443415664","SHIFT_NO":"MorningShift","SHIFT":"早班","REPORT_TYPE":"ActualWorkingHours","REPORT_USER_NUM":2.0,"WORK_TOTAL":0.0,"WORK_DATE":"2020-08-13 00:00:00","EQUIPMENT_LIST":null,"EQUIPMENT_TOTAL":0.0,"CREATE_USER":"Admin","CREATE_DATE":"2020-08-13 00:00:00","UPDATE_USER":"Admin","UPDATE_DATE":"2020-08-13 00:00:00"},{"SID":"98342f52-f049-46c2-b92d-d6f7399bc4ab","LOT_SID":"GTI19061310370703464","LOT":"Gti-20190613-13","OUTPUT_QTY":30.0,"ROUTE_VER_OPER_SID":"GTI19041123550700964","STATUS":"Create","OPERATION_SID":"GTI19041123373400918","OPERATION":"設備進站","ACTION":"CalculatWorkHour","APPLICATION_NAME":"StationCheckOut","ACTION_LINK_SID":"GTI20081317035887889","ACTION_LINK_SID_TRACE":"GTI20081317035887889","WO_SID":"Gtimes2019Demo","WO":"Gtimes2019Demo","LINE_SID":null,"LINE_NO":null,"SHIFT_SID":"GTI20071015443415664","SHIFT_NO":"MorningShift","SHIFT":"早班","REPORT_TYPE":"ActualWorkingHours","REPORT_USER_NUM":1.0,"WORK_TOTAL":0.0,"WORK_DATE":"2020-08-13 00:00:00","EQUIPMENT_LIST":null,"EQUIPMENT_TOTAL":0.0,"CREATE_USER":"Admin","CREATE_DATE":"2020-08-13 00:00:00","UPDATE_USER":"Admin","UPDATE_DATE":"2020-08-13 00:00:00"}]
+			_obj._baseSet = {
+				"columns": [
+					{
+						"title": "報工日期",
+						"data": "WORK_DATE"
+					},
+					{
+						"title": "建立者",
+						"data": "CREATE_USER"
+					},
+					{
+						"title": "建立時間",
+						"data": "CREATE_DATE"
+					},
+				],
+				columnDefs: [
+					{ targets: [0,2]
+						,render: $.fn.dataTable.render.moment('YYYY-MM-DD HH:mm:ss','YYYY/MM/DD') },
+				],
+			}
+			return _obj;
+		},
+	}
 	window.sample = {
 		Views,
 		Options,
 		API,
 		Tool,
-		Case
-
+		Case,
+		PlugIns
 	};
 })()

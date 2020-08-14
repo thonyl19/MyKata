@@ -28,7 +28,7 @@ let Views = {
          _vue:{
             template: `
             <div>
-               <select></select>
+               <select required></select>
             </div>
             `,
             mounted() {
