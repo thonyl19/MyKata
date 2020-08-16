@@ -2,16 +2,7 @@
 
 namespace CSharp.Linq
 {
-    public class Person
-    {
-        public string Name { get; set; }
-    }
-
-    public class Phone
-    {
-        public string PhoneNumber { get; set; }
-        public Person Person { get; set; }
-    }
+     
     public class L01
     {
         public static void Fn1(){
