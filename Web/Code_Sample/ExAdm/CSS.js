@@ -460,6 +460,108 @@
 					overflow-x: hidden !important;
 					padding-right: calc(var(--webkit_scrollbar)*2) !important;
 				}
+			};
+			return _obj;
+		},
+		def() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css: `
+			  .Group{
+				margin: 1em;
+					border-radius: 3px;
+					box-sizing:border-box;
+					border: 1px solid #ccc;
+					display:table;              
+			  }
+			  .Group input[type=text],
+			  .Group button{
+				display:table-cell;
+			  }
+			  .Group input[type=text]{
+				  height: 34px;
+				  padding: 0px 12px;
+				  font-size: 14px;
+				  line-height: 1.42857143;
+				  color: #555;
+				  background-color: #fff;
+				  background-image: none;
+				  border: 0px solid #ccc;
+				  border-radius: 4px;
+				  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+				  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+				  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+				  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+				  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+			  
+			  }
+			  `,
+				_vue: {
+					template: `
+					 <div>
+						${_note}
+						<div class=Group>
+						  <input type="text" />
+						  <button>test</button>
+						</div>
+					 </div>
+					 `,
+					data() {
+						return {
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+	};
+	let Case = {
+		 
+		'Attrib'() {
+			var _note = `
+			<pre>
+			因應工作需求,需要使用 attrib 的方式綁定樣式,
+			此外,一併解決 input.focus 時,預設黑外框的問題
+			</pre>
+			`;
+			var _obj = {
+				_css:`
+				input{
+					outline: 0;
+				}
+				input[required]{
+					border: 1px solid #27c24c;
+				}
+
+				`,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<input  type="text" required />
+					</div>
+					`,
+					data(){
+						return {}
+					}
+				}
+			};
+			return _obj;
+		},
+		'sty-edc'() {
+			var _note = `
+			  <pre>
+			  </pre>
+			  `;
+			var _obj = {
+				_css: `
+				  dl.sty-edc {
+					  display: inline-table;
+					  color: #fff;
+					  margin-right: 5px;
 		  
 				  .sty-scroll.hover:hover{
 					overflow-x: scroll !important;

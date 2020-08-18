@@ -1,11 +1,13 @@
-﻿/*
+﻿//const { debug } = require("console");
+
+/*
 [Note]
     https://github.com/guahsu/Vue-TurnTable/
 
 */
 (()=>{
     let API = {
-        '*render-case'() {
+        'render-case'() {
             var _note = `
             <pre>
             https://juejin.im/post/5f18f3346fb9a07eb417d2d2
@@ -199,6 +201,49 @@
             };
             return _obj;
         },
+        'directive-case'() {
+            var _note = `
+            <pre>
+            [ref]
+            https://juejin.im/post/6844903928803360776
+            https://medium.com/itsems-frontend/vue-custom-directives-c991ce456748
+            原本 因應專案的需求,需要在外層中,以特定參數指定 子層中某個元素做一些處理,
+                但實測結果卻不如預期.
+            </pre>
+            `;
+            var dyn = {
+                template: `
+                    <div >
+                        <span></span>
+                    </div>
+                    `,
+                
+            }
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                        ${_note}
+                        <dyn v-feedback></dyn>
+                    </div>
+                    `,
+                    components:{dyn},
+                    data(){
+                        return {}
+                    },
+                    directives:{
+                        'feedback':{
+                            bind(el,binding){
+                                debugger
+                                el.style.color = 'red';
+                            }
+                        } 
+                    }
+                }
+            };
+            return _obj;
+        },
         __def() {
             /*
             Vue.directive('numberOnly', {
@@ -354,6 +399,53 @@
                             alert('test2 running');
                         }
                     }
+                }
+            };
+            return _obj;
+        },
+        '*$attrs_case'() {
+            var _note = `
+            <pre>
+             
+            </pre>
+            `;
+             
+            var dny1 = {
+                template:`
+                <div class="child-1" >
+                    <p>in child1:</p>
+                    
+                    <p>$attrs: {{$attrs}}</p>
+                    <hr>
+                </div>
+                `,
+                computed: {
+                    fn(){
+                        debugger;
+                        let {att1,att2} = this.$attrs;
+                        return {att1,att2};
+                    }
+                },
+                 
+            }
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                        ${_note}
+                        <child1
+                            p-child1="child--1"
+                            p-child2="child--2"
+                            p-child3="child--3"
+                            att1
+                            att2="att2"
+                             > 
+                        </child1>
+                    </div>
+                    `,
+                    components: { child1:dny1 },
+                     
                 }
             };
             return _obj;
