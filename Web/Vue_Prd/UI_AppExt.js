@@ -21,15 +21,7 @@ var _note = {
         el.focus()
         }
     })
-    var _fn = {
-        map_mock:{
-            "string":["@name"],
-            "boolean":["Y","N"],
-            "number":["@integer(60, 100)"],
-            "date": ["@datetime"],
-            "symbol":["@id"],
-            "object":["@id"],
-        },
+    var pw_fn = {
         map_DataType:{
             string:{
                 mock:["@name"],
@@ -68,6 +60,47 @@ var _note = {
             //     textarea:'el-input-pw-ext',
             // }
         },
+        map_mock:{
+            "string":["@name"],
+            "boolean":["Y","N"],
+            "number":["@integer(60, 100)"],
+            "date": ["@datetime"],
+            "symbol":["@id"],
+            "object":["@id"],
+        },
+                //專門處理 以行為單位的設定格式
+                parse_cols(string_val,filedObj,split=','){
+                    var _self = this;
+                    var _r = [];
+                    var _arr = string_val.split('\n');
+                    _.each(_arr,(val,idx)=>{
+                        /*
+                        這裡預設規劃為3個欄位
+                        1.欄位抬頭
+                        2.欄位綁定對應,類似實際對應欄位 
+                        3.欄位值,以此做為欄位型別判斷
+                        */
+                        
+                        let [col_title,col_bind,col_val] = val.split(split); 
+                        col_val = eval(col_val);
+                        _r.push(filedObj(col_title,col_bind,col_val));
+                    })
+                    return _r;
+                },
+                //專門處理 JsonString 為設定格式
+                parse_row(jsonObj,filedObj){
+                    var _self = this;
+                    var _r = [];
+                    _.each(jsonObj,(val,name)=>{
+                        _r.push(filedObj(name,name,val));
+                    })
+                    return _r;
+                },
+    }
+
+    var _fn = {
+
+
         /*先保留 日後移除  */
         FiledMap:{
             old:{
@@ -89,33 +122,8 @@ var _note = {
         parse_Exten(val,note,input_ops){
             //Exten
         },
-        parse_cols(string_val,filedObj,split=','){
-            var _self = this;
-            var _r = [];
-            var _arr = string_val.split('\n');
-            _.each(_arr,(val,idx)=>{
-                /*
-                這裡預設規劃為3個欄位
-                1.欄位抬頭
-                2.欄位綁定對應,類似實際對應欄位 
-                3.欄位值,以此做為欄位型別判斷
-                */
-                
-                let [col_title,col_bind,col_val] = val.split(split); 
-                col_val = eval(col_val);
-                _r.push(filedObj(col_title,col_bind,col_val));
-            })
-            return _r;
-        },
 
-        parse_row(jsonObj,filedObj){
-            var _self = this;
-            var _r = [];
-            _.each(jsonObj,(val,name)=>{
-                _r.push(filedObj(name,name,val));
-            })
-            return _r;
-        },
+
         /* 改用 pw_baseModel,會比較符合官方規範和更好擴展 
          */
         simple_tpl(template,immediate=false){
@@ -134,6 +142,19 @@ var _note = {
             }
             return _vue;
         },
+        // pw_fn:{
+        //     v20200818(){
+        //         return {
+        //             data(){
+    
+        //             },
+        //             methods: {
+        //                 parse_cols:_fn.parse_cols,
+        //                 parse_row:_fn.parse_row,
+        //             },
+        //         }
+        //     }
+        // },
         
         pw_debug:{
             v20200619:{
@@ -507,8 +528,8 @@ var _note = {
                             } 
                             if (!JsonCode.val) return ;
                             let _act = JsonCode.isObj
-                                ? _fn.parse_row
-                                : _fn.parse_cols
+                                ? pw_fn.parse_row
+                                : pw_fn.parse_cols
                                 ;
                             this.tableData =  _act(JsonCode.val,this.filedObj);
                         },
@@ -589,7 +610,7 @@ var _note = {
                         },
     
                         filedObj(name,pass,data_val=""){
-                            var mock_ops = _fn.map_mock[$.type(data_val)];
+                            var mock_ops = pw_fn.map_mock[$.type(data_val)];
                             var _r = {
                                 name,
                                 mock_ops,
@@ -765,8 +786,8 @@ var _note = {
 						} 
                         if (!JsonCode.val) return ;
                         var _act = JsonCode.isObj
-                                ? _fn.parse_row
-                                : _fn.parse_cols
+                                ? pw_fn.parse_row
+                                : pw_fn.parse_cols
                                 ;
                         this.Config.grid_Col = _act (JsonCode.val , this.genObj);
                     },
@@ -823,7 +844,7 @@ var _note = {
                     },
 					genObj(title, data , data_val = ""){
                         data = data ?? title;
-                        var mock_ops = _fn.map_mock[$.type(data_val)];
+                        var mock_ops = pw_fn.map_mock[$.type(data_val)];
 						var _r = {
 							title,
 							data,
@@ -1267,8 +1288,8 @@ var _note = {
                         InputA_Exec(JsonCode){
                             var x = [];
                             var _parse = JsonCode.isObj
-                                ? _fn.parse_row
-                                : _fn.parse_cols
+                                ? pw_fn.parse_row
+                                : pw_fn.parse_cols
                                 ;
                             var _tab = this.base
                                     .chgTab('Config')
@@ -1277,7 +1298,7 @@ var _note = {
                         },
                         genFiled(title, ui_type , data_val = ""){
                             //data = data ?? title;
-                            var _map = _fn.map_DataType[$.type(data_val)];
+                            var _map = pw_fn.map_DataType[$.type(data_val)];
                             var _r = {
                                 title,
                                 ui_type:_map.ui[0],
@@ -1368,6 +1389,8 @@ var _note = {
             };
         },
     }
+    Vue.prototype.$pw_fn = pw_fn;
+
     Vue.component('jdt-table-cfg', _fn.jdt_table_cfg());
     
     Vue.component('pw-input', _fn.pw_input());
@@ -1381,7 +1404,6 @@ var _note = {
     Vue.component('pw-form', _fn.pw_form_ext.v20200622());
     Vue.component('pw-form-cfg', _fn.pw_form_cfg.v20200618());
     Vue.component('pw-form-cfg-col', _fn.pw_form_cfg_col());
-    
     Vue.component('pw-tabs', _fn.pw_tabs.v20200614());
     Vue.component('x-component', _fn.x_component.v20200614());
     
