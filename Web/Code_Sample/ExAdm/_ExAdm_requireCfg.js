@@ -13,12 +13,16 @@
 		"lodash": 'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min',
 		//示範載入
 		'_data': "./_tmpData",
+		"bts337":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min",
+		"bts337-css":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min",
 		"bts45":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min",
 		"bts45-css":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min",
 		d3:"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
 		c3:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
-		c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min"
-	
+		c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
+		'vuejs-paginate':"https://cdn.jsdelivr.net/npm/vuejs-paginate@2.1.0/dist/index.min",
+		'vue-pagination':'https://cdn.rawgit.com/matfish2/vue-pagination/master/dist/vue-pagination.min'
+		//'JwPagination':'https://cdn.jsdelivr.net/npm/jw-vue-pagination@1.0.3/lib/JwPagination.min',
 	},
 	map: {
 		"*": {
@@ -28,9 +32,13 @@
 	//依賴
 	shim: {
 		vuex:{deps:['vue']},
+		bts337:{deps: ['css!bts337-css']},
 		bts45:{deps: ['css!bts45-css']},
 		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
-		c3:{deps:['d3', 'css!c3_css'] }
+		c3:{deps:['d3', 'css!c3_css'] },
+		VuePager:{deps:['vue','vuejs-paginate','vue-pagination'
+				//,'JwPagination'
+		]},
 	}
 });
 
@@ -51,7 +59,8 @@ window.gEx = {
 	],
 	exList:[
 		'CSS',
-		'c3_0.7.15'
+		'c3_0.7.15',
+		'VuePager',
 	],
 	chgUrl(fnName){
 		var _url = new URL(location);
@@ -62,14 +71,14 @@ window.gEx = {
 		debugger
 		var _url = new URL(location);
 		var Ex = _url.hash;
-		return Ex != "" ? Ex.substr(1) :"CSS" ;
+		return Ex != "" ? Ex.substr(1) :"VuePager" ;
 	}
 }
 
 
 require
-	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled",window.gEx.getCurrentEx()]
-	, ($, _, Vue ,Vuex , ELEMENT, styled ,exFn) => {
+	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled","bts337",window.gEx.getCurrentEx()]
+	, ($, _, Vue ,Vuex , ELEMENT, styled, bts337 ,exFn) => {
 	debugger
 	Vue.use(Vuex);
 	ELEMENT.install(Vue);
@@ -96,25 +105,30 @@ require
 				}
 			}
 		},
+		/*
+		<ul class="list-group">
+						<li class="list-group-item" v-for="(item) in list" @click=chg(item) >{{item}}</li>
+					</ul>
+		*/
 		switch:{
 			template: `
 			<div>
-				<el-button type="text" @click="centerDialogVisible = true">点击打开 Dialog</el-button>
+				<el-button type="text" @click="centerDialogVisible = true">切換範例集合</el-button>
 				<el-dialog
 					:visible.sync="centerDialogVisible"
 					width="70%"
 					:append-to-body="true"
+					title="切換範例集合"
 					center>
-					<ul>
-						<li v-for="(item) in list" @click=chg(item) >{{item}}</li>
-					</ul>
+					<div class="list-group">
+						<button type="button" class="list-group-item" v-for="(item) in list" @click=chg(item) >{{item}}</button>
+					</div>
 				</el-dialog>
 			</div>
 			`,
 			data(){
 				return {
 					centerDialogVisible:true
-					
 				}
 			},
 			computed:{
@@ -129,6 +143,7 @@ require
 					require([item],(exFn) => {
 						debugger
 						_self.$store.state.exFn = exFn;
+						_self.centerDialogVisible = false;
 					});
 				}
 			}

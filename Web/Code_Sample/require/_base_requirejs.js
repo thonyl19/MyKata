@@ -71,6 +71,16 @@ require(["jquery", 'lodash', "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 				});
 			},
 			exec() {
+				/*
+			   演示 使用 define 定義程序-- ex_define1 ,
+				   並實現測載入結果, 
+			   其中一併 測試載入 css 的效果
+			   */
+			   require(["ex_define21"], (fn) => {
+				   fn.test();
+			   });
+		   },
+			exec_() {
 				debugger
 				/*
 			   演示 使用 define 定義程序-- ex_define1 ,

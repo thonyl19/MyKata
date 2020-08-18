@@ -1,8 +1,9 @@
-(function () {
+﻿(function () {
 	debugger
 	var arr = [
 		'lodash',
-		'require'
+		'styled',
+		'vue',
 	];
 	var fn = {
 		add(x, y){
@@ -12,10 +13,9 @@
 			console.log(_);
 		}
 	}
-	define(arr, (_)=>{
+	define(arr, (_,styled,vue)=>{
 		return fn;
 	});
 }());
 
-
-
+ 
