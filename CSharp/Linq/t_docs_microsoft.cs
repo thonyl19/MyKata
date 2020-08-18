@@ -106,13 +106,23 @@ namespace CSharp.Case
                 where a0.Name !=""
                 select a0).AsQueryable();
             return q;
+        }
+
+        IQueryable<dynamic> _x1(IQueryable<Person> _x1){
+            var x = Sample.Case1();
+            IQueryable<Person> q =  
+                (from a0 in  x.persons
+                where a0.Name !=""
+                select a0).AsQueryable();
+            return q;
         }       
 
-        IEnumerable<Person> _x2(IQueryable<Person> _x1){
+        IEnumerable<dynamic> _x2(IQueryable<Person> _x1){
             var _r =  
                 (from a0 in _x1
                 where a0.Name !=""
-                select a0).ToList();
+                select new{ a0.Name ,name = a0.name()})
+                .ToList<dynamic>();
             return _r;
         } 
         // IEnumerable<dynamic> _x21(){
@@ -154,11 +164,22 @@ namespace CSharp.Case
             return new List<T>();
         }
 
-        /// <summary>
-        /// https://stackoverflow.com/questions/612689/a-generic-list-of-anonymous-class
-        /// </summary>
         [TestMethod]
         public void t04(){
+            //取得第一層
+            var _q1 = _x1();
+            var _q2 = _x2(_q1);
+            
+        }
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/612689/a-generic-list-of-anonymous-class
+        /// 此測試程序主要是為了使動態物件可以在後續程序中,
+        ///     可以使用 智能提示
+        /// 
+        /// </summary>
+        [TestMethod]
+        public void t_動態物件應用(){
             var o = new 
             {   Id=""
                 , Int = 1
