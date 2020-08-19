@@ -5,6 +5,8 @@ https://dotblogs.com.tw/shadow/2018/04/03/033936
 	[jQuery] jQuery DataTables Server Side模式整合ASP.net MVC 的查詢、分頁和排序 Part2
 https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side-integration/
 
+https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/684065/
+	datatables那點兒事
 	*/
 
 (() => {
@@ -317,6 +319,30 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 			];
 			return _obj;
 		},
+		'Button Column'() {
+			var _obj = Views.DataBase_Json(`<pre>這個範列是以 [DataBase_Json] 為基底,演示如何在 Colument 中,設定 buttton</pre>`);
+			_obj._baseSet = {
+				columns: [
+					{
+						"title": "操作",
+						data: null,
+						render: function ( data, type, row ) {
+						  return '<button>exec</button>';
+						}
+					},
+					{ "title": "id", "data": "id" ,
+						createdCell(td, cellData, rowData, row, col){
+							$(td).html(`<a href=#  onclick="alert('${cellData}');" >${cellData}</a>`)
+						}
+					},
+					{ "title": "invdate", "data": "invdate" },
+				]
+			};
+			_obj._vue.methods.click = function(){
+				alert('test');
+			}
+			return _obj;
+		},
 		x() {
 			var ops = {
 				dom: 'Pfrtip',
@@ -406,7 +432,7 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 			})
 			return _obj;
 		},
-		'Cell Click'() {
+		'*Cell Click'() {
 			var _obj = Views.DataBase_Json(`<pre>這個範例是以 [DataBase_Json] 為基底,改寫 官網的範例
 	  https://datatables.net/examples/api/select_row.html ,主要演示以下範例
 	  1. columnDefs 擴充定義樣式的設定 
@@ -417,11 +443,19 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 		  row => 回傳值為物件,適用單撃取值的情境
 		  rows =>回傳值為陣列,適用取得複數資料的情境
 	  3. column(this).dataSrc()  取得事件 tag 對應的綁定欄位
+	  4. 增加 實作 button 的處理程序
+	  5. 實作刪除 的處理程序
 	  </pre>
 	  <div>{{selected}}</div>
 	`);
 			_obj._baseSet.columnDefs = [
-				{ className: "cell_0", "targets": [0] },
+				
+				{ className: "cell_button", "targets": [0] ,
+					render: function (data, type, row) {
+						return `<button class="cell_button">Del</button>`;
+					}
+				},
+				{ className: "cell_0", "targets": [1] },
 				{
 					className: "e_click", "targets": [2, 3]
 					, createdCell(td, cellData, rowData, row, col) {
@@ -439,6 +473,15 @@ https://www.c-sharpcorner.com/article/Asp-Net-mvc5-datatables-plugin-server-side
 				mounted() {
 					var _self = this;
 					_self.jqDT = $(this.$refs.jqDT).DataTable(_obj._baseSet);
+					_self.jqDT.on('click','.cell_button',function(event){
+						debugger
+						//當前的 event 是綁在 button 本身觸發,所以必須要再往上取到 td ,
+						// 	才有辦法取得正確的資料
+						var _td = event.target.parentElement;
+						var _r = _self.jqDT.row(_td).data();
+						_self.selected = _r;
+						_self.jqDT.row(_td).remove().draw();
+					});
 					_self.jqDT.on('click', '.cell_0', function () {
 						debugger
 						var _r = _self.jqDT.rows(this).data();

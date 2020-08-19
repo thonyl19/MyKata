@@ -95,7 +95,8 @@
                             
                         }
                         this.isObj = _.isPlainObject(this._);
-                    }
+                    },
+                    
                 }
                 
                 return _r;
@@ -116,6 +117,16 @@
                             : JSON.stringify(this.val,null,'\t');
                     }
                     return null;
+                },
+                //這段程序是偷懶用,必須要有 $pw_fn 
+                Act(fn_filedObj){
+                    let {parse_row,parse_cols} = Vue.prototype.$pw_fn ??{}
+                    if (parse_row == null) alert('找不到 $pw_fn')
+                    let _act = this.isObj 
+                        ? parse_row
+                        : parse_cols
+                        ;
+                    return _act(this.val,fn_filedObj);
                 }
             }
             try {

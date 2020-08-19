@@ -4,32 +4,7 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 
 let Views = {
-	'*def'() {
-		var _note = `
-		<pre>
-		</pre>
-		`;
-		var _obj = {
-			_css:``,
-			_vue: {
-				template: `
-				<div>
-					${_note}
-					<el-checkbox v-model="checked1" label="备选项1" true-label="A" false-label="B" border></el-checkbox>
-					<el-checkbox v-model="checked2" label="备选项2" border></el-checkbox>
-					{{[checked1,checked2]}}
-				</div>
-				`,
-				data(){
-					return {
-						checked1: "",
-        				checked2: false,
-					}
-				}
-			}
-		};
-		return _obj;
-	},
+	 
 	'巢狀 el-tabs 範例'() {
 		var _note = `
 		   <pre>
@@ -213,7 +188,7 @@ let Views = {
 };
 
 let Case = {
-	'*el-switch active-value'() {
+	'el-switch active-value'() {
 		var _note = `
 		<pre>
 		在開發時碰到的一個案例,當下在處理 el-switch 時,怎麼操作都不無法正確反應,
@@ -717,7 +692,7 @@ var Group = {
 }
 
 var Row = {
-  'def'() {
+  '測試範例'() {
 	  var _note = `
 		 <pre>
 		 </pre>
@@ -796,15 +771,10 @@ let Vue_Prd = {
 	'x-component'() {
 		var _note = `
 		   <pre>
+		以 Josn 的格式設定,動態產生 tab 頁籤
 		   </pre>
 		   `;
-		/*
-		{{tabs2}}
-					<pw-tabs v-model="tabs2"></pw-tabs>
-					{{tabs1}}
-					<pw-tabs v-model="tabs1"></pw-tabs>
-					
-		*/
+		
 		var _obj = {
 			_css:``,
 			_vue: {
@@ -1126,104 +1096,8 @@ let Vue_Prd = {
 	},
 }
 let Tool = {
-	'def'() {
-		var _note = `
-		   <pre>
-
-		   </pre>
-		   `;
-		var _obj = {
-			_css:`
-			.el-row.ext {
-				margin-bottom: 20px;
-				margin-right:3px !important;
-				border: #ccc 1px solid;
-				border-radius: 4px;
-			}
-			.el-col {
-				border-radius: 4px;
-			}
-
-			.grid-content {
-				border-radius: 4px;
-				min-height: 36px;
-				border: #ccc 1px solid;
-			}
-			
-			.el-row.ext .el-button-group{
-				display:none;
-			}
-			.el-row.ext:hover   .el-button-group{
-				display: inline-block;;
-			}
-			.el-button-group.ext{
-				position:absolute;
-				left:.7rem;
-				top:-3.1rem;
-				padding: 0 .7rem .7rem 0;
-				width:50%;
-				opacity:0.25;
-			}
-			.el-button-group.ext:hover{
-				opacity:1 !important;
-			}
-			.el-button-group.ext .el-button{
-				padding: 7px;
-			}
-
-			`,
-			_vue: {
-				template: `
-					<div>
-					${_note}
-					<el-row class="ext" :gutter="3"style="position:relative;">
-						<el-button-group class="ext" >
-							<el-button type="primary" icon="el-icon-circle-plus" @click="Add"></el-button>
-							<el-button type="primary" icon="el-icon-s-tools"></el-button>
-						</el-button-group>
-						<el-col :span="item.A" v-for="(item) in list" >
-							<div class="grid-content bg-purple">{{item.A}}</div>
-						</el-col>
-						<br/>
-					</el-row>
-					</div>
-				`,
-				data(){
-					return {
-						list:[],
-					}
-				},
-				methods:{
-					Add(){
-						this.list.push({A:4});
-					}
-				} 
-			}
-		};
-		return _obj;
-	},
-	'def'() {
-		var _note = `
-		   <pre>
-		   </pre>
-		   `;
-		var _obj = {
-			_css:``,
-			_vue: {
-				template: `
-					<div>
-					${_note}
-					<pw-form-cfg></pw-form-cfg>
-					</div>
-				`,
-				data(){
-					return {
-					}
-				} 
-			}
-		};
-		return _obj;
-	},
+ 
+	
 	'String Tpl'() {
 		var _note = `
 		<pre>
@@ -1246,6 +1120,28 @@ let Tool = {
 		return _obj;
 	},
 	'power-form-cfg'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					<pw-form-cfg></pw-form-cfg>
+					</div>
+				`,
+				data(){
+					return {
+					}
+				} 
+			}
+		};
+		return _obj;
+	},
+	'power-form-cfg 原型'() {
 		var _note = `
 		   <pre>
 		   </pre>
@@ -1312,111 +1208,6 @@ let Tool = {
 		};
 		return _obj;
 	},
-	'def'() {
-		var _note = `
-		<pre>
-		</pre>
-		`;
-		var _obj = {
-			_css:``,
-			
-			/*
-								<h3>base auto inin</h3>
-					<jdt-table-ext ></jdt-table-ext>
-					<h3>jdt_set</h3>
-					<jdt-table-ext :jdt_set="baseSet"></jdt-table-ext>
-					<h3>jdt_set , mock </h3>
-					<jdt-table-ext :jdt_set="baseSet" :mock="mock"></jdt-table-ext>		
-					<h3>auto_col</h3>
-					<jdt-table-ext :auto_col="auto_col"></jdt-table-ext>
-
-			
-			*/
-					
-			_vue: {
-				template: `
-				<div>
-					${_note}
-					<h3>mock</h3>
-					<jdt-table-ext :mock="mock"></jdt-table-ext>
-
-					<h3>jdt_data</h3>
-					<jdt-table-ext :jdt_data="mock_data"></jdt-table-ext>
-				</div>
-				`,
-				data(){
-					return {
-						auto_col:['A','B'],
-						baseSet: {
-							"columns": [
-								{
-									"title": "表單類型",
-									"data": "表單類型",
-									"sTitle": "表單類型",
-									"mData": "表單類型"
-								},
-								{
-									"title": "表單代碼",
-									"data": "表單代碼",
-									"sTitle": "表單代碼",
-									"mData": "表單代碼"
-								},
-								{
-									"title": "表單名稱",
-									"data": "表單名稱",
-									"sTitle": "表單名稱",
-									"mData": "表單名稱"
-								},
-								{
-									"title": "檢驗對象",
-									"data": "檢驗對象",
-									"sTitle": "檢驗對象",
-									"mData": "檢驗對象"
-								},
-								{
-									"title": "表單負責單位",
-									"data": "表單負責單位",
-									"sTitle": "表單負責單位",
-									"mData": "表單負責單位"
-								}
-							],
-							"responsive": true,
-							"searching": false,
-							columnDefs: [
-								{
-									className: 'e_click', "targets": [1]
-									, createdCell(td, cellData, rowData, row, col) {
-										$(td).html(`<a href='javascript:void(0)'>${cellData}</a>`);
-									}
-								}
-							],
-						},
-						mock: {
-							"data|5": [
-								{
-									"表單類型|1": ["IPQC"],
-									"表單代碼|+1": ["@@id"],
-									"表單名稱|+1": ["表單名稱A", "表單名稱A"],
-									"檢驗對象|1": ["LOT"],
-									"表單負責單位|+1": ["製造", "品管"]
-								}
-							]
-						}
-					}
-				} ,
-				computed:{
-					mock_data(){
-						var x = Mock.mock(this.mock).data;
-						console.log(x);
-						return x;
-					}
-				}
-			}
-		};
-		return _obj;
-	},
-
- 
 	'jq-dtable'() {
 		var _note = `
 		<pre>
@@ -1714,4 +1505,61 @@ let Tool = {
 		return _obj;
 	},
 }
-window.sample = {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd, };
+var 程式產生器 = {
+	'*el-table-column'() {
+		var _note = `
+		   <pre>
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_vue: {
+				template: `
+					<div>
+					${_note}
+					<pw-tabs v-model="base"  ></pw-tabs>
+					</div>
+				`,
+				data(){
+					var _self= this;
+					return {
+						base:{
+							val:'',
+							tabs:{
+								Input:{
+									is:'pw-input',
+									dyn_prop:{
+										Exec:_self.InputA_Exec
+									},
+									val:"A,,true\nB,,\nC,,['A']"
+								},
+								Code:{
+									is:'pw-input',
+									val:''
+								}
+							}
+						}
+					}
+				},
+				methods: {
+					InputA_Exec(JsonCode){
+						this.base.val = "Code";
+						var _r =  JsonCode.Act(this.filedObj);
+						this.base.tabs.Code.val = _r.join('\n');
+					},
+					filedObj(name,filed,data_val=""){
+						var _r = 
+`<el-table-column
+	prop="${name}"
+	label="${filed??name}"
+	></el-table-column>`
+						return _r;
+					},
+				},
+			}
+		};
+		return _obj;
+	},
+
+}
+window.sample = {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,程式產生器 };
