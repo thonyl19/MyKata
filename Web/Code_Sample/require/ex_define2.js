@@ -1,10 +1,13 @@
 
+
+
 var arr = [
 	'lodash',
 	'require'
 ];
 
 define(arr,function (_,require) {
+	debugger
 	var cfg = {
 		paths: {
 			d3:"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
