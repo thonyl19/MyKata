@@ -64,13 +64,14 @@ require(["jquery", "lodash", "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
           alert(math.add(1, 1));
         });
       },
-      exec5() {
+      exec_ex_define1() {
         /*
 				演示 使用 define 定義程序-- ex_define1 ,
 					並實現測載入結果, 
 				其中一併 測試載入 css 的效果
 				*/
         require(["ex_define1"], (fn) => {
+			debugger;
           fn.test();
         });
       },
@@ -164,35 +165,49 @@ require(["jquery", "lodash", "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
           debugger;
         });
 	  },
-	  exec_22_22() {
-		/*
-		但,在其後的測試應用時發現, exec_22 試例中,
-			一定要先執行 p1 的假設是錯的,
-			p1 之所以會錯,是因為 最原始的 cfg 中,
-			並沒有 "d3", "css!c3_css" 的設置,
-			才會因此報錯.
-		下例,可以印證,根本不需要 q1 的程序
-		*/
-		require(['jquery' ], ($) => {
+		exec_22_22() {
+			/*
+			但,在其後的測試應用時發現, exec_22 試例中,
+				一定要先執行 p1 的假設是錯的,
+				p1 之所以會錯,是因為 最原始的 cfg 中,
+				並沒有 "d3", "css!c3_css" 的設置,
+				才會因此報錯.
+			下例,可以印證,根本不需要 q1 的程序
+			*/
+			require(['jquery' ], ($) => {
+				debugger;
+			});
+		},
+		exec_31(){
+			var cfg = {
+				paths: {
+					d3: "https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
+					c3: "https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
+					c3_css: "https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
+				},
+				shim: {
+					c3: { deps: ["d3", "css!c3_css"] },
+				},
+			};
+			// require.config(cfg);
 			debugger;
-		});
-	  },
-	  exec_31(){
-		var cfg = {
-			paths: {
-				d3: "https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
-				c3: "https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
-				c3_css: "https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
-			},
-			shim: {
-				c3: { deps: ["d3", "css!c3_css"] },
-			},
-		};
-		debugger;
-		require(cfg, ($, ex_define21) => {
-			debugger;
-		});
-	  }
-    },
+
+			// require(["d3", "css!c3_css"], (req,d3) => {
+			// 	//
+			// 	debugger;
+			// });
+			require(cfg,()=>{
+				define(function(require, exports, module) {
+						debugger;
+						var a = require('a'),
+							b = require('b');
+				
+						//Return the module value
+						return function () {};
+					}
+				);
+			})
+		}
+	},
   });
 });

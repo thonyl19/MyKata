@@ -14,6 +14,7 @@ var arr = [
 
 define(arr
 	,function (bts45,moment) {
+		debugger
 		var fn = {
 			add(x, y){
 				return x + y;

@@ -1,15 +1,18 @@
 ﻿(function () {
   debugger;
   var arr = ["lodash"
-  , "styled"
-  , "vue"
-  , "vuejs-paginate"
-  , "vue-pagination"
+	, "styled"
+	, "vue"
+	, "https://cdn.jsdelivr.net/npm/vuejs-paginate@2.1.0/dist/index.min.js",
+	, 'https://cdn.rawgit.com/matfish2/vue-pagination/master/dist/vue-pagination.min.js'
+//   , "vuejs-paginate"
+//   , "vue-pagination"
   //,'JwPagination'
 ];
-  define(arr, (_, styled, vue, v_paginate ,v_pagination
+  define(arr,function (_, styled, vue, v_paginate ,v_pagination
 	//,v_JwPagination
-	) => {
+	){
+	debugger
 	//Vue.component('jw-pagination', v_JwPagination);
 	vue.use(v_pagination);
 	//console.log(v_paginate);

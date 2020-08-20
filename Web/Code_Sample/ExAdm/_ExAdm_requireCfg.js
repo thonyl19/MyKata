@@ -20,8 +20,8 @@
 		d3:"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
 		c3:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
 		c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
-		'vuejs-paginate':"https://cdn.jsdelivr.net/npm/vuejs-paginate@2.1.0/dist/index.min",
-		'vue-pagination':'https://cdn.rawgit.com/matfish2/vue-pagination/master/dist/vue-pagination.min'
+		// 'vuejs-paginate':"https://cdn.jsdelivr.net/npm/vuejs-paginate@2.1.0/dist/index.min",
+		// 'vue-pagination':'https://cdn.rawgit.com/matfish2/vue-pagination/master/dist/vue-pagination.min'
 		//'JwPagination':'https://cdn.jsdelivr.net/npm/jw-vue-pagination@1.0.3/lib/JwPagination.min',
 	},
 	map: {
