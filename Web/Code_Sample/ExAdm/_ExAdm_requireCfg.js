@@ -36,9 +36,9 @@
 		bts45:{deps: ['css!bts45-css']},
 		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
 		c3:{deps:['d3', 'css!c3_css'] },
-		VuePager:{deps:['vue','vuejs-paginate','vue-pagination'
-				//,'JwPagination'
-		]},
+		// VuePager:{deps:['vue','vuejs-paginate','vue-pagination'
+		// 		//,'JwPagination'
+		// ]},
 	}
 });
 
@@ -71,7 +71,7 @@ window.gEx = {
 		debugger
 		var _url = new URL(location);
 		var Ex = _url.hash;
-		return Ex != "" ? Ex.substr(1) :"VuePager" ;
+		return Ex != "" ? Ex.substr(1) :"CSS" ;
 	}
 }
 

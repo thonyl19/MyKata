@@ -29,52 +29,95 @@
 });
 debugger;
 require(["jquery", "lodash", "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
-  ELEMENT.install(Vue);
+	ELEMENT.install(Vue);
+	var _fn = {
+		'case_22'(){
+			/*計劃實驗 解決相依性的問題,
+				計算 將以下結構 放到 case 中,
+				使能實現 config by case 
+				VuePager:{deps:['vue','vuejs-paginate','vue-pagination'
+					]},
+			 */
+		},
+		'case_21'(){
+			/*
+			解決 崁套 過多的問題,使 結構更簡練
+			一並實測 load by case 的應用
+			*/
+			require(["case_21"], (fn) => {
+				fn.test();
+			});
+		},
+		'case_20'(){
+			/*
+			依據 case_11 演化出 v2 版本的寫法
+			這一版的測試方向為
+				-解決多檔應用時 define arr 被覆蓋的問題
+			*/
+			require(["case_20"], (fn) => {
+				fn.test();
+			});
+		},
+		'case_11 - 使用 define 定義程序'(){
+			/*
+			這一版的測試方向有2
+				1.現解和實現 define 的用法
+				2.試驗 define 抽離 arr 的寫法
+				3.試驗 define load by file 的寫法
+			演示 使用 define 定義程序-- case_11 ,
+				並實現測載入結果, 
+			其中一併 測試載入 css 的效果
+	
+			第一次試驗這一段並沒有成功 ,主要是因為 下面的路徑不正確
+				'https://www.jsdelivr.com/package/npm/mock-js'
+			再取另一個來測試時發現,是可以這樣做  動態 載入的,
+				但與寫在 require.config 中不同的地方在於,
+				這裡就必須要加 .js 的副檔名,
+				才能正確work ,連 css 也可使用.
+			*/
+			require(["case_11"], (fn) => {
+				fn.test();
+			});
+		},
+		'case_1 - 使用 define 定義程序--math ,並實現測載入結果'(){
+			//一併測試載入 bts45
+			require(["bts45", "case_1"], function (bts45, math) {
+				alert(math.add(1, 1));
+			});
+		},
+		'測試以 UMD 架構載入資料'(){
+			require(["_data"], (_data) => {
+				console.log({_data})
+			});
+		},
+		
+		'-測試使用 Append Tag方式執行'(){
+			//此方法無實質效用,並沒有如預想的載入檔案
+			var js = ["./case_0.js"];
+			var $head = $("head");
+			for (var i = 0; i < js.length; i++) {
+				var s = `<script data-main="${js[i]}" src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js" crossorigin="anonymous"></script>`;
+				$head.append(s);
+			}
+		},
+		'-測試直接載入'(){
+			/* 不 work
+			[Vue warn]: Error in v-on handler: "Error: Module name "case0" has not been loaded yet for context: _. Use require([])
+			*/
+			var Employee = require("./case_0");
+		},
+		
+	}
   new Vue({
-    el: "#app",
+	el: "#app",
+	computed: {
+		_list(){
+			return _fn
+		}
+	},
     methods: {
-      exec1() {
-        //此方法無實質效用
-        var js = ["./_base_requirejs_case1.js"];
-        var $head = $("head");
-        for (var i = 0; i < js.length; i++) {
-          var s = `<script data-main="${js[i]}" src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js" crossorigin="anonymous"></script>`;
-          $head.append(s);
-        }
-      },
-      exec2() {
-        //不 work
-        var Employee = require("./_base_requirejs_case1.js");
-      },
-      exec3() {
-        /*
-				測試以 UMD 架構載入資料,可以 work
-				*/
-        require(["_data"], (_data) => {
-          debugger;
-        });
-      },
-      exec4() {
-        /*
-				演示 使用 define 定義程序--math ,
-					並實現測載入結果
-				*/
-        require(["bts45", "ex_define"], function (bts45, math) {
-          debugger;
-          alert(math.add(1, 1));
-        });
-      },
-      exec_ex_define1() {
-        /*
-				演示 使用 define 定義程序-- ex_define1 ,
-					並實現測載入結果, 
-				其中一併 測試載入 css 的效果
-				*/
-        require(["ex_define1"], (fn) => {
-			debugger;
-          fn.test();
-        });
-      },
+   
+ 
       exec() {
         /*
 			   演示 使用 define 定義程序-- ex_define1 ,

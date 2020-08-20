@@ -1,4 +1,5 @@
-﻿require.config({
+﻿alert('_base_requirejs_case1.js');
+require.config({
   	//避免緩存
 	urlArgs: "bust=" + new Date().getTime(),
 	paths: {
@@ -15,6 +16,6 @@
         'bts45':{deps: ['css!bts45-css']},
     }
 });
-require(["jquery","vue","bts45"], ($,Vue,bts45)=> {
+require(["bts45"], (bts45)=> {
 	debugger
 });
