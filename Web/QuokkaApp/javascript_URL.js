@@ -58,7 +58,7 @@ var fn = {
         // history.pushState(state, title, url)
        
     },
-    'MVC 中的應用程序'(){
+    '_MVC 中的應用程序'(){
         var _URL = {
             get baseURL() {
                 /*
@@ -98,9 +98,27 @@ var fn = {
                         break;
                 }
                 return _url.toString();
+            },
+            chgSearchParam(newParams, autoReload = false) {
+                var _url = new URL('http://localhost:59394/GenesisNewMes/MES/WorkingTime/item?SingleModel=true&SID=9e50e033-6e9d-4d86-88ba-ed11b74e665e');
+                var _params_old = new URLSearchParams(_url.search.slice(1));
+                _params_old
+                _.each(newParams,(val,key)=>{
+                    if(val==null){
+                        _params_old.delete(key);
+                    }else if (_params_old.has(key)){
+                        _params_old.set(val)
+                    }else{
+                        _params_old.append(key,val);
+                    }
+                })
+                _url.search = `?${_params_old.toString()}`;
+                if (autoReload) location = _url.toString();
+                return _url.toString();
             }
         }
-
+        var z = _URL.chgSearchParam({SID:null})
+        z
     }
 }
 
