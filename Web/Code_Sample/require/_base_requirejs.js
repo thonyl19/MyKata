@@ -31,13 +31,19 @@ debugger;
 require(["jquery", "lodash", "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 	ELEMENT.install(Vue);
 	var _fn = {
-		'case_22'(){
+		'-case_22'(){
 			/*計劃實驗 解決相依性的問題,
-				計算 將以下結構 放到 case 中,
+				打算 將以下結構 放到 case 中,
 				使能實現 config by case 
 				VuePager:{deps:['vue','vuejs-paginate','vue-pagination'
 					]},
+				在本範例 中並沒有得到預期的效果, fn 傳回的是 undefine ,
+					但子程序在隨便會被觸發執行,
+					就理解上 , 必須是透過 define 來讓 程序來完成程序加載
 			 */
+			require(["case_22"], (fn) => {
+				fn.test();
+			});
 		},
 		'case_21'(){
 			/*

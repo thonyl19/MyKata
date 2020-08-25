@@ -1,21 +1,16 @@
-﻿(function () {
-	debugger
+﻿var __fn = (
+	$, _ , styled, Vue
+)=> 
+{
+	var 可用套件 ={
+ 	}
+ 	return { 可用套件};
+}
+(function () {
 	var arr = [
-		'lodash',
-		'styled',
-		'vue',
-	];
-	var fn = {
-		add(x, y){
-			return x + y;
-		},
-		test(){
-			console.log(_);
-		}
-	}
-	define(arr, (_,styled,vue)=>{
-		return fn;
-	});
+		"jquery","lodash","styled","vue",
+ 	];
+	define(arr, __fn);
 }());
 
  
