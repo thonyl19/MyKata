@@ -1,4 +1,4 @@
-﻿var local_path = '../../node_modules/'
+﻿var local_path = '../node_modules/'
 require.config({
 	//避免緩存
 	urlArgs: "bust=" + new Date().getTime(),
@@ -21,7 +21,7 @@ require.config({
 		vuex: "https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex",
 		styled:"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min",
 		fa_css:"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome",
-		
+		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
 		//示範載入
 		'_data': "./_tmpData",
 		"bts337":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min",
@@ -32,7 +32,8 @@ require.config({
 		c3:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
 		c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
 		ChartJs:"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min",
-		VueChartJs:'https://unpkg.com/vue-chartjs/dist/vue-chartjs.min'
+		VueChartJs:'https://unpkg.com/vue-chartjs/dist/vue-chartjs.min',
+		'vue-froala-wysiwyg':"https://cdn.jsdelivr.net/npm/vue-froala-wysiwyg@3.0.6/dist/vue-froala.min"
 		//'vuejs-paginate':"https://cdn.jsdelivr.net/npm/vuejs-paginate@2.1.0/dist/index.min",
 		//'vue-pagination':'https://cdn.rawgit.com/matfish2/vue-pagination/master/dist/vue-pagination.min'
 		//'JwPagination':'https://cdn.jsdelivr.net/npm/jw-vue-pagination@1.0.3/lib/JwPagination.min',
@@ -56,7 +57,11 @@ require.config({
 				,'ChartJs'
 				,'VueChartJs'
 				]
-		}
+		},
+		'vue-froala-wysiwyg':{deps: ['vue'
+			//,'vue-froala'
+			,"css!https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css"
+			]}
 		//bts45:{deps: ['jquery','css!bts45-css']},
  	}
 });
@@ -83,6 +88,10 @@ window.gEx = {
 		'element-ui-2.13',
 		'CSS',
 		'bootstrap3.3.7',
+		'bootstrap4.5.0',
+		
+		'froala_2.7',
+		'bootstrap4.5.0',
 		'bootstrap4.5.0',
 		'bootstrap4.5.0',
 		'bootstrap4.5.0',

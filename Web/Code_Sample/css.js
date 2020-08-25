@@ -1,458 +1,386 @@
-﻿(() => {
-	let Attrib = {
-		"text-shadow"() {
-			/* 用例說明
-					1.主要是動態呈現  text-shadow 的效果.
-					2.應用 html5 input.type="range" 做數字控制
-					3.應用 Vue :style 的動態樣式控制
-					4.應用 Vue 的 dom style.cssText 處理
-					5.應用 watch 機制
-					*/
-			var _vue = {
-				template: `
-					  <div>
-						  {{range}}<input type="range" min="1" max="10" v-model="range" class="slider" id="myRange">
-						  <div ref="styObj" :style="styleObject">text-shadow</div>
-						  <div>{{styleObject}}</div>
-						  <div>cssText:{{sty}}</div>
-					  </div>`,
-				data() {
-					return {
-						range: 10,
-						sty: ""
-					};
-				},
-				computed: {
-					styleObject() {
-						return {
-							"font-size": "30px",
-							color: "rgba(0,0,0,0)",
-							"text-shadow": `0 0 ${this.range}px rgba(255,0,0,1)`
-						};
-					}
-				},
-				watch: {
-					styleObject() {
-						let { styObj } = this.$refs;
-						if (styObj != null) {
-							this.sty = styObj.style.cssText;
-						}
-					}
-				}
-			};
-			return { _vue };
-		},
-		"text-overflow"(){
-			var _note = `<pre>
-如果文字超過邊界,自動以 ... 方式呈現</pre>
-			`
-			var _obj = {
-				_css: `
-			.sty-iframe{
-			  margin:.5em;
-			  height:100%;
-			}
-			.sty-1{
-				overflow:hidden;
-				text-overflow:ellipsis;
-				white-space:nowrap;
-			}
-			`,
-				_vue: {
-					template: `
-					<div>
-				${_note}
-				  <x-tpl-sample-range>
-					<div class="sty-1 area-mk">使用設定的字串代表被切斷的字串。</div>
-				  </x-tpl-sample-range>
-				  </div>
-				`
-				}
-			};
-			return _obj;
-		}
-	}
+﻿var __fn = (_,styled,vue)=>{
 	let views = {
-		"css-jss用例"() {
-			/*
-					Ref:
-						https://cssinjs.org/jss-api?v=v10.0.3
-						https://cssinjs.org/?v=v10.0.3
-					*/
-			var styles = `{
-					  wrapper {
-						  padding: 40px;
-						  background: #f7df1e;
-						  text-align: center;
-						  color: "red";
-					  },
-				  }
-				  `;
+	"css-jss用例"() {
+		/*
+				Ref:
+					https://cssinjs.org/jss-api?v=v10.0.3
+					https://cssinjs.org/?v=v10.0.3
+				*/
+		var styles = `{
+				  wrapper {
+					  padding: 40px;
+					  background: #f7df1e;
+					  text-align: center;
+					  color: "red";
+				  },
+			  }
+			  `;
 
-			var _jss = jss.create();
-			const { classes } = _jss.createStyleSheet(styles).attach();
-			var _vue = {
-				template: `
-					  <div>
-						  <A class="${classes.wrapper}">test</A>
-					  </div>`
-			};
-			return { _vue };
-		},
-		"css-sc用例1"() {
-			/*
-					Ref: vue-styled-components
-					*/
-			var Wrapper = styled.default.div`{
-					  display: flex;
-					  flex-direction: column;
-					  align-items: center;
-					  justify-content: center;
-					  width: 100%;
+		var _jss = jss.create();
+		const { classes } = _jss.createStyleSheet(styles).attach();
+		var _vue = {
+			template: `
+				  <div>
+					  <A class="${classes.wrapper}">test</A>
+				  </div>`
+		};
+		return { _vue };
+	},
+	"css-sc用例1"() {
+		/*
+				Ref: vue-styled-components
+				*/
+		var Wrapper = styled.default.div`{
+				  display: flex;
+				  flex-direction: column;
+				  align-items: center;
+				  justify-content: center;
+				  width: 100%;
+				  padding: 50px;
+				  color: #444;
+				  border: 1px solid #1890ff;
+			  }
+			  `;
+		Vue.component("Wrapper", Wrapper);
+
+		var _vue = {
+			template: `
+				  <div>
+					  <Wrapper  >test</Wrapper>
+				  </div>`
+		};
+		return { _vue };
+	},
+	"css-sc用例2"() {
+		var _css = `
+				  .wrapper {
 					  padding: 50px;
-					  color: #444;
+					  color: red;
 					  border: 1px solid #1890ff;
 				  }
 				  `;
-			Vue.component("Wrapper", Wrapper);
 
-			var _vue = {
-				template: `
-					  <div>
-						  <Wrapper  >test</Wrapper>
-					  </div>`
-			};
-			return { _vue };
-		},
-		"css-sc用例2"() {
-			var _css = `
-					  .wrapper {
-						  padding: 50px;
-						  color: red;
-						  border: 1px solid #1890ff;
-					  }
-					  `;
+		var _vue = {
+			template: `
+				  <div>
+					  <div class="wrapper">test</div>
+				  </div>`
+		};
+		return { _vue, _css };
+	},
+	FontAwesome() {
+		var _vue = {
+			template: `
+				  <dl class="flex f-col">
+					  <dt>[旋轉範例]</dt>
+					  <dd>
+						  <i class="fa fa-spinner fa-spin"></i>
+						  <i class="fa fa-refresh fa-spin"></i>
+						  <i class="fa fa-cog fa-spin"></i>
+					  </dd>
+					  <dt>[觸發旋轉]</dt>
+					  <dd>
+						  <i class="fa fa-quote-left fa-2x pull-left fa-border" @click="case1"></i>
+					  </dd>
+					  <dt>[Stacked Icons(疊圖)]</dt>
+					  <dd>
+						  <span class="fa-stack fa-lg">
+								  <i class="fa fa-square-o fa-stack-2x"></i>
+								  <i class="fa fa-twitter fa-stack-1x"></i>
+						  </span>
+						  fa-twitter on fa-square-o<br>
+						  <span class="fa-stack fa-lg">
+							  <i class="fa fa-circle fa-stack-2x"></i>
+							  <i class="fa fa-flag fa-stack-1x fa-inverse"></i>
+						  </span>
+						  fa-flag on fa-circle<br>
+						  <span class="fa-stack fa-lg">
+							  <i class="fa fa-square fa-stack-2x"></i>
+							  <i class="fa fa-terminal fa-stack-1x fa-inverse"></i>
+						  </span>
+						  fa-terminal on fa-square<br>
+						  <span class="fa-stack fa-lg">
+							  <i class="fa fa-camera fa-stack-1x"></i>
+							  <i class="fa fa-ban fa-stack-2x text-danger"></i>
+						  </span>
+						  fa-ban on fa-camera
+					  </dd>
+				  </dl>`,
+			methods: {
+				case1() { }
+			}
+		};
+		return { _vue };
+	},
 
-			var _vue = {
-				template: `
-					  <div>
-						  <div class="wrapper">test</div>
-					  </div>`
-			};
-			return { _vue, _css };
-		},
-		FontAwesome() {
-			var _vue = {
-				template: `
-					  <dl class="flex f-col">
-						  <dt>[旋轉範例]</dt>
-						  <dd>
-							  <i class="fa fa-spinner fa-spin"></i>
-							  <i class="fa fa-refresh fa-spin"></i>
-							  <i class="fa fa-cog fa-spin"></i>
-						  </dd>
-						  <dt>[觸發旋轉]</dt>
-						  <dd>
-							  <i class="fa fa-quote-left fa-2x pull-left fa-border" @click="case1"></i>
-						  </dd>
-						  <dt>[Stacked Icons(疊圖)]</dt>
-						  <dd>
-							  <span class="fa-stack fa-lg">
-									  <i class="fa fa-square-o fa-stack-2x"></i>
-									  <i class="fa fa-twitter fa-stack-1x"></i>
-							  </span>
-							  fa-twitter on fa-square-o<br>
-							  <span class="fa-stack fa-lg">
-								  <i class="fa fa-circle fa-stack-2x"></i>
-								  <i class="fa fa-flag fa-stack-1x fa-inverse"></i>
-							  </span>
-							  fa-flag on fa-circle<br>
-							  <span class="fa-stack fa-lg">
-								  <i class="fa fa-square fa-stack-2x"></i>
-								  <i class="fa fa-terminal fa-stack-1x fa-inverse"></i>
-							  </span>
-							  fa-terminal on fa-square<br>
-							  <span class="fa-stack fa-lg">
-								  <i class="fa fa-camera fa-stack-1x"></i>
-								  <i class="fa fa-ban fa-stack-2x text-danger"></i>
-							  </span>
-							  fa-ban on fa-camera
-						  </dd>
-					  </dl>`,
-				methods: {
-					case1() { }
+
+	"dl-flex"() {
+		/* 用例說明
+				1.dl 套用 flex 的呈現
+				2.input.radio 的使用
+				3.v-for 無法直接在 input 內使用,估計是因為 input 沒有 end tag ,
+					所以只能利用 li 再隔一層   
+	 
+				*/
+		var _css = `
+				  .case-dl-flex dt ,
+				  .case-dl-flex dd
+				  {
+					  border:ridge red 1px;
+				  }
+				  `;
+		var _vue = {
+			template: `
+				  <div class="case-dl-flex">
+					  <ul>
+						 <li v-for="(item, idx) in list"><input type="radio" v-model="group" :value=idx />{{item}}</li>
+					  </ul>
+					  <dl :class="sty">
+						  <dt>dt</dt>
+						  <dt>dt</dt>
+						  <dd><BR /><BR /><BR /><BR /><BR /></dd>
+					  </dl>
+				  </div>`,
+			data() {
+				return {
+					list: ["原始", "f-col", "f-row"],
+					group: 0
+				};
+			},
+			computed: {
+				sty() {
+					if (this.group == 0) return "";
+					return `flex ${this.list[this.group]}`;
 				}
-			};
-			return { _vue };
-		},
-
-
-		"dl-flex"() {
-			/* 用例說明
-					1.dl 套用 flex 的呈現
-					2.input.radio 的使用
-					3.v-for 無法直接在 input 內使用,估計是因為 input 沒有 end tag ,
-						所以只能利用 li 再隔一層   
-		 
-					*/
-			var _css = `
-					  .case-dl-flex dt ,
-					  .case-dl-flex dd
-					  {
-						  border:ridge red 1px;
-					  }
-					  `;
-			var _vue = {
+			}
+		};
+		return { _vue, _css };
+	},
+	"fa-fw"() {
+		/*
+				Ref:https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons
+				1.使用 fa-fw 設定, 讓 fa 的項目可以不被圖片大小影響 到 整個外圍的 tag
+				2.學習使用 :stype :class 的動態設定方式
+				*/
+		var _vue = {
+			template: `
+				  <div>
+					  <input type="checkbox" v-model="set" />fa-fw <br />
+					  <input type="range" min="1" max="10" v-model="range" >{{range}}
+					  <div  :style="{fontSize:range +'rem' }">
+						  <div><i class="fa fa-edit" :class="{'fa-fw':set}" style="background:DodgerBlue"></i></div>
+						  <div><i class="fa fa-remove" :class="{'fa-fw':set}" style="background:SkyBlue"></i></div>
+					  </div>
+				  </div>
+				  `,
+			data() {
+				return {
+					set: true,
+					range: 1
+				};
+			}
+		};
+		return { _vue };
+	},
+	"linear-gradient"() {
+		var _obj = {
+			_vue: {
 				template: `
-					  <div class="case-dl-flex">
-						  <ul>
-							 <li v-for="(item, idx) in list"><input type="radio" v-model="group" :value=idx />{{item}}</li>
-						  </ul>
-						  <dl :class="sty">
-							  <dt>dt</dt>
-							  <dt>dt</dt>
-							  <dd><BR /><BR /><BR /><BR /><BR /></dd>
-						  </dl>
-					  </div>`,
-				data() {
-					return {
-						list: ["原始", "f-col", "f-row"],
-						group: 0
-					};
-				},
-				computed: {
-					sty() {
-						if (this.group == 0) return "";
-						return `flex ${this.list[this.group]}`;
-					}
-				}
-			};
-			return { _vue, _css };
-		},
-		"fa-fw"() {
-			/*
-					Ref:https://fontawesome.com/how-to-use/on-the-web/styling/fixed-width-icons
-					1.使用 fa-fw 設定, 讓 fa 的項目可以不被圖片大小影響 到 整個外圍的 tag
-					2.學習使用 :stype :class 的動態設定方式
-					*/
-			var _vue = {
-				template: `
-					  <div>
-						  <input type="checkbox" v-model="set" />fa-fw <br />
-						  <input type="range" min="1" max="10" v-model="range" >{{range}}
-						  <div  :style="{fontSize:range +'rem' }">
-							  <div><i class="fa fa-edit" :class="{'fa-fw':set}" style="background:DodgerBlue"></i></div>
-							  <div><i class="fa fa-remove" :class="{'fa-fw':set}" style="background:SkyBlue"></i></div>
-						  </div>
+					  <div class="lg">
+						  [linear-gradient]{{myRange}}<input type="range" min="10" max="360" v-model="myRange" class="slider" >
+						  <h1 ref="styObj">資料統計</h1>
+						  <textarea  v-model="csstxt"></textarea>
 					  </div>
 					  `,
 				data() {
 					return {
-						set: true,
-						range: 1
+						myRange: 10
 					};
-				}
-			};
-			return { _vue };
-		},
-		"linear-gradient"() {
-			var _obj = {
-				_vue: {
-					template: `
-						  <div class="lg">
-							  [linear-gradient]{{myRange}}<input type="range" min="10" max="360" v-model="myRange" class="slider" >
-							  <h1 ref="styObj">資料統計</h1>
-							  <textarea  v-model="csstxt"></textarea>
-						  </div>
-						  `,
-					data() {
-						return {
-							myRange: 10
-						};
-					},
-					mounted() {
-						this.$refs.styObj.style.cssText = this.csstxt;
-					},
+				},
+				mounted() {
+					this.$refs.styObj.style.cssText = this.csstxt;
+				},
 
-					computed: {
-						csstxt() {
-							debugger;
-							let _css = `
-									  margin: 1em;
-									  border-radius: 10px;
-									  box-sizing:border-box;
-									  border-width:1px;
-									  border-style:solid;
-									  border-color:rgba(121, 121, 121, 1);
-									  background:linear-gradient(${this.myRange}deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
-								  `;
-							let { styObj } = this.$refs;
-							if (styObj != null) {
-								styObj.style.cssText = _css;
-							}
-							return _css;
+				computed: {
+					csstxt() {
+						debugger;
+						let _css = `
+								  margin: 1em;
+								  border-radius: 10px;
+								  box-sizing:border-box;
+								  border-width:1px;
+								  border-style:solid;
+								  border-color:rgba(121, 121, 121, 1);
+								  background:linear-gradient(${this.myRange}deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
+							  `;
+						let { styObj } = this.$refs;
+						if (styObj != null) {
+							styObj.style.cssText = _css;
 						}
+						return _css;
 					}
-					/*
-								//以下是經過簡化後, 不需要的方法,留存備忘
-								methods:{
-									bindCss(){
+				}
+				/*
+							//以下是經過簡化後, 不需要的方法,留存備忘
+							methods:{
+								bindCss(){
+									let {styObj} = this.$refs;
+									if (styObj != null){
+										styObj.style.cssText = this.csstxt;
+									}
+								}
+							},
+							watch:{
+								// csstxt(){
+								//     this.bindCss()
+								// },
+								
+								不 work
+								'this.$refs.styObj.style.cssText'(){
+									debugger
+								}
+								
+								原本的作用是希望在初始化時,就處理一次,但 因為 styObj 是 null,
+									所以不 work 留存備忘之
+								csstxt:{
+									immediate: true, // makes the watcher fire on first render, too.
+									handler() {
+										debugger
 										let {styObj} = this.$refs;
 										if (styObj != null){
 											styObj.style.cssText = this.csstxt;
 										}
 									}
-								},
-								watch:{
-									// csstxt(){
-									//     this.bindCss()
-									// },
-								    
-									不 work
-									'this.$refs.styObj.style.cssText'(){
-										debugger
-									}
-								    
-									原本的作用是希望在初始化時,就處理一次,但 因為 styObj 是 null,
-										所以不 work 留存備忘之
-									csstxt:{
-										immediate: true, // makes the watcher fire on first render, too.
-										handler() {
-											debugger
-											let {styObj} = this.$refs;
-											if (styObj != null){
-												styObj.style.cssText = this.csstxt;
-											}
-										}
-									}
 								}
-								*/
-				}
-			};
-			return _obj;
-		},
-		animation() {
-			/*
-					Ref:
-						https://www.oxxostudio.tw/articles/201803/css-animation.html
-						https://www.gradient-animator.com/
-					*/
-			var _obj = {
-				_css: `
-					  .sample1{
-						  position: relative;
+							}
+							*/
+			}
+		};
+		return _obj;
+	},
+	animation() {
+		/*
+				Ref:
+					https://www.oxxostudio.tw/articles/201803/css-animation.html
+					https://www.gradient-animator.com/
+				*/
+		var _obj = {
+			_css: `
+				  .sample1{
+					  position: relative;
+					  left:0;
+					  width:50px;
+					  height:50px;
+					  background:#f00;
+					  animation-name:oxxo;
+					  animation-duration:2s;
+					  animation-iteration-count:infinite
+				  }
+				  @keyframes oxxo{
+					  from{
 						  left:0;
-						  width:50px;
-						  height:50px;
-						  background:#f00;
-						  animation-name:oxxo;
-						  animation-duration:2s;
-						  animation-iteration-count:infinite
 					  }
-					  @keyframes oxxo{
-						  from{
-							  left:0;
-						  }
-						  to{
-							  left:100px;
-						  }
+					  to{
+						  left:100px;
 					  }
-	  
-					  .sample2{
-						  margin: 1em;
-						  border-radius: 10px;
-						  box-sizing: border-box;
-						  border-width: 1px;
-						  border-style: solid;
-						  border-color: rgba(121, 121, 121, 1);
-						  background: linear-gradient(var(--pos,10deg), rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
-						  animation: gradient 2s linear infinite;
-						  
-						  
+				  }
+  
+				  .sample2{
+					  margin: 1em;
+					  border-radius: 10px;
+					  box-sizing: border-box;
+					  border-width: 1px;
+					  border-style: solid;
+					  border-color: rgba(121, 121, 121, 1);
+					  background: linear-gradient(var(--pos,10deg), rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
+					  animation: gradient 2s linear infinite;
+					  
+					  
+				  }
+				  @keyframes gradient {
+					  0% { 
+						  --pos:10deg; 
+					  } 
+					  100% { 
+						  --pos:360deg; 
 					  }
-					  @keyframes gradient {
-						  0% { 
-							  --pos:10deg; 
-						  } 
-						  100% { 
-							  --pos:360deg; 
-						  }
-					  }
-					  `,
-				// animation: gradient 2s infinite ;
-				// animation-name:gradient;
-				//     animation-duration:2s;
-				//     animation-iteration-count:infinite;
-				_vue: {
-					template: `
-						  <div>
-							  <div class="sample1"></div>
-							  <h1 class="sample2">sample2</h1>
-						  </div>`
-				}
-			};
-			return _obj;
-		},
-		animation_Case() {
-			/*
-					Ref:
-						https://codepen.io/thebabydino/pen/BxxMwg
-						https://codepen.io/thebabydino/pen/pVVYKL
-						https://codepen.io/thebabydino/pen/bMMJWK
-					*/
-			var _obj = {
-				_vue: {
-					template: `
-						  <div>
-						  </div>`
-				}
-			};
-			return _obj;
-		},
-
-		scroll() {
-			/*
-			[Ref]
-			  https://css-tricks.com/custom-scrollbars-in-webkit/
-			  https://github.com/inuyaksa/jquery.nicescroll
-			  http://webkit-scroll-gen.sourceforge.net/
-			  https://codepen.io/GhostRider/pen/GHaFw
-			  https://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
-			 */
-
-			var _obj = {
-				_css: `
-			  :root {
-				--webkit_scrollbar:7px;
-				--webkit_scrollbar-button:3px;
-			  }
-			  @keyframes oxxo{
-				0%{
-				}
-				100%{
-					overflow-x: hidden !important;
-					overflow-y: hidden !important;
-				}
+				  }
+				  `,
+			// animation: gradient 2s infinite ;
+			// animation-name:gradient;
+			//     animation-duration:2s;
+			//     animation-iteration-count:infinite;
+			_vue: {
+				template: `
+					  <div>
+						  <div class="sample1"></div>
+						  <h1 class="sample2">sample2</h1>
+					  </div>`
 			}
-	  
-			  .sty-scroll {
-				margin-bottom: .35em;
-				overflow-y: auto;
-				width:60rem;
-				height:10rem;
-			  }
-	  
-			  .sty-scroll.hover:hover {
-				overflow-x: auto !important;
-				overflow-y: auto !important;
-				padding-right: var(--webkit_scrollbar) !important;
+		};
+		return _obj;
+	},
+	animation_Case() {
+		/*
+				Ref:
+					https://codepen.io/thebabydino/pen/BxxMwg
+					https://codepen.io/thebabydino/pen/pVVYKL
+					https://codepen.io/thebabydino/pen/bMMJWK
+				*/
+		var _obj = {
+			_vue: {
+				template: `
+					  <div>
+					  </div>`
 			}
-	  
-			  //限制只有 y 軸會顯示
-			  .sty-scroll.hover.hover-y:hover {
+		};
+		return _obj;
+	},
+
+	scroll() {
+		/*
+		[Ref]
+		  https://css-tricks.com/custom-scrollbars-in-webkit/
+		  https://github.com/inuyaksa/jquery.nicescroll
+		  http://webkit-scroll-gen.sourceforge.net/
+		  https://codepen.io/GhostRider/pen/GHaFw
+		  https://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
+		 */
+
+		var _obj = {
+			_css: `
+		  :root {
+			--webkit_scrollbar:7px;
+			--webkit_scrollbar-button:3px;
+		  }
+		  @keyframes oxxo{
+			0%{
+			}
+			100%{
 				overflow-x: hidden !important;
-				padding-right: calc(var(--webkit_scrollbar)*2) !important;
+				overflow-y: hidden !important;
 			}
+		}
+  
+		  .sty-scroll {
+			margin-bottom: .35em;
+			overflow-y: auto;
+			width:60rem;
+			height:10rem;
+		  }
+  
+		  .sty-scroll.hover:hover {
+			overflow-x: auto !important;
+			overflow-y: auto !important;
+			padding-right: var(--webkit_scrollbar) !important;
+		}
+  
+		  //限制只有 y 軸會顯示
+		  .sty-scroll.hover.hover-y:hover {
+			overflow-x: hidden !important;
+			padding-right: calc(var(--webkit_scrollbar)*2) !important;
+		}
+	
 	  
 			  .sty-scroll.hover:hover{
 				overflow-x: scroll !important;
@@ -550,12 +478,12 @@
 			/*
 			[Ref]
 			  https://css-tricks.com/box-sizing/
-	    
+		
 			使用 magin 需要注意, 在 width:100% 的情形下,無論 box-sizing 是那一種模式,
 			   margin 跟 width:100 會有衝突造成跑版的情形, 基本上 ,
 			   如果是要滿邊且內縮的需求, 單獨使用 margin 即可. 
 			   但高度的部份 就需要再找解法了,
-		    
+			
 			*/
 			var _obj = {
 				_css: `
@@ -703,7 +631,37 @@
 		},
 	};
 	let Case = {
+		'Attrib'() {
+			var _note = `
+			<pre>
+			因應工作需求,需要使用 attrib 的方式綁定樣式,
+			此外,一併解決 input.focus 時,預設黑外框的問題
+			</pre>
+			`;
+			var _obj = {
+				_css:`
+				input{
+					outline: 0;
+				}
+				input[required]{
+					border: 1px solid #27c24c;
+				}
 
+				`,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<input  type="text" required />
+					</div>
+					`,
+					data(){
+						return {}
+					}
+				}
+			};
+			return _obj;
+		},
 		'sty-edc'() {
 			var _note = `
 			  <pre>
@@ -1230,12 +1188,93 @@
 		},
 
 	}
-
-	window.sample = {
+	let Attrib = {
+		"text-shadow"() {
+			/* 用例說明
+					1.主要是動態呈現  text-shadow 的效果.
+					2.應用 html5 input.type="range" 做數字控制
+					3.應用 Vue :style 的動態樣式控制
+					4.應用 Vue 的 dom style.cssText 處理
+					5.應用 watch 機制
+					*/
+			var _vue = {
+				template: `
+					  <div>
+						  {{range}}<input type="range" min="1" max="10" v-model="range" class="slider" id="myRange">
+						  <div ref="styObj" :style="styleObject">text-shadow</div>
+						  <div>{{styleObject}}</div>
+						  <div>cssText:{{sty}}</div>
+					  </div>`,
+				data() {
+					return {
+						range: 10,
+						sty: ""
+					};
+				},
+				computed: {
+					styleObject() {
+						return {
+							"font-size": "30px",
+							color: "rgba(0,0,0,0)",
+							"text-shadow": `0 0 ${this.range}px rgba(255,0,0,1)`
+						};
+					}
+				},
+				watch: {
+					styleObject() {
+						let { styObj } = this.$refs;
+						if (styObj != null) {
+							this.sty = styObj.style.cssText;
+						}
+					}
+				}
+			};
+			return { _vue };
+		},
+		"text-overflow"(){
+			var _note = `<pre>
+如果文字超過邊界,自動以 ... 方式呈現</pre>
+			`
+			var _obj = {
+				_css: `
+			.sty-iframe{
+			  margin:.5em;
+			  height:100%;
+			}
+			.sty-1{
+				overflow:hidden;
+				text-overflow:ellipsis;
+				white-space:nowrap;
+			}
+			`,
+				_vue: {
+					template: `
+					<div>
+				${_note}
+				  <x-tpl-sample-range>
+					<div class="sty-1 area-mk">使用設定的字串代表被切斷的字串。</div>
+				  </x-tpl-sample-range>
+				  </div>
+				`
+				}
+			};
+			return _obj;
+		}
+	}
+	return {
 		views,
 		Attrib,
 		Case, Table, Layout, Position
-
 	};
-
-})()
+}
+window.sample = __fn();
+(function () {
+	var arr = [
+		'lodash',
+		'styled',
+		'vue',
+	];
+	if (typeof define === 'function' && define.amd) {
+			 define(arr, __fn);
+	}
+}());

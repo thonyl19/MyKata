@@ -1,8 +1,7 @@
-﻿/*
-https://v3.bootcss.com/getting-started/
-http://w3c.3306.biz/bootstrap_input_groups/show-35-123-1.html
-*/
-(()=>{
+﻿var __fn = (
+	$, _ , styled, Vue,Mock
+)=> 
+{
 	let Views = {
 		Form1() {
 			var _vue = {
@@ -971,5 +970,16 @@ http://w3c.3306.biz/bootstrap_input_groups/show-35-123-1.html
 			return _obj;
 		},
 	}
-	window.sample = { Views, Tool, Group, Fail, Vue_Prd, Case };
-})()
+ 	return { Views, Tool, Group, Fail, Vue_Prd, Case };
+}
+window.sample = __fn();
+(function () {
+	var arr = [
+		"jquery","lodash","styled","vue","Mock"
+	 ];
+	 if (typeof define === 'function' && define.amd) {
+		 define(arr, __fn);
+	 }
+}());
+
+ 
