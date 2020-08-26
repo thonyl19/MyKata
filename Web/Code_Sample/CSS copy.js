@@ -1267,6 +1267,7 @@
 		Case, Table, Layout, Position
 	};
 }
+window.sample = __fn();
 (function () {
 	var arr = [
 		'lodash',
@@ -1274,8 +1275,6 @@
 		'vue',
 	];
 	if (typeof define === 'function' && define.amd) {
-		define({arr, __fn});
-	}else{
-		window.sample = __fn();
+			 define(arr, __fn);
 	}
 }());

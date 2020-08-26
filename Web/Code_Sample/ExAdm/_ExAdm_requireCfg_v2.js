@@ -1,5 +1,5 @@
-﻿var local_path = '../node_modules/';
-var __req_cfg = {
+﻿var local_path = '../node_modules/'
+require.config({
 	//避免緩存
 	urlArgs: "bust=" + new Date().getTime(),
 	paths: {
@@ -31,6 +31,14 @@ var __req_cfg = {
 		d3:"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
 		c3:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
 		c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
+		'chart.js'
+			:'https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min',
+			//:"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min",
+		VueChartJs:'https://unpkg.com/vue-chartjs/dist/vue-chartjs.min',
+		'vue-froala-wysiwyg':"https://cdn.jsdelivr.net/npm/vue-froala-wysiwyg@3.0.6/dist/vue-froala.min"
+		//'vuejs-paginate':"https://cdn.jsdelivr.net/npm/vuejs-paginate@2.1.0/dist/index.min",
+		//'vue-pagination':'https://cdn.rawgit.com/matfish2/vue-pagination/master/dist/vue-pagination.min'
+		//'JwPagination':'https://cdn.jsdelivr.net/npm/jw-vue-pagination@1.0.3/lib/JwPagination.min',
 	},
 	map: {
 		"*": {
@@ -45,9 +53,20 @@ var __req_cfg = {
 		bts337:{deps: ['css!bts337-css']},
 		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
 		c3:{deps:['d3', 'css!c3_css'] },
+		VueChartJs:{
+			deps:[
+				'vue'
+				,'chart.js'
+			]
+		},
+		'vue-froala-wysiwyg':{deps: ['vue'
+			,"css!https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css"
+			]}
+		//bts45:{deps: ['jquery','css!bts45-css']},
  	}
-}
-require.config(__req_cfg);
+});
+
+ 
 window.gEx = {
 	"mydata": [
 		{ "id": "1", "invdate": "2007-10-01", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
@@ -92,8 +111,8 @@ window.gEx = {
 
 
 require
-	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled","bts337"]
-	, ($, _, Vue ,Vuex , ELEMENT, styled, bts337) => {
+	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled","bts337",window.gEx.getCurrentEx()]
+	, ($, _, Vue ,Vuex , ELEMENT, styled, bts337 ,exFn) => {
 	debugger
 	Vue.use(Vuex);
 	ELEMENT.install(Vue);
@@ -155,26 +174,11 @@ require
 				chg(item){
 					var _self =this;
 					window.gEx.chgUrl(item);
-					require([item],(_item) => {
+					require([item],(exFn) => {
 						debugger
-						let {arr,cfg = null,__fn} = _item;
-						var _cfg  = cfg == null
-							? __req_cfg
-							: _.merge({},__req_cfg,cfg)
-							;
-							// if (cfg !=null){
-							// 	var _cfg  = _.merge({},__req_cfg,_cfg);
-							// 	// let {paths,shim} = cfg;
-							// 	// if (paths!=null) _.merge(_cfg.paths,paths);
-							// 	// if (shim!=null) _.merge(_cfg.shim,shim);
-							// }
-						var _req = require.config(_cfg);
-						_req(arr,(...deps)=>{
-							var exFn = __fn(...deps);
-							_self.$store.state.exFn = exFn;
-							_self.centerDialogVisible = false;
-						});
-					})
+						_self.$store.state.exFn = exFn;
+						_self.centerDialogVisible = false;
+					});
 				}
 			}
 		},
@@ -294,19 +298,23 @@ require
 			},
 		},
 	}
-	for (var name in tpl_sample) {
-		Vue.component(`x-tpl-sample-${name}`, tpl_sample[name]);
+	if (exFn) {
+		for (var name in tpl_sample) {
+			Vue.component(`x-tpl-sample-${name}`, tpl_sample[name]);
+		}
+		// var main = Vue.extend(tpl_sample.main);
+		// new main().$mount('#app');
+		const store = new Vuex.Store({
+			state: {
+				exFn
+			},
+			//mutations: {}
+		});
+		new Vue({
+			el: '#app',
+			store,
+		});
+	} else {
+		alert('找不到 sample object!')
 	}
-	// var main = Vue.extend(tpl_sample.main);
-	// new main().$mount('#app');
-	const store = new Vuex.Store({
-		state: {
-			exFn:{}
-		},
-		//mutations: {}
-	});
-	new Vue({
-		el: '#app',
-		store,
-	});
 });

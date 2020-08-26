@@ -1,8 +1,10 @@
-﻿var __fn = ($, _, styled, Vue, ChartJs, VueChartJs) => {
-  debugger;
-  let { Line, Bar, mixins } = VueChartJs;
-  // const { reactiveProp } = mixins;
-  let _data = {
+﻿var __fn = ($, _, styled, Vue,ChartJs
+	,VueChartJs
+	) => {
+	debugger
+	let { Line, Bar, mixins } = VueChartJs;
+	// const { reactiveProp } = mixins;
+	let _data = {
     Bar() {
       return {
         data: {
@@ -103,7 +105,7 @@
       return _obj;
     },
 
-    std1() {
+    "std1"() {
       var _note = `
          <pre>
          https://vue-chartjs.org/zh-cn/guide/#%E6%9B%B4%E6%96%B0-charts
@@ -313,7 +315,7 @@
       };
       return _obj;
     },
-    flex() {
+    "flex"() {
       var _note = `
          <pre>
          </pre>
@@ -488,42 +490,29 @@
     },
   };
 
-  return {
-    Views,
-    RWD,
-    QA,
-  };
+	return {
+		Views,
+		RWD,
+		QA,
+	};
 };
-
 (function () {
-  var cfg = {
-    paths: {
-      'chart': "https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min",
-      //:"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min",
-      VueChartJs: "https://unpkg.com/vue-chartjs/dist/vue-chartjs.min",
-    },
-     
-    //依賴
-    shim: {
-		chart:{exports: 'chart.js'},
-		VueChartJs: {
-			deps: ["vue", "chart.js"],
+	var cfg = {
+		paths: {
+			'chart.js'
+				:'https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min',
+				//:"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min",
+			VueChartJs:'https://unpkg.com/vue-chartjs/dist/vue-chartjs.min',
 		},
-    },
-  };
-  var arr = [
-    "jquery",
-    "lodash",
-    "styled",
-	"vue",
-	'chart',
-	'VueChartJs'
-  ];
-  //var arr1 = ["jquery", "lodash", "styled", "vue", "chart.js", "VueChartJs"];
-  if (typeof define === "function" && define.amd) {
-    debugger;
-    define({ arr,cfg, __fn });
-  } else {
-    window.sample = __fn();
-  }
+		shim: {
+			VueChartJs:{
+				deps:[
+					'vue'
+					,'chart.js'
+				]
+			},
+		}
+	}
+    define({cfg,__fn});
 })();
+ 

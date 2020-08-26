@@ -1,36 +1,62 @@
-﻿require.config({
-  //避免緩存
-  urlArgs: "bust=" + new Date().getTime(),
-  paths: {
-    jquery: "https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min",
-    vue: "https://cdn.jsdelivr.net/npm/vue/dist/vue",
-    ELEMENT: "https://unpkg.com/element-ui@2.13.0/lib/index",
-    "eui-css":
-      "https://cdn.jsdelivr.net/npm/element-ui@2.13.2/lib/theme-chalk/index",
-    lodash: "https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min",
-    //示範載入
-    _data: "./_tmpData",
-    bts45:
-      "https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min",
-    "bts45-css":
-      "https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min",
-  },
-  map: {
-    "*": {
-      css:
-        "https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.10/css.min.js",
-    },
-  },
-  //依賴
-  shim: {
-    ELEMENT: { deps: ["vue", "css!eui-css"] },
-    bts45: { deps: ["css!bts45-css"] },
-  },
-});
-debugger;
+﻿var _req_cfg = {
+	//避免緩存
+	urlArgs: "bust=" + new Date().getTime(),
+	paths: {
+		  jquery: "https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min",
+		  vue: "https://cdn.jsdelivr.net/npm/vue/dist/vue",
+		  ELEMENT: "https://unpkg.com/element-ui@2.13.0/lib/index",
+		  "eui-css":
+		  "https://cdn.jsdelivr.net/npm/element-ui@2.13.2/lib/theme-chalk/index",
+		  lodash: "https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min",
+		  //示範載入
+		  _data: "./_tmpData",
+		  bts45:
+		  "https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min",
+		  "bts45-css":
+		  "https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min",
+	  },
+	  map: {
+		  "*": {
+		  css:
+			  "https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.10/css.min.js",
+		  },
+	  },
+	  //依賴
+	  shim: {
+		  ELEMENT: { deps: ["vue", "css!eui-css"] },
+		  bts45: { deps: ["css!bts45-css"] },
+	  },
+	  config:{
+		  bar:{size:'test'}
+	  }
+  }
+require.config(_req_cfg);
 require(["jquery", "lodash", "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 	ELEMENT.install(Vue);
 	var _fn = {
+		'case_25'(){
+			require(["case_25"], (fn) => {
+				debugger
+				var _cfg = _.merge({},_req_cfg,fn.cfg);
+				var _req = require.config(_cfg)
+				_req(fn.arr,(...fns)=>{
+					debugger;
+					var z = fn.__fn(...fns);
+					console.log(z);
+				});
+			});
+		},
+		'case_24'(){
+			require(["case_24"], (fn) => {
+				debugger
+				//fn.test();
+			});
+		},
+		'case_23'(){
+			require(["case_23"], (fn) => {
+				fn.test();
+			});
+		},
 		'-case_22'(){
 			/*計劃實驗 解決相依性的問題,
 				打算 將以下結構 放到 case 中,
@@ -89,6 +115,35 @@ require(["jquery", "lodash", "vue", "ELEMENT"], ($, _, Vue, ELEMENT) => {
 			//一併測試載入 bts45
 			require(["bts45", "case_1"], function (bts45, math) {
 				alert(math.add(1, 1));
+			});
+		},
+		'module 用法'(){
+			debugger
+			/*
+			//https://segmentfault.com/a/1190000002401665
+			試出來的結果,並不如文件所示,可以取到 config 中的set
+			反而是取到 定義 module 的 id,url 的資訊
+			*/
+			
+			require(["case_module"], (cfg) => {
+				debugger
+				console.log({cfg})
+			});
+			
+			//不正確用法
+			//var x  = require(['module']);
+
+			//不正確用法
+			// var x = define(['module'],(cfg)=>{
+			// 	debugger
+			// 	console.log({cfg});
+			// 	return {cfg};
+			// });
+			
+		},
+		'import'(){
+			import("./_tmpData").then((tmpData) => {
+				debugger
 			});
 		},
 		'測試以 UMD 架構載入資料'(){

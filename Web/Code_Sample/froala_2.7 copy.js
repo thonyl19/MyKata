@@ -40,18 +40,20 @@ var __fn = ($, _, styled, Vue, VueFroala) => {
   return { Views };
 };
 (function () {
-	var cfg = {
-		paths: {
-			'vue-froala-wysiwyg':"https://cdn.jsdelivr.net/npm/vue-froala-wysiwyg@3.0.6/dist/vue-froala.min"
-		},
-		shim:{
-			'vue-froala-wysiwyg':{deps: ['vue'
-				,"css!https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css"
-				]}
-		}
-	};
+	/*
+	vue-froala-wysiwyg  這個 KeyWord 的字段一定要完全符合,
+		後續程序才有辦法 run
+	*/
 	var arr = ["jquery", "lodash", "styled", "vue"
 		,"vue-froala-wysiwyg"
 	];
-	define({arr,cfg, __fn});
+	if (typeof define === "function" && define.amd) {
+		define(arr, __fn);
+	}else{
+		let {jQuery,lodash,styled,Vue}= window;
+		window.sample = __fn
+			(jQuery,lodash,styled,Vue,
+			window["vue-froala-wysiwyg"]
+			);
+	}
 })();
