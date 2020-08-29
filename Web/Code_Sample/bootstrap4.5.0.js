@@ -1,7 +1,7 @@
 ﻿/*
 https://bootstrap.hexschool.com/
 */
-var __fn = ($, _, styled, Vue, popper, bts45) => {
+var __fn = ($, _ , styled, Vue, bts45) => {
   let Grid = {
     "Order classes"() {
       var _note = `
@@ -764,20 +764,28 @@ var __fn = ($, _, styled, Vue, popper, bts45) => {
     utilities,
   };
 };
-window.sample = __fn();
-
 (function () {
+	//$, _ , styled, Vue, bts45
 	var arr = [
-		"jquery",
-		"lodash",
-		"styled",
-		"vue",
-		//,'bts45'
-		"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js",
-		"css!https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css",
+		'jquery',
+		'lodash',
+		'styled',
+		'vue',
+		'bts45'
 	];
+	var cfg = {
+		paths: {
+			"bts45":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min",
+			"bts45-css":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min",
+		},
+		shim:{
+			"bts45":{deps: ['jquery','css!bts45-css']},
+		}
+	};
 	if (typeof define === "function" && define.amd) {
-		define(arr, __fn);
+		define({arr, cfg, __fn});
+	}else{
+		window.sample = __fn();
 	}
 })();
  

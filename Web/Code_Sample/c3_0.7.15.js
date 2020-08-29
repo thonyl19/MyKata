@@ -136,7 +136,7 @@ var __fn = (_,d3,c3)=>{
 (function () {
 	var arr = ['lodash','d3','c3'];
 	if (typeof define === 'function' && define.amd) {
-		define(arr, __fn);
+		define({arr, __fn});
 	}else{
 		window.sample = __fn();
 	}

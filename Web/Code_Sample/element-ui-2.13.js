@@ -4,9 +4,10 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 var __fn = (
 	$, _ , styled, Vue,
-	ELEMENT
+	ELEMENT,UI_AppExt
 )=> 
 {
+	debugger;
 	let Views = {
 		'*def'() {
 			var _note = `
@@ -1800,15 +1801,24 @@ var __fn = (
 	}
  	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd, 程式產生器};
 }
-window.sample = __fn();
 (function () {
 	var arr = [
 		"jquery","lodash","styled","vue",
 		'ELEMENT'
- 	];
-	 if (typeof define === 'function' && define.amd) {
-			  define(arr, __fn);
-	 }
+		,'UI_AppExt'
+	 ];
+	 var cfg = {
+		paths: {
+			'Vue':"https://cdn.jsdelivr.net/npm/vue/dist/vue"
+		},
+		shim:{
+		}
+	};
+	if (typeof define === 'function' && define.amd) {
+		define({arr,__fn});
+	}else{
+		window.sample = __fn();
+	}
 }());
 
  

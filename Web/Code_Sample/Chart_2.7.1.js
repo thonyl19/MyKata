@@ -1,4 +1,4 @@
-﻿var __fn = ($, _, styled, Vue, ChartJs, VueChartJs) => {
+﻿var __fn = ($, _, styled, Vue, moment, chart, VueChartJs) => {
   debugger;
   let { Line, Bar, mixins } = VueChartJs;
   // const { reactiveProp } = mixins;
@@ -496,34 +496,46 @@
 };
 
 (function () {
-  var cfg = {
-    paths: {
-      'chart': "https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min",
-      //:"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min",
-      VueChartJs: "https://unpkg.com/vue-chartjs/dist/vue-chartjs.min",
-    },
-     
-    //依賴
-    shim: {
-		chart:{exports: 'chart.js'},
-		VueChartJs: {
-			deps: ["vue", "chart.js"],
+	var cfg = {
+		paths: {
+			chart: 
+				["https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart"
+				,"https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart"],
+			VueChartJs: [
+				"https://cdn.jsdelivr.net/npm/vue-chartjs@3.5.1/dist/vue-chartjs"
+				,"https://unpkg.com/vue-chartjs/dist/vue-chartjs"
+				],
 		},
-    },
-  };
-  var arr = [
-    "jquery",
-    "lodash",
-    "styled",
-	"vue",
-	'chart',
-	'VueChartJs'
-  ];
-  //var arr1 = ["jquery", "lodash", "styled", "vue", "chart.js", "VueChartJs"];
-  if (typeof define === "function" && define.amd) {
-    debugger;
-    define({ arr,cfg, __fn });
-  } else {
-    window.sample = __fn();
-  }
+		map: {
+			'chart.js': {
+				'chart.js': "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"
+			},
+		},
+		//依賴
+		shim: {
+			chart:{deps:['moment'], exports: 'chart.js'},
+			VueChartJs: {
+				deps: ["vue"],
+			},
+		},
+	};
+	//$, _, styled, Vue, ChartJs, VueChartJs
+	var arr = [
+		"jquery",
+		"lodash",
+		"styled",
+		"vue",
+		'moment',
+		'chart',
+		'VueChartJs'
+	];
+  	
+	if (typeof define === "function" && define.amd) {
+		debugger;
+		define({ arr,cfg, __fn });
+	} else {
+		debugger;
+		let {jQuery,_,styled,Vue,Chart,VueChartJs} = window;
+		window.sample = __fn(jQuery,_,styled,Vue,Chart,VueChartJs);
+	}
 })();

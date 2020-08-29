@@ -1,12 +1,12 @@
 ﻿(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'Vue'], factory);
+        define(['jquery', 'vue','lodash','Mock','ELEMENT'], factory);
     } else if (typeof exports === 'object') {
         module.exports = factory(require('jquery'), require('Vue'));
     } else {
         root.returnExports = factory(root.jQuery, root.Vue,root._,root.Mock);
     }
-}(this, function ($, Vue, _,Mock) {
+}(this, function ($, Vue, _,Mock,ELEMENT) {
 var _note = {
     jdt_table_cfg:`
 

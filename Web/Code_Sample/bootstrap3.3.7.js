@@ -1,5 +1,5 @@
 ﻿var __fn = (
-	$, _ , styled, Vue,Mock
+	$, _ , styled, Vue
 )=> 
 {
 	let Views = {
@@ -972,14 +972,15 @@
 	}
  	return { Views, Tool, Group, Fail, Vue_Prd, Case };
 }
-window.sample = __fn();
 (function () {
 	var arr = [
-		"jquery","lodash","styled","vue","Mock"
+		"jquery","lodash","styled","vue"
 	 ];
-	 if (typeof define === 'function' && define.amd) {
-		 define(arr, __fn);
-	 }
+	if (typeof define === 'function' && define.amd) {
+		define({arr, __fn});
+	}else{
+		window.sample = __fn();
+	}
 }());
 
  

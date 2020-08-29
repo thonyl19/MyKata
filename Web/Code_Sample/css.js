@@ -1,4 +1,6 @@
-﻿var __fn = (_,styled,vue)=>{
+﻿//styled,vue,jss
+var __fn = ($,_,Vue)=>{
+	debugger
 	let views = {
 	"css-jss用例"() {
 		/*
@@ -1269,12 +1271,22 @@
 }
 (function () {
 	var arr = [
+		'jquery',
 		'lodash',
-		'styled',
 		'vue',
+		//'jss',
 	];
+	var cfg = {
+		paths:{
+			jss:'https://cdn.jsdelivr.net/npm/jss@10.1.1/dist/jss.min',
+			'jss-preset-default':'https://cdn.jsdelivr.net/npm/jss-preset-default@10.1.1/dist/jss-preset-default.min',
+		},
+		shim: {
+			jss:{deps:['jss-preset-default']},
+		}
+	}
 	if (typeof define === 'function' && define.amd) {
-		define({arr, __fn});
+		define({arr,cfg, __fn});
 	}else{
 		window.sample = __fn();
 	}

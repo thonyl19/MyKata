@@ -13,11 +13,14 @@ var __req_cfg = {
 			],
 		"ELEMENT": "https://unpkg.com/element-ui@2.13.0/lib/index",
 		"eui-css": "https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index",
-			
+		"moment":"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
 		vue: [
 			`${local_path}vue/dist/vue.min`
 			,"https://cdn.jsdelivr.net/npm/vue/dist/vue"
 			],
+		Vue_Utility:"../Vue_Prd/Vue_Utility",
+		UI_App:"../Vue_Prd/UI_App",
+		UI_AppExt:"../Vue_Prd/UI_AppExt",
 		vuex: "https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex",
 		styled:"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min",
 		fa_css:"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome",
@@ -26,8 +29,7 @@ var __req_cfg = {
 		'_data': "./_tmpData",
 		"bts337":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min",
 		"bts337-css":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min",
-		// "bts45":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min",
-		// "bts45-css":"https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min",
+		
 		d3:"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
 		c3:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
 		c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
@@ -39,12 +41,14 @@ var __req_cfg = {
 	},
 	//依賴
 	shim: {
+		vue:{exports: 'Vue'},
 		jquery:{exports: '$'},
 		lodash:{exports: '_'},
 		vuex:{deps:['vue']},
 		bts337:{deps: ['css!bts337-css']},
 		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
 		c3:{deps:['d3', 'css!c3_css'] },
+		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']}
  	}
 }
 require.config(__req_cfg);
@@ -72,6 +76,7 @@ window.gEx = {
 		'bootstrap4.5.0',
 		
 		'froala_2.7',
+		'echarts',
 		'bootstrap4.5.0',
 		'bootstrap4.5.0',
 		'bootstrap4.5.0',
@@ -94,9 +99,9 @@ window.gEx = {
 require
 	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled","bts337"]
 	, ($, _, Vue ,Vuex , ELEMENT, styled, bts337) => {
-	debugger
 	Vue.use(Vuex);
 	ELEMENT.install(Vue);
+	
 	var tpl_sample = {
 		range: {
 			template: `
@@ -120,62 +125,32 @@ require
 				}
 			}
 		},
-		/*
-		<ul class="list-group">
-						<li class="list-group-item" v-for="(item) in list" @click=chg(item) >{{item}}</li>
-					</ul>
-		*/
 		switch:{
 			template: `
 			<div>
-				<el-button type="text" @click="centerDialogVisible = true">切換範例集合</el-button>
+				<el-button type="text" @click="ShowModules">切換範例集合</el-button>
 				<el-dialog
-					:visible.sync="centerDialogVisible"
+					:visible.sync="SwitchModulesDialog"
 					width="70%"
 					:append-to-body="true"
 					title="切換範例集合"
 					center>
 					<div class="list-group">
-						<button type="button" class="list-group-item" v-for="(item) in list" @click=chg(item) >{{item}}</button>
+						<button type="button" class="list-group-item" v-for="(item) in list" @click=chgUrl(item) >{{item}}</button>
 					</div>
 				</el-dialog>
 			</div>
 			`,
-			data(){
-				return {
-					centerDialogVisible:true
-				}
-			},
 			computed:{
 				list(){
 					return window.gEx.exList;
-				}
+				},
+				...Vuex.mapState([
+					'SwitchModulesDialog'
+				])
 			},
 			methods:{
-				chg(item){
-					var _self =this;
-					window.gEx.chgUrl(item);
-					require([item],(_item) => {
-						debugger
-						let {arr,cfg = null,__fn} = _item;
-						var _cfg  = cfg == null
-							? __req_cfg
-							: _.merge({},__req_cfg,cfg)
-							;
-							// if (cfg !=null){
-							// 	var _cfg  = _.merge({},__req_cfg,_cfg);
-							// 	// let {paths,shim} = cfg;
-							// 	// if (paths!=null) _.merge(_cfg.paths,paths);
-							// 	// if (shim!=null) _.merge(_cfg.shim,shim);
-							// }
-						var _req = require.config(_cfg);
-						_req(arr,(...deps)=>{
-							var exFn = __fn(...deps);
-							_self.$store.state.exFn = exFn;
-							_self.centerDialogVisible = false;
-						});
-					})
-				}
+				...Vuex.mapMutations(['chgUrl','ShowModules']),
 			}
 		},
 		left: {
@@ -301,12 +276,37 @@ require
 	// new main().$mount('#app');
 	const store = new Vuex.Store({
 		state: {
-			exFn:{}
+			exFn:{},
+			SwitchModulesDialog:false
 		},
-		//mutations: {}
+		mutations: {
+			ShowModules(state){
+				state.SwitchModulesDialog = true;
+			},
+			chgUrl(state,item) {
+				var _self = this;
+				window.gEx.chgUrl(item);
+				require([item],(_item) => {
+					let {arr,cfg = null,__fn} = _item;
+					var _cfg  = cfg == null
+						? __req_cfg
+						: _.merge({},__req_cfg,cfg)
+						;
+					var _req = require.config(_cfg);
+					_req(arr,(...deps)=>{
+						var exFn = __fn(...deps);
+						state.exFn = exFn;
+						state.SwitchModulesDialog = false;
+					});
+				})
+			}
+		}
 	});
 	new Vue({
 		el: '#app',
 		store,
+		mounted() {
+			this.$store.commit('chgUrl', window.gEx.getCurrentEx());
+		},
 	});
 });
