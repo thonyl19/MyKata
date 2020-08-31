@@ -970,7 +970,48 @@
 			return _obj;
 		},
 	}
- 	return { Views, Tool, Group, Fail, Vue_Prd, Case };
+	var List = {
+		'ExAdm 樣例'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+							<div class="row">
+								<div class="col-lg-3"  v-for="(items,key) in list">
+									<h4><span class="label label-primary">{{key}}</span></h4>
+									<div class="list-group">
+										<a class="list-group-item" v-for="(item) in items">{{item}}</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					`,
+					data(){
+						return {
+							list:{
+								Vue:['vue_2.x',
+									'VuePager',
+									'element-ui-2.13'],
+								Layout:[
+									'CSS',
+									'bootstrap3.3.7',
+									'bootstrap4.5.0',
+								],
+							}
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+	}
+ 	return { Views, Tool, Group, Fail, Vue_Prd, Case, List };
 }
 (function () {
 	var arr = [

@@ -18,10 +18,10 @@ var __req_cfg = {
 			`${local_path}vue/dist/vue.min`
 			,"https://cdn.jsdelivr.net/npm/vue/dist/vue"
 			],
+		vuex: "https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex",
 		Vue_Utility:"../Vue_Prd/Vue_Utility",
 		UI_App:"../Vue_Prd/UI_App",
 		UI_AppExt:"../Vue_Prd/UI_AppExt",
-		vuex: "https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex",
 		styled:"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min",
 		fa_css:"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome",
 		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
@@ -29,11 +29,7 @@ var __req_cfg = {
 		'_data': "./_tmpData",
 		"bts337":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min",
 		"bts337-css":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min",
-		
-		d3:"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min",
-		c3:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
-		c3_css:"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min",
-	},
+ 	},
 	map: {
 		"*": {
 			css: "https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.10/css.min.js",
@@ -47,7 +43,6 @@ var __req_cfg = {
 		vuex:{deps:['vue']},
 		bts337:{deps: ['css!bts337-css']},
 		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css','css!fa_css'] },
-		c3:{deps:['d3', 'css!c3_css'] },
 		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']}
  	}
 }
@@ -66,25 +61,27 @@ window.gEx = {
 		{ "id": "10", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
 		{ "id": "11", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" }
 	],
-	exList:[
-		'c3_0.7.15',
-		'Chart_2.7.1',
+	exList:{
+		Vue:['vue_2.x',
 		'VuePager',
-		'element-ui-2.13',
-		'CSS',
-		'bootstrap3.3.7',
-		'bootstrap4.5.0',
-		
-		'froala_2.7',
-		'echarts',
-		'jquery_dataTables',
-		'layer_2.3',
-		'selectize_0.12.6',
-		'vue_2.x',
-		'vue-window_2.4.2',
-		'vue-window_2.4.2',
-		'vue-window_2.4.2',
-	],
+		'element-ui-2.13'],
+		Layout:[
+			'CSS',
+			'bootstrap3.3.7',
+			'bootstrap4.5.0',
+		],
+		Chart:[
+			'c3_0.7.15',
+			'Chart_2.7.1',
+			'echarts',
+		],
+		Tool:[
+			'selectize_0.12.6',
+			'jquery_dataTables',
+			'froala_2.7',
+			'layer_2.3',
+		]
+	},
 	chgUrl(fnName){
 		var _url = new URL(location);
 		_url.hash = fnName;
@@ -139,9 +136,14 @@ require
 					:append-to-body="true"
 					title="切換範例集合"
 					center>
-					<div class="list-group">
-						<button type="button" class="list-group-item" v-for="(item) in list" @click=chgUrl(item) >{{item}}</button>
-					</div>
+					<el-row :gutter="10">
+						<el-col :span="6" v-for="(items,key) in list">
+							<h4><span class="label label-primary">{{key}}</span></h4>
+							<div class="list-group">
+								  <a class="list-group-item" v-for="(item) in items" @click=chgUrl(item)>{{item}}</a>
+							</div>
+						</el-col>
+					</el-row>
 				</el-dialog>
 			</div>
 			`,
@@ -220,7 +222,7 @@ require
             >
                 <x-tpl-sample-left :action.sync="currentTab"></x-tpl-sample-left>
             </el-scrollbar>
-            <div class="main">
+            <div class="main" v-loading="loading">
                 <div>
                     <input type="button" value="Copy" @click="copy" />
                     <input type="button" value="Copy Components" @click="copy_com" />
@@ -236,10 +238,13 @@ require
 				return {
 					currentTab: 'tpl-sample-test',
 					Code: ''
-	
+					
 				}
 			},
 			computed: {
+				...Vuex.mapState([
+					'loading'
+				]),
 				sample(){
 					var _self = this;
 					if (!_self.$store.state.exFn) return false;
@@ -281,7 +286,8 @@ require
 	const store = new Vuex.Store({
 		state: {
 			exFn:{},
-			SwitchModulesDialog:false
+			SwitchModulesDialog:false,
+			loading:false
 		},
 		mutations: {
 			ShowModules(state){
@@ -289,6 +295,7 @@ require
 			},
 			chgUrl(state,item) {
 				var _self = this;
+				state.loading = true;
 				window.gEx.chgUrl(item);
 				require([item],(_item) => {
 					let {arr,cfg = null,__fn} = _item;
@@ -301,6 +308,7 @@ require
 						var exFn = __fn(...deps);
 						state.exFn = exFn;
 						state.SwitchModulesDialog = false;
+						state.loading = false;
 					});
 				})
 			}

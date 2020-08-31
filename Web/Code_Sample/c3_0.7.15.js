@@ -134,7 +134,11 @@ var __fn = (_,d3,c3)=>{
 }
 
 (function () {
-	var arr = ['lodash','d3','c3'];
+	var arr = ['lodash',
+		"https://cdn.jsdelivr.net/npm/d3@5.16.0/dist/d3.min.js",
+		"https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min.js",
+		"css!https://cdn.jsdelivr.net/npm/c3@0.7.15/c3.min.css",
+	];
 	if (typeof define === 'function' && define.amd) {
 		define({arr, __fn});
 	}else{
