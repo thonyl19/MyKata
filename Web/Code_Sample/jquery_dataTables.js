@@ -9,7 +9,7 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/684065/
 	datatables那點兒事
 	*/
 
-(() => {
+var __fn = ($,_,Vue,moment) => {
 	var dataSet = [
 		["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
 		["Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750"],
@@ -152,7 +152,7 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/684065/
 		},
 		'DataBase_Json'(_note = "") {
 			var _obj = {
-				_data : window.tmpData.mydata,
+				_data : window.gEx.mydata,
 				_baseSet: {
 					columns: [
 						{ "title": "id", "data": "id" },
@@ -785,7 +785,7 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/684065/
 			return _obj;
 		},
 	}
-	window.sample = {
+	return {
 		Views,
 		Options,
 		API,
@@ -793,4 +793,33 @@ https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/684065/
 		Case,
 		PlugIns
 	};
-})()
+};
+
+(function () {
+	var cfg = {
+		paths: {
+			"datatables.net":"https://cdn.datatables.net/1.10.20/js/jquery.dataTables"
+			,"dataRender":"https://cdn.datatables.net/plug-ins/1.10.21/dataRender/datetime" 
+		},
+		shim:{
+			'dataRender':{deps: ['jquery',"datatables.net",'moment']},
+		}
+	};
+
+	var arr = ["jquery", "lodash", "vue","moment"
+		,"datatables.net"
+		,"dataRender"
+		,"https://cdn.datatables.net/rowreorder/1.2.6/js/dataTables.rowReorder.js" 
+		,"https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js" 
+		,"https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js" 
+		,"css!https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"
+		,"css!https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css"
+		,"css!https://cdn.datatables.net/rowreorder/1.2.6/css/rowReorder.dataTables.min.css" 
+		,"css!https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" 
+	];
+	if (typeof define === 'function' && define.amd) {
+		define({arr,cfg, __fn});
+	}else{
+		window.sample = __fn(window.$,window._,window.Vue);
+	}
+})();

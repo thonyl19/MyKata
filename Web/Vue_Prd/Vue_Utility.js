@@ -1,13 +1,13 @@
 (function (root, factory) {
     debugger
     if (typeof define === 'function' && define.amd) {
-        define(['jquery','lodash', 'vue'], factory);
+        define(['jquery', 'vue','lodash'], factory);
     } else if (typeof exports === 'object') {
         module.exports = factory(require('jquery'), require('Vue'));
     } else {
-        root.returnExports = factory(root.jQuery, root.Vue);
+        root.returnExports = factory(root.jQuery, root.Vue,root._);
     }
-}(this, function ($,_, Vue) {
+}(this, function ($, Vue, _) {
     var PropDef = {
         FullType(def=null){
             return {

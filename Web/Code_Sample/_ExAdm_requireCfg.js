@@ -46,7 +46,7 @@ var __req_cfg = {
 		lodash:{exports: '_'},
 		vuex:{deps:['vue']},
 		bts337:{deps: ['css!bts337-css']},
-		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
+		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css','css!fa_css'] },
 		c3:{deps:['d3', 'css!c3_css'] },
 		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']}
  	}
@@ -77,10 +77,13 @@ window.gEx = {
 		
 		'froala_2.7',
 		'echarts',
-		'bootstrap4.5.0',
-		'bootstrap4.5.0',
-		'bootstrap4.5.0',
-		'bootstrap4.5.0',
+		'jquery_dataTables',
+		'layer_2.3',
+		'selectize_0.12.6',
+		'vue_2.x',
+		'vue-window_2.4.2',
+		'vue-window_2.4.2',
+		'vue-window_2.4.2',
 	],
 	chgUrl(fnName){
 		var _url = new URL(location);
@@ -101,7 +104,8 @@ require
 	, ($, _, Vue ,Vuex , ELEMENT, styled, bts337) => {
 	Vue.use(Vuex);
 	ELEMENT.install(Vue);
-	
+	window.Vue = Vue;
+	window._ = _;
 	var tpl_sample = {
 		range: {
 			template: `

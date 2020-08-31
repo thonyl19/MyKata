@@ -1,5 +1,5 @@
 ﻿var __fn = (
-	$, _ , styled, Vue, v_paginate,v_pagination
+	$, _ , Vue, v_paginate,v_pagination
 )=> 
 {
 	var 可用套件 ={
@@ -185,11 +185,14 @@
 	var arr = [
 		"jquery",
 		"lodash",
-		"styled",
 		"vue",
 		"https://cdn.jsdelivr.net/npm/vuejs-paginate@2.1.0/dist/index.min.js",
 		"https://cdn.rawgit.com/matfish2/vue-pagination/master/dist/vue-pagination.min.js"
  	];
 
-	define(arr, __fn);
+	if (typeof define === 'function' && define.amd) {
+		define({arr, __fn});
+	}else{
+		window.sample = __fn();
+	}
 }());

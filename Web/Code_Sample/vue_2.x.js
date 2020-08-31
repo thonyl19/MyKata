@@ -5,7 +5,8 @@
     https://github.com/guahsu/Vue-TurnTable/
 
 */
-(()=>{
+var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
+    
     let API = {
         'render-case'() {
             var _note = `
@@ -132,7 +133,7 @@
                         log(evName){
                             console.log(evName);
                         },
-                         
+                            
                     },
                 }
             };
@@ -143,27 +144,27 @@
              * https://datatables.net/reference/api/#searchpanes
              * 
              */
-           var _note = `
-              <pre>
-              </pre>
-              `;
-           var _obj = {
-              _vue: {
-                 template: `
+            var _note = `
+                <pre>
+                </pre>
+                `;
+            var _obj = {
+                _vue: {
+                    template: `
                     <div>
-                       ${_note}
+                        ${_note}
         
                     </div>
                     `
-              }
-           };
-           return _obj;
+                }
+            };
+            return _obj;
         },
         'directive'() {
             var _note = `
-               <pre>
-               </pre>
-               `;
+                <pre>
+                </pre>
+                `;
             Vue.directive('demo', {
                 bind: function (el, binding, vnode) {
                     var s = JSON.stringify
@@ -197,7 +198,7 @@
                             message: 'hello!'
                         }
                     } 
-                   }
+                    }
             };
             return _obj;
         },
@@ -261,21 +262,21 @@
             })
             
             */
-           var _note = `
-              <pre>
-              </pre>
-              `;
-           var _obj = {
-              _vue: {
-                 template: `
+            var _note = `
+                <pre>
+                </pre>
+                `;
+            var _obj = {
+                _vue: {
+                    template: `
                     <div>
-                       ${_note}
+                        ${_note}
         
                     </div>
                     `
-              }
-           };
-           return _obj;
+                }
+            };
+            return _obj;
         },
         'v-html'() {
             /*
@@ -406,10 +407,10 @@
         '*$attrs_case'() {
             var _note = `
             <pre>
-             
+                
             </pre>
             `;
-             
+                
             var dny1 = {
                 template:`
                 <div class="child-1" >
@@ -426,7 +427,7 @@
                         return {att1,att2};
                     }
                 },
-                 
+                    
             }
             var _obj = {
                 _css:``,
@@ -440,12 +441,12 @@
                             p-child3="child--3"
                             att1
                             att2="att2"
-                             > 
+                                > 
                         </child1>
                     </div>
                     `,
                     components: { child1:dny1 },
-                     
+                        
                 }
             };
             return _obj;
@@ -454,7 +455,7 @@
     var Views = {
         'dblclick'() {
             var _note = `
-               <pre>
+                <pre>
                 實現 dblclick 的功能,這裡碰到了以下幾個問題
                 1.當如果使用 原生 Html Tag 時, 必須使用 v-on:dblclick ,
                     如果用 v-on:dblclick.native 就會在 console 出現 的異常
@@ -462,8 +463,8 @@
                 2.但如果是要在經過 封裝後的 components 物件,就必得用 v-on:dblclick.native
                 總結來說, v-on:dblclick 是可以 work 的,但只能用在 原生的 html tag ,
                     就是因為如此,所以 components 要用就得加上 native
-               </pre>
-               `;
+                </pre>
+                `;
             var _obj = {
                 _css:``,
                 _vue: {
@@ -483,27 +484,27 @@
                             this.counts++;
                         }
                     } 
-                   }
+                    }
             };
             return _obj;
         },
         '.number .lazy'() {
             //https://medium.com/pierceshih/vue-js-%E5%AD%B8%E7%BF%92%E7%AD%86%E8%A8%98-day2-v-model%E8%B3%87%E6%96%99%E9%9B%99%E5%90%91%E7%B6%81%E5%AE%9A-9d54a82e23e5
-           var _note = `
-              <pre>
-              </pre>
-              `;
-           var _obj = {
-              _vue: {
-                 template: `
+            var _note = `
+                <pre>
+                </pre>
+                `;
+            var _obj = {
+                _vue: {
+                    template: `
                     <div>
-                       ${_note}
+                        ${_note}
         
                     </div>
                     `
-              }
-           };
-           return _obj;
+                }
+            };
+            return _obj;
         },
         destroyed() {
             var _vue = {
@@ -670,7 +671,7 @@
                         <span>Default slot: {{ item }} <button @click="$emit('delete', index)">X</button></span>
                     </slot></li>
                 </ul>
-           `
+            `
             };
             Vue.component('list', list);
     
@@ -1132,7 +1133,7 @@
                 template: `
             <div>
             <h1>{{ msg }}</h1>
-                 <input v-on:keyup.enter="onEnter" />
+                    <input v-on:keyup.enter="onEnter" />
             </div>`,
                 methods: {
                     onEnter() {
@@ -1290,12 +1291,12 @@
             var _obj = {
                 _vue: {
                     template: `
-                  <div>
+                    <div>
                     ${_note}
                     <ex_compoment ></ex_compoment>
                     <ex_compoment :fun1="act"></ex_compoment>
                     </div>
-                  `,
+                    `,
                     components: { ex_compoment },
                     data() {
                         return {
@@ -1322,13 +1323,13 @@
                 這樣會造成子物件連帶受影響,因此,應該要避免直接修改 prop 的值
             </pre>
             `;
-         var dynamic = {
+            var dynamic = {
             props: {
                 title: String,
                 value: {
                     type: [String,Object],
                     default(){
-                       return null;
+                        return null;
                     }
                 },
                 placeholder: {
@@ -1346,35 +1347,35 @@
                         </dl>
                         `,
             computed:{
-               c_val:{
-                  get(){
-                     return this.value;
-                  },
-                  set(val){
-                     this.$emit('update:value', val);
-                  }
-               }
+                c_val:{
+                    get(){
+                        return this.value;
+                    },
+                    set(val){
+                        this.$emit('update:value', val);
+                    }
+                }
             },
-         };
-         var _obj = {
+            };
+            var _obj = {
             _vue: {
-               template: `
-                  <div>
-                     ${_note}
+                template: `
+                    <div>
+                        ${_note}
                     <div>[form]{{form}}</div>
                     <dynamic title="批號" :value.sync="form.value_1"></dynamic>
-                  </div>
-                  `,
-               components:{dynamic},
-               data(){
-                  return {
-                     form:{ value_1:'',
-                     }
-                  }
-               }
+                    </div>
+                    `,
+                components:{dynamic},
+                data(){
+                    return {
+                        form:{ value_1:'',
+                        }
+                    }
+                }
             }
-         };
-         return _obj;
+            };
+            return _obj;
         },
         '預設值範例'() {
             var _note = `
@@ -1463,12 +1464,12 @@
             return _obj;
         },
         'def'() {
-           var _note = `
-              <pre>
-              Q:Prop 的資料,在 beforeCreate 是否可以被取用
-              A:不行
-              </pre>
-              `;
+            var _note = `
+                <pre>
+                Q:Prop 的資料,在 beforeCreate 是否可以被取用
+                A:不行
+                </pre>
+                `;
             var dyn = {
                 extends: {},
                 template:`
@@ -1484,19 +1485,19 @@
                     debugger
                 },
             };
-           var _obj = {
-              _vue: {
-                 template: `
+            var _obj = {
+                _vue: {
+                    template: `
                     <div>
-                       ${_note}
+                        ${_note}
                         <dyn t_type="Test"></dyn>
                     </div>
                     `,
     
                 components:{dyn}
-              }
-           };
-           return _obj;
+                }
+            };
+            return _obj;
         },
     }
     var rxjs = {
@@ -1595,11 +1596,11 @@
             var _obj = {
                 _vue: {
                     template: `
-                  <div>
+                    <div>
                     ${_note}
                     <ex_compoment :AddVer="act" :fun_Add="act"></ex_compoment>
                 </div>
-                  `,
+                    `,
                     components: { ex_compoment },
                     data() {
                         return {
@@ -1629,7 +1630,7 @@
                 template: `
                 <span>
                     <slot v-bind:user="user">{{ user.lastName }}</slot>
-                  </span>
+                    </span>
                 `,
                 data(){
                     return { 
@@ -1685,7 +1686,7 @@
                 template: `
                 <span>
                     <slot v-bind:user="user">{{ user.lastName }}</slot>
-                  </span>
+                    </span>
                 `,
                 props:['user']
             }
@@ -1728,5 +1729,29 @@
             return _obj;
         },
     }
-    window.sample = { API, Views, Props, rxjs, Fail ,Slot  }
-})()
+    return  { API, Views, Props, rxjs, Fail ,Slot  }
+}
+
+
+
+(function () {
+	var cfg = {
+		paths: {
+			'vue-froala-wysiwyg':"https://cdn.jsdelivr.net/npm/vue-froala-wysiwyg@3.0.6/dist/vue-froala.min"
+		},
+		shim:{
+			'vue-froala-wysiwyg':{deps: ['vue'
+				,"css!https://cdn.jsdelivr.net/npm/froala-editor@3.1.0/css/froala_editor.pkgd.min.css"
+				]}
+		}
+	};
+    var arr = ["jquery", "lodash", "vue" ,"vuex"
+        ,"https://unpkg.com/vue-router/dist/vue-router.js"
+        ,"https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.8/dist/global/Rx.umd.js"
+	];
+	if (typeof define === 'function' && define.amd) {
+		define({arr, __fn});
+	}else{
+		window.sample = __fn();
+	}
+})();
