@@ -5,51 +5,50 @@ var __req_cfg = {
 	paths: {
 		jquery: [
 			`${local_path}jquery/dist/jquery.min`
-			//,"https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min",
+			,"https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min",
 		],
 		"lodash": [
 			`${local_path}lodash/lodash.min`
-			//,'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min'
+			,'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min'
 		],
 		"ELEMENT": [
-			`../node_modules/element-ui/lib/index`
-			//"https://unpkg.com/element-ui@2.13.0/lib/index",
+			`${local_path}element-ui/lib/index`
+			,"https://unpkg.com/element-ui@2.13.0/lib/index",
 		],
 		"eui-css":[
-			`../node_modules/element-ui/lib/theme-chalk/index` 
-			//,"https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index"
+			`${local_path}element-ui/lib/theme-chalk/index` 
+			,"https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index"
 		],
 		vue: [
 			`${local_path}vue/dist/vue.min`
-			//,"https://cdn.jsdelivr.net/npm/vue/dist/vue"
+			,"https://cdn.jsdelivr.net/npm/vue/dist/vue"
 			],
 		vuex:[
-			`../node_modules/vuex/dist/vuex.min`
-			//"https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex"
+			`${local_path}vuex/dist/vuex.min`
+			,"https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex"
 		],
 		styled:[
-			`../node_modules/vue-styled-components/dist/vue-styled-components.min`
-			//,"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min"
+			`${local_path}vue-styled-components/dist/vue-styled-components.min`
+			,"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min"
 		],
 		fa_css:[
-			`../node_modules/font-awesome/css/font-awesome.min`
-			//,"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome"
+			`${local_path}font-awesome/css/font-awesome.min`
+			,"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome"
 		],
 		"bts337":[
-			`../node_modules/bootstrap/dist/js/bootstrap.min`
-			//"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min"
+			`${local_path}bootstrap/dist/js/bootstrap.min`
+			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min"
 		],
 		"bts337-css":[
-			`../node_modules/bootstrap/dist/css/bootstrap.min`
-			//"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min"
+			`${local_path}bootstrap/dist/css/bootstrap.min`
+			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min"
 		],
  		Vue_Utility:"../Vue_Prd/Vue_Utility",
 		UI_App:"../Vue_Prd/UI_App",
 		UI_AppExt:"../Vue_Prd/UI_AppExt",
 		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
-		//示範載入
-		'_data': "./_tmpData",
+ 
 	},
 	map: {
 		"*": {

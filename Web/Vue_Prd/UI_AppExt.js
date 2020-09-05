@@ -7,6 +7,7 @@
         root.returnExports = factory(root.jQuery, root.Vue,root._,root.Mock);
     }
 }(this, function ($, Vue, _,Mock,ELEMENT) {
+    //debugger
 var _note = {
     jdt_table_cfg:`
 
@@ -14,13 +15,13 @@ var _note = {
     `   
 
 };
-    Vue.directive('debug', {
-        // 当被绑定的元素插入到 DOM 中时……
-        update: function (el) {
-        // 聚焦元素
-        el.focus()
-        }
-    })
+    // Vue.directive('debug', {
+    //     // 当被绑定的元素插入到 DOM 中时……
+    //     update: function (el) {
+    //         // 聚焦元素
+    //         el.focus()
+    //     }
+    // })
     var pw_fn = {
         map_DataType:{
             string:{
@@ -124,24 +125,7 @@ var _note = {
         },
 
 
-        /* 改用 pw_baseModel,會比較符合官方規範和更好擴展 
-         */
-        simple_tpl(template,immediate=false){
-            var _vue = {
-                template,
-                props:['value'],
-				watch:{
-					value:{
-						handler(val, oldName) {
-                            this.$emit('input',val);
-                        },
-                        deep: true,
-                        immediate,
-					}
-				}
-            }
-            return _vue;
-        },
+
         // pw_fn:{
         //     v20200818(){
         //         return {
@@ -157,25 +141,34 @@ var _note = {
         // },
         
         pw_debug:{
-            v20200619:{
-                components:{
-                    'pw-debug':{
-                        template:`<div>{{debug}}</div>`,
-                        props:['debug'],
-                    }
-                } 
+            v20200619(){
+                return {
+                    template:`<div v-if="debug!=null">{{debug}}</div>`,
+                    props:{
+                        debug:Vue.prototype.$PropDef.FunAppend()
+                    },
+                }
             }
         },
         /*
-        新增 支援 debug 模式,應用請參見 pw_tabs
+        新增 支援 debug 模式,應用請參見 pw_tabs 
+        'debug',
         */
         pw_baseModel(immediate=true){
             return {
-                props:['value','debug'],
+                props:['value', 'dyn_prop'],
                 watch:{
                     value:{
                         handler(val, oldName) {
                             this.$emit('input',val);
+                            this.$emit('update:value',val);
+                        },
+                        immediate,
+                        deep: true
+                    },
+                    dyn_prop:{
+                        handler(val, oldName) {
+                            this.$emit('dyn_prop',val);
                         },
                         immediate,
                         deep: true
@@ -183,10 +176,80 @@ var _note = {
                 }
             }
         },
-        pw_input() {
-            var _obj = {
+        /* 或可改直接使用 pw_baseModel,會比較符合官方規範和更好擴展 
+         */
+        simple_tpl(template,immediate=false){
+            var _vue = {
+                mixins:[_fn.pw_baseModel(immediate)],
+                template,
+            }
+            return _vue;
+        },
+        pw_ToolGrp:{
+            v2020905(){
+                var _obj =  {
+                    template: `
+                    <span>
+                        <el-button type="warning" size="small" round 
+                            >SyncBack</el-button>
+                    </span>
+                    `,
+                    props:{
+                        cfg:{
+                            type:Object,
+                            default:{}
+                        }
+                    }
+                    ,computed:{
+                        _cfg(){
+                            var _r = {};
+                            _.each(this.cfg,(val,key)=>{
+
+                            })
+                            return _r;
+                        }
+                    }
+                };
+                return _obj;
+            },
+            v2020904(){
+                var _obj =  {
+                        template: `
+                        <span>
+                            <el-button type="warning" size="small" round 
+                                v-if="SyncBack!=false" 
+                                >SyncBack</el-button>
+                            
+                            <el-button type="success" size="small" round
+                                v-if="Exec!=false"  
+                                >Exec</el-button>
+                            <el-button type="primary" size="small" round
+                                v-if="Renew!=false"  
+                                >重新產生數據</el-button>
+                        </span>
+                        `,
+                        props:{
+                            //沒設定則不顯示
+                            Exec:Vue.prototype.$PropDef.FunEnable(),
+                            /*
+                            v1:應考慮由原生 的 fun 中,做預設不切換為宜
+                            v0:預設的定義是,不會觸發頁籤切換行為 ,故而會傳入一個 false 
+                            */
+                            Renew:Vue.prototype.$PropDef.FunEnable(),
+                            SyncBack:Vue.prototype.$PropDef.FunEnable(),
+                        },
+                };
+                return _obj;
+            }
+        },
+        pw_input:{
+            V20200905(){
+                var _obj = {
+                    mixins:[_fn.pw_baseModel(false)],
                     template: `
                     <div>
+                        <pw-debug v-bind="$attrs" />
+                        <span>
                         <el-button type="warning" size="small" round 
                             v-if="SyncBack!=false" 
                             @click="SyncBack(JsonCode)">SyncBack</el-button>
@@ -196,6 +259,7 @@ var _note = {
                         <el-button type="primary" size="small" round
                             v-if="Renew!=false"  
                             @click="Renew(JsonCode.isZip)">重新產生數據</el-button>
+                            </span>
                         <slot :JsonCode="JsonCode" />
                         <el-checkbox v-model="JsonCode.isZip" 
                             v-if="JsonCode.isObj" 
@@ -216,9 +280,6 @@ var _note = {
                         }
                     },
                     props:{
-                        value:{
-                            type:String,
-                        },
                         //沒設定則不顯示
                         Exec:Vue.prototype.$PropDef.FunEnable(),
                         /*
@@ -238,6 +299,7 @@ var _note = {
                             set(val){
                                 this.chk_Json(val);
                                 this.$emit('input',val);
+                                this.$emit('update:value',val);
                             }
                         },
                         
@@ -261,19 +323,75 @@ var _note = {
                             return this.JsonCode.isObj;
                         }
                     }
-            };
-            return _obj;
+                };
+                return _obj;
+            }
         },
         x_component:{
-            v20200614(){
+            v20200905(){
                 return {
                     mixins:[_fn.pw_baseModel()],
-                    //props:['dyn_prop'],
+                    template:`
+                        <component v-bind="dyn_prop"></component>
+                    `,
+                    computed:{
+                        dyn_prop(){
+                            let {dyn_prop={}} = this.value;
+                            return dyn_prop;
+                        },
+                        is(){
+                            let {is="",tabs=null} = this.value;
+                            if (is == "" && tabs !=null) is = 'pw-tabs'
+                            return is;
+                        },
+                        val:{
+                            get(){
+                                let {val=null,__chgTab=null} = this.value;
+                                //自動補上 val 參數
+                                if (val == null && _.isPlainObject(this.value)){
+                                    this.$set(this.value,'val',"");
+                                }
+                                switch(this.is){
+                                    case "pw-tabs":
+                                        var _tabObj = this.value;
+                                        //以下這段 code 與 pw_tabs 有重覆,
+                                        //  先 mark 掉,日後不用再刪除 
+                                        // if (__chgTab==null){
+                                        //     debugger
+                                        //     //1非常規的用法,故而特意名為 __chgTab ,以便追查
+                                        //     this.$set(_tabObj,'__chgTab',(name)=>{
+                                        //         _tabObj.val = name;
+                                        //         return _tabObj.tabs[name];
+                                        //     });
+                                        // }
+                                        return _tabObj;
+                                        break;
+                                }
+                                return this.value.val;
+                            },
+                            set(val){
+                                switch(this.is){
+                                    case "pw-tabs":
+                                        this.value = val;
+                                        break;
+                                    default:
+                                        this.value.val = val;
+                                        break;
+                                }
+                            }
+                        },
+                    },
+                }
+            },
+            v20200614(){
+                return {
+                    //v-bind="dyn_prop"
+                    mixins:[_fn.pw_baseModel()],
                     template:`
                         <component 
                             :is="is"
                             v-model="val"
-                            v-bind="dyn_prop"
+                            v-bind="$attrs"
                         ></component>
                     `,
                     computed:{
@@ -288,7 +406,7 @@ var _note = {
                         },
                         val:{
                             get(){
-                                let {val=null,chgTab=null} = this.value;
+                                let {val=null,__chgTab=null} = this.value;
                                 //自動補上 val 參數
                                 if (val == null && _.isPlainObject(this.value)){
                                     this.$set(this.value,'val',"");
@@ -296,12 +414,16 @@ var _note = {
                                 switch(this.is){
                                     case "pw-tabs":
                                         var _tabObj = this.value;
-                                        if (chgTab==null){
-                                            this.$set(_tabObj,'chgTab',(name)=>{
-                                                _tabObj.val = name;
-                                                return _tabObj.tabs[name];
-                                            });
-                                        }
+                                        //以下這段 code 與 pw_tabs 有重覆,
+                                        //  先 mark 掉,日後不用再刪除 
+                                        // if (__chgTab==null){
+                                        //     debugger
+                                        //     //1非常規的用法,故而特意名為 __chgTab ,以便追查
+                                        //     this.$set(_tabObj,'__chgTab',(name)=>{
+                                        //         _tabObj.val = name;
+                                        //         return _tabObj.tabs[name];
+                                        //     });
+                                        // }
                                         return _tabObj;
                                         break;
                                 }
@@ -323,11 +445,85 @@ var _note = {
             }
         },
         pw_tabs:{
-            v20200614(){
+            v20200905(){
                 return {
-                    mixins:[_fn.pw_baseModel(false),_fn.pw_debug.v20200619],
+                    mixins:[_fn.pw_baseModel(false)],
                     template:`
                     <div>
+                        <div v-if="debug!=false">{{debug}}</div>
+                        <el-tabs :type="tab_type" v-model="val">
+                            <template v-for="(tab,key,idx) in tabs">
+                                <el-tab-pane v-if="key!='value'"
+                                    :label="key" 
+                                    :name="key" 
+                                    :key="idx"
+                                    >
+                                    <component 
+                                        
+                                        v-bind="tabs[key]" 
+                                        :debug="tabs[key]"></component>
+                                </el-tab-pane>
+                            </template> 
+                        </el-tabs>
+                    </div>
+                    `,
+                    props:{
+                        tabs:{
+                            type:Object,
+                            default:{}
+                        }
+                    },
+                    computed:{
+                           
+                        _dyn_prop(){
+                            return {};
+                            let {dyn_prop=null} = this.dyn_prop;
+                            return dyn_prop;
+                        },
+                        // tabs(){
+                        //     let {tabs={}} = this.dyn_prop;
+                        //     return tabs;
+                        // },
+                        tab_type(){
+                            // let {tab_type='border-card'} = this.dyn_prop;
+                            // return tab_type;
+                            return 'border-card';
+                            let {tab_type='border-card'} = this.dyn_prop;
+                        },
+                        val:{
+                            get(){
+                                debugger
+                                let {val="",__chgTab =null} = this.dyn_prop;
+                                if (val=="") {
+                                     let [idx0=""]= Object.keys(this.tabs);
+                                     val = idx0;
+                                }
+                                var _tabObj = this.dyn_prop;
+                                if (__chgTab==null){
+                                    //2執行頁籤切換,一併傳回該 tab 的資料物件,以便後續操作 
+                                    this.$set(_tabObj,'__chgTab',(name)=>{
+                                        _tabObj.val = name;
+                                        return _tabObj.tabs[name];
+                                    });
+                                }
+                                return val;
+                            },
+                            set(val){
+                                this.dyn_prop.val = val;
+                            }
+                        }
+                    }
+
+
+                }
+            },
+            v20200614(){
+                return {
+                    //,_fn.pw_debug.v20200619
+                    mixins:[_fn.pw_baseModel(false)],
+                    template:`
+                    <div>
+                        <pw-debug v-bind="$attrs"/>
                         <div v-if="debug!=false">{{debug}}</div>
                         <el-tabs :type="tab_type" v-model="val">
                             <el-tab-pane
@@ -336,7 +532,8 @@ var _note = {
                                 :name="key" 
                                 :key="idx"
                                 >
-                                <x-component v-model="tabs[key]" />
+                                <pw-tool-grp v-bind="dyn_prop" />
+                                <x-component v-model="tabs[key]" /></x-component>
                             </el-tab-pane>
                         </el-tabs>
                     </div>
@@ -347,6 +544,11 @@ var _note = {
                         }
                     },
                     computed:{
+                        dyn_prop(){
+                            debugger
+                            let {dyn_prop=null} = this.value;
+                            return dyn_prop;
+                        },
                         tabs(){
                             let {tabs={}} = this.value;
                             return tabs;
@@ -357,14 +559,16 @@ var _note = {
                         },
                         val:{
                             get(){
-                                let {val="",chgTab =null} = this.value;
+                                debugger
+                                let {val="",__chgTab =null} = this.value;
                                 if (val=="") {
                                      let [idx0=""]= Object.keys(this.tabs);
                                      val = idx0;
                                 }
                                 var _tabObj = this.value;
-                                if (chgTab==null){
-                                    this.$set(_tabObj,'chgTab',(name)=>{
+                                if (__chgTab==null){
+                                    //2執行頁籤切換,一併傳回該 tab 的資料物件,以便後續操作 
+                                    this.$set(_tabObj,'__chgTab',(name)=>{
                                         _tabObj.val = name;
                                         return _tabObj.tabs[name];
                                     });
@@ -1228,13 +1432,14 @@ var _note = {
             */
             v20200618(){
                 return {
-                    template:`<pw-tabs v-model="base" :debug="debug"></pw-tabs>`,
+                    template:`<pw-tabs v-model="pw_model" :debug="debug"></pw-tabs>`,
                     data(){
                         var _self= this;
                         return {
-                            base:{
+                            pw_model:{
                                 val:'',
                                 tabs:{
+                                    //基礎資料輸入
                                     Input:{
                                         is:'pw-input',
                                         dyn_prop:{
@@ -1243,12 +1448,20 @@ var _note = {
                                         val:"A,,true\nB,,\nC,,['A']"
                                     },
                                     Config:{
+                                        dyn_prop:{
+                                            Exec:_self.InputA_Exec,
+                                            SyncBack(){}
+                                        },
                                         tabs:{
+                                            
                                             code:{
                                                 is:'pw-input',
                                             },
                                             grid:{
                                                 is:'pw-form-cfg-col',
+                                                dyn_prop:{
+                                                    Exec:_self.InputA_Exec
+                                                },
                                                 val:[],
                                             }
                                         }
@@ -1271,7 +1484,7 @@ var _note = {
                     },
                     computed:{
                         main_tab(){
-                            return this.base.tabs;
+                            return this.pw_model.tabs;
                         },
                         tab_View(){
                             return this.main_tab.View;
@@ -1291,9 +1504,9 @@ var _note = {
                                 ? pw_fn.parse_row
                                 : pw_fn.parse_cols
                                 ;
-                            var _tab = this.base
-                                    .chgTab('Config')
-                                    .chgTab('grid');
+                            var _tab = this.pw_model
+                                    .__chgTab('Config')
+                                    .__chgTab('grid');
                             _tab.val = _parse(JsonCode.val,this.genFiled);
                         },
                         genFiled(title, ui_type , data_val = ""){
@@ -1393,7 +1606,7 @@ var _note = {
 
     Vue.component('jdt-table-cfg', _fn.jdt_table_cfg());
     
-    Vue.component('pw-input', _fn.pw_input());
+    Vue.component('pw-input', _fn.pw_input.V20200905());
     Vue.component('pw-mock', _fn.pw_mock());
     Vue.component('pw-mock-cfg', _fn.pw_mock_cfg());
     Vue.component('pw-el-radio', _fn.power_form_el_options('radio'));
@@ -1405,7 +1618,11 @@ var _note = {
     Vue.component('pw-form-cfg', _fn.pw_form_cfg.v20200618());
     Vue.component('pw-form-cfg-col', _fn.pw_form_cfg_col());
     Vue.component('pw-tabs', _fn.pw_tabs.v20200614());
+    Vue.component('pw-tabs-n', _fn.pw_tabs.v20200905());
     Vue.component('x-component', _fn.x_component.v20200614());
+    Vue.component('x-component-1', _fn.x_component.v20200905());
+    Vue.component('pw-tool-grp', _fn.pw_ToolGrp.v2020905());
+    Vue.component('pw-debug', _fn.pw_debug.v20200619());
     
-
+    
 }));
