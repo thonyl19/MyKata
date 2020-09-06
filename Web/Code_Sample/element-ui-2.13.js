@@ -798,8 +798,192 @@ var __fn = (
 	
 	}
 	
+	let _dataBase = {
+
+		tabs_基本型(op_is = 'pw-input-v2'){
+			return {
+				tabs:{
+					Input:{
+						is:op_is,
+					},
+					Config:{
+						is:'el-input'
+					},
+				}
+			}
+		},
+		tabs_多層式(op_is = 'pw-input-v2'){
+			return {
+				is:'pw-tabs-n',
+				tabs:{
+					InputA:{
+						is:op_is,
+					},
+					ConfigA:{
+						is:'pw-tabs-n',
+						tabs:{
+							AAAAA:{
+								is:'el-input'
+							},
+							BBBB:{
+								is:op_is,
+							},
+						}
+					},
+				}
+			} 
+		},
+		'@DynUI'(){
+			/*
+			基本上,沒必要考慮  ref 設置的問題,因為直接以 DataObj 做操作即可
+			*/
+			var arr = [
+				'pw-input-v2'
+			]
+			var 各型基本樣式 = {};
+			_.each(arr,(el)=>{
+				各型基本樣式[el]={is:el};
+			}) 
+			return {
+				簡式:{}
+				,各型基本樣式 
+				,'pw_tabs_n':{
+					//is:'pw-tabs-n',
+					tabs:{
+						InputA:{
+							is:'pw-input-v2',
+						},
+						ConfigA:{
+							//is:'pw-tabs-n',
+							tabs:{
+								AAAAA:{
+									is:'el-input'
+								},
+								BBBB:{
+									is:'pw-input-v2',
+								},
+							}
+						},
+					}
+
+				}
+			}
+		},
+	}
 	let Vue_Prd = {
-		'*x-component'() {
+		'*pw-dyn-ui'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<h3>pw_tabs_n</h3>
+							<pw-dyn-ui v-model="pw_tabs_n" :debug="pw_tabs_n"/>
+						<button @click="exe1">test</button>
+						<h3>簡易型</h3>
+							<pw-dyn-ui v-model="simple" />
+						<h3>各型基本樣式</h3>
+							{{baseCase}}
+							<pw-dyn-ui v-for="(item) in baseCase" 
+								v-model="item" />
+					</div>
+					`,
+					data(){
+						let {各型基本樣式:baseCase ,簡式:simple ,pw_tabs_n} = _dataBase['@DynUI']()
+
+						return  {
+							baseCase,
+							simple
+							,pw_tabs_n
+						}
+					},
+					 
+					methods:{
+						exe1(){
+							debugger;
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+		'pw-tabs-n'() {
+			var _note = `
+			<pre>
+			在component 模式, 必須要多做個 v-bind 的程序,
+				這樣才能讓 is 正確的 作用
+			</pre>
+			`;
+		 var _obj = {
+			 _css:``,
+			 _vue: {
+				 template: `
+					 <div>
+					 ${_note}
+					 <h3>base</h3>
+					 <button @click="exec1">test</button>
+					 <pw-tabs-n v-model="tabs1" 
+					 	:debug="tabs1" />
+					 <h3>component 模式</h3>
+					 <component v-model="tabs2" v-bind="tabs2" 
+					 	:debug="tabs2" />
+					 </div>
+				 `,
+				 data(){
+					 return {
+						 tabs1:_dataBase.tabs_基本型()
+						 ,tabs2:_dataBase.tabs_多層式()
+					 }
+				 },
+				 methods:{
+					exec1(){
+						debugger;
+						var x = this.tabs1.__chgTab('Config');
+						console.log(x);
+					 }
+				 }
+			 }
+		 };
+		 return _obj;
+		},
+
+		'pw-input-v2'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<h3>基本應用</h3>
+						<pw-input-v2 v-model="case1"/>
+						<h3>component 模式</h3>
+						<component v-model="case2.value" is="pw-input-v2" />
+						<component v-bind.sync="case2" :debug="case2"/>
+						</div>
+					`,
+					data(){
+						return {
+							case1:'',
+							case2:{
+								is:'pw-input-v2',
+								value:''
+							}
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+		'x-component'() {
 			var _note = `
 			   <pre>
 			   </pre>
@@ -900,7 +1084,7 @@ var __fn = (
 						${_note}
 						<h3>基本應用</h3>
 						<button @click="base.Exec">test</button>
-						<pw-tool-grp :cfg="base" />
+						<pw-tool-grp v-bind="base" />
 						</div>
 					`,
 					data(){
@@ -1242,6 +1426,68 @@ var __fn = (
 							}
 						},
 					}
+				}
+			};
+			return _obj;
+		},
+		'_pw-tabs-n-v20200905'() {
+			var _note = `
+			   <pre>
+			   因為 $attrs.sync 無法解決 設定 value 的問題,
+			   所以先封存
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<h3>base</h3>
+						<pw-tabs-n v-model="tabs1.value" 
+							:tabs="tabs1.tabs" :debug="tabs1" />
+						<h3>component 模式</h3>
+						<component v-bind.sync="tabs2" :debug="tabs2" />
+						</div>
+					`,
+					data(){
+						return {
+							tabs1:{
+								tabs:{
+									Input:{
+										is:'pw-input-v2',
+									},
+									Config:{},
+								}
+							}
+							,tabs2:{
+								is:'pw-tabs-n',
+								tabs:{
+									InputA:{
+										is:'pw-input-v2',
+									},
+									ConfigA:{
+										is:'pw-tabs-n',
+										tabs:{
+											AAAAA:{},
+											BBBB:{
+												is:'pw-input-v2',
+												dyn_prop:{
+													Exec(){
+														alert('test');
+													}
+												}
+											},
+										}
+									},
+								}
+							},tabs3:{
+								tabs:{
+									AAAAA:{},
+									BBBB:{},
+								}}
+						}
+					} 
 				}
 			};
 			return _obj;

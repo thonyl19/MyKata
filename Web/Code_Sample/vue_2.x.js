@@ -424,10 +424,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
             var dny1 = {
                 template:`
                 <div class="child-1" >
-                    <p>in child1:</p>
                     <p>$attrs: {{$attrs}}</p>
-                    <p>$listeners: {{$listeners}}</p>
-                    <hr>
                     <input type=text v-model="value" />
                     <input type=text v-model="val" />
                 </div>
@@ -456,17 +453,25 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
                     },
                     val:{
                         get(){
+                            debugger
                             let {val=null,__chgTab=null} = this.$attrs;
                             //自動補上 val 參數
                             if (val == null && _.isPlainObject(this.$attrs)){
-                                this.$set(this.$attrs,'val',"");
+                                this.value = ""
+                                this.$set(this.$attrs,'val',"--");
+                                this.$set(this.$attrs,'__chgTab',(name)=>{
+                                    alert(name);
+                                });
+                                //this.$emit('update:value',"");
                             }
  
                             return this.$attrs.val;
                         },
                         set(val){
-                            //this.$attrs.val = val;
-                            this.$emit('update:val',val);
+                            debugger
+                            this.$attrs.val = val;
+                            //this.$emit('update:value',val);
+                            //this.value = val;
                         }
                     },
                 },
@@ -495,8 +500,10 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
                                 > 
                         </child1>
                         <h3>case 22 - v-bind.sync</h3>
-                        <child1 v-bind.sync="x" :debug="x"> 
+                        {{x1}}
+                        <child1 v-bind.sync="x1" :debug="x1"> 
                         </child1>
+                        <button @click="x1.__chgTab('test')">text</button>
                     </div>
                     `,
                     components: { child1:dny1 },
@@ -505,6 +512,10 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
                             x:{
                                 value:'111',
                                 val:'val',
+                                A:1,
+                                B:2
+                            },
+                            x1:{
                                 A:1,
                                 B:2
                             }
