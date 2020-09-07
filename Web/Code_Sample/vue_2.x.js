@@ -5,7 +5,9 @@
     https://github.com/guahsu/Vue-TurnTable/
 
 */
-var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
+var __fn = ($,_,Vue,Vuex,VueRouter,Rx
+    ,vueNumeralFilterInstaller 
+)=>{
     
     let API = {
         'render-case'() {
@@ -1729,7 +1731,31 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
             return _obj;
         },
     }
-    return  { API, Views, Props, rxjs, Fail ,Slot  }
+    PlugIn = {
+        '*vueNumeralFilterInstaller'() {
+            Vue.use(vueNumeralFilterInstaller, { locale: 'en-gb' });
+            var _note = `
+            <pre>
+            </pre>
+            `;
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                        ${_note}
+                        <div>Bytes : {{ 10485760 | numeral('0b') }}</div>
+                        <div>Percentage : {{ 0.5567 | numeral('0.[00]%') }}</div>
+                        <div>Thousands Separator : {{ 561739482 | numeral('0,0') }}</div>
+                    </div>
+                    `
+                }
+            };
+            return _obj;
+        },
+    }
+    
+    return  { API, Views, Props, rxjs, Fail ,Slot ,PlugIn  }
 }
 
 
@@ -1748,6 +1774,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx)=>{
     var arr = ["jquery", "lodash", "vue" ,"vuex"
         ,"https://unpkg.com/vue-router/dist/vue-router.js"
         ,"https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.8/dist/global/Rx.umd.js"
+        ,"https://cdn.jsdelivr.net/npm/vue-numeral-filter/dist/vue-numeral-filter.min.js"
 	];
 	if (typeof define === 'function' && define.amd) {
 		define({arr, __fn});
