@@ -1,5 +1,4 @@
 (function (root, factory) {
-    debugger
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'vue','lodash'], factory);
     } else if (typeof exports === 'object') {

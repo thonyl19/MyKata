@@ -406,28 +406,76 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             };
             return _obj;
         },
+ 
         '*$attrs_case'() {
             var _note = `
             <pre>
-                
+                測試在子物件中,取得的 $attrs 參數力,
+                從 case2 中可以觀察到 ,因為 子物件中己有定義 value,
+                    所以 使用 v-bind="x" 時,
+                    子項所收到的 $attrs 就會直接過濾到 value 的參數,
+                    而 value 的參數會被 props.value 接走
+                不過,在嘗試改用 this.$emit('update:value',val) 時發現,
+                    這樣做,就可以在不設 v-model 的情形下,
+                    直接以 v-bind 就對 value 做雙向繋結了.
+                debug 是故意用來測試,當沒設置相應的參數, 
+                    $attrs 是否可以正確接到 debug 的設置 
             </pre>
             `;
                 
             var dny1 = {
                 template:`
                 <div class="child-1" >
-                    <p>in child1:</p>
-                    
                     <p>$attrs: {{$attrs}}</p>
-                    <hr>
+                    <input type=text v-model="value" />
+                    <input type=text v-model="val" />
                 </div>
                 `,
+                props:{
+                    value:{
+                        type:String,
+                        default:''
+                    }
+                },
+                watch:{
+                    value:{
+                        handler(val, oldName) {
+                            //適用於 v-model
+                            this.$emit('input',val);
+                            //適用於 v-bind
+                            this.$emit('update:value',val);
+                        },
+                    },
+                },
                 computed: {
                     fn(){
                         debugger;
                         let {att1,att2} = this.$attrs;
                         return {att1,att2};
-                    }
+                    },
+                    val:{
+                        get(){
+                            debugger
+                            let {val=null,__chgTab=null} = this.$attrs;
+                            //自動補上 val 參數
+                            if (val == null && _.isPlainObject(this.$attrs)){
+                                this.value = ""
+                                this.$set(this.$attrs,'val',"--");
+                                this.$set(this.$attrs,'__chgTab',(name)=>{
+                                    alert(name);
+                                });
+                                //this.$emit('update:value',"");
+                            }
+ 
+                            return this.$attrs.val;
+                        },
+                        set(val){
+                            debugger
+                            this.$attrs.val = val;
+                            //this.$emit('update:value',val);
+                            //this.value = val;
+                        }
+                    },
                 },
                     
             }
@@ -437,6 +485,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
                     template: `
                     <div>
                         ${_note}
+                        <h3>case 1</h3>
                         <child1
                             p-child1="child--1"
                             p-child2="child--2"
@@ -445,9 +494,35 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
                             att2="att2"
                                 > 
                         </child1>
+                        {{x}}
+                        <h3>case 21 - v-model</h3>
+                        <child1
+                            v-model="x.value"
+                            v-bind="x"
+                                > 
+                        </child1>
+                        <h3>case 22 - v-bind.sync</h3>
+                        {{x1}}
+                        <child1 v-bind.sync="x1" :debug="x1"> 
+                        </child1>
+                        <button @click="x1.__chgTab('test')">text</button>
                     </div>
                     `,
                     components: { child1:dny1 },
+                    data(){
+                        return {
+                            x:{
+                                value:'111',
+                                val:'val',
+                                A:1,
+                                B:2
+                            },
+                            x1:{
+                                A:1,
+                                B:2
+                            }
+                        }
+                    }
                         
                 }
             };

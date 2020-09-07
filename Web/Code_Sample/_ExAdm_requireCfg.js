@@ -10,26 +10,46 @@ var __req_cfg = {
 		"lodash": [
 			`${local_path}lodash/lodash.min`
 			,'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min'
-			],
-		"ELEMENT": "https://unpkg.com/element-ui@2.13.0/lib/index",
-		"eui-css": "https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index",
-		"moment":"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
+		],
+		"ELEMENT": [
+			`${local_path}element-ui/lib/index`
+			,"https://unpkg.com/element-ui@2.13.0/lib/index",
+		],
+		"eui-css":[
+			`${local_path}element-ui/lib/theme-chalk/index` 
+			,"https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index"
+		],
 		vue: [
 			`${local_path}vue/dist/vue.min`
 			,"https://cdn.jsdelivr.net/npm/vue/dist/vue"
 			],
-		vuex: "https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex",
-		Vue_Utility:"../Vue_Prd/Vue_Utility",
+		vuex:[
+			`${local_path}vuex/dist/vuex.min`
+			,"https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex"
+		],
+		styled:[
+			`${local_path}vue-styled-components/dist/vue-styled-components.min`
+			,"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min"
+		],
+		fa_css:[
+			`${local_path}font-awesome/css/font-awesome.min`
+			,"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome"
+		],
+		"bts337":[
+			`${local_path}bootstrap/dist/js/bootstrap.min`
+			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min"
+		],
+		"bts337-css":[
+			`${local_path}bootstrap/dist/css/bootstrap.min`
+			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min"
+		],
+ 		Vue_Utility:"../Vue_Prd/Vue_Utility",
 		UI_App:"../Vue_Prd/UI_App",
 		UI_AppExt:"../Vue_Prd/UI_AppExt",
-		styled:"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min",
-		fa_css:"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome",
 		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
-		//示範載入
-		'_data': "./_tmpData",
-		"bts337":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min",
-		"bts337-css":"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min",
- 	},
+		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
+ 
+	},
 	map: {
 		"*": {
 			css: "https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.10/css.min.js",
@@ -42,7 +62,7 @@ var __req_cfg = {
 		lodash:{exports: '_'},
 		vuex:{deps:['vue']},
 		bts337:{deps: ['css!bts337-css']},
-		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css','css!fa_css'] },
+		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
 		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']}
  	}
 }

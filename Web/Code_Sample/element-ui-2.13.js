@@ -3,15 +3,16 @@ https://v3.bootcss.com/getting-started/
 https://github.com/ElemeFE/element/tree/dev/packages
 */
 var __fn = (
-	$, _ , styled, Vue,
+	$, _ , styled, Vue,Mock,
 	ELEMENT,UI_AppExt
 )=> 
 {
-	debugger;
+	//debugger;
 	let Views = {
-		'*def'() {
+		'el-checkbox'() {
 			var _note = `
 			<pre>
+			true/false label 應用實例
 			</pre>
 			`;
 			var _obj = {
@@ -218,7 +219,7 @@ var __fn = (
 	};
 	
 	let Case = {
-		'*el-switch active-value'() {
+		'el-switch active-value'() {
 			var _note = `
 			<pre>
 			在開發時碰到的一個案例,當下在處理 el-switch 時,怎麼操作都不無法正確反應,
@@ -797,28 +798,236 @@ var __fn = (
 	
 	}
 	
+	let _dataBase = {
+
+		tabs_基本型(op_is = 'pw-input-v2'){
+			return {
+				tabs:{
+					Input:{
+						is:op_is,
+					},
+					Config:{
+						is:'el-input'
+					},
+				}
+			}
+		},
+		tabs_多層式(op_is = 'pw-input-v2'){
+			return {
+				is:'pw-tabs-n',
+				tabs:{
+					InputA:{
+						is:op_is,
+					},
+					ConfigA:{
+						is:'pw-tabs-n',
+						tabs:{
+							AAAAA:{
+								is:'el-input'
+							},
+							BBBB:{
+								is:op_is,
+							},
+						}
+					},
+				}
+			} 
+		},
+		'@DynUI'(){
+			/*
+			基本上,沒必要考慮  ref 設置的問題,因為直接以 DataObj 做操作即可
+			*/
+			var arr = [
+				'pw-input-v2'
+			]
+			var 各型基本樣式 = {};
+			_.each(arr,(el)=>{
+				各型基本樣式[el]={is:el};
+			}) 
+			return {
+				簡式:{}
+				,各型基本樣式 
+				,'pw_tabs_n':{
+					//is:'pw-tabs-n',
+					tabs:{
+						InputA:{
+							is:'pw-input-v2',
+						},
+						ConfigA:{
+							//is:'pw-tabs-n',
+							tabs:{
+								AAAAA:{
+									is:'el-input'
+								},
+								BBBB:{
+									is:'pw-input-v2',
+								},
+							}
+						},
+					}
+
+				}
+			}
+		},
+	}
 	let Vue_Prd = {
-		'x-component'() {
+		'*pw-dyn-ui'() {
 			var _note = `
-			<pre>
-			以 Josn 的格式設定,動態產生 tab 頁籤
+			   <pre>
 			   </pre>
 			   `;
-			/*
-			{{tabs2}}
-						<pw-tabs v-model="tabs2"></pw-tabs>
-						{{tabs1}}
-						<pw-tabs v-model="tabs1"></pw-tabs>
-						
-			*/
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<h3>pw_tabs_n</h3>
+							<pw-dyn-ui v-model="pw_tabs_n" :debug="pw_tabs_n"/>
+						<button @click="exe1">test</button>
+						<h3>簡易型</h3>
+							<pw-dyn-ui v-model="simple" />
+						<h3>各型基本樣式</h3>
+							{{baseCase}}
+							<pw-dyn-ui v-for="(item) in baseCase" 
+								v-model="item" />
+					</div>
+					`,
+					data(){
+						let {各型基本樣式:baseCase ,簡式:simple ,pw_tabs_n} = _dataBase['@DynUI']()
+
+						return  {
+							baseCase,
+							simple
+							,pw_tabs_n
+						}
+					},
+					 
+					methods:{
+						exe1(){
+							debugger;
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+		'pw-tabs-n'() {
+			var _note = `
+			<pre>
+			在component 模式, 必須要多做個 v-bind 的程序,
+				這樣才能讓 is 正確的 作用
+			</pre>
+			`;
+		 var _obj = {
+			 _css:``,
+			 _vue: {
+				 template: `
+					 <div>
+					 ${_note}
+					 <h3>base</h3>
+					 <button @click="exec1">test</button>
+					 <pw-tabs-n v-model="tabs1" 
+					 	:debug="tabs1" />
+					 <h3>component 模式</h3>
+					 <component v-model="tabs2" v-bind="tabs2" 
+					 	:debug="tabs2" />
+					 </div>
+				 `,
+				 data(){
+					 return {
+						 tabs1:_dataBase.tabs_基本型()
+						 ,tabs2:_dataBase.tabs_多層式()
+					 }
+				 },
+				 methods:{
+					exec1(){
+						debugger;
+						var x = this.tabs1.__chgTab('Config');
+						console.log(x);
+					 }
+				 }
+			 }
+		 };
+		 return _obj;
+		},
+
+		'pw-input-v2'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
 			var _obj = {
 				_css:``,
 				_vue: {
 					template: `
 						<div>
 						${_note}
-						{{tabs2}}
-						<x-component v-model="tabs2" />
+						<h3>基本應用</h3>
+						<pw-input-v2 v-model="case1"/>
+						<h3>component 模式</h3>
+						<component v-model="case2.value" is="pw-input-v2" />
+						<component v-bind.sync="case2" :debug="case2"/>
+						</div>
+					`,
+					data(){
+						return {
+							case1:'',
+							case2:{
+								is:'pw-input-v2',
+								value:''
+							}
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+		'x-component'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<h3>基本應用</h3>
+						<x-component v-bind.sync="case1" :debug="case1"/>
+						</div>
+					`,
+					data(){
+						return {
+							case1:{
+								is:'pw-input',
+								value:''
+							}
+						}
+					} 
+				}
+			};
+			return _obj;
+		},
+		'x-component - pw-tabs'() {
+			var _note = `
+			<pre>
+			以 Josn 的格式設定,動態產生 tab 頁籤
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						
+						<h3>pw-tabs 基本</h3>
+						{{tabs1}}
+						<x-component v-model="tabs1"/>
+						<h3>pw-tabs 多階</h3>
+						<x-component v-model="tabs2"/>
 						</div>
 					`,
 					data(){
@@ -859,6 +1068,97 @@ var __fn = (
 						}
 					} 
 				   }
+			};
+			return _obj;
+		},
+		'_pw-tool-grp'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<h3>基本應用</h3>
+						<button @click="base.Exec">test</button>
+						<pw-tool-grp v-bind="base" />
+						</div>
+					`,
+					data(){
+						let {Exec} = this;
+						return {
+							base:{
+								Exec
+							}
+						}
+					},
+					methods: {
+						Exec(){
+							alert('Exec');
+						}
+					},
+				}
+			};
+			return _obj;
+		},
+
+
+		'__pw-tabs-n'() {
+			var _note = `
+			   <pre>
+			   因為 解決不了 v-bind 時 , 對 v-model=value 的繋結問題,
+			   所以只能先擱置目前的處理
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<h3>基本型</h3>
+						<button @click="T01">T01</button>
+						<pw-tabs-n v-bind="base" :debug="base"></pw-tabs-n>
+						<pw-tabs-n v-model="base.val" :tabs="base.tabs"  :debug="base"></pw-tabs-n>
+						
+						</div>
+					`,
+					//<pw-tabs-n-1 :dyn_prop="base" :debug="base"></pw-tabs-n-1>
+					data(){
+						return {
+							//基礎原型
+							base:{
+								tabs:{
+									Input:{
+										is:'pw-input',
+									},
+									Config:{
+										is:'pw-tabs-n',
+										value:'',
+										tabs:{
+											AAAAA:{},
+											BBBB:{
+												is:'pw-input',
+											},
+										}
+									},
+								},
+								__chgTab(name){
+									this.val = name;
+									return this.tabs[name];
+								}
+							}
+						}
+					},
+					methods:{
+						T01(){
+							alert(this.base.__chgTab('Input'));
+						}
+					} 
+				}
 			};
 			return _obj;
 		},
@@ -1130,85 +1430,71 @@ var __fn = (
 			};
 			return _obj;
 		},
-	}
-	let Tool = {
-		'def'() {
+		'_pw-tabs-n-v20200905'() {
 			var _note = `
 			   <pre>
-	
+			   因為 $attrs.sync 無法解決 設定 value 的問題,
+			   所以先封存
 			   </pre>
 			   `;
 			var _obj = {
-				_css:`
-				.el-row.ext {
-					margin-bottom: 20px;
-					margin-right:3px !important;
-					border: #ccc 1px solid;
-					border-radius: 4px;
-				}
-				.el-col {
-					border-radius: 4px;
-				}
-	
-				.grid-content {
-					border-radius: 4px;
-					min-height: 36px;
-					border: #ccc 1px solid;
-				}
-				
-				.el-row.ext .el-button-group{
-					display:none;
-				}
-				.el-row.ext:hover   .el-button-group{
-					display: inline-block;;
-				}
-				.el-button-group.ext{
-					position:absolute;
-					left:.7rem;
-					top:-3.1rem;
-					padding: 0 .7rem .7rem 0;
-					width:50%;
-					opacity:0.25;
-				}
-				.el-button-group.ext:hover{
-					opacity:1 !important;
-				}
-				.el-button-group.ext .el-button{
-					padding: 7px;
-				}
-	
-				`,
+				_css:``,
 				_vue: {
 					template: `
 						<div>
 						${_note}
-						<el-row class="ext" :gutter="3"style="position:relative;">
-							<el-button-group class="ext" >
-								<el-button type="primary" icon="el-icon-circle-plus" @click="Add"></el-button>
-								<el-button type="primary" icon="el-icon-s-tools"></el-button>
-							</el-button-group>
-							<el-col :span="item.A" v-for="(item) in list" >
-								<div class="grid-content bg-purple">{{item.A}}</div>
-							</el-col>
-							<br/>
-						</el-row>
+						<h3>base</h3>
+						<pw-tabs-n v-model="tabs1.value" 
+							:tabs="tabs1.tabs" :debug="tabs1" />
+						<h3>component 模式</h3>
+						<component v-bind.sync="tabs2" :debug="tabs2" />
 						</div>
 					`,
 					data(){
 						return {
-							list:[],
-						}
-					},
-					methods:{
-						Add(){
-							this.list.push({A:4});
+							tabs1:{
+								tabs:{
+									Input:{
+										is:'pw-input-v2',
+									},
+									Config:{},
+								}
+							}
+							,tabs2:{
+								is:'pw-tabs-n',
+								tabs:{
+									InputA:{
+										is:'pw-input-v2',
+									},
+									ConfigA:{
+										is:'pw-tabs-n',
+										tabs:{
+											AAAAA:{},
+											BBBB:{
+												is:'pw-input-v2',
+												dyn_prop:{
+													Exec(){
+														alert('test');
+													}
+												}
+											},
+										}
+									},
+								}
+							},tabs3:{
+								tabs:{
+									AAAAA:{},
+									BBBB:{},
+								}}
 						}
 					} 
 				}
 			};
 			return _obj;
 		},
-		'def'() {
+	}
+	let Tool = {
+		'pw-form-cfg'() {
 			var _note = `
 			   <pre>
 			   </pre>
@@ -1227,6 +1513,34 @@ var __fn = (
 						}
 					} 
 				}
+			};
+			return _obj;
+		},
+		'pw_form_cfg_col'() {
+			var _note = `
+			   <pre>
+			   pw_form_cfg_col
+			   依據 傳入的 data 資料,轉成表格式的顯示
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						{{data}}
+						<pw-form-cfg-col v-model="data"></pw-form-cfg-col>
+						</div>
+					`,
+					data(){
+						return {
+							data:[
+								{title:'title',ui_type:'ui_type',ui_type:'el-input'}
+							]
+						}
+					} 
+				   }
 			};
 			return _obj;
 		},
@@ -1340,7 +1654,7 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'def'() {
+		'jdt-table-ext'() {
 			var _note = `
 			<pre>
 			</pre>
@@ -1743,7 +2057,7 @@ var __fn = (
 		},
 	}
 	var 程式產生器 = {
-		'*el-table-column'() {
+		'el-table-column'() {
 			var _note = `
 			   <pre>
 			   </pre>
@@ -1799,11 +2113,85 @@ var __fn = (
 		},
 	
 	}
- 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd, 程式產生器};
+	var Table = {
+		'行內編輯功能'() {
+			var _note = `
+			   <pre>
+			   因應專案上的需求,實作 行內編輯的功能
+			   1.利 row-class-name 的功能,以實現設定指定行的的樣式.
+			   2.利用 css 的組合性條件,由行的樣式名稱 切換行內的顯示和編輯模式
+			   </pre>
+			   `;
+			var _obj = {
+				_css:`
+					.sty-edit {
+						display:none;
+					}
+					.edit-row .sty-edit {
+						display:inline;
+					}
+
+					.edit-row div.sty-view {
+						display:none;
+					}
+				`,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						{{RowIdx}}<br>
+						<el-table
+							:data="tableData"
+							style="width: 100%"
+							:row-class-name="row_sty"
+							>
+								<el-table-column
+									label="Edit"
+									width="180">
+									<template slot-scope="scope">
+										<button @click="Edit(scope.$index)">edit</button>
+									</template>
+								</el-table-column>
+								<el-table-column
+									label="Name"
+									width="180"
+									prop="name">
+									<template slot-scope="scope">
+										<el-input class="sty-edit" type=text v-model="scope.row.name" />
+										<div class="sty-view">{{scope.row.name}}</div>
+									</template>
+								</el-table-column>
+							</el-table>
+						</div>
+					`,
+					data(){
+						return {
+							RowIdx:-1,
+							tableData:window.gEx.mydata
+						}
+					},
+					methods:{
+						Edit(idx){
+							debugger
+							this.RowIdx = idx;
+						},
+						row_sty(row){
+							debugger
+							let {rowIndex} =row;
+							return rowIndex == this.RowIdx ? "edit-row":"";
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+	}
+ 
+ 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,程式產生器};
 }
 (function () {
 	var arr = [
-		"jquery","lodash","styled","vue",
+		"jquery","lodash","styled","vue",'Mock',
 		'ELEMENT'
 		,'UI_AppExt'
 	 ];
