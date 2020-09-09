@@ -855,6 +855,7 @@ var __fn = (
 						},
 						ConfigA:{
 							//is:'pw-tabs-n',
+
 							tabs:{
 								AAAAA:{
 									is:'el-input'
@@ -869,6 +870,13 @@ var __fn = (
 				}
 			}
 		},
+		/*
+		
+		'@Tabs':{
+			is:'pw-tabs'
+		}
+		
+		*/
 	}
 	let Vue_Prd = {
 		'*pw-dyn-ui'() {
@@ -2057,7 +2065,7 @@ var __fn = (
 		},
 	}
 	var 程式產生器 = {
-		'el-table-column'() {
+		'*el-table-column'() {
 			var _note = `
 			   <pre>
 			   </pre>
@@ -2068,7 +2076,7 @@ var __fn = (
 					template: `
 						<div>
 						${_note}
-						<pw-tabs v-model="base"  ></pw-tabs>
+						<pw-tabs-n v-model="base"  ></pw-tabs-n>
 						</div>
 					`,
 					data(){
