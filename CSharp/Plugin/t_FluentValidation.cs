@@ -76,12 +76,14 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
         public void t_複雜特性() {
-            var model_1 = new Phone { 
+            var model_1 = new Phone {
                 PhoneNumber= null ,
                 Person = new Person{ Name = null}
             };
             var result_1 = new PhoneValidator().Validate (model_1);
         }
+ 
+        
     }
 
     public class PersonValidator : AbstractValidator<Person> {
@@ -89,12 +91,14 @@ namespace CSharp.Plugin {
             RuleFor (person => person.Name).NotNull ();
         }
 
-        
+
     }
     public class PhoneValidator : AbstractValidator<Phone> {
         public PhoneValidator() {
             RuleFor (Phone => Phone.PhoneNumber).NotNull ();
             RuleFor(Phone => Phone.Person).SetValidator(new PersonValidator());
         }
+
+
     }
 }
