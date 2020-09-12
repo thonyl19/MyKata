@@ -62,26 +62,56 @@
     "prefix": "vue_ex\r",
     "description": "",
     "body": [
-      "def() {\r",
+      "'*def'() {\r",
       "    var _note = `\r",
       "       <pre>\r",
       "       </pre>\r",
       "       `;\r",
       "    var _obj = {\r",
-      "       _vue: {\r",
-      "          template: `\r",
-      "             <div>\r",
+      "        _css:``,\r",
+      "        _vue: {\r",
+      "            template: `\r",
+      "                <div>\r",
       "                \\${_note}\r",
-      "             </div>\r",
-      "             `,\r",
-      "          data(){\r",
-      "             return {\r",
-      "            }\r",
-      "          } \r",
-      "       }\r",
+      "                </div>\r",
+      "            `,\r",
+      "            data(){\r",
+      "                return {\r",
+      "                }\r",
+      "            } \r",
+      "       \t}\r",
       "    };\r",
       "    return _obj;\r",
-      " },"
+      "},"
+    ]
+  },
+  "v-range": {
+    "prefix": "v-range\r",
+    "description": "",
+    "body": [
+      "<input type=\"range\" min=\"1\" max=\"10\" v-model=\"range\" >{{range}}"
+    ]
+  },
+  "v-chkbox": {
+    "prefix": "v-chkbox\r",
+    "description": "",
+    "body": [
+      "<input type=\"checkbox\" v-model=\"set\" />fa-fw <br />"
+    ]
+  },
+  "vue-watch-deep": {
+    "prefix": "vue-watch-deep\r",
+    "description": "",
+    "body": [
+      "value:{\r",
+      "    handler(val, oldName) {\r",
+      "        this.\\$emit('input',val);\r",
+      "    },\r",
+      "    // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法\r",
+      "    immediate: false,\r",
+      "    deep: true\r",
+      "}\r",
+      "\t\t\t\t"
     ]
   }
 }
