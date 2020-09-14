@@ -229,6 +229,30 @@ namespace MyKata.Lib
 			return ao_obj;
 		}
 
+		/// <summary>
+		/// 讀取 序列化讀檔,支援 anonymousTypeObject
+		/// </summary>
+		/// <returns></returns>
+		public T Read_SerializeJson<T>(string as_FullFileName, T anonymousTypeObject, JsonSerializerSettings json_options = null)
+		{
+			json_options = json_options ?? FileApp.json_options;
+			T _obj = default(T);
+			try
+			{
+				TextReader lo_TextReader = this.ts_StreamReader(as_FullFileName);
+				string _s = lo_TextReader.ReadToEnd();
+				_obj = JsonConvert.DeserializeAnonymousType(_s, anonymousTypeObject, json_options);
+			}
+			catch (Exception Ex)
+			{
+				throw new Exception($"Read_SerializeJson 序列讀檔({as_FullFileName})");
+			}
+			finally
+			{
+				this.Close();
+			}
+			return _obj;
+		}
 
 		public static T Read_SerializeJson<T>(string as_FullFileName, JsonSerializerSettings json_options = null, bool isMult = true)
 		{
@@ -259,6 +283,8 @@ namespace MyKata.Lib
 			}
 			return _obj;
 		}
+
+		
 
 		/// <summary>
 		/// 此程序 是將 檢核檔案是否存及 StreamReader 做合併處理

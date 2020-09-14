@@ -82,15 +82,95 @@ namespace CSharp.Plugin {
             };
             var result_1 = new PhoneValidator().Validate (model_1);
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestMethod]
+        public void t_DependentRules() {
+            var model_1 = new Person { 
+                Name= null 
+            };
+            var result_1 = new PersonValidator_DependentRules().Validate (model_1);
+        }
+
+        [TestMethod]
+        public void t_複合式應用() {
+            var model_1 = new Person { 
+                Name= null 
+            };
+            var result_1 = new PersonValidator(PersonValidator_flag.All)
+                .Validate (model_1);
+        }
+
+
+        /// <summary>
+        /// 把全部的錯誤訊息提出
+        /// </summary>
+        [TestMethod]
+        public void t_訊息處理() {
+            var model_1 = new Person { 
+                Name= null 
+            };
+            var _v8n = new PersonValidator(PersonValidator_flag.All)
+                .Validate (model_1);
+            var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
+        }
     }
 
+
+
+    public enum PersonValidator_flag
+    {
+        DependentRules,
+        All,   
+    }
     public class PersonValidator : AbstractValidator<Person> {
         public PersonValidator () {
             RuleFor (person => person.Name).NotNull ();
         }
 
-        
+        /// <summary>
+        /// 省卻開多個 class 懶人做法
+        /// </summary>
+        /// <param name="flag"></param>
+        public PersonValidator(PersonValidator_flag flag) {
+            switch (flag){
+                case PersonValidator_flag.DependentRules:
+                    RuleFor (person => person.Name)
+                        .NotNull ()
+                        //相依於前一個檢查條件,成功才會往下執行到這一條 
+                        .DependentRules(() =>
+                        {
+                            RuleFor(x => x.Name).NotNull();
+                        });
+                    break;
+                case PersonValidator_flag.All:
+                    Include(new PersonValidator());
+                    Include(new PersonValidator(PersonValidator_flag.DependentRules));
+                    Include(new PersonValidator_DependentRules());
+                    break;
+            }
+        }
     }
+    public class PersonValidator_DependentRules : AbstractValidator<Person> {
+        public PersonValidator_DependentRules () {
+            RuleFor (person => person.Name)
+            .NotNull ()
+            //相依於前一個檢查條件,成功才會往下執行到這一條 
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Name).NotNull();
+            });
+        }
+    }
+
+ 
+
+
+
+
     public class PhoneValidator : AbstractValidator<Phone> {
         public PhoneValidator() {
             RuleFor (Phone => Phone.PhoneNumber).NotNull ();
