@@ -86,13 +86,36 @@ namespace CSharp.Plugin {
         
     }
 
+
+
+    public enum PersonValidator_flag
+    {
+        DependentRules,
+        All,   
+    }
     public class PersonValidator : AbstractValidator<Person> {
         public PersonValidator () {
             RuleFor (person => person.Name).NotNull ();
         }
 
-
     }
+    public class PersonValidator_DependentRules : AbstractValidator<Person> {
+        public PersonValidator_DependentRules () {
+            RuleFor (person => person.Name)
+            .NotNull ()
+            //相依於前一個檢查條件,成功才會往下執行到這一條 
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.Name).NotNull();
+            });
+        }
+    }
+
+ 
+
+
+
+
     public class PhoneValidator : AbstractValidator<Phone> {
         public PhoneValidator() {
             RuleFor (Phone => Phone.PhoneNumber).NotNull ();

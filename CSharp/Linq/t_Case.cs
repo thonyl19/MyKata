@@ -104,6 +104,15 @@ namespace CSharp.Linq {
             var _r = aOnlyNumbers.ToArray();
         }
 
+        /// <summary>
+        /// https://dotblogs.com.tw/invercent914/2016/01/14/175006
+        /// </summary>
+        [TestMethod]
+        public void t_空值判斷寫法(){
+            var _x = Sample.Case1().phones;
+            var  firstItemValue = _x.FirstOrDefault()?.Person?.Name?? "替代值";
+        }
+
          
         
     }
