@@ -6,6 +6,8 @@ namespace CSharp.Linq
     {
         public string Name { get; set; }
 
+        public string Addres { get; set; }
+
 		public string name(){
 			return Name.ToLower();
 		}
@@ -15,6 +17,8 @@ namespace CSharp.Linq
     {
         public string PhoneNumber { get; set; }
         public Person Person { get; set; }
+
+		 
     }
 
 	public class Case1 {
