@@ -11,13 +11,16 @@ Cypress.on('window:before:load', (win) => {
 	Login(){
 		cy.visit('https://mma.sinopac.com/MemberPortal/Member/MMALogin.aspx');
 		cy.get('.rowElem:eq(0) input')
-			.type(id);
+			.type('id');
 		cy.get('.rowElem:eq(1) input')
-			.type('....');
-
-		// cy.get('.rowElem:eq(3) input')
-		// 	.focus();
-		cy.get(".xxxxx", { timeout: 60*1000 });
+			.type('id');
+		cy.get('.rowElem:eq(2) input')
+			.type('pw');
+		//.focus();
+		cy.get('.rowElem:eq(3) input')
+			.focus();
+		cy.wait(60*1000);
+		cy.get(".xxxxx", );
 		// cy.get('#Account').type('admin'); 
 		// cy.get('#Password').type('gtimes135');
 		// cy.get('.btn').click();
