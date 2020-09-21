@@ -9,6 +9,7 @@ namespace CSharp.Linq
 		public string name(){
 			return Name.ToLower();
 		}
+		public int Age{get;set;}
     }
 
     public class Phone

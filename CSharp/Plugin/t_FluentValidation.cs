@@ -117,6 +117,29 @@ namespace CSharp.Plugin {
                 .Validate (model_1);
             var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
         }
+
+        /// <summary>
+        /// https://docs.fluentvalidation.net/en/latest/index.html?highlight=when#example
+        /// </summary>
+        [TestMethod]
+        public void t_When() {
+            var model_1 = new Person { 
+                Name= null ,
+                Age = 10
+            };
+            var _v8n = new PersonValidator(PersonValidator_flag.When)
+                .Validate (model_1);
+            var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
+        }
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/56648664/notempty-validation-for-multiple-fields
+        /// </summary>
+        [TestMethod]
+        public void t_RuleForParams() {
+            //待研究 
+        }
+        
     }
 
 
@@ -124,7 +147,8 @@ namespace CSharp.Plugin {
     public enum PersonValidator_flag
     {
         DependentRules,
-        All,   
+        All,  
+        When, 
     }
     public class PersonValidator : AbstractValidator<Person> {
         public PersonValidator () {
@@ -150,6 +174,12 @@ namespace CSharp.Plugin {
                     Include(new PersonValidator());
                     Include(new PersonValidator(PersonValidator_flag.DependentRules));
                     Include(new PersonValidator_DependentRules());
+                    break;
+                case PersonValidator_flag.When:
+                    RuleFor(x => x.Name).NotNull()
+                        .When(x => x.Age > 0)
+                        .WithMessage("當 Age > 0 , Name 不得為 Null")
+                        ;
                     break;
             }
         }
