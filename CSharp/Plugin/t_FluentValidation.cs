@@ -76,47 +76,14 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
         public void t_複雜特性() {
-            var model_1 = new Phone { 
+            var model_1 = new Phone {
                 PhoneNumber= null ,
                 Person = new Person{ Name = null}
             };
             var result_1 = new PhoneValidator().Validate (model_1);
         }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [TestMethod]
-        public void t_DependentRules() {
-            var model_1 = new Person { 
-                Name= null 
-            };
-            var result_1 = new PersonValidator_DependentRules().Validate (model_1);
-        }
-
-        [TestMethod]
-        public void t_複合式應用() {
-            var model_1 = new Person { 
-                Name= null 
-            };
-            var result_1 = new PersonValidator(PersonValidator_flag.All)
-                .Validate (model_1);
-        }
-
-
-        /// <summary>
-        /// 把全部的錯誤訊息提出
-        /// </summary>
-        [TestMethod]
-        public void t_訊息處理() {
-            var model_1 = new Person { 
-                Name= null 
-            };
-            var _v8n = new PersonValidator(PersonValidator_flag.All)
-                .Validate (model_1);
-            var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
-        }
+ 
+        
 
         /// <summary>
         /// https://docs.fluentvalidation.net/en/latest/index.html?highlight=when#example
@@ -206,5 +173,7 @@ namespace CSharp.Plugin {
             RuleFor (Phone => Phone.PhoneNumber).NotNull ();
             RuleFor(Phone => Phone.Person).SetValidator(new PersonValidator());
         }
+
+
     }
 }

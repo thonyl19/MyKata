@@ -1,0 +1,18 @@
+namespace CSharp.WebApi {
+	public class SampleController : Controller {
+		public ISampleService SampleService { get; set; }
+
+		//// 尚未套用Ioc，暫時直接初始化
+		public SampleController () : this (new SampleService ()) { }
+
+		public SampleController (ISampleService sampleService) {
+			this.SampleService = sampleService;
+		}
+
+		public ActionResult Index () {
+			var data = this.SampleService.GetSamples ();
+
+			return Json (data, JsonRequestBehavior.AllowGet);
+		}
+	}
+}
