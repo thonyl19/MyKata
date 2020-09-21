@@ -38,7 +38,30 @@ namespace CSharp.Linq
 						  
 			//linqStament;			
         }
-         
+
+		 
+		[TestMethod]
+        /// <summary>
+        /// 以群組化的語法組合成 json 格式的資料
+        /// </summary>
+		public void t_L02()
+        {
+			var x = sample1() ;
+			var linqStament = (from p in x
+						group p by new { p.Name ,p.Code} into g
+						select new 
+						  	{ Name = g.Key.Name
+							  , GRP = (from p1 in x
+							  			where p1.Name == g.Key.Name
+										select new {p1.Code,p1.QTY})
+										.ToList()})
+						.ToList();
+			MyKata.Lib.FileApp.Write_SerializeJson
+				(linqStament,
+				MyKata.Lib.FileApp.ts_Log("test.json")
+				);			  
+			
+        }
 		
     }
 
