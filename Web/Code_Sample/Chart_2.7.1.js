@@ -1,7 +1,9 @@
-﻿var __fn = ($, _, styled, Vue, moment, chart, VueChartJs) => {
+﻿var __fn = ($, _, styled, Vue, moment, chart, VueChartJs,
+  elementResizeDetectorMaker
+  ) => {
   debugger;
-  let { Line, Bar, mixins } = VueChartJs;
-  // const { reactiveProp } = mixins;
+  let { Line, Bar, mixins  } = VueChartJs;
+  const { reactiveProp,reactiveData   } = mixins;
   let _data = {
     Bar() {
       return {
@@ -44,7 +46,7 @@
       };
     },
   };
-  let Views = {
+  let VueChartJs基本用法 = {
     Bar_case1() {
       var _note = `
           <pre>
@@ -101,8 +103,100 @@
         },
       };
       return _obj;
+	},
+	'~reactiveData '() {
+		var _note = `
+		   <pre>
+		   ！實作未完成
+		   reactiveData 创建一个本地的chartData变量, 不是props参数! 
+		   以及创建一个对这个变量的 watcher. 如果你需要单一目的的图表, 
+		   以及在图表组件中进行API调用的时候, 这将非常有用
+		   [Ref]https://vue-chartjs.org/zh-cn/guide/#%E6%9B%B4%E6%96%B0-charts
+		   </pre>
+		   `;
+		var _obj = {
+			_css:``,
+			_dyn:{
+				extends: Line,
+				mixins: [reactiveData],
+				mounted () {
+					// this.chartData 在 mixin 创建.
+					// 如果你需要替换 options , 请创建本地的 options 对象
+					this.renderChart(this.chartData, this.options)
+				}	 
+			},
+			 
+		};
+		return _obj;
+	},
+    'reactiveProp'() {
+        var _note = `
+		<pre>
+		[Ref]https://vue-chartjs.org/zh-cn/guide/#%E6%9B%B4%E6%96%B0-charts
+		搭配 reactiveProp 將 chart 封裝後,程序內會自动创建名为 chartData 的props参数, 
+		并为这个参数添加vue watch. 当数据改变, 如果数据在数据集中改变, 
+		它将调用update(); 如果添加了新的数据集, 它将调用renderChart() 
+		</pre>
+		`;
+		var _dyn={
+			extends: Line,
+			mixins: [reactiveProp],
+			props: ['options'],
+			mounted () {
+				// this.chartData 在 mixin 创建.
+				// 如果你需要替换 options , 请创建本地的 options 对象
+				this.renderChart(this.chartData, this.options)
+			}	 
+		};
+        var _obj = {
+			_css:``,
+			_dyn,
+            _vue: {
+				components: {
+					LineChart:_dyn
+				},
+                template: `
+                    <div>
+                    ${_note}
+					<button @click="fillData()">Randomize</button>
+					{{datacollection}}
+                    <line-chart :chart-data="datacollection" height="150px" />
+                    </div>
+                `,
+                data(){
+                    return {
+                      datacollection: null,
+                    }
+                }, 
+                mounted() {
+					this.fillData();
+				},
+				methods:{
+					fillData() {
+						this.datacollection = {
+						  labels: [this.getRandomInt(), this.getRandomInt()],
+						  datasets: [
+							{
+							  label: "Data One",
+							  backgroundColor: "#f87979",
+							  data: [this.getRandomInt(), this.getRandomInt()],
+							},
+							{
+							  label: "Data One",
+							  backgroundColor: "#f87979",
+							  data: [this.getRandomInt(), this.getRandomInt()],
+							},
+						  ],
+						};
+					  },
+					getRandomInt() {
+						return Math.floor(Math.random() * (50 - 5 + 1)) + 5;
+					},
+				}
+             }
+        };
+        return _obj;
     },
-
     std1() {
       var _note = `
          <pre>
@@ -244,7 +338,7 @@
   };
 
   let RWD = {
-    原生語法() {
+    'Chart原生方法'() {
       var _note = `
          <pre>
          https://codepen.io/chartjs/pen/YVWZbz
@@ -261,7 +355,7 @@
            position: relative;
            margin: auto;
            height: 80vh;
-           width: 80vw;
+           width: 70vw;
          }
          
          `,
@@ -281,7 +375,7 @@
       };
       return _obj;
     },
-    vueChat用法() {
+    'vueChat用法'() {
       var _note = `
           <pre>
           </pre>
@@ -296,7 +390,7 @@
            position: relative;
            margin: auto;
            height: 80vh;
-           width: 80vw;
+           width: 70vw;
          }
          
          `,
@@ -313,135 +407,109 @@
       };
       return _obj;
     },
-    flex() {
-      var _note = `
+    '*flex'() {
+      	var _note = `
          <pre>
+         reactiveProp 搭配 elementResizeDetectorMaker
          </pre>
          `;
-      var dyn = {
-        extends: Line,
-        mixins: [reactiveProp],
-        props: ["chartData", "options"],
-        mounted() {
-          this.renderChart(this.chartData, this.options);
-        },
-      };
-      var _obj = {
-        _css: `
-               .flex{
-                  display:flex;
-                  flex-direction: column;
-               }
-               .f-g1{
-                  flex-grow: 1;
-                  border:1px dotted red;
-               }
-                
-                
-                .chart-container {
-                  position: relative;
-                  margin: auto;
-                }
-            `,
-        /*
-            <div class="chart-container">
-                                 <canvas id="chart"></canvas>
-                              </div>
-            */
-        _vue: {
-          template: `
-                  <div>
-                     ${_note}
-                     <div>
-                        <input type="range" min="10" max="90" v-model.number="width">[width]{{range_w}}%
-                        <input type="range" min="10" max="50" v-model.number="height">[height]{{range_h}}vh<br />
-                        <div ref="wrap_div" class="flex" :style="{width:range_w+'%',height:range_h+'vh'}">
-                           <div class="f-g1" >
-                              <line-chart class="chart-container"
-                                 :chartData="char_1.data"
-                                 :options="char_1.options"
-                                 :styles="myStyles"
-                                 />
-                           </div>
-                           <div class="f-g1"><br/></div>
-                           <div class="f-g1"  ><br/></div>
-                        </div>
-                     </div>
-                  </div>
-                  `,
-          components: { "line-chart": dyn },
-          data() {
-            return {
-              hh: 10,
-              width: 90,
-              height: 50,
-              char_1: _data.Bar(),
-            };
-          },
-          computed: {
-            range_w() {
-              return this.width;
-            },
-            range_h() {
-              return this.height;
-            },
-            myStyles() {
-              return {
-                height: `${this.hh}px`,
-                position: "relative",
-              };
-            },
-          },
-          mounted() {
-            this.t02();
+		 let {_dyn} = VueChartJs基本用法.reactiveProp();
+		var _obj = {
+			_css: `
+				.flex{
+					display:flex;
+					flex-direction: column;
+				}
+				.f-g1{
+					flex-grow: 1;
+					border:1px dotted red;
+				}
+					
+					
+					.chart-container {
+					position: relative;
+					margin: auto;
+					}
+				`,
 
-            /*
-                  $('.f-g1').each((idx,el)=>{
-                     erd.listenTo(el, function(element) {
-                        // console.log($(element));
-                        _self.hh = $(element).height();
-                        $('canvas',element).each((idx,_el)=>{
-                           debugger
-                           _el.parentNode.style.height = `${_self.hh}px`;
-                        })
-                        // 图表自带的重置函数
-                        //_self.$data._chart.update();
-                        //chart.$refs.canvas.parentNode.style.height = `${contall.clientHeight}px`;
-                     })
-                  })
-                  */
-          },
-          methods: {
-            t01() {
-              debugger;
-              var wrap_div = this.$refs.wrap_div;
-              const erd = elementResizeDetectorMaker({
-                strategy: "scroll",
-              });
-              erd.listenTo(wrap_div, function (element) {
-                console.log(element);
-                // 图表自带的重置函数
-                //_self.$data._chart.update();
-                //chart.$refs.canvas.parentNode.style.height = `${contall.clientHeight}px`;
-              });
-            },
-            t02() {
-              var _self = this;
-              var wrap_div = this.$refs.wrap_div;
-              const erd = elementResizeDetectorMaker({
-                strategy: "scroll",
-              });
-              erd.listenTo(wrap_div, function (element) {
-                _self.hh = $(".f-g1:eq(0)", element).height();
-                // .each((idx,el)=>{
-                //    $(el).height
-                // })
-              });
-            },
-          },
-        },
-      };
-      return _obj;
+			_vue: {
+			template: `
+					<div>
+						${_note}
+						<div>
+							<input type="range" min="10" max="90" v-model.number="width">[width]{{range_w}}%
+							<input type="range" min="10" max="50" v-model.number="height">[height]{{range_h}}vh<br />
+							<div ref="wrap_div" class="flex" :style="{width:range_w+'%',height:range_h+'vh'}">
+							<div class="f-g1" >
+								<line-chart class="chart-container"
+									:chartData="char_1.data"
+									:options="char_1.options"
+									:styles="myStyles"
+									/>
+							</div>
+	
+							</div>
+						</div>
+					</div>
+					`,
+			components: { "line-chart":_dyn  },
+			data() {
+				return {
+				hh: 10,
+				width: 90,
+				height: 50,
+				char_1: _data.Bar(),
+				};
+			},
+			computed: {
+				range_w() {
+				return this.width;
+				},
+				range_h() {
+				return this.height;
+				},
+				myStyles() {
+					return {
+						height: `${this.hh}px`,
+						position: "relative",
+					};
+				},
+			},
+			mounted() {
+				//this.t02();
+	
+			},
+			methods: {
+				t01() {
+				debugger;
+				var wrap_div = this.$refs.wrap_div;
+				const erd = elementResizeDetectorMaker({
+					strategy: "scroll",
+				});
+				erd.listenTo(wrap_div, function (element) {
+					console.log(element);
+					// 图表自带的重置函数
+					//_self.$data._chart.update();
+					//chart.$refs.canvas.parentNode.style.height = `${contall.clientHeight}px`;
+				});
+				},
+				t02() {
+				var _self = this;
+				var wrap_div = this.$refs.wrap_div;
+				const erd = elementResizeDetectorMaker({
+					strategy: "scroll",
+				});
+				erd.listenTo(wrap_div, function (element) {
+					_self.hh = $(".f-g1:eq(0)", element).height();
+					// .each((idx,el)=>{
+					//    $(el).height
+					// })
+				});
+				},
+			},
+			},
+		};
+		return _obj;
     },
     "?Dashboard"() {
       var _note = `
@@ -489,7 +557,7 @@
   };
 
   return {
-    Views,
+    VueChartJs基本用法,
     RWD,
     QA,
   };
@@ -504,7 +572,8 @@
 			VueChartJs: [
 				"https://cdn.jsdelivr.net/npm/vue-chartjs@3.5.1/dist/vue-chartjs"
 				,"https://unpkg.com/vue-chartjs/dist/vue-chartjs"
-				],
+        ],
+      ElementResize:'https://cdn.jsdelivr.net/npm/element-resize-detector@1.2.1/dist/element-resize-detector.min'
 		},
 		map: {
 			'chart.js': {
@@ -527,7 +596,8 @@
 		"vue",
 		'moment',
 		'chart',
-		'VueChartJs'
+    'VueChartJs',
+    'ElementResize'
 	];
   	
 	if (typeof define === "function" && define.amd) {

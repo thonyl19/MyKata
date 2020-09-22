@@ -11,11 +11,11 @@ Cypress.on('window:before:load', (win) => {
 	Login(){
 		cy.visit('https://mma.sinopac.com/MemberPortal/Member/MMALogin.aspx');
 		cy.get('.rowElem:eq(0) input')
-			.type('id');
+			.type('e122085379');
 		cy.get('.rowElem:eq(1) input')
-			.type('id');
+			.type('thony1');
 		cy.get('.rowElem:eq(2) input')
-			.type('pw');
+			.type('EL1904');
 		//.focus();
 		cy.get('.rowElem:eq(3) input')
 			.focus();
