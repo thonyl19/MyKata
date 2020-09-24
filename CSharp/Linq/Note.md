@@ -1,3 +1,6 @@
+### 待實作
+https://stackoverflow.com/questions/43570178/how-to-convert-dictionarystring-object-to-listt
+
 ### Ref
 https://github.com/linq2db/linq2db/tree/master/Source/LinqToDB
 
