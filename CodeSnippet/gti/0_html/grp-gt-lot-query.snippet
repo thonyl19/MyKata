@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>grp-gt-lot-query</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>grp-gt-lot-query</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="html" Delimiter="$"><![CDATA[<gt-lot-query :label="i18n.LOT" v-model="LOT"
+        placeholder="@RES.BLL.Message.PleaseScanTheBarcodeOrUseKeywords"
+	    :callback="QueryLOT"
+        :check_repeat="tableData"></gt-lot-query>
+
+QueryLOT(LOT) {
+    let { ROUTE_VER_OPER_SID, OPERATION } = LOT;
+	var isFirstLot = this.lot_list.length == 0;
+	if (isFirstLot) {
+		this.ROUTE_VER_OPER_SID = ROUTE_VER_OPER_SID;
+		this.form.OPERATION = OPERATION;
+		this.lot_list.push(LOT);
+	} else {
+		var isSameOPER = this.ROUTE_VER_OPER_SID == ROUTE_VER_OPER_SID
+		if (isSameOPER) {
+			this.lot_list.push(LOT);
+		} else {
+			this.$Alert.Err(this.i18n.msg_MustSameOPER);
+		}
+	}
+},]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

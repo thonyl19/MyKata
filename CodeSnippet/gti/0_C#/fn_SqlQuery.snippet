@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>gti_mvc_IResult</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>gti_mvc_IResult</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>fn</ID>
+          <ToolTip>
+          </ToolTip>
+          <Default>fn</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp" Delimiter="$"><![CDATA[        public xResult $fn$()
+		{
+			var _r = new Result(true);
+			using (var dbc = mes.dbc())
+			{
+				var _sql = @"
+					UPDATE  ZZ_OPER_WORKT_SUMMARY
+					SET		STATUS = 'N'
+					WHERE	STATUS = 'I'
+							AND WORK_DATE BETWEEN :starDate AND :endDate
+							AND (:SHIFT_SID is null OR SHIFT_SID = :SHIFT_SID)
+							AND (:LINE_SID is null OR LINE_SID = :LINE_SID)
+							AND (:OPERATION_SID is null OR OPERATION_SID = :OPERATION_SID)
+				";
+				var currentUser = true
+						? new CurrentLoginUserModel() { UserName = "admin_test" }
+						: GetLoginUser();
+				string starDate = Convert.ToDateTime(WORK_DATE).ToString("yyyy-MM-dd") + " 00:00:00";
+				string endDate = Convert.ToDateTime(WORK_DATE).ToString("yyyy-MM-dd") + " 23:59:59";
+
+				_sql = dbc.GetCommandText(_sql, SQLStringType.OracleSQLString);
+				try
+				{
+					List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+					parameters.Add(dbc.CreateCommandParameter(":LINK_SID", GetSID()));
+					parameters.Add(dbc.CreateCommandParameter(":CREATE_USER", currentUser.UserName));
+					parameters.Add(dbc.CreateCommandParameter(":starDate", DateTime.Parse(starDate)));
+					parameters.Add(dbc.CreateCommandParameter(":SHIFT_SID", ((object)SHIFT_SID ?? DBNull.Value)));
+					
+					dbc.Execute(_sql, parameters);
+					_r.Data = dbc.Select(_sql, parameters);
+				}
+				catch (Exception Ex)
+				{
+					//this.FileLog.Error(Ex.Message);
+					return new Result(false, ErrCode.False);
+				}
+			}
+			return _r;
+		}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

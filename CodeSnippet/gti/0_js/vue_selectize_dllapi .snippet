@@ -5,7 +5,7 @@
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
       </SnippetTypes>
-      <Title>Partial</Title>
+      <Title>vue_selectize_dllapi </Title>
       <Author>
       </Author>
       <Description>
@@ -16,7 +16,11 @@
       </Shortcut>
     </Header>
     <Snippet>
-      <Code Language="csharp" Delimiter="$"><![CDATA[@Html.Partial("_test")]]></Code>
+      <Code Language="html" Delimiter="$"><![CDATA[	<vue-selectize-dllapi ref="ddl_OPERATION" action="Operation"
+										      :auto_drowdown="true"
+										      :options="ops_OPER"
+										      v-model="OPERATION_SID"
+                                            render_sty="GTIMES" />]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>

@@ -48,8 +48,11 @@
       </Declarations>
       <Code Language="javascript" Delimiter="$"><![CDATA[        $fn$() {
 			var param = $param$;
+            var url 
+                ='@Url.Action("$Action$")';
+                //= this.$$URL.chg_Path(`api/ddl/$${this.action}`,param);
 			var _ajax = {
-				url: '@Url.$Action$("$Action$")',
+				url ,
 				type: '$Verb$',
 				param,
 				success: this.ajax_success
@@ -58,10 +61,12 @@
 		},
 		ajax_success(res) {
 			//debugger
-			let { Success, Message ,Data} = res;
+			let { Success, Message="" ,Data} = res;
 			if (Success) {
-				this.query(this.currentPage)
+				this.query(this.currentPage);
+                //location.replace(location.href);
 			} else {
+                //TODO:Message 不應為空值
 				this.$$Alert.Err(Message);
 			}
 		},]]></Code>

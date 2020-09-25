@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>fn_mvc_create</Title>
+      <Author>
+      </Author>
+      <Description>fk</Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>fn_mvc_create</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>model</ID>
+          <ToolTip>EFModel</ToolTip>
+          <Default>
+          </Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>IResult</ID>
+          <ToolTip>IResult</ToolTip>
+          <Default>IResult</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp" Delimiter="$" Kind="method decl"><![CDATA[public $IResult$ $model$_Create(mdl.$model$ entity, bool isTest = false)
+		{
+			var _InputDataNotExist = RES.BLL.Message.InputDataNotExist;
+			#region check
+			Result result = chk_$model$(entity);
+			if (!result.Success) return result;
+			#endregion
+			using (var dbContext = new MDL.MESContext())
+			{
+				var _svc = new EFRepository<mdl.$model$>(dbContext);
+				try
+				{
+					var currentUser = isTest
+						? new CurrentLoginUserModel() { UserName = "admin_test" }
+						: GetLoginUser();
+					entity.CREATE_USER
+						= entity.UPDATE_USER
+						= currentUser.UserName;
+					entity.CREATE_DATE
+						= entity.UPDATE_DATE
+						= GetSysDBTime();
+					entity.SID
+						= entity.ACTION_LINK_SID
+						= GetSID();
+
+					var _AD_LOG = new mdl.AD_LOG()
+					{
+						FUN_NAME = "Maintain",
+						ACTION = "INSERT",
+						TARGET_TABLE = "$model$",
+						TARGET_PK = entity.SID,
+						TARGET_IDENTITY = entity.LOT,
+						CREATE_USER = entity.CREATE_USER,
+						CREATE_DATE = entity.CREATE_DATE,
+					};
+					dbContext.AD_LOG.Add(_AD_LOG);
+
+					_svc.Create(entity);
+					_svc.SaveChanges();
+				}
+				catch (Exception ex)
+				{
+
+					result.Success = false;
+					result.Message = ex.Message;
+				}
+				result.Data = entity;
+				return result;
+
+			}
+		}
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>fun_Save</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>fun_Save</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>Action</ID>
+          <ToolTip>Action</ToolTip>
+          <Default>Action</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="javascript" Delimiter="$"><![CDATA[Save()
+{
+	var _self = this;
+    //TODO-i18n:
+	this.$$confirm(_self.i18n.Save_confirm, _self.i18n.Alert, _self.confirm_arg).then(() => {
+        /*
+        var url 
+            ='@Url.$Action$("$Action$")';
+            = this.$$URL.chg_Path(`api/ddl/$${this.action}`,param);
+        */
+	    var url = _self.isAddMode
+		    ? '@Url.$Action$("WORKT_Create")'
+		    : '@Url.$Action$("WORKT_Update")'
+		    ;
+	    var _ajax = {
+		    url,
+		    param: _self.form,
+		    type: 'post',
+		    success: _self.Ajax_success
+	    };
+	    $$.submitForm(_ajax);
+	});
+},
+Save_success(res){
+    let { Success, Message="" ,Data} = res;
+	if (Success) {
+        //TODO-i18n:存檔成功
+		var msg = this.i18n.msg_Success;
+		//Err,Info,Warning,msg_NoData
+		this.$Alert.Success(msg).then(() => {
+			location.replace(location.href);
+		});
+	} else {
+        //TODO:Message 不應為空值
+		this.$$Alert.Err(Message);
+	}
+}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

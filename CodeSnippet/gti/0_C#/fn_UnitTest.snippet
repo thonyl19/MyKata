@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>fn_UnitTest</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp" Delimiter="$"><![CDATA[        [TestMethod]
+		public void t_fn()
+		{
+			dynamic f = new ExpandoObject();
+			using (var dbc = mes.dbc())
+			{
+				var QC_NO = "GTI20092116354270600";
+				List<IDbDataParameter> parameters = new List<IDbDataParameter>();
+				dbc.AddCommandParameter(parameters, "QC_NO", QC_NO);
+
+				f = QMSService.parseEdcInput(dbc, QC_NO);
+			}
+			FileApp.Write_SerializeJson(f, _log.t_QCResult, null);
+		}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

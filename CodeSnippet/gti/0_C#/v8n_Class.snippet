@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Class_v8n</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp" Delimiter="$"><![CDATA[using BLL.DataViews.Res;
+using BLL.InterFace;
+using FluentValidation;
+using System.Linq;
+using mdl = MDL.MES;
+
+namespace BLL.MES.FluentValidation
+{
+	public class v8n_QC_INSP : AbstractValidator<mdl.QC_INSP>
+	{
+		public v8n_QC_INSP()
+		{
+			//TODO-i18n:INSP_NO
+			RuleFor(x => x.INSP_NO).NotEmpty().WithName("表單代碼");
+			RuleFor(x => x.INSP_NAME).NotEmpty().WithName("表單名稱");
+			RuleFor(x => x.INSP_SID).NotEmpty().WithMessage(ErrCode.MustHaveInput);
+			RuleFor(x => x.ENABLE_FLAG).NotEmpty().WithMessage(ErrCode.MustHaveInput);
+			RuleFor(x => x.QUOTE_ONCE).NotEmpty().WithMessage(ErrCode.MustHaveInput);
+		}
+
+
+		/// <summary>
+		/// 檢核資料,一併做相應的初始化
+		/// </summary>
+		/// <param name="LoginUser"></param>
+		/// <param name="mainObj"></param>
+		/// <param name="isAdd"></param>
+		/// <returns></returns>
+		public static Result chk(CurrentLoginUserModel LoginUser, mdl.QC_INSP mainObj, bool isAdd = false)
+		{
+			var _dbc = mes.dbc();
+			mainObj.UPDATE_USER = LoginUser.UserName;
+			mainObj.UPDATE_DATE = _dbc.GetDBTime();
+			if (isAdd)
+			{
+				mainObj.ENABLE_FLAG = "T";
+				mainObj.QUOTE_ONCE = "F";
+				mainObj.INSP_SID = _dbc.GetSID();
+				mainObj.CREATE_USER = mainObj.UPDATE_USER;
+				mainObj.CREATE_DATE = mainObj.UPDATE_DATE;
+			}
+
+			var _v8n = new v8n_QC_INSP().Validate(mainObj);
+			return Result.v8n(_v8n);
+		}
+
+	}
+}
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
