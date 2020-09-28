@@ -594,7 +594,6 @@ var _note = {
                     template:`
                     <div>
                         <pw-debug v-bind="$attrs"/>
-                        <div v-if="debug!=false">{{debug}}</div>
                         <el-tabs :type="tab_type" v-model="val">
                             <el-tab-pane
                                 v-for="(tab,key,idx) in tabs" 

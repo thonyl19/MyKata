@@ -2057,7 +2057,7 @@ var __fn = (
 		},
 	}
 	var 程式產生器 = {
-		'el-table-column'() {
+		'*el-table-column'() {
 			var _note = `
 			   <pre>
 			   </pre>
@@ -2068,7 +2068,7 @@ var __fn = (
 					template: `
 						<div>
 						${_note}
-						<pw-tabs v-model="base"  ></pw-tabs>
+						<pw-tabs-n v-model="base"  ></pw-tabs-n>
 						</div>
 					`,
 					data(){
@@ -2139,17 +2139,19 @@ var __fn = (
 					template: `
 						<div>
 						${_note}
-						{{RowIdx}}<br>
+						{{currentRow}}<br>
 						<el-table
 							:data="tableData"
 							style="width: 100%"
+							highlight-current-row
 							:row-class-name="row_sty"
+							@current-change="handleCurrentChange"
 							>
 								<el-table-column
 									label="Edit"
 									width="180">
 									<template slot-scope="scope">
-										<button @click="Edit(scope.$index)">edit</button>
+										<button @click="Edit(scope)">edit</button>
 									</template>
 								</el-table-column>
 								<el-table-column
@@ -2166,19 +2168,40 @@ var __fn = (
 					`,
 					data(){
 						return {
-							RowIdx:-1,
+							//RowIdx:-1,
+							currentRow:null,
 							tableData:window.gEx.mydata
 						}
 					},
+					watch:{
+						currentRow() {
+							if (this.currentRow == null) {
+								window.removeEventListener("keyup", this.onEscapeKeyUp);
+							} else {
+								window.addEventListener("keyup", this.onEscapeKeyUp);
+							}
+						}
+					},
 					methods:{
-						Edit(idx){
-							debugger
-							this.RowIdx = idx;
+						onEscapeKeyUp(event) {
+							if (event.which === 27) {
+								this.currentRow = null;
+							}
 						},
-						row_sty(row){
+						Edit(scope){
 							debugger
-							let {rowIndex} =row;
-							return rowIndex == this.RowIdx ? "edit-row":"";
+							//this.RowIdx = scope.$index;
+							this.currentRow = scope.row;
+						},
+						row_sty(item){
+							debugger
+							let {rowIndex,row} =item;
+							var isEditRow = row===this.currentRow;
+							return isEditRow ? "edit-row":"";
+						},
+						handleCurrentChange(val) {
+							debugger
+							this.currentRow = val;
 						}
 					}
 				}

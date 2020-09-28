@@ -1829,8 +1829,47 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             return _obj;
         },
     }
+    var event = {
+        'keyup.esc in Page'() {
+            var _note = `
+            <pre>
+            [ref]https://stackoverflow.com/questions/49042667/vuejs-keyup-esc-on-div-element-is-not-working
+            </pre>
+            `;
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div @keyup.esc="Exec" tabindex="0">
+                        ${_note}
+        
+                    </div>
+                    `,
+                    data(){
+                        return {}
+                    },
+                    created() {
+                        document.onkeydown = evt => {
+                            alert('get ESC !');
+                            evt = evt || window.event;
+                            if (evt.keyCode == 27) {
+                                
+                                this.$emit("close");
+                            }
+                        };
+                    }
+                    ,methods: {
+                        Exec(){
+                            alert('get ESC !');
+                        }
+                    },
+                }
+            };
+            return _obj;
+        },
+    }
     
-    return  { API, Views, Props, rxjs, Fail ,Slot ,PlugIn  }
+    return  { API, Views, Props, rxjs, Fail ,Slot ,PlugIn , event }
 }
 
 

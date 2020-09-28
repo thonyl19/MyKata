@@ -1,4 +1,9 @@
-﻿//styled,vue,jss
+﻿/*
+jquery-awesome-cursor
+
+*/
+
+
 var __fn = ($,_,Vue)=>{
 	debugger
 	let views = {
