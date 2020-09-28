@@ -2,15 +2,18 @@
 	$, _ , styled, Vue
 )=> 
 {
-	var 可用套件 ={
+	var 基本應用 ={
  	}
- 	return { 可用套件};
+ 	return { 基本應用};
 }
 (function () {
 	var arr = [
-		"jquery","lodash","styled","vue",
- 	];
-	define(arr, __fn);
+		"jquery","lodash","styled","vue"
+	 ];
+	if (typeof define === 'function' && define.amd) {
+		define({arr, __fn});
+	}else{
+		window.sample = __fn();
+	}
 }());
-
  

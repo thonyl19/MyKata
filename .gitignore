@@ -11,3 +11,5 @@ Guriddo_jqGrid_JS_5_4_X_demo.zip
 /_demo.*
 
 _demo_備份.mdb
+
+Web/cypress/integration/mma_spec.js

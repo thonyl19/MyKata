@@ -855,6 +855,7 @@ var __fn = (
 						},
 						ConfigA:{
 							//is:'pw-tabs-n',
+
 							tabs:{
 								AAAAA:{
 									is:'el-input'
@@ -869,6 +870,13 @@ var __fn = (
 				}
 			}
 		},
+		/*
+		
+		'@Tabs':{
+			is:'pw-tabs'
+		}
+		
+		*/
 	}
 	let Vue_Prd = {
 		'*pw-dyn-ui'() {

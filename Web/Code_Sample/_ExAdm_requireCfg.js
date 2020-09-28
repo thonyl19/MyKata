@@ -93,6 +93,7 @@ window.gEx = {
 		Chart:[
 			'c3_0.7.15',
 			'Chart_2.7.1',
+			'echarts4.7.0',
 			'echarts',
 		],
 		Tool:[
