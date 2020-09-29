@@ -98,6 +98,7 @@ window.gEx = {
 		],
 		Tool:[
 			'selectize_0.12.6',
+			'jquery_ex',
 			'jquery_dataTables',
 			'froala_2.7',
 			'layer_2.3',

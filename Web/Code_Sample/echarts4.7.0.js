@@ -135,6 +135,7 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 		'*動態數據'() {
 			var _note = `
 			   <pre>
+			   [Ref]https://blog.csdn.net/weixin_43606158/article/details/96457167?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.add_param_isCf&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.add_param_isCf
 			   </pre>
 			   `;
 			var _obj = {
