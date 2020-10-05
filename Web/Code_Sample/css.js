@@ -884,7 +884,7 @@ var __fn = ($,_,Vue)=>{
 		},
 	}
 	let Table = {
-		'Case1'() {
+		'*Case1'() {
 			var _note = `
 			  <pre>
 			  1.字體隨著版面動態放大
@@ -894,7 +894,7 @@ var __fn = ($,_,Vue)=>{
 			  `;
 			var _obj = {
 				_css: `
-			  .xtpl-b01 {
+			  .sty-1 {
 				//讓表格格線變細 , 需搭配 border="1"
 				border-collapse: collapse;
 				border-spacing: 0;
@@ -919,32 +919,74 @@ var __fn = ($,_,Vue)=>{
 	  
 				height:40vh;
 			}
-			.xtpl-b01 tr {
-			  background: #f4f4f4;
-		  }
+			.sty-1 tr {
+				background: #f4f4f4;
+			}
+			.sty-2 {
+				height:40vh;
+				font-size: 2.35vmin;
+				text-align: center;
+				width: 97%;
+				font-family: Arial, Helvetica, sans-serif;
+				color: white;
+				margin: 2rem;
+				background-color:#14224a;
+			}
+			.sty-2 .list{
+				background-color: rgba(255, 255, 255, 0.45);
+			}
+			
+			//.sty-2 td.list:nth-of-type(2),
+			//.sty-2 td.list:not(:first-child)
+			.sty-2 td.list:last-of-type(1){
+				border-radius: 0 0 30px 30px;
+			}
+			.sty-2 .z-left{
+				background-color: rgba(12, 107, 156,0.5);
+			}
+			.sty-2 .z-right{
+				background-color: rgba(82, 191, 200,.45);
+			}
 			  `,
 				_vue: {
 					template: `
 					<div>
 					   ${_note}
-					   <table class="xtpl-b01"  border="1"  >
+					   	<el-select v-model="set_sty" >
+							<el-option
+								v-for="item in options"
+								:key="item"
+								:label="item"
+								:value="item">
+							</el-option>
+					 	</el-select>
+					   <table :class="[set_sty]"  border="1"  >
 						  <tr height="30%">
-							  <td width="60%">待投工單數</td>
-							  <td>30</td>
+							  <td width="60%" class="z-left">待投工單數</td>
+							  <td class="z-right">30</td>
 						  </tr>
 						  <tr height="20%">
-							  <td colspan="2">明細 List...</td>
+							  <td colspan="2" class="list">明細 List...</td>
 						  </tr>
 						  <tr height="30%">
-							  <td>在製工單數</td>
-							  <td>700</td>
+							  <td class="z-left">在製工單數</td>
+							  <td class="z-right">700</td>
 						  </tr>
 						  <tr height="20%">
-							  <td colspan="2">明細 List...</td>
+							  <td colspan="2" class="list">明細 List...</td>
 						  </tr>
 					  </table>
 					</div>
 					`
+					,data(){
+						return{
+							set_sty:'sty-2',
+							options:[
+								'sty-1',
+								'sty-2'
+							]
+						}
+					}
 				}
 			};
 			return _obj;

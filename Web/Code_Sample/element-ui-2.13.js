@@ -232,7 +232,6 @@ var __fn = (
 			</pre>
 			`;
 			var dyn = {
-				
 					template: `
 						<el-switch v-model.num="fixedTip"
 							active-value=2
