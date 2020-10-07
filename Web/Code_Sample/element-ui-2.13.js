@@ -9,33 +9,7 @@ var __fn = (
 {
 	//debugger;
 	let Views = {
-		'el-checkbox'() {
-			var _note = `
-			<pre>
-			true/false label 應用實例
-			</pre>
-			`;
-			var _obj = {
-				_css:``,
-				_vue: {
-					template: `
-					<div>
-						${_note}
-						<el-checkbox v-model="checked1" label="备选项1" true-label="A" false-label="B" border></el-checkbox>
-						<el-checkbox v-model="checked2" label="备选项2" border></el-checkbox>
-						{{[checked1,checked2]}}
-					</div>
-					`,
-					data(){
-						return {
-							checked1: "",
-							checked2: false,
-						}
-					}
-				}
-			};
-			return _obj;
-		},
+
 		'巢狀 el-tabs 範例'() {
 			var _note = `
 			   <pre>
@@ -2194,8 +2168,8 @@ var __fn = (
 			return _obj;
 		},
 	}
-	var Pagination = {
-		'*def'() {
+	var 原生元件 = {
+		'Pagination'() {
 			var _note = `
 			   <pre>
 			   </pre>
@@ -2261,8 +2235,35 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'el-checkbox'() {
+			var _note = `
+			<pre>
+			true/false label 應用實例
+			</pre>
+			`;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<el-checkbox v-model="checked1" label="备选项1" true-label="A" false-label="B" border></el-checkbox>
+						<el-checkbox v-model="checked2" label="备选项2" border></el-checkbox>
+						{{[checked1,checked2]}}
+					</div>
+					`,
+					data(){
+						return {
+							checked1: "",
+							checked2: false,
+						}
+					}
+				}
+			};
+			return _obj;
+		},
 	}
- 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,Pagination,程式產生器};
+ 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,原生元件,程式產生器};
 }
 (function () {
 	var arr = [
