@@ -2,7 +2,7 @@
  
 	*/
 
-var __fn = ($,_,Vue,CountUp,waypoint) => {
+var __fn = ($,_,Vue,CountUp,ICountUp ,waypoint) => {
 	var 輕型套件 = {
 		'CountUp'() {
 			var _note = `
@@ -71,9 +71,28 @@ var __fn = ($,_,Vue,CountUp,waypoint) => {
 			};
 			return _obj;
 		},
-	}  
-	var Waypoint = {
-		'*def'() {
+		'*vue_countUp'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						</div>
+					`,
+					data(){
+						return {
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+		Waypoint(){
 			var _note = `
 			   <pre>
 				[Ref]http://imakewebthings.com/waypoints/guides/getting-started/
@@ -81,18 +100,46 @@ var __fn = ($,_,Vue,CountUp,waypoint) => {
 			   `;
 
 			var list = {
-				base(sty,vm){
-					debugger
-					$(`.sty-${sty}`).waypoint({
-						handler: function() {
-							vm.$notify({
-								message: 'base',
-								type: 'success'
-							  });
-						}
-					})
+				base:{
+					Note:`基礎用例`,
+					Code(key,vm){
+						$(`.sty-${key}`).waypoint({
+							handler() {
+								vm.$notify({
+									message: `[${key}] hit`,
+								});
+							}
+						});
+					}
+				},
+				offset:{
+					Note:`將處理程序選項作為第一個參數傳遞給waypoint`,
+					Code(key,vm){
+						$(`.sty-${key}`).waypoint((direction)=>{
+							var msg = {
+								message: `[${key}] hit 25% from top of window`,
+							}
+							vm.$notify(msg);
+						  }, {
+							offset: '25%'
+						  });
+					}
+				},
+				context:{
+					Note:`將處理程序選項作為第一個參數傳遞給waypoint`,
+					Code(key,vm){
+						var _sel = `.sty-${key}`;
+						$(_sel).waypoint((direction)=>{
+							var msg = {
+								message: `Context example triggered`,
+							}
+							vm.$notify(msg);
+						  }, {
+							context: $(_sel)
+						  });
+					}
 				}
-			}
+			};
 			var _obj = {
 				_css:`
 				.t-sty li {
@@ -105,7 +152,7 @@ var __fn = ($,_,Vue,CountUp,waypoint) => {
 						<div>
 						${_note}
 						<ul class="t-sty">
-							<li v-for="(item,key) in list" :class="'sty-'+key">{{key}}</li>
+							<li v-for="(item,key) in list" :class="'sty-'+key">{{key}}：{{item.Note}}</li>
 						</ul>
 						</div>
 					`,
@@ -117,7 +164,8 @@ var __fn = ($,_,Vue,CountUp,waypoint) => {
 					mounted(){
 						var _self = this;
 						_.each(list,(item,key)=>{
-							item(key,_self);
+							//debugger
+							item.Code(key,_self);
 						})
 					},
 					methods: {
@@ -132,10 +180,10 @@ var __fn = ($,_,Vue,CountUp,waypoint) => {
 			};
 			return _obj;
 		},
-	}
+	}  
+ 
 	return {
-		輕型套件,
-		Waypoint
+		輕型套件 
 	};
 };
 
@@ -143,18 +191,21 @@ var __fn = ($,_,Vue,CountUp,waypoint) => {
 	var cfg = {
 		paths: {
 			countUp:'https://cdn.jsdelivr.net/npm/jquery-countup@1.0.1/src/jquery.countUp.min',
+			//vue_countUp:'https://cdn.jsdelivr.net/npm/vue-countup-v2@4.0.0/dist/countup.umd.min',
 			//'https://cdn.jsdelivr.net/npm/countup.js@2.0.7/dist/countUp.umd',
 			waypoint:'https://cdn.jsdelivr.net/npm/waypoints@4.0.1/lib/jquery.waypoints.min',
 			//counterup:'https://cdn.jsdelivr.net/npm/jquery.counterup@2.1.0/jquery.counterup'
 		},
 		shim:{
 			'countUp':{deps: ["jquery"]},
+			'vue_countUp':{deps: ["countUp"]},
 			'waypoint':{deps: ['jquery']},
 		}
 	};
 
 	var arr = ["jquery", "lodash", "vue"
 		,'countUp'
+		//,'vue_countUp'
 		,'waypoint'
 		//,'counterup'
 	];

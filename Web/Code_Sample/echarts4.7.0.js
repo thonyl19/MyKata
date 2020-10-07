@@ -132,7 +132,7 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 			};
 			return _obj;
 		},
-		'*動態數據'() {
+		'~動態數據和寛高'() {
 			var _note = `
 			   <pre>
 			   [Ref]https://blog.csdn.net/weixin_43606158/article/details/96457167?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.add_param_isCf&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromBaidu-1.add_param_isCf
@@ -147,7 +147,7 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 						${_note}
 						<button @click="test">test</button>
 						<x-tpl-sample-range>
-							<dyn v-model="ops" :size /></dyn>
+							<dyn v-model="ops"   /></dyn>
 						</x-tpl-sample-range>
 						</div>
 					`,
