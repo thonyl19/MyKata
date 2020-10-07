@@ -146,7 +146,15 @@ require
 					type:Number,
 					default:10
 				}
-			}
+			},
+			watch: {
+				i_width(val){
+					this.$emit('update:i_width',val);
+				},
+				i_height(val){
+					this.$emit('update:i_height',val);
+				}
+			},
 		},
 		switch:{
 			template: `
