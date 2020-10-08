@@ -1873,6 +1873,8 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             var _note = `
             <pre>
             [Ref]https://vuejs-tips.github.io/vue-the-mask/
+            https://jsfiddle.net/auom8st8/
+            https://wirecardbrasil.github.io/awesome-examples/
             </pre>
             `;
             var _obj = {
