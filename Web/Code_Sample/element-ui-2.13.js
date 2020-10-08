@@ -9,33 +9,7 @@ var __fn = (
 {
 	//debugger;
 	let Views = {
-		'el-checkbox'() {
-			var _note = `
-			<pre>
-			true/false label 應用實例
-			</pre>
-			`;
-			var _obj = {
-				_css:``,
-				_vue: {
-					template: `
-					<div>
-						${_note}
-						<el-checkbox v-model="checked1" label="备选项1" true-label="A" false-label="B" border></el-checkbox>
-						<el-checkbox v-model="checked2" label="备选项2" border></el-checkbox>
-						{{[checked1,checked2]}}
-					</div>
-					`,
-					data(){
-						return {
-							checked1: "",
-							checked2: false,
-						}
-					}
-				}
-			};
-			return _obj;
-		},
+
 		'巢狀 el-tabs 範例'() {
 			var _note = `
 			   <pre>
@@ -2355,8 +2329,102 @@ var __fn = (
 			return _obj;
 		},
 	}
- 
- 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,程式產生器};
+	var 原生元件 = {
+		'Pagination'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<el-checkbox v-for="(value, name) in object" v-model="object[name]" >{{ name }}</el-checkbox>
+						<el-pagination
+							@size-change="handleSizeChange"
+							@current-change="handleCurrentChange"
+							:current-page="currentPage"
+							:page-size="100"
+							:layout="layouts"
+							:total="1000">
+						</el-pagination>
+						<h3>[slot]</h3>
+						<el-pagination  background  
+							@size-change="handleSizeChange"   
+							@current-change="handleCurrentChange" 
+							:current-page="currentPage"  
+							:page-size="100" layout="slot,pager" :total="1000">
+									<spane class="ensure-btn" >確定</spane>
+									<el-button>button</el-button>
+						</el-pagination>
+						</div>
+					`,
+					data(){
+						return {
+							currentPage:1,
+							
+							object:{
+								total:true,
+								sizes:true,
+								prev:true,
+								pager:true, 
+								next:true, 
+								jumper:true
+							}, 
+						}
+					} ,
+					computed:{
+						layouts(){
+							var arr =   [];
+							_.each(this.object ,(el,key)=>{
+								if (el) arr.push(key);
+							})
+							return arr.join(',');
+						}
+					},
+					methods: {
+						handleSizeChange(val) {
+						  console.log(`每页 ${val} 条`);
+						},
+						handleCurrentChange(val) {
+						  console.log(`当前页: ${val}`);
+						}
+					  },
+				   }
+			};
+			return _obj;
+		},
+		'el-checkbox'() {
+			var _note = `
+			<pre>
+			true/false label 應用實例
+			</pre>
+			`;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<el-checkbox v-model="checked1" label="备选项1" true-label="A" false-label="B" border></el-checkbox>
+						<el-checkbox v-model="checked2" label="备选项2" border></el-checkbox>
+						{{[checked1,checked2]}}
+					</div>
+					`,
+					data(){
+						return {
+							checked1: "",
+							checked2: false,
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+	}
+ 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,原生元件,程式產生器};
 }
 (function () {
 	var arr = [

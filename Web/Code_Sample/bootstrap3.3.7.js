@@ -938,7 +938,7 @@
 		},
 	}
 	var Case = {
-		'*Label'() {
+		'Label'() {
 			var _note = `
 			<pre>
 			</pre>
@@ -1011,7 +1011,65 @@
 			return _obj;
 		},
 	}
- 	return { Views, Tool, Group, Fail, Vue_Prd, Case, List };
+	var Pagination = {
+		'*def'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<el-radio-group v-model="idx" size="small">
+							<el-radio-button v-for="(item) in list" :label="item"></el-radio-button>
+						</el-radio-group><br />
+						<ul class="pagination" :class="size">
+							<li><a href = "#">«</a></li>
+							<li v-for="(n) in 10"><a href="#">{{n}}</a></li>
+						</ul>
+						<nav aria-label="Page navigation example">
+							<ul class="pagination justify-content-end" :class="size">
+								<li class="page-item disabled">
+									<a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+								</li>
+								<li v-for="(n) in 10"><a href="#">{{n}}</a></li>
+								<li class="page-item">
+									<a class="page-link" href="#">Next</a>
+								</li>
+							</ul>
+						</nav>
+						<ul class = "pager">
+							<li><a href = "#">Previous</a></li>
+							<li><a href = "#">Next</a></li>
+						</ul>
+						<ul class = "pager">
+							<li class = "previous"><a href = "#">&larr; Older</a></li>
+							<li class = "next"><a href = "#">Newer &rarr;</a></li>
+						</ul>
+						</div>
+					`,
+					data(){
+						return {
+							list:['sm','lg','def'],
+							idx:'def'
+						}
+					}
+					,computed:{
+						size(){
+							//var _sty = this.list[this.idx];
+							if (this.idx=="def")return "";
+							return 'pagination-'+ this.idx;
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+	}
+ 	return { Views, Tool, Group, Fail, Vue_Prd, Case, List,Pagination };
 }
 (function () {
 	var arr = [
