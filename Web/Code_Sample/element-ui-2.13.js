@@ -603,7 +603,7 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'fmoney'() {
+		'*fmoney'() {
 			var _note = `
 			<pre>
 			https://segmentfault.com/a/1190000022299780
@@ -622,11 +622,17 @@ var __fn = (
 						type:[String,Number],
 						default:null,
 						desc:'Value'
-					}
+					},
+					format: {
+                        type: [Function, String],
+                        default: null,
+                        desc: 'format Function/FunctionName'
+                    }
 				},
 				data(){
 					return {
-						formatVal:''
+						formatVal:'',
+						act_format(){}
 					}
 				},
 				computed: {
@@ -639,7 +645,7 @@ var __fn = (
 								vm.$emit('input',val.replace(/,/g,''));
 							},
 							blur(event){
-								vm.formatVal=vm.fmoney(vm.value);
+								vm.formatVal=vm.act_format(vm.value);
 								if (vm.$listeners.blur){
 									vm.$listeners.blur(event);
 								}
@@ -651,16 +657,27 @@ var __fn = (
 					}
 				},
 				created(){
-					this.formatVal = this.fmoney(this.value);
+					if (this.format == null){
+						this.act_format = this.Thousands;
+					} else if  (_.isFunction(this.format)){
+						this.act_format = this.format;
+					}else if (_.isString(this.format)){
+						this.act_format = this[this.format];
+					}
+					this.formatVal = this.act_format(this.value);
 				},
 				methods:{
-					fmoney(n){
+					//將資料格式化為 千分位
+ 					Thousands(n){
 						debugger
 						if(!n) return n;  
 						let str = n.toString().split('.');  
 						let re = /\d{1,3}(?=(\d{3})+$)/g;  
 						let n1 = str[0].replace(re, "$&,");  
 						return str.length > 1 && str[1] ? `${n1}.${str[1]}` : `${n1}`; 
+					},
+					CellPhone(v){
+						
 					}
 				}
 			};
@@ -671,13 +688,22 @@ var __fn = (
 					template: `
 					<div>
 						${_note}
-						<dyn v-model="formatVal"></dyn>
 						{{formatVal}}
+						<h3>基本用法</h3>
+						<dyn v-model="formatVal"></dyn>
+						<h3>Function</h3>
+						<dyn v-model="formatVal" :format="testFun"></dyn>
 					</div>
 					`,
 					data(){
 						return {
 							formatVal:100
+						}
+					},
+					methods:{
+						testFun(val){
+							debugger
+							return val.toString().replace(/./g,"-");
 						}
 					}
 				}

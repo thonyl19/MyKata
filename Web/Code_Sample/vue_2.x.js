@@ -1868,7 +1868,30 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             return _obj;
         },
     }
-    
+    var PlugIn = {
+        '~vue-the-mask'() {
+            var _note = `
+            <pre>
+            [Ref]https://vuejs-tips.github.io/vue-the-mask/
+            </pre>
+            `;
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                        ${_note}
+        
+                    </div>
+                    `,
+                    data(){
+                        return {}
+                    }
+                }
+            };
+            return _obj;
+        },
+    }  
     return  { API, Views, Props, rxjs, Fail ,Slot ,PlugIn , event }
 }
 
