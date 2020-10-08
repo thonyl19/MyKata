@@ -629,6 +629,87 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'fmoney'() {
+			var _note = `
+			<pre>
+			https://segmentfault.com/a/1190000022299780
+			</pre>
+			`;
+			var dyn = {
+				inheritAttrs:false,
+				template:`
+					<el-input v-model="formatVal"
+						v-bind="$attrs"
+						v-on="inputEvn"
+					></el-input>
+				`,
+				props:{
+					value:{
+						type:[String,Number],
+						default:null,
+						desc:'Value'
+					}
+				},
+				data(){
+					return {
+						formatVal:''
+					}
+				},
+				computed: {
+					inputEvn(){
+						var vm=this;
+						return Object.assign({},this.$listeners,{
+							input(val){
+								debugger
+								vm.formatVal=val;
+								vm.$emit('input',val.replace(/,/g,''));
+							},
+							blur(event){
+								vm.formatVal=vm.fmoney(vm.value);
+								if (vm.$listeners.blur){
+									vm.$listeners.blur(event);
+								}
+							},
+							focus(event){
+								vm.formatVal = vm.value;
+							}
+						})
+					}
+				},
+				created(){
+					this.formatVal = this.fmoney(this.value);
+				},
+				methods:{
+					fmoney(n){
+						debugger
+						if(!n) return n;  
+						let str = n.toString().split('.');  
+						let re = /\d{1,3}(?=(\d{3})+$)/g;  
+						let n1 = str[0].replace(re, "$&,");  
+						return str.length > 1 && str[1] ? `${n1}.${str[1]}` : `${n1}`; 
+					}
+				}
+			};
+			var _obj = {
+				_css:``,
+				_vue: {
+					components:{dyn},
+					template: `
+					<div>
+						${_note}
+						<dyn v-model="formatVal"></dyn>
+						{{formatVal}}
+					</div>
+					`,
+					data(){
+						return {
+							formatVal:100
+						}
+					}
+				}
+			};
+			return _obj;
+		},
 	};
 	let Fail = {
 	
