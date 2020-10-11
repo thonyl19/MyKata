@@ -177,7 +177,7 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 			};
 			return _obj;
 		},
-		'拖曳範例'() {
+		'*拖曳範例'() {
 			var _note = `
 			   <pre>
 			   https://echarts.apache.org/examples/zh/editor.html?c=line-draggable
@@ -201,7 +201,7 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 					`,
 					data(){
 						var data =  [[15, 0], [-50, 10], [-56.5, 20], [-46.5, 30], [-22.1, 40]];
-						var symbolSize = 20;
+						var symbolSize = 15;
 
 						return {
 							myChart:null,
@@ -338,12 +338,14 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 						*/
 						onPointDragging(dataIndex, position) {
 							debugger
-							//let {data} = this;
-							this.data[dataIndex] = this.myChart.convertFromPixel('grid', position);
+							var _site = this.myChart.convertFromPixel('grid', position);
+							//少了這一段 ,就沒有響應式的作用
+							this.$set(this.data,dataIndex,_site);
+							let {data } = this;
 							this.myChart.setOption({
 								series: [{
 									id: 'a',
-									data:this.data
+									data
 								}]
 							});
 						}
