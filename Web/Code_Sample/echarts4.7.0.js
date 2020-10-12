@@ -50,28 +50,59 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 						immediate:false,
 						handler(){
 							//debugger
-							//console.log(this.value);
 							this.setOptions();
 						}
 					},
 					size(){
 						if(this.size == null) return;
-						//this.$refs.echart.resize();
-						this.chart.resize();
+						var _self = this;
+						_self.$nextTick(()=>{
+							_self.chart.resize();
+						})
 					}
 
 				},
 				mounted(){
-					//debugger
+					debugger
 					this.chart = echarts.init(this.$refs.echart);
+					this.setOptions();
 				},
 				methods: {
 					setOptions() {
-						this.chart.setOption(this.value);
+						var _self = this;
+						_self.$nextTick(()=>{
+							console.log(_self.value);
+							_self.chart.setOption(_self.value,true);
+						})
 					},
 				},
+				
 			}
 			return _.merge(_vue,ops);
+		},
+		dyn2(ops={}){
+			return _fn.dyn({
+				template:`
+					<x-tpl-sample-range :i_width.sync="i_width" :i_height.sync="i_height">
+						<div ref="echart" style="height:100%;" :resize="resize" >test</div>
+					</x-tpl-sample-range>
+				`,
+				data(){
+					return{
+						chart:null,
+						i_width:50,
+						i_height:50,
+					}
+				},
+				computed: {
+					resize(){
+						var i = this.i_width+this.i_height;
+						if(this.chart == null) return;
+						this.chart.resize();
+						return i;
+					}
+				},
+			})
 		}
 	};
 	var Basic = {
@@ -162,12 +193,6 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 							ops:{}
 						}
 					},
-					watch:{
-						i_width(){
-							//debugger;
-							//this.$refs.chart.resize();
-						}
-					},
 					methods:{
 						test(){
 							this.ops = _fn.BarData();
@@ -177,7 +202,7 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 			};
 			return _obj;
 		},
-		'*拖曳範例'() {
+		'拖曳範例'() {
 			var _note = `
 			   <pre>
 			   https://echarts.apache.org/examples/zh/editor.html?c=line-draggable
@@ -510,6 +535,128 @@ if (option && typeof option === "object") {
 						_fn();
 					}, 
 				}
+			};
+			return _obj;
+		},
+		'圓餅圖'() {
+			var _note = `
+			   <pre>
+			   https://echarts.apache.org/examples/zh/view.html?c=doc-example/tutorial-styling-step0&edit=1&reset=1
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					components:{dyn:_fn.dyn()},
+					template: `
+						<div>
+						${_note}
+						<x-tpl-sample-range :i_width.sync="i_width" :i_height.sync="i_height">
+							<dyn v-model="ops" ref="chart" :size="{i_width,i_height}" /></dyn>
+						</x-tpl-sample-range>
+						</div>
+					`,
+					data(){
+						return {
+							i_width:10,
+							i_height:10,
+							ops:{
+								series : [
+									{
+										name: '访问来源',
+										type: 'pie',
+										radius: '55%',
+										roseType: 'angle',
+										data:[
+											{value:235, name:'视频广告'},
+											{value:274, name:'联盟广告'},
+											{value:310, name:'邮件营销'},
+											{value:335, name:'直接访问'},
+											{value:400, name:'搜索引擎'}
+										]
+									}
+								]
+							}
+						}
+					} 
+				}
+			};
+			return _obj;
+		},
+		'?儀表盤Gauge'() {
+			var _note = `
+			   <pre>
+			   https://echarts.apache.org/examples/zh/editor.html?c=gauge
+			   1.基本的數據變動功能己經能完成,但發現有個缺陷,
+			   	就是在動態變更寛高後,指針就無法依數值變動,只有 lable 的值會變更
+			   
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					components:{dyn:_fn.dyn2()},
+					template: `
+						<div>
+						${_note}
+						<div>[完成度{{i_val/100}}]<input type="range" min="10" max="10000" v-model.num="i_val" class="slider" ></div>
+							<dyn v-model="ops" ref="chart"/></dyn>
+						</div>
+					`,
+					data(){
+						return {
+							i_val:5000,
+						}
+					},
+					computed:{
+						ops(){
+							var i = this.i_val/100;
+							return {
+								tooltip: {
+									formatter: '{a} <br/>{b} : {c}%'
+								},
+								toolbox: {
+									feature: {
+										restore: {},
+										saveAsImage: {}
+									}
+								},
+								series: [
+									{
+										name: '业务指标',
+										type: 'gauge',
+										detail: {formatter: '{value}%'},
+										data: [{value: i, name: '完成率'}]
+									}
+								]
+							}
+							//return this.ops_data;
+						}
+						
+					} 
+				}
+			};
+			return _obj;
+		},
+		'~鼠标拖动指针改变数值'() {
+			var _note = `
+			   <pre>
+			   https://www.shuzhiduo.com/A/n2d9yV0wdD/
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						</div>
+					`,
+					data(){
+						return {
+						}
+					} 
+				   }
 			};
 			return _obj;
 		},
