@@ -1,0 +1,145 @@
+﻿<script>
+	$(() => {
+		var _vue = {
+			template: `
+	        <div class="panel" v-cloak>
+				<div v-if="title!=''" class="panel-heading b panel-header-radius" style="background-color:#ffffcc;">
+			        <h3 class="panel-title">{{title}}</h3>
+		        </div>
+                <div class="panel-body">
+                     <div :class="['form-group',grid_set.input]">
+						<div class="input-group">
+                            <div class="input-group-addon group" :style="input_label_width">{{I18n.OLD_OPERATION}}</div>
+                            <input class="form-control group" v-model="old_operation" readonly />
+                        </div>
+						<div class="input-group">
+							<div class="input-group-addon group" :style="input_label_width">{{I18n.NEW_OPERATION}}</div>
+							<input class="form-control group btn" style="text-align:left;"  v-model="old_operation" readonly @@click="dialogTableVisible=true"/>
+						</div>
+					</div>
+                </div>
+				<el-dialog :title="I18n.title" :visible.sync="dialogTableVisible">
+					<el-checkbox-groupd v-model="checklist" :max="1"
+				  <el-table :data="options" empty-text="　">
+					<el-table-column label = "" width="60" >
+						<template slot-scope="scope">
+							<el-checkbox label="$index" />
+						</template>
+					</el-table-column>
+					<el-table-column :label="I18n.OPERATION" width="*">
+						<template slot-scope="scope">
+							{{scope.row}}
+						</template>
+					</el-table-column>
+				  </el-table>
+</el-checkbox-groupd>
+					<div slot="footer" class="dialog-footer">
+						<el-button size="medium" @@click="dialogTableVisible=false">@RES.BLL.Face.FunctionBarCancelButton</el-button>
+						<el-button size="medium" type="primary"  @@click="Action">@RES.BLL.Face.FunctionBarConfirmButton</el-button>
+					</div>
+				</el-dialog>
+            </div>
+            `,
+			data() {
+				return {
+					new_operation: null,
+					dialogTableVisible: true,
+				}
+			},
+			props: {
+				value: {
+					type: Array,
+				},
+				grid_set: {
+					type: Object,
+					default() {
+						return {
+							main: '',
+							input: 'col-md-12 col-sm-12',
+						}
+					}
+				},
+				old_operation: {
+					type: String,
+					default() {
+						if (!this.$store ) return "-old_operation";
+						let { OPERATION="" } = this.$store.state.MainData.CurrentLot;
+						return OPERATION;
+					}
+				},
+				options: {
+					type: Array,
+					default() {
+						if (!this.$store) return [];
+						return this.$store.state.MainData.ReWorkOperList;
+					}
+				},
+				i18n: {
+					type: Object,
+					default() {
+						return {};
+					}
+				},
+				selectize_ops: {
+					type: Object,
+					default() {
+						return {
+							tagField: 'ROUTE_NO',
+							labelField: 'OPER',
+							valueField: 'SID',
+							searchField: ['ROUTE_NO', 'OPER', 'OPER_NO'],
+						};
+					}
+				},
+				cfg: {
+					type: Array,
+					default() {
+						return {};
+					}
+				}
+            },
+			computed: {
+				title() {
+					let { title = "@RES.BLL.Face.NextOperation" } = this.cfg;
+                    return title;
+				},
+				input_label_width() {
+                    let { input_label_width = "min-width:6rem;" } = this.grid_set;
+                    return input_label_width;
+				},
+				I18n() {
+					var _base = {
+						NextOperation:'@RES.BLL.Face.NextOperation',
+						'OPERATION': '@RES.BLL.Face.OPERATION',
+						'OLD_OPERATION': '@RES.BLL.Face.OLD_OPERATION',
+						'NEW_OPERATION': '@RES.BLL.Face.NEW_OPERATION',
+						'SelectNO': '@RES.BLL.Face.SelectNO'
+					}
+					return _.merge(_base, this.i18n);
+				}
+			},
+			watch: {
+				sel() {
+					debugger
+					let [val = {}] = this.$refs.chgoper.getSelectedRow();
+                    this.$emit('input', val);
+				}
+			},
+			methods: {
+				Action() {
+					alert('test');
+				}
+			}
+        }
+
+
+
+		Vue.component('rework-input', _vue);
+
+	});
+
+
+
+
+
+</script>
