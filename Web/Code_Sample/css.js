@@ -884,7 +884,7 @@ var __fn = ($,_,Vue)=>{
 		},
 	}
 	let Table = {
-		'*Case1'() {
+		'Case1'() {
 			var _note = `
 			  <pre>
 			  1.字體隨著版面動態放大
@@ -1280,19 +1280,20 @@ var __fn = ($,_,Vue)=>{
 			};
 			return { _vue };
 		},
-		"text-overflow"(){
+		'*text-overflow'(){
 			var _note = `<pre>
+			https://blog.xuite.net/vexed/tech/22596484-%E7%94%A8+CSS+%E8%AE%93%E9%81%8E%E9%95%B7%E6%BA%A2%E5%87%BA%E7%9A%84%E5%AD%97%E7%9C%81%E7%95%A5%E8%AE%8A+...
 如果文字超過邊界,自動以 ... 方式呈現</pre>
 			`
 			var _obj = {
 				_css: `
-			.sty-iframe{
-			  margin:.5em;
-			  height:100%;
-			}
+			 
 			.sty-1{
 				overflow:hidden;
 				text-overflow:ellipsis;
+				white-space:nowrap;
+			}
+			.items{
 				white-space:nowrap;
 			}
 			`,
@@ -1302,6 +1303,11 @@ var __fn = ($,_,Vue)=>{
 				${_note}
 				  <x-tpl-sample-range>
 					<div class="sty-1 area-mk">使用設定的字串代表被切斷的字串。</div>
+					<div class="selectize-input items has-options form-control full has-items">
+						<div class="item sty-1" data-value="GTI20091612080907042">
+							<h5><span class="label label-primary ">ROUTE_NO111111111</span> OPER</h5>
+						</div>
+					</div>
 				  </x-tpl-sample-range>
 				  </div>
 				`
