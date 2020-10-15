@@ -2361,7 +2361,11 @@ var __fn = (
 			   </pre>
 			   `;
 			var _obj = {
-				_css:``,
+				_css:`
+				.el-table__body tr.current-row>td{
+					background-color: #ecfff2 !important;
+				}
+				`,
 				_vue: {
 					//<el-radio-group v-model="test" ></el-radio-group>
 					template: `
@@ -2379,7 +2383,12 @@ var __fn = (
 									</el-table-column>
 									<el-table-column label="I18n.OPERATION" width="*">
 										<template slot-scope="scope">
-											{{scope.row.SID}}
+										<H5><span class="label label-primary">{{scope.row.OPERATION_NO}}</span> {{scope.row.OPERATION}}</H5>
+										</template>
+									</el-table-column>
+									<el-table-column label="I18n.ROUTE" width="*">
+										<template slot-scope="scope" v-if="scope.row.TO_OPER_CATEGORY == 'R'">
+										<H5><span class="label label-primary">{{scope.row.ROUTE_NO}}</span> {{scope.row.ROUTE}}</H5>
 										</template>
 									</el-table-column>
 								</el-table>
@@ -2390,7 +2399,7 @@ var __fn = (
 						return {
 							SelIdx:null,
 							currentRow:null,
-							options:[{"SID":"GTI20101409450002611","Status":"O","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
+							options:[{"SID":"GTI20101409450002611","Status":"O","TO_OPER_CATEGORY":"O","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","TO_OPER_CATEGORY":"R","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
 						}
 					},
 					methods:{
