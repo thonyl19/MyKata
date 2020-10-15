@@ -182,14 +182,6 @@ var __fn = (
 		};
 		return _obj;
 	  },
-	  std() {
-		var _vue = {
-		  template: `
-					<div>
-					</div>`
-		};
-		return {_vue};
-	  },
 	};
 	
 	let Case = {
@@ -381,8 +373,8 @@ var __fn = (
 			</label>
 		
 				<span slot="footer" class="dialog-footer">
-				<el-button @@click="dialog1=false">取 消</el-button>
-				<el-button type="primary" @@click="dialog1=false">确 定</el-button>
+				<el-button @@click="dialog1=false">取消</el-button>
+				<el-button type="primary" @@click="dialog1=false">確定</el-button>
 				</span>
 			</el-dialog></div>`,
 			data(){
@@ -812,16 +804,17 @@ var __fn = (
 	}
 	var Group = {
 	  
-	  'Bts .btn-group'() {
+	  '*Bts .btn-group'() {
 		var _note = `
 		  <pre>
-		  1.原本希望利用 bts.input-group 來實作 group btn 的效果,
+		1.原本希望利用 bts.input-group 來實作 group btn 的效果,
 			但發現, el-ui 跟 bts 會產生互斥的問題,後來發現根本是搞錯了,
 			應該是要用 btn-group
-		  2.而原本 input-group 的問題,經測試發現,主要是因為 group 中,
+		2.而原本 input-group 的問題,經測試發現,主要是因為 group 中,
 			只能有一個主物件設為 form-control , 第二個 form-control 一定會破壞排版 ,
 			所以 button ,得用 input-group-btn 來協助整合 ,
-			但 input  就無法整入了
+				
+		3. el-input 也可以成功整入,但發現 ,當前 el-ui 的版本 ,沒有 clearabl 的效果
 		  </pre>
 		   `;
 		var _obj = {
@@ -845,10 +838,19 @@ var __fn = (
 						<button  class="btn  btn-default">button</button>
 					  </span>
 					</div>
+					<h3>el-input</h3>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">@</span>
+						<el-input placeholder="请输入内容"
+							v-model="val_1" clearabl></el-input>
+						<span class="input-group-addon" id="basic-addon1">@</span>
+					</div>
+ 
 				 </div>
 				 `,
 			  data(){
 				 return {
+					 val_1:null
 				}
 			  } 
 		   }
@@ -2354,10 +2356,13 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'*單選'() {
+		'單選'() {
 			var _note = `
 			   <pre>
 			   [Ref]https://www.twblogs.net/a/5c1f1776bd9eee16b3da5d16
+			   1.在 el-table 中,實現 radio 單選功能
+			   2.實現點撃行 做 選取/取消 的功能
+			   3.實現 radio 和點撃行的連動程序
 			   </pre>
 			   `;
 			var _obj = {
@@ -2373,10 +2378,13 @@ var __fn = (
 									>
 									<el-table-column label = "" width="60" >
 										<template slot-scope="scope">
-											<el-radio  v-model="SelIdx" :label="scope.$index" @click.native.prevent="chg1(scope,event)" ><i></i></el-radio>
+											<el-radio  v-model="SelIdx" :label="scope.$index" 
+												@click.native.prevent="change(scope,event)">
+													<i></i>
+											</el-radio>
 										</template>
 									</el-table-column>
-									<el-table-column label="I18n.OPERATION" width="*">
+									<el-table-column label="Name" width="*">
 										<template slot-scope="scope">
 											{{scope.row.name}}
 										</template>
@@ -2393,14 +2401,9 @@ var __fn = (
 						}
 					},
 					methods:{
-						chg(idx,event){
-							debugger
-							this.SelIdx = this.SelIdx == idx
-								?null
-								:idx;
-						},
-						chg1(scope,event){
+						change(scope,event){
 							event.stopPropagation();
+							//需要補上 rowIndex , 相關處理轉交給 row_click 處理
 							event.currentTarget.rowIndex = scope.$index;
 							this.row_click(scope.row,null,event);
 						},
@@ -2424,44 +2427,7 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'?單選'() {
-			var _note = `
-			   <pre>
-			   使用 el-checkbox-group 有成功,但操作體驗不好
-			   </pre>
-			   `;
-			var _obj = {
-				_css:``,
-				_vue: {
-					template: `
-						<div>
-						${_note}
-						<el-checkbox-group v-model="test" :max=1>
-							<el-table :data="options" empty-text="　">
-								<el-table-column label = "" width="60" >
-									<template slot-scope="scope">
-										<el-checkbox :label="scope.$index" />
-									</template>
-								</el-table-column>
-								<el-table-column label="I18n.OPERATION" width="*">
-									<template slot-scope="scope">
-										{{scope.row.SID}}
-									</template>
-								</el-table-column>
-							</el-table>
-						</el-checkbox-group>
-						</div>
-					`,
-					data(){
-						return {
-							test:[],
-							options:[{"SID":"GTI20101409450002611","Status":"O","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
-						}
-					} 
-				   }
-			};
-			return _obj;
-		},
+ 
 	}
 	var 原生元件 = {
 		'Pagination'() {

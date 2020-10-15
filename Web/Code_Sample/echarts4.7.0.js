@@ -202,7 +202,7 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 			};
 			return _obj;
 		},
-		'拖曳範例'() {
+		'拖曳範例.v2'() {
 			var _note = `
 			   <pre>
 			   https://echarts.apache.org/examples/zh/editor.html?c=line-draggable
@@ -379,11 +379,13 @@ var __fn = ($, _, styled, Vue, moment, echarts) => {
 			};
 			return _obj;
 		},
-		'~拖曳範例'() {
+		'~拖曳範例.v1'() {
 			var _note = `
-			   <pre>
-			   https://echarts.apache.org/examples/zh/editor.html?c=line-draggable
-			   </pre>
+			<pre>
+			https://echarts.apache.org/examples/zh/editor.html?c=line-draggable
+			這裡是保留範例,其主要問題是無法實現 data 的動態呈現,
+				在 v2 版本中,就己經排除了這個問題了.	
+			</pre>
 			   `;
 			var _fn = ()=>{
 				var dom = document.getElementById("container");
