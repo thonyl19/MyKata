@@ -603,7 +603,7 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'*fmoney'() {
+		'fmoney'() {
 			var _note = `
 			<pre>
 			https://segmentfault.com/a/1190000022299780
@@ -2354,6 +2354,123 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'*單選'() {
+			var _note = `
+			   <pre>
+			   [Ref]https://www.twblogs.net/a/5c1f1776bd9eee16b3da5d16
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					//<el-radio-group v-model="test" ></el-radio-group>
+					template: `
+						<div>
+						${_note}
+						<br />{{currentRow}}
+								<el-table ref="ETable" :data="options" empty-text="　"
+									highlight-current-row
+									@row-click="row_click"
+									>
+									<el-table-column label = "" width="60" >
+										<template slot-scope="scope">
+											<el-radio  v-model="SelIdx" :label="scope.$index" @click.native.prevent="chg1(scope,event)" ><i></i></el-radio>
+										</template>
+									</el-table-column>
+									<el-table-column label="I18n.OPERATION" width="*">
+										<template slot-scope="scope">
+											{{scope.row.SID}}
+										</template>
+									</el-table-column>
+								</el-table>
+							
+						</div>
+					`,
+					data(){
+						return {
+							SelIdx:null,
+							currentRow:null,
+							options:[{"SID":"GTI20101409450002611","Status":"O","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
+						}
+					},
+					methods:{
+						chg(idx,event){
+							debugger
+							this.SelIdx = this.SelIdx == idx
+								?null
+								:idx;
+							// var isCancel = this.SelIdx==null;
+							// if (isCancel){
+							// 	this.$refs.ETable.setCurrentRow();
+							// }
+							 
+							//if (event!=null && isCancel) event.stopPropagation();
+							//if (event) event.stopPropagation();
+						},
+						chg1(scope,event){
+							event.stopPropagation();
+							event.currentTarget.rowIndex = scope.$index;
+							this.row_click(scope.row,null,event);
+						},
+						row_click(row, column, event) {
+							debugger
+							this.SelIdx = event.currentTarget.rowIndex;
+							//if (this.SelIdx != idx) ;
+							var isSameObj  = this.currentRow === row;
+							if (isSameObj){
+								this.currentRow 
+									= this.SelIdx 
+									= null;
+							}else{
+								this.currentRow = row;
+							}
+							this.$refs.ETable.setCurrentRow(this.currentRow);
+						}
+						
+					}
+
+				   }
+			};
+			return _obj;
+		},
+		'?單選'() {
+			var _note = `
+			   <pre>
+			   使用 el-checkbox-group 有成功,但操作體驗不好
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<el-checkbox-group v-model="test" :max=1>
+							<el-table :data="options" empty-text="　">
+								<el-table-column label = "" width="60" >
+									<template slot-scope="scope">
+										<el-checkbox :label="scope.$index" />
+									</template>
+								</el-table-column>
+								<el-table-column label="I18n.OPERATION" width="*">
+									<template slot-scope="scope">
+										{{scope.row.SID}}
+									</template>
+								</el-table-column>
+							</el-table>
+						</el-checkbox-group>
+						</div>
+					`,
+					data(){
+						return {
+							test:[],
+							options:[{"SID":"GTI20101409450002611","Status":"O","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
 	}
 	var 原生元件 = {
 		'Pagination'() {
@@ -2446,6 +2563,56 @@ var __fn = (
 						}
 					}
 				}
+			};
+			return _obj;
+		},
+		'el-dialog'() {
+			var _note = `
+			   <pre>
+			   [ref]
+			   列印範例
+			   	https://plungjan.name/SO/testprintiframe.html
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
+							<el-dialog
+									fullscreen="true"
+									title="提示"
+									:visible.sync="dialogVisible"
+									width="80%"
+									height="100%"
+									 >
+								<iframe id="printf" src="css.htm" frameborder="0" width="100%" height="600px" onload="focus();print();"></iframe>
+								<span slot="footer" class="dialog-footer">
+									<el-button @click="print">列印</el-button>
+									<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+								</span>
+							</el-dialog>
+						</div>
+					`,
+					data(){
+						return {
+							dialogVisible:false
+						}
+					},
+					methods:{
+						print(){
+							// window.frames["printf"].focus();
+							// window.frames["printf"].print();
+							var frm = document.getElementById('printf').contentWindow;
+							// frm.postMessage ('test', '*');
+							// frm.focus();
+							// frm.print();
+							frm.printPage();
+						}
+					} 
+				   }
 			};
 			return _obj;
 		},
