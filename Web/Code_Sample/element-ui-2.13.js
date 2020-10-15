@@ -2363,7 +2363,6 @@ var __fn = (
 			var _obj = {
 				_css:``,
 				_vue: {
-					//<el-radio-group v-model="test" ></el-radio-group>
 					template: `
 						<div>
 						${_note}
@@ -2379,7 +2378,7 @@ var __fn = (
 									</el-table-column>
 									<el-table-column label="I18n.OPERATION" width="*">
 										<template slot-scope="scope">
-											{{scope.row.SID}}
+											{{scope.row.name}}
 										</template>
 									</el-table-column>
 								</el-table>
@@ -2390,7 +2389,7 @@ var __fn = (
 						return {
 							SelIdx:null,
 							currentRow:null,
-							options:[{"SID":"GTI20101409450002611","Status":"O","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
+							options:window.gEx.mydata
 						}
 					},
 					methods:{
@@ -2399,13 +2398,6 @@ var __fn = (
 							this.SelIdx = this.SelIdx == idx
 								?null
 								:idx;
-							// var isCancel = this.SelIdx==null;
-							// if (isCancel){
-							// 	this.$refs.ETable.setCurrentRow();
-							// }
-							 
-							//if (event!=null && isCancel) event.stopPropagation();
-							//if (event) event.stopPropagation();
 						},
 						chg1(scope,event){
 							event.stopPropagation();
@@ -2415,7 +2407,6 @@ var __fn = (
 						row_click(row, column, event) {
 							debugger
 							this.SelIdx = event.currentTarget.rowIndex;
-							//if (this.SelIdx != idx) ;
 							var isSameObj  = this.currentRow === row;
 							if (isSameObj){
 								this.currentRow 
