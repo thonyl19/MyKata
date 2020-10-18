@@ -129,59 +129,7 @@ var __fn = (
 		};
 		return { _vue, _css };
 	  },
-	  "dialog 自適高度"() {
-		/*
-				當在 el-dialog 的內容超過螢幕範圍時,原生的樣式不支援做內容捲動的呈現,
-					而是整個 el-dialog 做整頁的捲動
-				*/
-		var _obj = {
-		  _css: `
-					.abow_dialog {
-						display: flex;
-						justify-content: center;
-						align-items: Center;
-						overflow: hidden;
-					}
-					.abow_dialog .el-dialog {
-						margin: 0 auto !important;
-						height: 90%;
-						overflow: hidden;
-						width: 85rem !important;
-						max-width: 95vw;
-					}
-					.abow_dialog .el-dialog__body {
-						position: absolute;
-						left: 0;
-						top: 54px;
-						bottom: 0;
-						right: 0;
-						padding: 1em 2.3em;
-						z-index: 1;
-						overflow: hidden;
-						overflow-y: auto;
-					}
-					`,
-		  _vue: {
-			template: `
-						<div>
-							
-							<el-dialog title="搜尋" :visible.sync="visible" :class="[switch_model?'abow_dialog':'']">
-								<div>
-									<input type=checkbox v-model="switch_model" />content scroll
-								</div>
-								<iframe scrolling="no" src="element-ui-2.13.htm" style="height:120vh;"></iframe>
-							</el-dialog>
-						</div>`,
-			data() {
-			  return {
-				switch_model: true,
-				visible: true
-			  };
-			}
-		  }
-		};
-		return _obj;
-	  },
+
 	};
 	
 	let Case = {
@@ -334,61 +282,7 @@ var __fn = (
 			};
 			return {_vue};
 		},
-		'el-dialog 樣式'(){
-			/*
-			情境需求:
-			1.自定義 dialog header 樣式
-			2.dialog 設定圓角
-				2-1. el-dialog__header 需要再補設 border-radius ,
-					才不會造成頭部的圓角被蓋掉
-		
-			*/
-			var _css = `
-			.el-dialog__header {
-				border-radius: 7px 7px 0px 0px;
-				background-color: #5d9cec;
-				padding: 13px !important;
-				color: #fff;
-				text-align: left;
-			}
-		
-			.el-dialog {
-				border-radius: 7px;
-			}
-		
-			
-			`;
-			var _vue = {
-			template: `
-			<div>
-			<el-dialog  
-					:append-to-body="true"
-					:visible.sync="dialog1"
-					width="35rem"
-					class="ver-modify"
-					:show-close="false"
-					center>
-			<label slot="title">
-				版本管理
-			</label>
-		
-				<span slot="footer" class="dialog-footer">
-				<el-button @@click="dialog1=false">取消</el-button>
-				<el-button type="primary" @@click="dialog1=false">確定</el-button>
-				</span>
-			</el-dialog></div>`,
-			data(){
-				return {
-				dialog1: true
-		
-				}
-			},
-			methods: {
-		
-			},
-			};
-			return {_vue,_css};
-		},
+
 		
 		'版本控制'() {
 			var _obj = {
@@ -804,7 +698,7 @@ var __fn = (
 	}
 	var Group = {
 	  
-	  '*Bts .btn-group'() {
+	  'Bts .btn-group'() {
 		var _note = `
 		  <pre>
 		1.原本希望利用 bts.input-group 來實作 group btn 的效果,
@@ -2523,7 +2417,213 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'el-dialog'() {
+
+	}
+	var Dialog = {
+		'*拖曳寛高'() {
+			var _note = `
+			   <pre>
+			   https://github.com/guokangf/vue-element-utils
+			   </pre>
+			   `;
+			var dialogDragWidth = {
+				bind(el) {
+					const dragDom = el.querySelector('.el-dialog');
+					const lineEl = document.createElement('div');
+					lineEl.style =
+						'width: 2px; background: inherit; height: 80%; position: absolute; right: 0; top: 0; bottom: 0; margin: auto; z-index: 1; cursor: w-resize;';
+					lineEl.addEventListener(
+						'mousedown',
+						function(e) {
+							// 鼠标按下，计算当前元素距离可视区的距离
+							const disX = e.clientX - el.offsetLeft;
+			
+							// 当前宽度
+							const curWidth = dragDom.offsetWidth;
+			
+							document.onmousemove = function(e) {
+								e.preventDefault(); // 移动时禁用默认事件
+								// 通过事件委托，计算移动的距离
+								const l = e.clientX - disX;
+								dragDom.style.width = `${curWidth + l}px`;
+							};
+			
+							document.onmouseup = function(e) {
+								document.onmousemove = null;
+								document.onmouseup = null;
+							};
+						},
+						false
+					);
+					dragDom.appendChild(lineEl);
+				}
+			}
+			Vue.directive('el-dialog-drag-width', dialogDragWidth);
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<button @click="dialogVisible=true">show</button>
+						<el-dialog
+							title="提示"
+							:visible.sync="dialogVisible"
+							width="30%"
+							:close-on-click-modal="false"
+							v-el-dialog-drag-width
+						>
+							<span>这是一段信息</span>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisible = false">取 消</el-button>
+								<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+							</span>
+						</el-dialog>
+						</div>
+					`,
+					data(){
+						return {
+							dialogVisible :true
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+		'拖曳位置,寛高'() {
+			var _note = `
+			   <pre>
+				[Ref]
+				https://blog.csdn.net/sinat_21902709/article/details/86545444	
+				https://rnseia.github.io/2019/02/22/element-ui%E5%AE%9E%E7%8E%B0dialog%E5%8F%AF%E6%8B%96%E6%8B%BD%E4%BD%8D%E7%BD%AE%E5%8F%8A%E5%AE%BD%E9%AB%98/
+				拖曳可用,但寛高無法正常使用,所以棄置另尋方案
+				</pre>
+			   `;
+			   Vue.directive('dialogDrag', {
+				bind(el, binding, vnode, oldVnode) {
+				  const dialogHeaderEl = el.querySelector('.el-dialog__header')
+				  const dragDom = el.querySelector('.el-dialog')
+				  dialogHeaderEl.style.cursor = 'move'
+			  
+				  // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null);
+				  const sty = dragDom.currentStyle || window.getComputedStyle(dragDom, null)
+			  
+				  dialogHeaderEl.onmousedown = (e) => {
+					// 鼠标按下，计算当前元素距离可视区的距离
+					const disX = e.clientX - dialogHeaderEl.offsetLeft
+					const disY = e.clientY - dialogHeaderEl.offsetTop
+			  
+					// 获取到的值带px 正则匹配替换
+					let styL, styT
+			  
+					// 注意在ie中 第一次获取到的值为组件自带50% 移动之后赋值为px
+					if (sty.left.includes('%')) {
+					  styL = +document.body.clientWidth * (+sty.left.replace(/\%/g, '') / 100)
+					  styT = +document.body.clientHeight * (+sty.top.replace(/\%/g, '') / 100)
+					} else {
+					  styL = +sty.left.replace(/\px/g, '')
+					  styT = +sty.top.replace(/\px/g, '')
+					}
+			  
+					document.onmousemove = function(e) {
+					  // 通过事件委托，计算移动的距离
+					  const l = e.clientX - disX
+					  const t = e.clientY - disY
+			  
+					  // 移动当前元素
+					  dragDom.style.left = `${l + styL}px`
+					  dragDom.style.top = `${t + styT}px`
+			  
+					  // 将此时的位置传出去
+					  // binding.value({x:e.pageX,y:e.pageY})
+					}
+			  
+					document.onmouseup = function(e) {
+					  document.onmousemove = null
+					  document.onmouseup = null
+					}
+				  }
+				}
+			  })
+ 
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<button @click="dialogVisible=true">show</button>
+						<el-dialog
+							:visible.sync="dialogVisible"
+							v-dialogDrag
+							>
+							test
+						</div>
+					`,
+					data(){
+						return {
+							dialogVisible :true
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+
+		"dialog 自適高度"() {
+			/*
+			當在 el-dialog 的內容超過螢幕範圍時,原生的樣式不支援做內容捲動的呈現,
+				而是整個 el-dialog 做整頁的捲動
+					*/
+			var _obj = {
+			  _css: `
+						.abow_dialog {
+							display: flex;
+							justify-content: center;
+							align-items: Center;
+							overflow: hidden;
+						}
+						.abow_dialog .el-dialog {
+							margin: 0 auto !important;
+							height: 90%;
+							overflow: hidden;
+							width: 85rem !important;
+							max-width: 95vw;
+						}
+						.abow_dialog .el-dialog__body {
+							position: absolute;
+							left: 0;
+							top: 54px;
+							bottom: 0;
+							right: 0;
+							padding: 1em 2.3em;
+							z-index: 1;
+							overflow: hidden;
+							overflow-y: auto;
+						}
+						`,
+			  _vue: {
+				template: `
+							<div>
+								
+								<el-dialog title="搜尋" :visible.sync="visible" :class="[switch_model?'abow_dialog':'']">
+									<div>
+										<input type=checkbox v-model="switch_model" />content scroll
+									</div>
+									<iframe scrolling="no" src="element-ui-2.13.htm" style="height:120vh;"></iframe>
+								</el-dialog>
+							</div>`,
+				data() {
+				  return {
+					switch_model: true,
+					visible: true
+				  };
+				}
+			  }
+			};
+			return _obj;
+		  },
+		'子視窗列印'() {
 			var _note = `
 			   <pre>
 			   [ref]
@@ -2573,8 +2673,63 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'el-dialog 樣式'(){
+			/*
+			情境需求:
+			1.自定義 dialog header 樣式
+			2.dialog 設定圓角
+				2-1. el-dialog__header 需要再補設 border-radius ,
+					才不會造成頭部的圓角被蓋掉
+		
+			*/
+			var _css = `
+			.el-dialog__header {
+				border-radius: 7px 7px 0px 0px;
+				background-color: #5d9cec;
+				padding: 13px !important;
+				color: #fff;
+				text-align: left;
+			}
+		
+			.el-dialog {
+				border-radius: 7px;
+			}
+		
+			
+			`;
+			var _vue = {
+			template: `
+			<div>
+			<el-dialog  
+					:append-to-body="true"
+					:visible.sync="dialog1"
+					width="35rem"
+					class="ver-modify"
+					:show-close="false"
+					center>
+			<label slot="title">
+				版本管理
+			</label>
+		
+				<span slot="footer" class="dialog-footer">
+				<el-button @@click="dialog1=false">取消</el-button>
+				<el-button type="primary" @@click="dialog1=false">確定</el-button>
+				</span>
+			</el-dialog></div>`,
+			data(){
+				return {
+				dialog1: true
+		
+				}
+			},
+			methods: {
+		
+			},
+			};
+			return {_vue,_css};
+		},
 	}
- 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,原生元件,程式產生器};
+ 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,Dialog,原生元件,程式產生器};
 }
 (function () {
 	var arr = [
