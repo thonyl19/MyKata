@@ -18,7 +18,7 @@ window.gEx = {
 		Vue:['vue_2.x',
 		'VuePager',
 		'element-ui-2.13',
-		'vue-easy-dnd_1.10.2'
+		'vue-test'
 		],
 		Layout:[
 			'CSS',
