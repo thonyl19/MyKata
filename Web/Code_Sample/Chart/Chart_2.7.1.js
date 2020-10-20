@@ -1,4 +1,10 @@
-﻿//const { debug } = require("console");
+﻿/*
+chart.js 必須存置於 跟 _ExAdm_requireCfg 同一層,主要的原因是,
+	VueChartJs 內部的程序,會自 call chart.js ,
+	如果不這樣配置,程序 load 的時候就會報錯 
+*/
+
+//const { debug } = require("console");
 
 var __fn = (
   $,

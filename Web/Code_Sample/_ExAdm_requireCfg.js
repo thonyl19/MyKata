@@ -1,46 +1,104 @@
-﻿var local_path = '../node_modules/';
+﻿//var local_path = '../node_modules/';
+window.gEx = {
+	local_path : '../node_modules/',
+	"mydata": [
+		{ "id": "1", "invdate": "2007-10-01", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
+		{ "id": "2", "invdate": "2007-10-02", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
+		{ "id": "3", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
+		{ "id": "4", "invdate": "2007-10-04", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
+		{ "id": "5", "invdate": "2007-10-05", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
+		{ "id": "6", "invdate": "2007-09-06", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
+		{ "id": "7", "invdate": "2007-10-04", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
+		{ "id": "8", "invdate": "2007-10-03", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
+		{ "id": "9", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
+		{ "id": "10", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
+		{ "id": "11", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" }
+	],
+	exList:{
+		Vue:['vue_2.x',
+		'VuePager',
+		'element-ui-2.13',
+		'vue-test'
+		],
+		Layout:[
+			'CSS',
+			'bootstrap3.3.7',
+			'bootstrap4.5.0',
+		],
+		Chart:[
+			'c3_0.7.15',
+			'Chart_2.7.1',
+			'echarts4.7.0',
+			//'echarts',
+		],
+		Tool:[
+			'selectize_0.12.6',
+			'jquery_ex',
+			'jquery_dataTables',
+			'froala_2.7',
+			'layer_2.3',
+		]
+	},
+	chgUrl(fnName){
+		debugger
+		var _url = new URL(location);
+		//_url.hash = `${key}/${fnName}`;
+		_url.hash = fnName;
+		window.history.pushState(null, null,_url.toString());
+	},
+	getCurrentEx(){
+		//debugger
+		var _base = "Layout/CSS" ;//["Layout","CSS" ];
+		var _url = new URL(location);
+		var Ex = _url.hash;
+		if (Ex != ""){
+			_base = Ex.substr(1);//.split('/');
+		}
+		return _base ;
+	}
+}
 var __req_cfg = {
 	//避免緩存
 	urlArgs: "bust=" + new Date().getTime(),
 	paths: {
 		jquery: [
-			`${local_path}jquery/dist/jquery.min`
+			`${window.gEx.local_path}jquery/dist/jquery.min`
 			,"https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min",
 		],
 		"lodash": [
-			`${local_path}lodash/lodash.min`
+			`${window.gEx.local_path}lodash/lodash.min`
 			,'https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min'
 		],
 		"ELEMENT": [
-			`${local_path}element-ui/lib/index`
+			`${window.gEx.local_path}element-ui/lib/index`
 			,"https://unpkg.com/element-ui@2.13.0/lib/index",
 		],
 		"eui-css":[
-			`${local_path}element-ui/lib/theme-chalk/index` 
+			`${window.gEx.local_path}element-ui/lib/theme-chalk/index` 
 			,"https://unpkg.com/element-ui@2.13.0/lib/theme-chalk/index"
 		],
 		vue: [
-			`${local_path}vue/dist/vue.min`
+			`${window.gEx.local_path}vue/dist/vue.min`
 			,"https://cdn.jsdelivr.net/npm/vue/dist/vue"
 			],
 		vuex:[
-			`${local_path}vuex/dist/vuex.min`
+			`${window.gEx.local_path}vuex/dist/vuex.min`
 			,"https://cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex"
 		],
 		styled:[
-			`${local_path}vue-styled-components/dist/vue-styled-components.min`
+			`${window.gEx.local_path}vue-styled-components/dist/vue-styled-components.min`
 			,"https://cdn.jsdelivr.net/npm/vue-styled-components@1.5.1/dist/vue-styled-components.min"
 		],
 		fa_css:[
-			`${local_path}font-awesome/css/font-awesome.min`
+			`${window.gEx.local_path}font-awesome/css/font-awesome.min`
 			,"https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome"
 		],
 		"bts337":[
-			`${local_path}bootstrap/dist/js/bootstrap.min`
+			`${window.gEx.local_path}bootstrap/dist/js/bootstrap.min`
 			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min"
 		],
 		"bts337-css":[
-			`${local_path}bootstrap/dist/css/bootstrap.min`
+			`${window.gEx.local_path}bootstrap/dist/css/bootstrap.min`
 			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min"
 		],
  		Vue_Utility:"../Vue_Prd/Vue_Utility",
@@ -67,55 +125,7 @@ var __req_cfg = {
  	}
 }
 require.config(__req_cfg);
-window.gEx = {
-	"mydata": [
-		{ "id": "1", "invdate": "2007-10-01", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
-		{ "id": "2", "invdate": "2007-10-02", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
-		{ "id": "3", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
-		{ "id": "4", "invdate": "2007-10-04", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
-		{ "id": "5", "invdate": "2007-10-05", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
-		{ "id": "6", "invdate": "2007-09-06", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
-		{ "id": "7", "invdate": "2007-10-04", "name": "test", "note": "note", "amount": "200.00", "tax": "10.00", "total": "210.00" },
-		{ "id": "8", "invdate": "2007-10-03", "name": "test2", "note": "note2", "amount": "300.00", "tax": "20.00", "total": "320.00" },
-		{ "id": "9", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
-		{ "id": "10", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" },
-		{ "id": "11", "invdate": "2007-09-01", "name": "test3", "note": "note3", "amount": "400.00", "tax": "30.00", "total": "430.00" }
-	],
-	exList:{
-		Vue:['vue_2.x',
-		'VuePager',
-		'element-ui-2.13'],
-		Layout:[
-			'CSS',
-			'bootstrap3.3.7',
-			'bootstrap4.5.0',
-		],
-		Chart:[
-			'c3_0.7.15',
-			'Chart_2.7.1',
-			'echarts4.7.0',
-			'echarts',
-		],
-		Tool:[
-			'selectize_0.12.6',
-			'jquery_ex',
-			'jquery_dataTables',
-			'froala_2.7',
-			'layer_2.3',
-		]
-	},
-	chgUrl(fnName){
-		var _url = new URL(location);
-		_url.hash = fnName;
-		window.history.pushState(null, null,_url.toString());
-	},
-	getCurrentEx(){
-		//debugger
-		var _url = new URL(location);
-		var Ex = _url.hash;
-		return Ex != "" ? Ex.substr(1) :"CSS" ;
-	}
-}
+
 
 
 require
@@ -170,7 +180,7 @@ require
 						<el-col :span="6" v-for="(items,key) in list">
 							<h4><span class="label label-primary">{{key}}</span></h4>
 							<div class="list-group">
-								  <a class="list-group-item" v-for="(item) in items" @click=chgUrl(item)>{{item}}</a>
+								  <a class="list-group-item" v-for="(item) in items" @click=_chgUrl(key,item) >{{item}}</a>
 							</div>
 						</el-col>
 					</el-row>
@@ -187,6 +197,9 @@ require
 			},
 			methods:{
 				...Vuex.mapMutations(['chgUrl','ShowModules']),
+				_chgUrl(key,item){
+					this.$store.commit('chgUrl', `${key}/${item}`);
+				}
 			}
 		},
 		left: {

@@ -129,67 +129,7 @@ var __fn = (
 		};
 		return { _vue, _css };
 	  },
-	  "dialog 自適高度"() {
-		/*
-				當在 el-dialog 的內容超過螢幕範圍時,原生的樣式不支援做內容捲動的呈現,
-					而是整個 el-dialog 做整頁的捲動
-				*/
-		var _obj = {
-		  _css: `
-					.abow_dialog {
-						display: flex;
-						justify-content: center;
-						align-items: Center;
-						overflow: hidden;
-					}
-					.abow_dialog .el-dialog {
-						margin: 0 auto !important;
-						height: 90%;
-						overflow: hidden;
-						width: 85rem !important;
-						max-width: 95vw;
-					}
-					.abow_dialog .el-dialog__body {
-						position: absolute;
-						left: 0;
-						top: 54px;
-						bottom: 0;
-						right: 0;
-						padding: 1em 2.3em;
-						z-index: 1;
-						overflow: hidden;
-						overflow-y: auto;
-					}
-					`,
-		  _vue: {
-			template: `
-						<div>
-							
-							<el-dialog title="搜尋" :visible.sync="visible" :class="[switch_model?'abow_dialog':'']">
-								<div>
-									<input type=checkbox v-model="switch_model" />content scroll
-								</div>
-								<iframe scrolling="no" src="element-ui-2.13.htm" style="height:120vh;"></iframe>
-							</el-dialog>
-						</div>`,
-			data() {
-			  return {
-				switch_model: true,
-				visible: true
-			  };
-			}
-		  }
-		};
-		return _obj;
-	  },
-	  std() {
-		var _vue = {
-		  template: `
-					<div>
-					</div>`
-		};
-		return {_vue};
-	  },
+
 	};
 	
 	let Case = {
@@ -342,61 +282,7 @@ var __fn = (
 			};
 			return {_vue};
 		},
-		'el-dialog 樣式'(){
-			/*
-			情境需求:
-			1.自定義 dialog header 樣式
-			2.dialog 設定圓角
-				2-1. el-dialog__header 需要再補設 border-radius ,
-					才不會造成頭部的圓角被蓋掉
-		
-			*/
-			var _css = `
-			.el-dialog__header {
-				border-radius: 7px 7px 0px 0px;
-				background-color: #5d9cec;
-				padding: 13px !important;
-				color: #fff;
-				text-align: left;
-			}
-		
-			.el-dialog {
-				border-radius: 7px;
-			}
-		
-			
-			`;
-			var _vue = {
-			template: `
-			<div>
-			<el-dialog  
-					:append-to-body="true"
-					:visible.sync="dialog1"
-					width="35rem"
-					class="ver-modify"
-					:show-close="false"
-					center>
-			<label slot="title">
-				版本管理
-			</label>
-		
-				<span slot="footer" class="dialog-footer">
-				<el-button @@click="dialog1=false">取 消</el-button>
-				<el-button type="primary" @@click="dialog1=false">确 定</el-button>
-				</span>
-			</el-dialog></div>`,
-			data(){
-				return {
-				dialog1: true
-		
-				}
-			},
-			methods: {
-		
-			},
-			};
-			return {_vue,_css};
-		},
+
 		
 		'版本控制'() {
 			var _obj = {
@@ -815,13 +701,14 @@ var __fn = (
 	  'Bts .btn-group'() {
 		var _note = `
 		  <pre>
-		  1.原本希望利用 bts.input-group 來實作 group btn 的效果,
+		1.原本希望利用 bts.input-group 來實作 group btn 的效果,
 			但發現, el-ui 跟 bts 會產生互斥的問題,後來發現根本是搞錯了,
 			應該是要用 btn-group
-		  2.而原本 input-group 的問題,經測試發現,主要是因為 group 中,
+		2.而原本 input-group 的問題,經測試發現,主要是因為 group 中,
 			只能有一個主物件設為 form-control , 第二個 form-control 一定會破壞排版 ,
 			所以 button ,得用 input-group-btn 來協助整合 ,
-			但 input  就無法整入了
+				
+		3. el-input 也可以成功整入,但發現 ,當前 el-ui 的版本 ,沒有 clearabl 的效果
 		  </pre>
 		   `;
 		var _obj = {
@@ -845,10 +732,19 @@ var __fn = (
 						<button  class="btn  btn-default">button</button>
 					  </span>
 					</div>
+					<h3>el-input</h3>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">@</span>
+						<el-input placeholder="请输入内容"
+							v-model="val_1" clearabl></el-input>
+						<span class="input-group-addon" id="basic-addon1">@</span>
+					</div>
+ 
 				 </div>
 				 `,
 			  data(){
 				 return {
+					 val_1:null
 				}
 			  } 
 		   }
@@ -2354,10 +2250,13 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'*單選'() {
+		'單選'() {
 			var _note = `
 			   <pre>
 			   [Ref]https://www.twblogs.net/a/5c1f1776bd9eee16b3da5d16
+			   1.在 el-table 中,實現 radio 單選功能
+			   2.實現點撃行 做 選取/取消 的功能
+			   3.實現 radio 和點撃行的連動程序
 			   </pre>
 			   `;
 			var _obj = {
@@ -2367,7 +2266,6 @@ var __fn = (
 				}
 				`,
 				_vue: {
-					//<el-radio-group v-model="test" ></el-radio-group>
 					template: `
 						<div>
 						${_note}
@@ -2378,12 +2276,15 @@ var __fn = (
 									>
 									<el-table-column label = "" width="60" >
 										<template slot-scope="scope">
-											<el-radio  v-model="SelIdx" :label="scope.$index" @click.native.prevent="chg1(scope,event)" ><i></i></el-radio>
+											<el-radio  v-model="SelIdx" :label="scope.$index" 
+												@click.native.prevent="change(scope,event)">
+													<i></i>
+											</el-radio>
 										</template>
 									</el-table-column>
-									<el-table-column label="I18n.OPERATION" width="*">
+									<el-table-column label="Name" width="*">
 										<template slot-scope="scope">
-										<H5><span class="label label-primary">{{scope.row.OPERATION_NO}}</span> {{scope.row.OPERATION}}</H5>
+											{{scope.row.name}}
 										</template>
 									</el-table-column>
 									<el-table-column label="I18n.ROUTE" width="*">
@@ -2399,32 +2300,19 @@ var __fn = (
 						return {
 							SelIdx:null,
 							currentRow:null,
-							options:[{"SID":"GTI20101409450002611","Status":"O","TO_OPER_CATEGORY":"O","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","TO_OPER_CATEGORY":"R","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
+							options:window.gEx.mydata
 						}
 					},
 					methods:{
-						chg(idx,event){
-							debugger
-							this.SelIdx = this.SelIdx == idx
-								?null
-								:idx;
-							// var isCancel = this.SelIdx==null;
-							// if (isCancel){
-							// 	this.$refs.ETable.setCurrentRow();
-							// }
-							 
-							//if (event!=null && isCancel) event.stopPropagation();
-							//if (event) event.stopPropagation();
-						},
-						chg1(scope,event){
+						change(scope,event){
 							event.stopPropagation();
+							//需要補上 rowIndex , 相關處理轉交給 row_click 處理
 							event.currentTarget.rowIndex = scope.$index;
 							this.row_click(scope.row,null,event);
 						},
 						row_click(row, column, event) {
 							debugger
 							this.SelIdx = event.currentTarget.rowIndex;
-							//if (this.SelIdx != idx) ;
 							var isSameObj  = this.currentRow === row;
 							if (isSameObj){
 								this.currentRow 
@@ -2442,44 +2330,7 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'?單選'() {
-			var _note = `
-			   <pre>
-			   使用 el-checkbox-group 有成功,但操作體驗不好
-			   </pre>
-			   `;
-			var _obj = {
-				_css:``,
-				_vue: {
-					template: `
-						<div>
-						${_note}
-						<el-checkbox-group v-model="test" :max=1>
-							<el-table :data="options" empty-text="　">
-								<el-table-column label = "" width="60" >
-									<template slot-scope="scope">
-										<el-checkbox :label="scope.$index" />
-									</template>
-								</el-table-column>
-								<el-table-column label="I18n.OPERATION" width="*">
-									<template slot-scope="scope">
-										{{scope.row.SID}}
-									</template>
-								</el-table-column>
-							</el-table>
-						</el-checkbox-group>
-						</div>
-					`,
-					data(){
-						return {
-							test:[],
-							options:[{"SID":"GTI20101409450002611","Status":"O","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"熱烘烤","OPERATION_NO":"B040.01","OPER_SID":"GTI20020714333001285","ROUTE":"ReWork01","ROUTE_VER_SID":"GTI20101318275702518","ROUTE_NO":"ReWork01"},{"SID":"GTI20101409454602612","Status":"R","JUDGE_PARAMETER":"ATTRIBUTE_10","OPERATION":"切割","OPERATION_NO":"C02000-0030","OPER_SID":"GTI20091014210205213","ROUTE":"重工流程測試","ROUTE_VER_SID":"GTI20091610074707007","ROUTE_NO":"R001"}]
-						}
-					} 
-				   }
-			};
-			return _obj;
-		},
+ 
 	}
 	var 原生元件 = {
 		'Pagination'() {
@@ -2575,7 +2426,213 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'el-dialog'() {
+
+	}
+	var Dialog = {
+		'*拖曳寛高'() {
+			var _note = `
+			   <pre>
+			   https://github.com/guokangf/vue-element-utils
+			   </pre>
+			   `;
+			var dialogDragWidth = {
+				bind(el) {
+					const dragDom = el.querySelector('.el-dialog');
+					const lineEl = document.createElement('div');
+					lineEl.style =
+						'width: 2px; background: inherit; height: 80%; position: absolute; right: 0; top: 0; bottom: 0; margin: auto; z-index: 1; cursor: w-resize;';
+					lineEl.addEventListener(
+						'mousedown',
+						function(e) {
+							// 鼠标按下，计算当前元素距离可视区的距离
+							const disX = e.clientX - el.offsetLeft;
+			
+							// 当前宽度
+							const curWidth = dragDom.offsetWidth;
+			
+							document.onmousemove = function(e) {
+								e.preventDefault(); // 移动时禁用默认事件
+								// 通过事件委托，计算移动的距离
+								const l = e.clientX - disX;
+								dragDom.style.width = `${curWidth + l}px`;
+							};
+			
+							document.onmouseup = function(e) {
+								document.onmousemove = null;
+								document.onmouseup = null;
+							};
+						},
+						false
+					);
+					dragDom.appendChild(lineEl);
+				}
+			}
+			Vue.directive('el-dialog-drag-width', dialogDragWidth);
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<button @click="dialogVisible=true">show</button>
+						<el-dialog
+							title="提示"
+							:visible.sync="dialogVisible"
+							width="30%"
+							:close-on-click-modal="false"
+							v-el-dialog-drag-width
+						>
+							<span>这是一段信息</span>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogVisible = false">取 消</el-button>
+								<el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+							</span>
+						</el-dialog>
+						</div>
+					`,
+					data(){
+						return {
+							dialogVisible :true
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+		'拖曳位置,寛高'() {
+			var _note = `
+			   <pre>
+				[Ref]
+				https://blog.csdn.net/sinat_21902709/article/details/86545444	
+				https://rnseia.github.io/2019/02/22/element-ui%E5%AE%9E%E7%8E%B0dialog%E5%8F%AF%E6%8B%96%E6%8B%BD%E4%BD%8D%E7%BD%AE%E5%8F%8A%E5%AE%BD%E9%AB%98/
+				拖曳可用,但寛高無法正常使用,所以棄置另尋方案
+				</pre>
+			   `;
+			   Vue.directive('dialogDrag', {
+				bind(el, binding, vnode, oldVnode) {
+				  const dialogHeaderEl = el.querySelector('.el-dialog__header')
+				  const dragDom = el.querySelector('.el-dialog')
+				  dialogHeaderEl.style.cursor = 'move'
+			  
+				  // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null);
+				  const sty = dragDom.currentStyle || window.getComputedStyle(dragDom, null)
+			  
+				  dialogHeaderEl.onmousedown = (e) => {
+					// 鼠标按下，计算当前元素距离可视区的距离
+					const disX = e.clientX - dialogHeaderEl.offsetLeft
+					const disY = e.clientY - dialogHeaderEl.offsetTop
+			  
+					// 获取到的值带px 正则匹配替换
+					let styL, styT
+			  
+					// 注意在ie中 第一次获取到的值为组件自带50% 移动之后赋值为px
+					if (sty.left.includes('%')) {
+					  styL = +document.body.clientWidth * (+sty.left.replace(/\%/g, '') / 100)
+					  styT = +document.body.clientHeight * (+sty.top.replace(/\%/g, '') / 100)
+					} else {
+					  styL = +sty.left.replace(/\px/g, '')
+					  styT = +sty.top.replace(/\px/g, '')
+					}
+			  
+					document.onmousemove = function(e) {
+					  // 通过事件委托，计算移动的距离
+					  const l = e.clientX - disX
+					  const t = e.clientY - disY
+			  
+					  // 移动当前元素
+					  dragDom.style.left = `${l + styL}px`
+					  dragDom.style.top = `${t + styT}px`
+			  
+					  // 将此时的位置传出去
+					  // binding.value({x:e.pageX,y:e.pageY})
+					}
+			  
+					document.onmouseup = function(e) {
+					  document.onmousemove = null
+					  document.onmouseup = null
+					}
+				  }
+				}
+			  })
+ 
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<button @click="dialogVisible=true">show</button>
+						<el-dialog
+							:visible.sync="dialogVisible"
+							v-dialogDrag
+							>
+							test
+						</div>
+					`,
+					data(){
+						return {
+							dialogVisible :true
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+
+		"dialog 自適高度"() {
+			/*
+			當在 el-dialog 的內容超過螢幕範圍時,原生的樣式不支援做內容捲動的呈現,
+				而是整個 el-dialog 做整頁的捲動
+					*/
+			var _obj = {
+			  _css: `
+						.abow_dialog {
+							display: flex;
+							justify-content: center;
+							align-items: Center;
+							overflow: hidden;
+						}
+						.abow_dialog .el-dialog {
+							margin: 0 auto !important;
+							height: 90%;
+							overflow: hidden;
+							width: 85rem !important;
+							max-width: 95vw;
+						}
+						.abow_dialog .el-dialog__body {
+							position: absolute;
+							left: 0;
+							top: 54px;
+							bottom: 0;
+							right: 0;
+							padding: 1em 2.3em;
+							z-index: 1;
+							overflow: hidden;
+							overflow-y: auto;
+						}
+						`,
+			  _vue: {
+				template: `
+							<div>
+								
+								<el-dialog title="搜尋" :visible.sync="visible" :class="[switch_model?'abow_dialog':'']">
+									<div>
+										<input type=checkbox v-model="switch_model" />content scroll
+									</div>
+									<iframe scrolling="no" src="element-ui-2.13.htm" style="height:120vh;"></iframe>
+								</el-dialog>
+							</div>`,
+				data() {
+				  return {
+					switch_model: true,
+					visible: true
+				  };
+				}
+			  }
+			};
+			return _obj;
+		  },
+		'子視窗列印'() {
 			var _note = `
 			   <pre>
 			   [ref]
@@ -2625,8 +2682,63 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'el-dialog 樣式'(){
+			/*
+			情境需求:
+			1.自定義 dialog header 樣式
+			2.dialog 設定圓角
+				2-1. el-dialog__header 需要再補設 border-radius ,
+					才不會造成頭部的圓角被蓋掉
+		
+			*/
+			var _css = `
+			.el-dialog__header {
+				border-radius: 7px 7px 0px 0px;
+				background-color: #5d9cec;
+				padding: 13px !important;
+				color: #fff;
+				text-align: left;
+			}
+		
+			.el-dialog {
+				border-radius: 7px;
+			}
+		
+			
+			`;
+			var _vue = {
+			template: `
+			<div>
+			<el-dialog  
+					:append-to-body="true"
+					:visible.sync="dialog1"
+					width="35rem"
+					class="ver-modify"
+					:show-close="false"
+					center>
+			<label slot="title">
+				版本管理
+			</label>
+		
+				<span slot="footer" class="dialog-footer">
+				<el-button @@click="dialog1=false">取消</el-button>
+				<el-button type="primary" @@click="dialog1=false">確定</el-button>
+				</span>
+			</el-dialog></div>`,
+			data(){
+				return {
+				dialog1: true
+		
+				}
+			},
+			methods: {
+		
+			},
+			};
+			return {_vue,_css};
+		},
 	}
- 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,原生元件,程式產生器};
+ 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,Dialog,原生元件,程式產生器};
 }
 (function () {
 	var arr = [
