@@ -2156,12 +2156,77 @@ var __fn = (
 	
 	}
 	var Table = {
+		'*sort'() {
+			var _note = `
+			   <pre>
+			   	1.sortable:
+				   後端排序:custom  前端排序與否:T/F ,
+				   但實測試時發現 只能直接用 sortable ,加上 T/F 就沒有排序的效果了
+				2.前端排序的功能必須注意, el-table-column 一定要設定 prop 值
+				3. default-sort 是預設的排序方式
+				4.後端排序 需搭配 在 el-table 設置 sort-change 的事件,
+					並實作相應的查詢程序才能生效 
+				5. sort-change 是監聽 table 的排序事件 ,所以 前端排序的動作也會觸發到該事件,
+					前後端排序混用時必須小心.
+
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+							<el-table ref="ETable" :data="tableData" empty-text="　"
+								highlight-current-row
+								:default-sort="{prop: 'name', order: 'descending'}"
+								@sort-change="sort_change"
+								>
+								<el-table-column prop="name" label="Name(前端排序)" width="*" sortable >
+									<template slot-scope="scope">
+										{{scope.row.name}}
+									</template>
+								</el-table-column>
+								<el-table-column label="Invdate(後端排序)" prop="invdate" width="*" sortable="custom">
+									
+								</el-table-column>
+								 
+								amount
+							</el-table>
+						</div>
+					`,
+					data(){
+						return {
+							tableData:window.gEx.mydata,
+							sort_orders:[
+								'ascending', 
+								'descending'
+								//不排序
+								, null]
+						}
+					},
+					methods:{
+						sort_change(column, prop, order ){
+							var isServerSiteOrder = column.column.sortable == "custom";
+							var _s = JSON.stringify({column, prop, order,isServerSiteOrder},"",4);
+							this.$message({
+								title: 'HTML 片段',
+								dangerouslyUseHTMLString: true,
+								message: _s
+							  });
+						}
+					}
+				}
+			};
+			return _obj;
+		},
 		'行內編輯功能'() {
 			var _note = `
 			   <pre>
 			   因應專案上的需求,實作 行內編輯的功能
 			   1.利 row-class-name 的功能,以實現設定指定行的的樣式.
 			   2.利用 css 的組合性條件,由行的樣式名稱 切換行內的顯示和編輯模式
+			   3.ESC 取消編輯的功能
 			   </pre>
 			   `;
 			var _obj = {
@@ -2429,7 +2494,7 @@ var __fn = (
 
 	}
 	var Dialog = {
-		'*拖曳寛高'() {
+		'?拖曳寛高'() {
 			var _note = `
 			   <pre>
 			   https://github.com/guokangf/vue-element-utils
