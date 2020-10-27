@@ -170,6 +170,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             Vue.directive('demo', {
                 bind: function (el, binding, vnode) {
                     debugger
+                    console.log({el, binding, vnode});
                     var s = JSON.stringify;
                     el.innerHTML =
                         'name: '       + s(binding.name) + '<br>' +
@@ -182,8 +183,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             })
             Vue.directive('debug', {
                 componentUpdated(el, binding, vnode){
-                    let {arg=''} = binding;
-                    console.log({arg,el, binding, vnode});
+                    console.log({el, binding, vnode});
                 }
             })
             var _obj = {
@@ -193,7 +193,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
                         <div>
                         ${_note}
                             <input type='text' v-model="message" />
-                            <div id="hook-arguments-example" v-debug v-demo:foo.a.b.zz="message"></div>
+                            <div id="hook-arguments-example" v-debug v-demo:foo.a.b.zz="message"  v-model="message"></div>
                         </div>
                     `,
                     data(){
@@ -248,35 +248,106 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             };
             return _obj;
         },
-        '?directive numbers'() {
+        '*directive numbers'() {
             var _note = `
                <pre>
                [Ref]https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/230874/
+               **https://juejin.im/post/6844904145892147208
                1.與原作己有諸多不同,後來只保留 directive 精神 
                2.目前使用原生 input 沒問題 ,但套到 el-input 有問題,待修正
                </pre>
                `;
                let number = {
                     twoWay: true,
-                    e_blur(e){
+                    e_blur(e,vnode=null){
                         debugger
+                        console.log({e_blur:{e,vnode}});
                         var _val = e.srcElement.value;
-                        e.srcElement.value = number.formatNumber(_val);
+                        var t = number.formatNumber(_val);
+                        if (vnode==null) return;
+                        vnode.context.$nextTick(function () {
+                                e.target.value =t;
+                                //console.log(" event.target.value =t",t)
+                            }
+                            ,false 
+                        //冒泡阶段执行，记得不要用true
+                        //如果设为true的话，这个函数会在捕捉阶段执行，  
+                        )
                     },
-                    e_focus(e){
+                    e_focus(e,vnode=null){
                         debugger
-
+                        console.log({e_focus:{e,vnode}});
                         var _val = e.srcElement.value;
-                        e.srcElement.value = _val.replace(/,/g,'');
+                        var t = _val.replace(/,/g,'');
+                        if (vnode==null) return;
+                        vnode.context.$nextTick(function () {
+                                e.target.value =t;
+                                //console.log(" event.target.value =t",t)
+                            }
+                            ,false 
+                        //冒泡阶段执行，记得不要用true
+                        //如果设为true的话，这个函数会在捕捉阶段执行，  
+                        )
                     },
-                    bind(el){
+                    bind(el, binding, vnode){
                         debugger
+                        var _vue = el['__vue__'];
+                        if (_vue==null){
+                            el.addEventListener('blur', (e)=>{
+                                number.e_blur(e,vnode);
+                            });
+                            el.addEventListener('focus', (e)=>{
+                                number.e_focus(e,vnode);
+                            });
+                        }else{
+                            _vue.$on('blur', (e)=>{
+                                number.e_blur(e,vnode);
+                            });
+                            _vue.$on('focus', (e)=>{
+                                number.e_focus(e,vnode);
+                            });
+                        }
+                    },
+                    bind_v2(el, binding, vnode){
+                        debugger
+                        var key = Object.keys(binding.modifiers)[0]
+                        function numFormat(num){
+                            var num1 = num.split(".")[0]
+                            var num2 = num.split(".")[1]
+                            var c = num1.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+                            if(num.toString().indexOf(".")!==-1){
+                                return c+"."+num2
+                            }
+                            else {
+                                return c
+                            }
+                        }
+                        el.addEventListener("input",function (event) {
+                           var inp = event.target.value =  event.target.value.replace(/,/g,"")
+                           binding.value[key] = event.target.value;
+                            var t =  numFormat(inp)
+                            vnode.context.$nextTick(function () {
+                                event.target.value =t
+                                console.log(" event.target.value =t",t)
+                            },
+                            false 
+                            //冒泡阶段执行，记得不要用true
+                            //如果设为true的话，这个函数会在捕捉阶段执行，  
+                            )
+                        })
+                    },
+    
+                    
+                    _bind(el){
+                        debugger
+                        //console.log({bind:{el,binding}});
                         var _vue = el['__vue__'];
                         if (_vue==null){
                             el.addEventListener('blur', number.e_blur);
                             el.addEventListener('focus', number.e_focus);
                         }else{
-                            vm.value
+                            _vue.$on('blur', number.e_blur);
+                            _vue.$on('focus', number.e_focus);
                         }
                     },
                     unbind(el) {
@@ -291,7 +362,10 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
                         let re = /\d{1,3}(?=(\d{3})+$)/g;  
                         let n1 = str[0].replace(re, "$&,");  
                         return str.length > 1 && str[1] ? `${n1}.${str[1]}` : `${n1}`; 
-                    }
+                    },
+                    // componentUpdated(el, binding, vnode){
+                    //     console.log({el, binding, vnode});
+                    // }
                 }
             
             Vue.directive('numbers',number);
@@ -302,13 +376,15 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
                         <div>
                         ${_note}
                         <input type="text" class="form-control" placeholder="" v-numbers v-model="val_1">
-                        <el-input   placeholder="" v-numbers v-model="val_2">
+                        <input type="text" class="form-control" placeholder="" v-numbers v-model="val_2">
+                        <el-input   placeholder="" v-numbers v-model="val_3">
                         </div>
                     `,
                     data(){
                         return {
                             val_1:1000,
-                            val_2:9999
+                            val_2:9999,
+                            val_3:9999,
                         }
                     } 
                    }
