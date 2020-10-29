@@ -2156,7 +2156,82 @@ var __fn = (
 	
 	}
 	var Table = {
-		'*sort'() {
+		'*兩欄併一行'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var dyn1 = {
+				template: `
+					<div>
+						<div v-for="(item,index) in arr">{{item}}{{index}}</div>
+					</div>
+					`,
+				props:{
+					value:{
+						type:String,
+						default(){
+							""
+						}
+					},
+					split:{
+						type:String,
+						default:" "
+					}
+				},
+				computed:{
+					arr(){
+						debugger
+						console.log(this.value);
+						return this.value.split(this.split);
+					}
+				}
+				
+			};
+			var _obj = {
+				_css:``,
+				_vue: {
+					components:{dyn1},
+					template: `
+						<div>
+						${_note}
+						<el-table
+							:data="tableData"
+							style="width: 100%"
+							highlight-current-row
+							>
+ 								<el-table-column
+									label="Name"
+									width="180"
+									prop="name">
+									<template slot-scope="scope">
+										<el-tag type="success"  size="mini" >{{scope.row.name}}</el-tag>
+										<div>{{scope.row.invdate}}</div>
+									</template>
+								</el-table-column>
+								<el-table-column
+									label="Name"
+									width="180"
+									prop="name">
+									<template slot-scope="scope">
+										<dyn1 v-model="val_1" ></dyn1>
+									</template>
+								</el-table-column>
+							</el-table>
+						</div>
+						</div>
+					`,
+					data(){
+						return {
+							val_1:'2015-10-10 10:10:10',
+							tableData:window.gEx.mydata
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+		'sort'() {
 			var _note = `
 			   <pre>
 			   	1.sortable:
@@ -2498,6 +2573,7 @@ var __fn = (
 			var _note = `
 			   <pre>
 			   https://github.com/guokangf/vue-element-utils
+			   https://cloud.tencent.com/developer/article/1712938
 			   </pre>
 			   `;
 			var dialogDragWidth = {
