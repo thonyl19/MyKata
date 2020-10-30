@@ -3,7 +3,7 @@ https://v3.bootcss.com/getting-started/
 https://github.com/ElemeFE/element/tree/dev/packages
 */
 var __fn = (
-	$, _ , styled, Vue,Mock,
+	$, _ , styled, Vue,Mock,moment,
 	ELEMENT,UI_AppExt
 )=> 
 {
@@ -2164,12 +2164,12 @@ var __fn = (
 			var dyn1 = {
 				template: `
 					<div>
-						<div v-for="(item,index) in arr">{{item}}{{index}}</div>
+						<h6 v-for="(item) in arr">{{item}}</h6>
 					</div>
 					`,
 				props:{
 					value:{
-						type:String,
+						type:[String,Date],
 						default(){
 							""
 						}
@@ -2177,13 +2177,24 @@ var __fn = (
 					split:{
 						type:String,
 						default:" "
+					},
+					moment:{
+						type:Function,
+						default:null
 					}
 				},
 				computed:{
 					arr(){
-						debugger
-						console.log(this.value);
-						return this.value.split(this.split);
+						var _tmp = this.value;
+						if (_.isDate(_tmp)){
+							var _hasMoment = this.moment!=null;
+							if(_hasMoment){
+								_tmp = moment(_tmp).format('YYYY-MM-DD HH:mm:ss')
+							}else{
+								_tmp = _tmp.toISOString().substring(0, 10);
+							}
+						}
+						return _tmp.split(this.split);
 					}
 				}
 				
@@ -2214,7 +2225,23 @@ var __fn = (
 									width="180"
 									prop="name">
 									<template slot-scope="scope">
-										<dyn1 v-model="val_1" ></dyn1>
+										<dyn1 v-model="val_1"></dyn1>
+									</template>
+								</el-table-column>
+								<el-table-column
+									label="Date"
+									width="180"
+									prop="name">
+									<template slot-scope="scope">
+										<dyn1 v-model="val_2"></dyn1>
+									</template>
+								</el-table-column>
+								<el-table-column
+									label="Date_moment"
+									width="180"
+									prop="name">
+									<template slot-scope="scope">
+										<dyn1 v-model="val_2" moment="moment"></dyn1>
 									</template>
 								</el-table-column>
 							</el-table>
@@ -2224,6 +2251,7 @@ var __fn = (
 					data(){
 						return {
 							val_1:'2015-10-10 10:10:10',
+							val_2:new Date(),
 							tableData:window.gEx.mydata
 						}
 					} 
@@ -2883,7 +2911,7 @@ var __fn = (
 }
 (function () {
 	var arr = [
-		"jquery","lodash","styled","vue",'Mock',
+		"jquery","lodash","styled","vue",'Mock','moment',
 		'ELEMENT'
 		,'UI_AppExt'
 	 ];
