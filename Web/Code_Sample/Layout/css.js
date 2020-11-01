@@ -1316,10 +1316,65 @@ var __fn = ($,_,Vue)=>{
 			return _obj;
 		}
 	}
+	var Background = {
+		'*gradient'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:`
+				div.base{
+					height:15em;
+				}
+				`,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						{{range}}<input type="range" min="1" max="100" v-model="range" class="slider" id="myRange">
+						<div class='base' ref="styObj" :style="sty"> </div>
+						<div>{{sty}}</div>
+						  <h5><label class='label-info'> cssText:</label></h5>
+						  <div>{{sty_code}}</div>
+						</div>
+					`,
+					data(){
+						return {
+							range:10,
+							sty_code:''
+						}
+					},
+					computed:{
+						sty(){
+							return {
+								background: '#BCCDD6',
+								background: `-moz-linear-gradient(top, #BCCDD6 0%, #FFFFFF ${this.range}%, #BCCDD6 100%)`,
+								background: `-webkit-linear-gradient(top, #BCCDD6 0%, #FFFFFF ${this.range}%, #BCCDD6 100%)`,
+								background: `linear-gradient(to bottom, #BCCDD6 0%, #FFFFFF  ${this.range}%, #BCCDD6 100%)`
+							}
+						}
+					},
+					watch: {
+						sty() {
+							debugger
+							let { styObj } = this.$refs;
+							if (styObj != null) {
+								this.sty_code = styObj.style.cssText;
+							}
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+		
+	}
 	return {
 		views,
 		Attrib,
-		Case, Table, Layout, Position
+		Case, Table, Layout, Position,
+		Background,
 	};
 }
 (function () {
