@@ -698,7 +698,7 @@ var __fn = (
 	}
 	var Group = {
 	  
-	  'Bts .btn-group'() {
+	  '*Bts .btn-group'() {
 		var _note = `
 		  <pre>
 		1.原本希望利用 bts.input-group 來實作 group btn 的效果,
@@ -707,8 +707,8 @@ var __fn = (
 		2.而原本 input-group 的問題,經測試發現,主要是因為 group 中,
 			只能有一個主物件設為 form-control , 第二個 form-control 一定會破壞排版 ,
 			所以 button ,得用 input-group-btn 來協助整合 ,
-				
 		3. el-input 也可以成功整入,但發現 ,當前 el-ui 的版本 ,沒有 clearabl 的效果
+		4. el-input 雖然可以整入,但如果裡面有其他 的form-control 就會相衝
 		  </pre>
 		   `;
 		var _obj = {
@@ -718,14 +718,18 @@ var __fn = (
 					${_note}
 					<h3>.btn-group</h3>
 					<div class="btn-group">
-					  <el-button class="btn btn-default" >el-button</el-button>
-					  <input type="button" class="btn  btn-default" value="html_button" />
-					  <button  class="btn  btn-default">button</button> 
+						<el-input placeholder="请输入内容"
+								v-model="val_1"></el-input>
+					  	<el-button class="btn btn-default" >el-button</el-button>
+					  	<input type="button" class="btn  btn-default" value="html_button" />
+					  	<button  class="btn  btn-default">button</button> 
 					</div>
 					<h3>.input-group</h3>
 					<div class="input-group">
-					  <span class="input-group-addon" id="basic-addon1">@</span>
-					  <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+						<span class="input-group-addon" id="basic-addon1">@</span>
+						<el-input placeholder="请输入内容"
+								v-model="val_1" clearabl></el-input>
+						<input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
 					  <span class="input-group-btn">
 						<el-button class="btn btn-default" >el-button</el-button>
 						<input type="button" class="btn  btn-default" value="html_button" />
@@ -739,7 +743,13 @@ var __fn = (
 							v-model="val_1" clearabl></el-input>
 						<span class="input-group-addon" id="basic-addon1">@</span>
 					</div>
- 
+					<h3>el-input 與 form-control</h3>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1">@</span>
+						<el-input placeholder="请输入内容"
+							v-model="val_1" clearabl></el-input>
+						<input type="text" class="form-control" placeholder="form-control" aria-describedby="basic-addon1">
+					</div>
 				 </div>
 				 `,
 			  data(){
@@ -2429,7 +2439,7 @@ var __fn = (
 
 	}
 	var Dialog = {
-		'*拖曳寛高'() {
+		'拖曳寛高'() {
 			var _note = `
 			   <pre>
 			   https://github.com/guokangf/vue-element-utils
