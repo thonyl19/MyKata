@@ -1,7 +1,31 @@
 ﻿/*
 
 */
-var __fn = ($, _, styled, Vue,vuedraggable) => {
+var __fn = ($, _, styled, Vue,VueMask,vuedraggable) => {
+	var VueTheMask= {
+		'*def'() {
+			Vue.use(VueMask);
+			var _note = `
+			<pre>
+			</pre>
+			`;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+					<div>
+						${_note}
+						<input type="tel" v-mask="'##/##/####'" />
+					</div>
+					`,
+					data(){
+						return {}
+					}
+				}
+			};
+			return _obj;
+		},
+	}
 	var VueDraggable = {
 		/*
 		程序中會使用到 sortablejs ,必須 load 到 local .....
@@ -67,17 +91,20 @@ var __fn = ($, _, styled, Vue,vuedraggable) => {
 			return _obj;
 		},	
 	};
-	return { VueDraggable 
+	return { VueTheMask
+		//, VueDraggable 
 		//,vue_easy_dnd 
 	};
 };
 (function () {
 	var arr = ["jquery", "lodash", "styled", "vue"
-		,"vuedraggable"
+		,"VueTheMask"
+		//,"vuedraggable"
 	  	//,"VueEasyDnD"
 	];
 	var cfg = {
 		paths: {
+			VueTheMask:'https://cdn.jsdelivr.net/npm/vue-the-mask@0.11.1/dist/vue-the-mask.min',
 			Sortable:'https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min',
 			vuedraggable:'https://cdn.jsdelivr.net/npm/vuedraggable@2.24.2/dist/vuedraggable.umd.min',
 			VueEasyDnD:
