@@ -24,6 +24,7 @@ window.gEx = {
 			'CSS',
 			'bootstrap3.3.7',
 			'bootstrap4.5.0',
+			'bulma0.9.1',
 		],
 		Chart:[
 			'c3_0.7.15',
@@ -40,7 +41,7 @@ window.gEx = {
 		]
 	},
 	chgUrl(fnName){
-		debugger
+		//debugger
 		var _url = new URL(location);
 		//_url.hash = `${key}/${fnName}`;
 		_url.hash = fnName;

@@ -991,6 +991,131 @@ var __fn = ($,_,Vue)=>{
 			};
 			return _obj;
 		},
+		'blueTable'() {
+			var _note = `
+			   <pre>
+			   https://divtable.com/table-styler/
+			   https://stackoverflow.com/questions/45933894/table-design-in-javafx/45941245
+				參考 ,未完成   
+			   </pre>
+			   `;
+			var _obj = {
+				_css:`
+				table.blueTable {
+					border: 1px solid #1C6EA4;
+					background-color: #EEEEEE;
+					width: 100%;
+					text-align: left;
+					border-collapse: collapse;
+				  }
+				  table.blueTable td, table.blueTable th {
+					border: 1px solid #AAAAAA;
+					padding: 3px 2px;
+				  }
+				  table.blueTable tbody td {
+					font-size: 13px;
+				  }
+				  table.blueTable tr:nth-child(even) {
+					background: #D0E4F5;
+				  }
+				  table.blueTable thead {
+					background: #1C6EA4;
+					background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+					background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+					background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+					border-bottom: 2px solid #444444;
+				  }
+				  table.blueTable thead th {
+					font-size: 15px;
+					font-weight: bold;
+					color: #FFFFFF;
+					border-left: 2px solid #D0E4F5;
+				  }
+				  table.blueTable thead th:first-child {
+					border-left: none;
+				  }
+				  
+				  table.blueTable tfoot {
+					font-size: 14px;
+					font-weight: bold;
+					color: #FFFFFF;
+					background: #D0E4F5;
+					background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+					background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+					background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+					border-top: 2px solid #444444;
+				  }
+				  table.blueTable tfoot td {
+					font-size: 14px;
+				  }
+				  table.blueTable tfoot .links {
+					text-align: right;
+				  }
+				  table.blueTable tfoot .links a{
+					display: inline-block;
+					background: #1C6EA4;
+					color: #FFFFFF;
+					padding: 2px 8px;
+					border-radius: 5px;
+				  }
+				`,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<table class="blueTable">
+<thead>
+<tr>
+<th>head1</th>
+<th>head2</th>
+<th>head3</th>
+<th>head4</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<td colspan="4">
+<div class="links"><a href="#">&laquo;</a> <a class="active" href="#">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">&raquo;</a></div>
+</td>
+</tr>
+</tfoot>
+<tbody>
+<tr>
+<td>cell1_1</td>
+<td>cell2_1</td>
+<td>cell3_1</td>
+<td>cell4_1</td>
+</tr>
+<tr>
+<td>cell1_2</td>
+<td>cell2_2</td>
+<td>cell3_2</td>
+<td>cell4_2</td>
+</tr>
+<tr>
+<td>cell1_3</td>
+<td>cell2_3</td>
+<td>cell3_3</td>
+<td>cell4_3</td>
+</tr>
+<tr>
+<td>cell1_4</td>
+<td>cell2_4</td>
+<td>cell3_4</td>
+<td>cell4_4</td>
+</tr>
+</tbody>
+</table>
+						</div>
+					`,
+					data(){
+						return {
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
 		//http://johnsardine.com/example/simple-little-table/
 	}
 	let Layout = {
@@ -1280,7 +1405,7 @@ var __fn = ($,_,Vue)=>{
 			};
 			return { _vue };
 		},
-		'*text-overflow'(){
+		'text-overflow'(){
 			var _note = `<pre>
 			https://blog.xuite.net/vexed/tech/22596484-%E7%94%A8+CSS+%E8%AE%93%E9%81%8E%E9%95%B7%E6%BA%A2%E5%87%BA%E7%9A%84%E5%AD%97%E7%9C%81%E7%95%A5%E8%AE%8A+...
 如果文字超過邊界,自動以 ... 方式呈現</pre>
@@ -1316,10 +1441,65 @@ var __fn = ($,_,Vue)=>{
 			return _obj;
 		}
 	}
+	var Background = {
+		'gradient'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:`
+				div.base{
+					height:15em;
+				}
+				`,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						{{range}}<input type="range" min="1" max="100" v-model="range" class="slider" id="myRange">
+						<div class='base' ref="styObj" :style="sty"> </div>
+						<div>{{sty}}</div>
+						  <h5><label class='label-info'> cssText:</label></h5>
+						  <div>{{sty_code}}</div>
+						</div>
+					`,
+					data(){
+						return {
+							range:10,
+							sty_code:''
+						}
+					},
+					computed:{
+						sty(){
+							return {
+								background: '#BCCDD6',
+								background: `-moz-linear-gradient(top, #BCCDD6 0%, #FFFFFF ${this.range}%, #BCCDD6 100%)`,
+								background: `-webkit-linear-gradient(top, #BCCDD6 0%, #FFFFFF ${this.range}%, #BCCDD6 100%)`,
+								background: `linear-gradient(to bottom, #BCCDD6 0%, #FFFFFF  ${this.range}%, #BCCDD6 100%)`
+							}
+						}
+					},
+					watch: {
+						sty() {
+							debugger
+							let { styObj } = this.$refs;
+							if (styObj != null) {
+								this.sty_code = styObj.style.cssText;
+							}
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+		
+	}
 	return {
 		views,
 		Attrib,
-		Case, Table, Layout, Position
+		Case, Table, Layout, Position,
+		Background,
 	};
 }
 (function () {
