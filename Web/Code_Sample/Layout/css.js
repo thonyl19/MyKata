@@ -7,7 +7,7 @@ jquery-awesome-cursor
 var __fn = ($,_,Vue)=>{
 	debugger
 	let views = {
-	"css-jss用例"() {
+	"?css-jss用例"() {
 		/*
 				Ref:
 					https://cssinjs.org/jss-api?v=v10.0.3
@@ -33,7 +33,7 @@ var __fn = ($,_,Vue)=>{
 		};
 		return { _vue };
 	},
-	"css-sc用例1"() {
+	"?css-sc用例1"() {
 		/*
 				Ref: vue-styled-components
 				*/
@@ -189,82 +189,7 @@ var __fn = ($,_,Vue)=>{
 		};
 		return { _vue };
 	},
-	"linear-gradient"() {
-		var _obj = {
-			_vue: {
-				template: `
-					  <div class="lg">
-						  [linear-gradient]{{myRange}}<input type="range" min="10" max="360" v-model="myRange" class="slider" >
-						  <h1 ref="styObj">資料統計</h1>
-						  <textarea  v-model="csstxt"></textarea>
-					  </div>
-					  `,
-				data() {
-					return {
-						myRange: 10
-					};
-				},
-				mounted() {
-					this.$refs.styObj.style.cssText = this.csstxt;
-				},
 
-				computed: {
-					csstxt() {
-						debugger;
-						let _css = `
-								  margin: 1em;
-								  border-radius: 10px;
-								  box-sizing:border-box;
-								  border-width:1px;
-								  border-style:solid;
-								  border-color:rgba(121, 121, 121, 1);
-								  background:linear-gradient(${this.myRange}deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
-							  `;
-						let { styObj } = this.$refs;
-						if (styObj != null) {
-							styObj.style.cssText = _css;
-						}
-						return _css;
-					}
-				}
-				/*
-							//以下是經過簡化後, 不需要的方法,留存備忘
-							methods:{
-								bindCss(){
-									let {styObj} = this.$refs;
-									if (styObj != null){
-										styObj.style.cssText = this.csstxt;
-									}
-								}
-							},
-							watch:{
-								// csstxt(){
-								//     this.bindCss()
-								// },
-								
-								不 work
-								'this.$refs.styObj.style.cssText'(){
-									debugger
-								}
-								
-								原本的作用是希望在初始化時,就處理一次,但 因為 styObj 是 null,
-									所以不 work 留存備忘之
-								csstxt:{
-									immediate: true, // makes the watcher fire on first render, too.
-									handler() {
-										debugger
-										let {styObj} = this.$refs;
-										if (styObj != null){
-											styObj.style.cssText = this.csstxt;
-										}
-									}
-								}
-							}
-							*/
-			}
-		};
-		return _obj;
-	},
 	animation() {
 		/*
 				Ref:
@@ -1442,15 +1367,16 @@ var __fn = ($,_,Vue)=>{
 		}
 	}
 	var Background = {
-		'gradient'() {
+		'*gradient'() {
 			var _note = `
 			   <pre>
+			   
 			   </pre>
 			   `;
 			var _obj = {
 				_css:`
 				div.base{
-					height:15em;
+					height:5em;
 				}
 				`,
 				_vue: {
@@ -1458,42 +1384,114 @@ var __fn = ($,_,Vue)=>{
 						<div>
 						${_note}
 						{{range}}<input type="range" min="1" max="100" v-model="range" class="slider" id="myRange">
-						<div class='base' ref="styObj" :style="sty"> </div>
-						<div>{{sty}}</div>
-						  <h5><label class='label-info'> cssText:</label></h5>
-						  <div>{{sty_code}}</div>
-						</div>
+						<div class='base' ref="styObj"> </div>
+						<textarea  v-model="csstxt"></textarea>
 					`,
 					data(){
 						return {
 							range:10,
-							sty_code:''
 						}
 					},
+		 
 					computed:{
-						sty(){
-							return {
-								background: '#BCCDD6',
-								background: `-moz-linear-gradient(top, #BCCDD6 0%, #FFFFFF ${this.range}%, #BCCDD6 100%)`,
-								background: `-webkit-linear-gradient(top, #BCCDD6 0%, #FFFFFF ${this.range}%, #BCCDD6 100%)`,
-								background: `linear-gradient(to bottom, #BCCDD6 0%, #FFFFFF  ${this.range}%, #BCCDD6 100%)`
+						csstxt() {
+							let _css = `
+									background:#BCCDD6;
+									background:linear-gradient(#BCCDD6 0%, #FFFFFF ${this.range}%, #BCCDD6 100%);									  
+								  `;
+							this.bind(this.$refs.styObj,_css);
+							return _css;
+						},
+ 					},
+					methods:{
+						bind(styObj,css){
+							debugger
+							if (styObj != null) {
+								styObj.style.cssText = css;
 							}
 						}
 					},
-					watch: {
-						sty() {
-							debugger
-							let { styObj } = this.$refs;
-							if (styObj != null) {
-								this.sty_code = styObj.style.cssText;
-							}
-						}
-					}
+					 
 				}
 			};
 			return _obj;
 		},
-		
+		"linear-gradient"() {
+			var _obj = {
+				_vue: {
+					template: `
+						  <div class="lg">
+							  [linear-gradient]{{myRange}}<input type="range" min="10" max="360" v-model="myRange" class="slider" >
+							  <h1 ref="styObj">資料統計</h1>
+							  <textarea  v-model="csstxt"></textarea>
+						  </div>
+						  `,
+					data() {
+						return {
+							myRange: 10
+						};
+					},
+					mounted() {
+						this.$refs.styObj.style.cssText = this.csstxt;
+					},
+	
+					computed: {
+						csstxt() {
+							debugger;
+							let _css = `
+									  margin: 1em;
+									  border-radius: 10px;
+									  box-sizing:border-box;
+									  border-width:1px;
+									  border-style:solid;
+									  border-color:rgba(121, 121, 121, 1);
+									  background:linear-gradient(${this.myRange}deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 0%, rgba(0, 255, 153, 1) 100%, rgba(0, 255, 153, 1) 100%);
+								  `;
+							let { styObj } = this.$refs;
+							if (styObj != null) {
+								styObj.style.cssText = _css;
+							}
+							return _css;
+						}
+					}
+					/*
+								//以下是經過簡化後, 不需要的方法,留存備忘
+								methods:{
+									bindCss(){
+										let {styObj} = this.$refs;
+										if (styObj != null){
+											styObj.style.cssText = this.csstxt;
+										}
+									}
+								},
+								watch:{
+									// csstxt(){
+									//     this.bindCss()
+									// },
+									
+									不 work
+									'this.$refs.styObj.style.cssText'(){
+										debugger
+									}
+									
+									原本的作用是希望在初始化時,就處理一次,但 因為 styObj 是 null,
+										所以不 work 留存備忘之
+									csstxt:{
+										immediate: true, // makes the watcher fire on first render, too.
+										handler() {
+											debugger
+											let {styObj} = this.$refs;
+											if (styObj != null){
+												styObj.style.cssText = this.csstxt;
+											}
+										}
+									}
+								}
+								*/
+				}
+			};
+			return _obj;
+		},
 	}
 	return {
 		views,
