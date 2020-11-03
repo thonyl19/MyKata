@@ -15,6 +15,7 @@
     <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.5" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.5" />
     <PackageReference Include="Z.EntityFramework.Plus.EF6" Version="1.12.31" />
   </ItemGroup>
 

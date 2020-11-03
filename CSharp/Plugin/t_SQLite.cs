@@ -11,10 +11,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SQLite;
+using System.Data;
 
 namespace CSharp.Plugin {
     [TestClass]
     public class t_SQLite {
+        public static IDbConnection cnn  {
+            get{
+                //以下語法 不work
+                //using (IDbConnection cnn = new MvcMovieContext())
+                var db_path = @"data source=.\MvcMovie.db;version=3;";
+                return new SQLiteConnection(db_path);
+            }
+        }
 		[TestMethod]
 		public void T_db連線設置(){
 			using (var context = new MvcMovieContext())

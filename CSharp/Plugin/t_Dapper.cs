@@ -14,15 +14,6 @@ namespace CSharp.Plugin {
     [TestClass]
     public class t_Dapper {
         
-        IDbConnection cnn  {
-            get{
-                //以下語法 不work
-                //using (IDbConnection cnn = new MvcMovieContext())
-                var db_path = @"data source=.\MvcMovie.db;version=3;";
-                return new SQLiteConnection(db_path);
-            }
-        }
-
         /// <summary>
         /// 初始化設定
         /// </summary>
@@ -35,7 +26,7 @@ namespace CSharp.Plugin {
 
         [TestMethod]
 		public void T_Query(){
-            using (var cnn = this.cnn)
+            using (var cnn = t_SQLite.cnn)
 			{
                 //cnn.Open();
                 string _sql = @"
@@ -51,7 +42,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void T_ExecuteScalar(){
-            using (var cnn = this.cnn)
+            using (var cnn = t_SQLite.cnn)
 			{
                 var result = cnn.ExecuteScalar(
                     "SELECT @Value",
