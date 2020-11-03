@@ -3,3 +3,4 @@
 
 ### [Ref]
 [dotnet/docs.zh-tw](https://github.com/dotnet/docs.zh-tw/tree/live/docs)
+https://github.com/dotnet/AspNetCore.Docs.zh-tw/tree/live/aspnetcore
