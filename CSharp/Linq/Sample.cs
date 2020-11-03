@@ -11,6 +11,7 @@ namespace CSharp.Linq
 		public string name(){
 			return Name.ToLower();
 		}
+		public int Age{get;set;}
     }
 
     public class Phone
@@ -28,10 +29,10 @@ namespace CSharp.Linq
 
 	public class Sample{
 		public static Case1 Case1(){
-			Person Peter = new Person() { Name = "Peter" };
-            Person Sunny = new Person() { Name = "Sunny" };
-            Person Tim = new Person() { Name = "Tim" };
-            Person May = new Person() { Name = "May" };
+			Person Peter = new Person() { Name = "Peter" ,Age=10 ,Addres="A"};
+            Person Sunny = new Person() { Name = "Sunny",Age=10 ,Addres="B"};
+            Person Tim = new Person() { Name = "Tim" ,Age=11,Addres="C"};
+            Person May = new Person() { Name = "May" ,Age=11,Addres="C"};
 
 			var _r =  new Case1(){
 				persons = new Person[] { Peter, Sunny, Tim, May },

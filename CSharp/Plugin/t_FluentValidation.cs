@@ -84,6 +84,29 @@ namespace CSharp.Plugin {
         }
  
         
+
+        /// <summary>
+        /// https://docs.fluentvalidation.net/en/latest/index.html?highlight=when#example
+        /// </summary>
+        [TestMethod]
+        public void t_When() {
+            var model_1 = new Person { 
+                Name= null ,
+                Age = 10
+            };
+            var _v8n = new PersonValidator(PersonValidator_flag.When)
+                .Validate (model_1);
+            var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
+        }
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/56648664/notempty-validation-for-multiple-fields
+        /// </summary>
+        [TestMethod]
+        public void t_RuleForParams() {
+            //待研究 
+        }
+        
     }
 
 
@@ -91,13 +114,42 @@ namespace CSharp.Plugin {
     public enum PersonValidator_flag
     {
         DependentRules,
-        All,   
+        All,  
+        When, 
     }
     public class PersonValidator : AbstractValidator<Person> {
         public PersonValidator () {
             RuleFor (person => person.Name).NotNull ();
         }
 
+        /// <summary>
+        /// 省卻開多個 class 懶人做法
+        /// </summary>
+        /// <param name="flag"></param>
+        public PersonValidator(PersonValidator_flag flag) {
+            switch (flag){
+                case PersonValidator_flag.DependentRules:
+                    RuleFor (person => person.Name)
+                        .NotNull ()
+                        //相依於前一個檢查條件,成功才會往下執行到這一條 
+                        .DependentRules(() =>
+                        {
+                            RuleFor(x => x.Name).NotNull();
+                        });
+                    break;
+                case PersonValidator_flag.All:
+                    Include(new PersonValidator());
+                    Include(new PersonValidator(PersonValidator_flag.DependentRules));
+                    Include(new PersonValidator_DependentRules());
+                    break;
+                case PersonValidator_flag.When:
+                    RuleFor(x => x.Name).NotNull()
+                        .When(x => x.Age > 0)
+                        .WithMessage("當 Age > 0 , Name 不得為 Null")
+                        ;
+                    break;
+            }
+        }
     }
     public class PersonValidator_DependentRules : AbstractValidator<Person> {
         public PersonValidator_DependentRules () {
