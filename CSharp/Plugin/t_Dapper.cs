@@ -13,7 +13,15 @@ using System.Data.SQLite;
 namespace CSharp.Plugin {
     [TestClass]
     public class t_Dapper {
-        private PersonValidator validator;
+        
+        IDbConnection cnn  {
+            get{
+                //以下語法 不work
+                //using (IDbConnection cnn = new MvcMovieContext())
+                var db_path = @"data source=.\MvcMovie.db;version=3;";
+                return new SQLiteConnection(db_path);
+            }
+        }
 
         /// <summary>
         /// 初始化設定
@@ -26,17 +34,28 @@ namespace CSharp.Plugin {
  
 
         [TestMethod]
-		public void T_新增資料(){
-            var db_path = @"data source=.\MvcMovie.db;version=3;";
-            //以下語法 不work
-            //using (IDbConnection cnn = new MvcMovieContext())
-            using (IDbConnection cnn = new SQLiteConnection(db_path))
+		public void T_Query(){
+            using (var cnn = this.cnn)
 			{
                 //cnn.Open();
                 string _sql = @"
                     select * from Movie
                 ";
 				var x = cnn.Query<Movie>(_sql).ToList();
+			}
+		}
+ 
+        /// <summary>
+        /// [https://docs.microsoft.com/zh-tw/dotnet/standard/data/sqlite/dapper-limitations]
+        /// Dapper 也預期參數會使用@前置詞。 其他首碼將無法使用。
+        /// </summary>
+        [TestMethod]
+		public void T_ExecuteScalar(){
+            using (var cnn = this.cnn)
+			{
+                var result = cnn.ExecuteScalar(
+                    "SELECT @Value",
+                    new { Value = 1 });
 			}
 		}
  
