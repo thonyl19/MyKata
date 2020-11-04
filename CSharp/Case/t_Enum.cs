@@ -35,7 +35,7 @@ namespace CSharp.Case
             x(TypeB.B1);
 
             // 測試,直接將 TypeA.A1 轉成 B 並取值
-            var z =((TypeB) TypeA.A1);
+            var zz =((TypeB) TypeA.A1);
 
         }
         

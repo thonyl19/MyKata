@@ -14,7 +14,7 @@ using System.Data.SQLite;
 using System.Data;
 
 namespace CSharp.Plugin {
-    [TestClass]
+    //[TestClass]
     public class t_SQLite {
         public static IDbConnection cnn  {
             get{
