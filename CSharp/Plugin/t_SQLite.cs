@@ -15,7 +15,7 @@ using System.Data;
 using System.IO;
 
 namespace CSharp.Plugin {
-    [TestClass]
+    //[TestClass]
     public class t_SQLite {
         public static string db_path = @"data source=.\MvcMovie.db;version=3;";
         

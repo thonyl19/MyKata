@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Z.EntityFramework.Plus;
 
 namespace CSharp.Plugin {
-    [TestClass]
+    //[TestClass]
     public class t_ZEntityFramework {
 		// public static void GenerateData()
 		// {

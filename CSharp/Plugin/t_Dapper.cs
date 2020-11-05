@@ -11,7 +11,7 @@ using System.Data;
 using System.Data.SQLite;
 
 namespace CSharp.Plugin {
-    [TestClass]
+    //[TestClass]
     public class t_Dapper {
         
         /// <summary>
