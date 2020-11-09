@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System;
 using Microsoft.EntityFrameworkCore;
 using CSharp.Linq;
+using MyKata.Lib;
 
 namespace CSharp.Plugin
 {
@@ -230,6 +231,7 @@ namespace CSharp.Plugin
                     .OrderBy(c=>c.Id) 
                     .PageResult(1,2)
                     ;
+                FileApp.Write_SerializeJson(example1,@"./test.json");
                 var example2 = example1.Queryable.ToList();
             }
         }

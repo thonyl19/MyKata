@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Data.SQLite;
 using System.Data;
+using System.IO;
 
 namespace CSharp.Plugin {
     //[TestClass]
@@ -23,6 +24,20 @@ namespace CSharp.Plugin {
                 var db_path = @"data source=.\MvcMovie.db;version=3;";
                 return new SQLiteConnection(db_path);
             }
+        }
+        public static IDbConnection cnn_chinook  {
+            get{
+                //以下語法 不work
+                //using (IDbConnection cnn = new MvcMovieContext())
+                
+                var db_path = $@"data source={basePath("chinook.db")};version=3;";
+                return new SQLiteConnection(db_path);
+            }
+        }
+        public static string basePath(string file) {
+            var x = Directory.GetCurrentDirectory();
+            var x1 = Path.GetFullPath($@"{x}\..\..\..\Plugin\{file}");
+            return x1;
         }
 		[TestMethod]
 		public void T_db連線設置(){
@@ -97,10 +112,27 @@ namespace CSharp.Plugin {
 			/*
             這段 語法不可以用,會產生 SQLite Error 1: 'no such table 的錯誤
                 但後來又變可以用了, 不知其所以然
+            但後來搞懂了,主要是因為 程序會把路徑指向 .\bin\Debug\netcoreapp2.2 ,
+                而非 預期的 .\Plugin 底下,所以 才會造成上述的問題
             */
-			optionsBuilder.UseSqlite("Data Source=MvcMovie.db");
-			//optionsBuilder.UseSqlite("Filename=MvcMovie.db");
+			optionsBuilder.UseSqlite($"Data Source={t_SQLite.basePath("MvcMovie.db")}");
+
+			//optionsBuilder.UseSqlite("Data Source=MvcMovie.db");
 			//Database.EnsureCreated();
+		}
+    }
+
+	public class Chinook : DbContext
+    {
+        // public MvcMovieContext (DbContextOptions<MvcMovieContext> options)
+        //     : base(options)
+        // {
+        // }
+       
+ 
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			optionsBuilder.UseSqlite($"Data Source={t_SQLite.basePath("chinook.db")}");
 		}
     }
 

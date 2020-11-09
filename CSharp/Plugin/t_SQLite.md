@@ -1,5 +1,6 @@
 ### Ref
 https://docs.microsoft.com/zh-tw/aspnet/core/tutorials/first-mvc-app/adding-model?view=aspnetcore-2.2&tabs=visual-studio-code
+https://www.sqlitetutorial.net/sqlite-in/
 
 
 ```

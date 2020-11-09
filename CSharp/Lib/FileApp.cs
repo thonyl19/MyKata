@@ -10,6 +10,7 @@ namespace MyKata.Lib
 
 	public class FileApp
 	{
+		
 		public System.IO.TextWriter go_TextWriter;
 		public FileMode _FileMode = FileMode.CreateNew;
 		public Encoding EncodingType;
@@ -86,6 +87,7 @@ namespace MyKata.Lib
 		/// <returns></returns>
 		public virtual FileApp SetEncoding()
 		{
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 			this.EncodingType = Encoding.GetEncoding(950);
 			return this;
 		}

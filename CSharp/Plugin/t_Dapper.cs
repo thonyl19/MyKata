@@ -9,9 +9,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dapper;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
 
 namespace CSharp.Plugin {
-    //[TestClass]
+    [TestClass]
     public class t_Dapper {
         
         /// <summary>
@@ -50,6 +51,72 @@ namespace CSharp.Plugin {
 			}
 		}
  
+        /// <summary>
+        /// https://dapper-tutorial.net/querymultiple
+        /// 一次讀入多個資料表
+        /// </summary>
+        [TestMethod]
+		public void t_QueryMultiple(){
+            using (var cnn = t_SQLite.cnn)
+			{
+                //;
+                var multi = cnn.QueryMultiple(
+                    "select * from Movie;select Genre from Movie group by Genre;"
+                    );
+                var table_1 = multi.Read<Movie>().First();
+                var table_2 = multi.Read().ToList();
+			}
+		}
+
+
+        /// <summary>
+        /// https://dapper-tutorial.net/parameter-list
+        /// </summary>
+        [TestMethod]
+		public void t_Parameter_In(){
+            using (var cnn = t_SQLite.cnn)
+			{
+                var sql = "SELECT * FROM Movie WHERE Genre IN @Kind;";
+                var Kind = new[] {"Comedy"
+                    , "Romantic Comedy"};
+                var invoices = cnn.Query<Movie>(sql, 
+                    new {Kind}).ToList();
+			}
+		}
+
+        /// <summary>
+        /// https://dapper-tutorial.net/parameter-string
+        /// can't work
+        /// </summary>
+        [TestMethod]
+		public void t_Parameter_String(){
+            using (var cnn = t_SQLite.cnn)
+			{
+                var sql = "SELECT * FROM Movie WHERE Genre = @Genre;";
+                var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
+                var invoices = cnn.Query<Movie>(sql, 
+                    new {Genre}).ToList();
+			}
+		}
+
+        /// <summary>
+        ///https://dapper-tutorial.net/result-multi-mapping
+        /// can't work
+        /// </summary>
+        [TestMethod]
+		public void t_QueryMultiMapping(){
+            using (var cnn = t_SQLite.cnn_chinook)
+			{
+                var sql = "SELECT * FROM albums";
+                //var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
+                var _r = cnn.Query(sql).ToList();
+			}
+		}
+
+        
+
+        
+        
         
     }
 }
