@@ -7,6 +7,7 @@ using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System;
 using Microsoft.EntityFrameworkCore;
+using CSharp.Linq;
 
 namespace CSharp.Plugin
 {
@@ -92,6 +93,83 @@ namespace CSharp.Plugin
     		var result1 = baseQuery.Where("it == null ");
         	var result2 = baseQuery.Where("it != null ");
         }
+
+
+        /// <summary>
+        /// https://dynamic-linq.net/expression-language
+        /// </summary>
+        [TestMethod]
+		public void t_in(){
+            var rangeOfNumbers = Enumerable.Range(1, 100).ToArray();
+            var result1 = rangeOfNumbers.AsQueryable()
+                .Where("it in (1,3,5,7, 101)").ToArray();
+
+            var values = new int[] { 2, 4, 6, 8, 102};
+            var result2 = rangeOfNumbers.AsQueryable()
+                .Where("it in @0", values).ToArray();
+        }
+
+        /// <summary>
+        /// https://dynamic-linq.net/expression-language
+        /// 條件式轉換, 將值 判斷是否為偶數,並取得結果
+        /// </summary>
+        [TestMethod]
+		public void t_Conditional_Operator(){
+            var baseQuery = new int[] { 1, 2, 3, 4, 5 }.AsQueryable();
+            //var result = baseQuery.Select(" it % 2 == 0 ? true : false");
+            var result = baseQuery.Select("new (it)");
+        }
+
+        /// <summary>
+        /// https://dynamic-linq.net/advanced-null-propagation
+        /// 1.示範 null 判斷,和子項內容判斷
+        /// 2.null to  default value
+        /// </summary>
+         [TestMethod]
+		public void t_Null_Propagation(){
+            var _Sample = Sample.Case1();
+            var _r = _Sample.phones.AsQueryable()
+                .Include(c => c.Person) 
+                .Where("np(Person.Name) == \"Peter\"")
+                .ToList();
+            
+            //模擬一個 null 項目
+            var _item = new Phone(){
+                PhoneNumber="null to  default value"
+                ,Person = new Person(){Name=null}
+                };
+            _r.Add(_item);
+
+            var _r1 = _r.AsQueryable()
+                .Include(c => c.Person) 
+                .Where("np(Person.Name,\"test\") == \"test\"")
+                .ToList();
+
+              
+        }
+        
+        
+
+        /// <summary>
+        /// https://dynamic-linq.net/advanced-create-dynamic-class
+        /// 使用DynamicClassFactory創建動態創建的類型具有兩個屬性的簡單的例子，
+        /// Name和Birthday然後使用.NET反射來創建類和分配值的屬性的一個實例。
+        /// </summary>
+         [TestMethod]
+		public void t_Create_Dynamic_Class(){
+            var props = new DynamicProperty[]
+            {
+                new DynamicProperty("Name", typeof(string)),
+                new DynamicProperty("Birthday", typeof(DateTime)) 
+            };
+
+            Type type = DynamicClassFactory.CreateType(props);
+
+            var dynamicClass = Activator.CreateInstance(type) as DynamicClass;
+            dynamicClass.SetDynamicPropertyValue("Name", "Albert");
+            dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
+        }
+
 
 
         /// <summary>
