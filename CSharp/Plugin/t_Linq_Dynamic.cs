@@ -6,9 +6,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System;
-using Microsoft.EntityFrameworkCore;
 using CSharp.Linq;
 using MyKata.Lib;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSharp.Plugin
 {
