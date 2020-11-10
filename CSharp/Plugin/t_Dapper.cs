@@ -27,7 +27,7 @@ namespace CSharp.Plugin {
 
         [TestMethod]
 		public void T_Query(){
-            using (var cnn =  new SQLiteConnection(t_SQLite.db_path))
+            using (var cnn = t_SQLite.cnn)
 			{
                 //cnn.Open();
                 string _sql = @"
@@ -43,7 +43,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void T_ExecuteScalar(){
-            using (var cnn = new SQLiteConnection(t_SQLite.db_path))
+            using (var cnn = t_SQLite.cnn)
 			{
                 var result = cnn.ExecuteScalar(
                     "SELECT @Value",

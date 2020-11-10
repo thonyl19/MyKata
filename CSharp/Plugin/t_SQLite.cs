@@ -19,6 +19,15 @@ namespace CSharp.Plugin {
     public class t_SQLite {
         public static string db_path = @"data source=.\MvcMovie.db;version=3;";
         
+        public static IDbConnection cnn  {
+            get{
+                //以下語法 不work
+                //using (IDbConnection cnn = new MvcMovieContext())
+                
+                var db_path = $@"data source={basePath("MvcMovie.db")};version=3;";
+                return new SQLiteConnection(db_path);
+            }
+        }
         public static IDbConnection cnn_chinook  {
             get{
                 //以下語法 不work
