@@ -116,4 +116,48 @@ namespace CSharp.Linq {
          
         
     }
+
+
+    
+
+    /*
+    [Ref]
+    https://blog.darkthread.net/blog/linq-except-for-custom-class/
+    https://gist.github.com/s1495k043/9e192daa00c752e1d77b4e0bd5153062
+    */
+    public static class LinqExtension
+    {
+        // 這一段 有錯 不 work ,先留註.
+        // public static IEnumerable<T> Except<T, TValue>(this IEnumerable<T> list, IEnumerable<T> second, Func<T, TValue> selector)
+        // {
+        //     return list.Except(second, new CommonComparer(selector));
+        // }
+
+        class CommonComparer<T, TValue> : IEqualityComparer<T>
+        {
+            public Func<T, TValue> selector;
+
+            public CommonComparer(Func<T, TValue> selector)
+            {
+                this.selector = selector;
+            }
+
+            public CommonComparer()
+            {
+            }
+
+            public bool Equals(T x, T y)
+            {
+                var a = selector(x);
+                var b = selector(y);
+                return a.Equals(b);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                var v = selector(obj);
+                return v.GetHashCode();
+            }
+        }
+    }
 }
