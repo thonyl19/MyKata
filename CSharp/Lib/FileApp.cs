@@ -1,3 +1,7 @@
+/*
+
+*/
+
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -85,6 +89,8 @@ namespace MyKata.Lib
 		/// 設置 EncodingType(預設為中文 GetEncoding(950))
 		/// </summary>
 		/// <returns></returns>
+		/// http://limitedcode.blogspot.com/2017/06/net-core-big5.html
+		/// dotnet add package System.Text.Encoding.CodePages --version 5.0.0
 		public virtual FileApp SetEncoding()
 		{
 			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
