@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CSharp.Plugin
 {
-	[TestClass]
+	//[TestClass]
     public class t_Linq_Dynamic {
  
         /// <summary>

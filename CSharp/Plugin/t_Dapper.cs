@@ -10,6 +10,8 @@ using Dapper;
 using System.Data;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq.Dynamic.Core;
+
 
 namespace CSharp.Plugin {
     [TestClass]
@@ -92,24 +94,69 @@ namespace CSharp.Plugin {
 		public void t_Parameter_String(){
             using (var cnn = t_SQLite.cnn)
 			{
-                var sql = "SELECT * FROM Movie WHERE Genre = @Genre;";
-                var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
-                var invoices = cnn.Query<Movie>(sql, 
-                    new {Genre}).ToList();
+                try
+                {
+                    var sql 
+                        //= "SELECT A.* FROM Movie A WHERE A.Genre = @Genre;";
+                        = "SELECT * FROM Movie  WHERE Genre = @Genre ;";
+                    var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
+                    var invoices = cnn.Query<Movie>(sql, 
+                        new {Genre}).ToList();
+                }
+                catch (System.Exception ex)
+                {
+                }
+
 			}
 		}
 
         /// <summary>
-        ///https://dapper-tutorial.net/result-multi-mapping
+        /// https://dapper-tutorial.net/parameter-string
         /// can't work
         /// </summary>
         [TestMethod]
-		public void t_QueryMultiMapping(){
+		public void t_混搭DynLinq(){
             using (var cnn = t_SQLite.cnn_chinook)
 			{
-                var sql = "SELECT * FROM albums";
+                try
+                {
+                    var sql 
+                        //= "SELECT * FROM Movie WHERE Genre = @Genre;";
+                        = @"SELECT A.* , B.Name 
+                        FROM    albums A 
+                                INNER JOIN artists B 
+                                    ON A.ArtistId = B.ArtistId
+                        WHERE   A.Title = @Title
+                        ";
+                    var Title = new {Title = new DbString {Value = "A", IsFixedLength = false, IsAnsi = true}};
+                    var _r = cnn.Query(sql, 
+                        new {Title})//.AsQueryable()
+                        .ToList();
+                        // .OrderBy("A.ArtistId desc")
+                        // .PageResult(1,5);
+                        }
+                catch (System.Exception ex)
+                {
+                    
+                    
+                }
+			}
+		}
+  
+        /// <summary>
+        ///https://dapper-tutorial.net/result-multi-mapping
+        // 未完成
+        /// </summary>
+        [TestMethod]
+		public void _QueryMultiMapping(){
+            using (var cnn = t_SQLite.cnn_chinook)
+			{
+                var sql = "SELECT * FROM albums A INNER JOIN artists B ON A.ArtistId = B.ArtistId ";
                 //var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
-                var _r = cnn.Query(sql).ToList();
+                // var _r = cnn.Query<albums,artist,albums_ext>(sql,(albums,artist)=>{
+                //     //albums_ext _obj = albums;
+                    
+                // });
 			}
 		}
 

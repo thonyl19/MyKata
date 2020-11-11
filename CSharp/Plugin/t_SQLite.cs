@@ -139,6 +139,8 @@ namespace CSharp.Plugin {
         // {
         // }
        
+        public DbSet<albums> albums { get; set; }
+        public DbSet<artist> artist { get; set; }
  
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -156,4 +158,23 @@ namespace CSharp.Plugin {
         public string Genre { get; set; }
         public decimal Price { get; set; }
     }
+
+    public class artist
+    {
+        public int ArtistId { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class albums
+    {
+        public int AlbumId { get; set; }
+        public string Title { get; set; }
+        public int  ArtistId { get; set; }
+    }
+
+    public class albums_ext:albums{
+        public string Name { get; set; }
+
+    }
+
 }
