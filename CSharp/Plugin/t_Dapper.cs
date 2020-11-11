@@ -11,7 +11,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq.Dynamic.Core;
-
+using MyKata.Lib;
 
 namespace CSharp.Plugin {
     [TestClass]
@@ -110,12 +110,67 @@ namespace CSharp.Plugin {
 			}
 		}
 
-        /// <summary>
+/// <summary>
         /// https://dapper-tutorial.net/parameter-string
         /// can't work
         /// </summary>
         [TestMethod]
+		public void t_Parameter_Dynamic(){
+            using (var cnn = t_SQLite.cnn)
+			{
+                try
+                {
+                    var sql 
+                        //= "SELECT A.* FROM Movie A WHERE A.Genre = @Genre;";
+                        = "SELECT * FROM Movie  WHERE Genre = @Genre ;";
+                    var parameter = new DynamicParameters();
+                    parameter.Add("@Genre","Comedy",DbType.String,ParameterDirection.Input);
+                    //var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
+                    var invoices = cnn.Query<Movie>(sql, 
+                        parameter).ToList();
+                }
+                catch (System.Exception ex)
+                {
+                }
+
+			}
+		}
+
+        /// <summary>
+        /// </summary>
+        [TestMethod]
 		public void t_混搭DynLinq(){
+            using (var cnn = t_SQLite.cnn_chinook)
+			{
+                try
+                {
+                    var sql 
+                        = @"SELECT A.* , B.Name 
+                        FROM    albums A 
+                                INNER JOIN artists B 
+                                    ON A.ArtistId = B.ArtistId
+                        WHERE   A.Title = @Title
+                        ";
+                    var parameter = new DynamicParameters();
+                    parameter.Add("@Title","Big Ones",DbType.String,ParameterDirection.Input);
+                    var _r = cnn.Query(sql, 
+                        parameter)
+                        //.ToList();
+                        .AsQueryable()
+                        .OrderBy("A.ArtistId desc")
+                        .PageResult(1,5);
+                }
+                catch (System.Exception ex)
+                {
+                    
+                    
+                }
+			}
+		}
+        /// <summary>
+        /// </summary>
+        [TestMethod]
+		public void t_混搭DynLinq_like(){
             using (var cnn = t_SQLite.cnn_chinook)
 			{
                 try
@@ -126,15 +181,18 @@ namespace CSharp.Plugin {
                         FROM    albums A 
                                 INNER JOIN artists B 
                                     ON A.ArtistId = B.ArtistId
-                        WHERE   A.Title = @Title
+                        WHERE   A.Title like @Title
                         ";
-                    var Title = new {Title = new DbString {Value = "A", IsFixedLength = false, IsAnsi = true}};
+                    //var Title = new {Title = new DbString {Value = "A", IsFixedLength = false, IsAnsi = true}};
+                    var parameter = new DynamicParameters();
+                    parameter.Add("@Title","A%",DbType.String,ParameterDirection.Input);
                     var _r = cnn.Query(sql, 
-                        new {Title})//.AsQueryable()
-                        .ToList();
-                        // .OrderBy("A.ArtistId desc")
-                        // .PageResult(1,5);
-                        }
+                        parameter).AsQueryable()
+                        //.ToList();
+                        .OrderBy("A.ArtistId desc")
+                        .PageResult(1,5);
+                    FileApp.Write_SerializeJson(_r,FileApp.ts_Log("test.json"));
+                }
                 catch (System.Exception ex)
                 {
                     

@@ -67,7 +67,7 @@ namespace MyKata.Lib
 		/// <returns></returns>
 		public static string getRelatePath(string file){
 			string _path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug", "");
-			return $@"{_path}\{file}";
+			return $@"{_path}{file}";
 		}
 
 		public static string ts_Log(string PathName)

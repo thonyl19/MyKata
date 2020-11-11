@@ -13,35 +13,34 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.SQLite;
 using System.Data;
 using System.IO;
+using MyKata.Lib;
 
 namespace CSharp.Plugin {
     //[TestClass]
     public class t_SQLite {
-        public static string db_path = @"data source=.\MvcMovie.db;version=3;";
+        public static string db_MvcMovie{
+            get{
+                var _file = FileApp.getRelatePath(@"Plugin\MvcMovie.db");
+                return $"data source={_file};version=3;";
+            }
+        }
+        // public static string db_Chinook {
+        //     get{
+        //         var _file = FileApp.getRelatePath(@"Plugin\chinook.db");
+        //         return $"data source={_file};version=3;";
+        //     }
+        // }
         
         public static IDbConnection cnn  {
             get{
-                //以下語法 不work
-                //using (IDbConnection cnn = new MvcMovieContext())
-                
-                var db_path = $@"data source={basePath("MvcMovie.db")};version=3;";
-                return new SQLiteConnection(db_path);
+                return new SQLiteConnection(db_MvcMovie);
             }
         }
         public static IDbConnection cnn_chinook  {
             get{
-                //以下語法 不work
-                //using (IDbConnection cnn = new MvcMovieContext())
-                
-                var db_path = $@"data source={basePath("chinook.db")};version=3;";
-                return new SQLiteConnection(db_path);
+                return new SQLiteConnection("db_Chinook");
             }
-        }
-        public static string basePath(string file) {
-            var x = Directory.GetCurrentDirectory();
-            var x1 = Path.GetFullPath($@"{x}\..\..\..\Plugin\{file}");
-            return x1;
-        }
+        } 
 		[TestMethod]
 		public void T_db連線設置(){
 			using (var context = new MvcMovieContext())
@@ -123,7 +122,9 @@ namespace CSharp.Plugin {
             但後來搞懂了,主要是因為 程序會把路徑指向 .\bin\Debug\netcoreapp2.2 ,
                 而非 預期的 .\Plugin 底下,所以 才會造成上述的問題
             */
-			optionsBuilder.UseSqlite($"Data Source={t_SQLite.basePath("MvcMovie.db")}");
+            var x = FileApp.getRelatePath("plugin/MvcMovie.db");
+			optionsBuilder.UseSqlite($"Data Source={x}");
+			//optionsBuilder.UseSqlite(t_SQLite.db_MvcMovie);
 
 			//optionsBuilder.UseSqlite("Data Source=MvcMovie.db");
 			//Database.EnsureCreated();
@@ -134,17 +135,12 @@ namespace CSharp.Plugin {
 
 	public class Chinook : DbContext
     {
-        // public MvcMovieContext (DbContextOptions<MvcMovieContext> options)
-        //     : base(options)
-        // {
-        // }
-       
         public DbSet<albums> albums { get; set; }
         public DbSet<artist> artist { get; set; }
  
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlite($"Data Source={t_SQLite.basePath("chinook.db")}");
+			optionsBuilder.UseSqlite("t_SQLite.db_Chinook");
 		}
     }
 
