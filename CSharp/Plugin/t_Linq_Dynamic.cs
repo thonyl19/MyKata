@@ -53,7 +53,23 @@ namespace CSharp.Plugin
                     .ToList();
             }
         }
-
+        /// <summary>
+        /// </summary>
+        [TestMethod]
+		public void t_Jon(){
+            using (var cnn = new Chinook())
+			{
+                var r = cnn.albums
+                    .Join(cnn.artist
+                        ,a0 => a0.ArtistId
+                        ,a1 => a1.ArtistId
+                        ,(a0, a1) => new {
+                            a0.Title,
+                            a1.Name
+                        }
+                    ).ToList();
+            }
+        }
         /// <summary>
         /// https://dynamic-linq.net/
         /// </summary>

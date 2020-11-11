@@ -93,5 +93,13 @@ namespace CSharp.Linq
 							""ZipCode"": ""9115"",
 							""Age"": 79
 						}]";
+	
+		public static string Case3 = 
+			@"{ 
+				""d"": ""2015-01-01T00:00:00Z"", 
+				""n"": 32767, 
+				""s"": ""darkthread"",
+				""a"": [ 1,2,3,4,5 ]
+			}";
 	}
 }

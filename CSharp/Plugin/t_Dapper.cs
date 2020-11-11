@@ -12,6 +12,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq.Dynamic.Core;
 using MyKata.Lib;
+using System.Dynamic;
 
 namespace CSharp.Plugin {
     [TestClass]
@@ -110,7 +111,7 @@ namespace CSharp.Plugin {
 			}
 		}
 
-/// <summary>
+        /// <summary>
         /// https://dapper-tutorial.net/parameter-string
         /// can't work
         /// </summary>
@@ -158,7 +159,10 @@ namespace CSharp.Plugin {
                         //.ToList();
                         .AsQueryable()
                         .OrderBy("A.ArtistId desc")
-                        .PageResult(1,5);
+                        .PageResult(1,5)
+                        .Queryable.ToList();
+                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
+                    
                 }
                 catch (System.Exception ex)
                 {
@@ -188,10 +192,11 @@ namespace CSharp.Plugin {
                     parameter.Add("@Title","A%",DbType.String,ParameterDirection.Input);
                     var _r = cnn.Query(sql, 
                         parameter).AsQueryable()
-                        //.ToList();
                         .OrderBy("A.ArtistId desc")
-                        .PageResult(1,5);
-                    FileApp.Write_SerializeJson(_r,FileApp.ts_Log("test.json"));
+                        .ToList<dynamic>();
+                        // .PageResult(1,5)
+                        // .Queryable.ToList<dynamic>();
+                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
                 }
                 catch (System.Exception ex)
                 {
@@ -200,6 +205,8 @@ namespace CSharp.Plugin {
                 }
 			}
 		}
+
+        
   
         /// <summary>
         ///https://dapper-tutorial.net/result-multi-mapping

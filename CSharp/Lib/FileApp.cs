@@ -66,7 +66,7 @@ namespace MyKata.Lib
 		/// <param name="file"></param>
 		/// <returns></returns>
 		public static string getRelatePath(string file){
-			string _path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug", "");
+			string _path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug\netcoreapp2.2\", "");
 			return $@"{_path}{file}";
 		}
 

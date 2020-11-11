@@ -18,19 +18,10 @@ using MyKata.Lib;
 namespace CSharp.Plugin {
     //[TestClass]
     public class t_SQLite {
-        public static string db_MvcMovie{
-            get{
-                var _file = FileApp.getRelatePath(@"Plugin\MvcMovie.db");
-                return $"data source={_file};version=3;";
-            }
-        }
-        // public static string db_Chinook {
-        //     get{
-        //         var _file = FileApp.getRelatePath(@"Plugin\chinook.db");
-        //         return $"data source={_file};version=3;";
-        //     }
-        // }
-        
+        public static string db_MvcMovie = $"data source={FileApp.getRelatePath(@"Plugin\MvcMovie.db") };version=3;";
+ 
+        public static string db_Chinook = $"data source={ FileApp.getRelatePath(@"Plugin\chinook.db") };version=3;";
+         
         public static IDbConnection cnn  {
             get{
                 return new SQLiteConnection(db_MvcMovie);
@@ -38,7 +29,7 @@ namespace CSharp.Plugin {
         }
         public static IDbConnection cnn_chinook  {
             get{
-                return new SQLiteConnection("db_Chinook");
+                return new SQLiteConnection(db_Chinook);
             }
         } 
 		[TestMethod]
@@ -122,9 +113,9 @@ namespace CSharp.Plugin {
             但後來搞懂了,主要是因為 程序會把路徑指向 .\bin\Debug\netcoreapp2.2 ,
                 而非 預期的 .\Plugin 底下,所以 才會造成上述的問題
             */
-            var x = FileApp.getRelatePath("plugin/MvcMovie.db");
-			optionsBuilder.UseSqlite($"Data Source={x}");
-			//optionsBuilder.UseSqlite(t_SQLite.db_MvcMovie);
+            // var x = FileApp.getRelatePath(@"Plugin\MvcMovie.db");
+			// optionsBuilder.UseSqlite($"Data Source={x}");
+			optionsBuilder.UseSqlite(t_SQLite.db_MvcMovie);
 
 			//optionsBuilder.UseSqlite("Data Source=MvcMovie.db");
 			//Database.EnsureCreated();
@@ -140,7 +131,7 @@ namespace CSharp.Plugin {
  
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlite("t_SQLite.db_Chinook");
+			optionsBuilder.UseSqlite(t_SQLite.db_Chinook);
 		}
     }
 
