@@ -66,5 +66,47 @@ namespace CSharp.Linq {
 			}
 
 		}
+    
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/43570178/how-to-convert-dictionarystring-object-to-listt
+        /// 如何將Dictionary <string，object>轉換為List <T>
+        /// </summary>
+        [TestMethod]
+        public void t_Case1(){
+            var _data = Sample.Case1().persons;
+
+            /*這一段,先模擬案例中的需求,做出類似的資料
+                {"Users[0].Id", 1},
+                {"Users[0].Name", "Rajib"},
+                {"Users[0].Email", "rajib@azr.com"},
+                {"Users[1].Id", 2},
+                {"Users[1].Name", "Ashiq"},
+            */
+            var _dc = new Dictionary<string, object>();
+            var idx = 0;
+            foreach (var item in _data)
+            {
+                var _Properties = item.GetType().GetProperties();
+                foreach (var item1 in _Properties)
+                {
+                    var _key = $"Person[{idx}].{item1.Name}";
+                    var _val = item1.GetValue(item);
+                    _dc.Add(_key,_val);
+                }
+                idx++;
+            }
+        
+            var data = _dc.GroupBy(item => item.Key.Substring(0, item.Key.IndexOf(".")))
+                .Select(group => group.Aggregate(new Person(), (_obj, item) =>
+                {
+                    var _name = item.Key.Substring(item.Key.IndexOf(".") + 1);
+                    var propertyInfo = _obj.GetType().GetProperty(_name);
+                    var _val = Convert.ChangeType(item.Value, propertyInfo.PropertyType);
+                    propertyInfo.SetValue(_obj, _val, null);
+                    return _obj;
+                })).ToList();
+        }
+    
     }
 }

@@ -16,12 +16,10 @@ namespace CSharp.Linq {
 
         /// <summary>
         /// [Ref]https://blog.darkthread.net/blog/json-linq-wo-declare-class/
+        /// 演示如何不設物件,直接解析並取用 Json 資料
         /// </summary>
         [TestMethod]
-        public void t_反序列化Json () {
-            dynamic data = JsonConvert.DeserializeObject<JObject>(
-                Sample_Json.Case1);
-
+        public void t_Json反序列化 () {
             dynamic[] data1 = JsonConvert.DeserializeObject<JObject[]>(
                     Sample_Json.Case2);
 
@@ -30,6 +28,11 @@ namespace CSharp.Linq {
                 FirstName: {x.FirstName}
                 LastName: {x.LastName}
                 Age: {x.Age}";
+
+
+            dynamic data = JsonConvert.DeserializeObject<JObject>(
+                Sample_Json.Case1);
+
         }    
     }
 }

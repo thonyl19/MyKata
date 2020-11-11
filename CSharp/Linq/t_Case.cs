@@ -65,15 +65,12 @@ namespace CSharp.Linq {
 
         [TestMethod]
         public void t04(){
-            var sample1 = Sample.Case1();
-
-             var _x = 
-                from c in sample1.phones
-                from o in c.PhoneNumber
+            var _x = 
+                from o in "PhoneNumber"
                 select o
                 ;
 
-            ///其結果,會把所有的 PhoneNumber 拆解成字元列表
+            ///其結果,會 PhoneNumber 拆解成字元列表
             var _r = _x.ToList();
         }
 
@@ -81,7 +78,7 @@ namespace CSharp.Linq {
         /// https://github.com/dotnet/try-samples/blob/master/101-linq-samples/src/SetOperations.cs
         /// </summary>
         [TestMethod]
-        public void t_DifferenceOfSets(){
+        public void t_Except_剔除兩個集合中重覆的資料(){
             int[] numbersA = { 0, 2, 4, 5, 6, 8, 9 };
             int[] numbersB = { 1, 3, 5, 7, 8 };
             IEnumerable<int> aOnlyNumbers = numbersA.Except(numbersB);
