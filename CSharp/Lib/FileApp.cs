@@ -60,12 +60,19 @@ namespace MyKata.Lib
 			}
 		};
 
+		/// <summary>
+		/// 取得相對路徑
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns></returns>
+		public static string getRelatePath(string file){
+			string _path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug", "");
+			return $@"{_path}\{file}";
+		}
 
 		public static string ts_Log(string PathName)
 		{
-			string _path = System.AppDomain.CurrentDomain.BaseDirectory.Replace(@"bin\Debug", "");
-			string _filePath = $@"{_path}Log\{PathName}";
-			return _filePath;
+			return getRelatePath($@"Log\{PathName}");
 		}
 
 		/// <summary>

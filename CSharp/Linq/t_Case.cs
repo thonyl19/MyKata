@@ -65,15 +65,12 @@ namespace CSharp.Linq {
 
         [TestMethod]
         public void t04(){
-            var sample1 = Sample.Case1();
-
-             var _x = 
-                from c in sample1.phones
-                from o in c.PhoneNumber
+            var _x = 
+                from o in "PhoneNumber"
                 select o
                 ;
 
-            ///其結果,會把所有的 PhoneNumber 拆解成字元列表
+            ///其結果,會 PhoneNumber 拆解成字元列表
             var _r = _x.ToList();
         }
 
@@ -81,7 +78,7 @@ namespace CSharp.Linq {
         /// https://github.com/dotnet/try-samples/blob/master/101-linq-samples/src/SetOperations.cs
         /// </summary>
         [TestMethod]
-        public void t_DifferenceOfSets(){
+        public void t_Except_剔除兩個集合中重覆的資料(){
             int[] numbersA = { 0, 2, 4, 5, 6, 8, 9 };
             int[] numbersB = { 1, 3, 5, 7, 8 };
             IEnumerable<int> aOnlyNumbers = numbersA.Except(numbersB);
@@ -115,5 +112,49 @@ namespace CSharp.Linq {
 
          
         
+    }
+
+
+    
+
+    /*
+    [Ref]
+    https://blog.darkthread.net/blog/linq-except-for-custom-class/
+    https://gist.github.com/s1495k043/9e192daa00c752e1d77b4e0bd5153062
+    */
+    public static class LinqExtension
+    {
+        // 這一段 有錯 不 work ,先留註.
+        // public static IEnumerable<T> Except<T, TValue>(this IEnumerable<T> list, IEnumerable<T> second, Func<T, TValue> selector)
+        // {
+        //     return list.Except(second, new CommonComparer(selector));
+        // }
+
+        class CommonComparer<T, TValue> : IEqualityComparer<T>
+        {
+            public Func<T, TValue> selector;
+
+            public CommonComparer(Func<T, TValue> selector)
+            {
+                this.selector = selector;
+            }
+
+            public CommonComparer()
+            {
+            }
+
+            public bool Equals(T x, T y)
+            {
+                var a = selector(x);
+                var b = selector(y);
+                return a.Equals(b);
+            }
+
+            public int GetHashCode(T obj)
+            {
+                var v = selector(obj);
+                return v.GetHashCode();
+            }
+        }
     }
 }

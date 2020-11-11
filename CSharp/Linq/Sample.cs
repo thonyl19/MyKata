@@ -48,6 +48,50 @@ namespace CSharp.Linq
 		}
 
 		
-		 
+	}
+	public class Sample_Json {
+		public static string Case1 = "{\"beijing\":{\"zone\":\"海淀\",\"zone_en\":\"haidian\"}}";
+		public static string Case2 = @"
+					[
+						{
+							""FirstName"": ""Jane"",
+							""LastName"": ""Hansen"",
+							""Birthday"": ""1969-12-31T16:00:00-08:00"",
+							""Address"": ""P.O. Box 492, 4607 Tempus, Rd."",
+							""City"": ""Polatlı"",
+							""State"": ""Ankara"",
+							""ZipCode"": ""3536"",
+							""Age"": 44
+						},
+						{
+									""FirstName"": ""Robin"",
+							""LastName"": ""Hudson"",
+							""Birthday"": ""1969-12-31T16:00:00-08:00"",
+							""Address"": ""211-4877 In, Avenue"",
+							""City"": ""Saint Louis"",
+							""State"": ""MO"",
+							""ZipCode"": ""82383-505"",
+							""Age"": 44
+						},
+						{
+									""FirstName"": ""Ebony"",
+							""LastName"": ""Greene"",
+							""Birthday"": ""1969-12-31T16:00:00-08:00"",
+							""Address"": ""4025 Ac Avenue"",
+							""City"": ""Estación Central"",
+							""State"": ""RM"",
+							""ZipCode"": ""6818"",
+							""Age"": 33
+						},
+						{
+									""FirstName"": ""Sybill"",
+							""LastName"": ""Nunez"",
+							""Birthday"": ""1969-12-31T16:00:00-08:00"",
+							""Address"": ""497-7769 Vel St."",
+							""City"": ""Cumberland County"",
+							""State"": ""Nova Scotia"",
+							""ZipCode"": ""9115"",
+							""Age"": 79
+						}]";
 	}
 }
