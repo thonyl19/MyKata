@@ -30,7 +30,7 @@ namespace CSharp.Plugin {
 
         [TestMethod]
 		public void T_Query(){
-            using (var cnn = t_SQLite.cnn)
+            using (var cnn =  new SQLiteConnection(t_SQLite.db_MvcMovie))
 			{
                 //cnn.Open();
                 string _sql = @"
@@ -46,7 +46,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void T_ExecuteScalar(){
-            using (var cnn = t_SQLite.cnn)
+            using (var cnn = new SQLiteConnection(t_SQLite.db_MvcMovie))
 			{
                 var result = cnn.ExecuteScalar(
                     "SELECT @Value",
@@ -60,7 +60,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void t_QueryMultiple(){
-            using (var cnn = t_SQLite.cnn)
+            using (var cnn = new SQLiteConnection(t_SQLite.db_MvcMovie))
 			{
                 //;
                 var multi = cnn.QueryMultiple(
@@ -77,7 +77,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void t_Parameter_In(){
-            using (var cnn = t_SQLite.cnn)
+            using (var cnn = new SQLiteConnection(t_SQLite.db_MvcMovie))
 			{
                 var sql = "SELECT * FROM Movie WHERE Genre IN @Kind;";
                 var Kind = new[] {"Comedy"
@@ -93,7 +93,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void t_Parameter_String(){
-            using (var cnn = t_SQLite.cnn)
+            using (var cnn = new SQLiteConnection(t_SQLite.db_MvcMovie))
 			{
                 try
                 {
@@ -117,7 +117,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void t_Parameter_Dynamic(){
-            using (var cnn = t_SQLite.cnn)
+            using (var cnn = new SQLiteConnection(t_SQLite.db_MvcMovie))
 			{
                 try
                 {
@@ -141,7 +141,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void t_混搭DynLinq(){
-            using (var cnn = t_SQLite.cnn_chinook)
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
 			{
                 try
                 {
@@ -175,7 +175,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void t_混搭DynLinq_like(){
-            using (var cnn = t_SQLite.cnn_chinook)
+            using (var cnn =new SQLiteConnection(t_SQLite.db_Chinook))
 			{
                 try
                 {
@@ -214,7 +214,7 @@ namespace CSharp.Plugin {
         /// </summary>
         [TestMethod]
 		public void _QueryMultiMapping(){
-            using (var cnn = t_SQLite.cnn_chinook)
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
 			{
                 var sql = "SELECT * FROM albums A INNER JOIN artists B ON A.ArtistId = B.ArtistId ";
                 //var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};

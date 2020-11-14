@@ -280,6 +280,17 @@ namespace CSharp.Plugin
 			}
 		}
 
+
+        /// <summary>
+        /// https://dynamic-linq.net/basic-query-operators#aggregate
+        /// </summary>
+        [TestMethod]
+		public void t_Aggregate(){
+            var sampe = Sample.Case1();
+            var _avg = sampe.persons
+                        .AsQueryable()
+                        .Aggregate("Average", "Age");
+        }
 	}
  
 }

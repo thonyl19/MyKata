@@ -1,2 +1,9 @@
 {
+	"csharp.unitTestDebuggingOptions": {
+		"logging": {
+			"engineLogging": true
+		}
+	},
+	"files.encoding": "utf8bom"
 }
+

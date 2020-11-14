@@ -8,7 +8,7 @@ using FluentValidation.TestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-using Z.EntityFramework.Plus;
+//using Z.EntityFramework.Plus;
 
 namespace CSharp.Plugin {
     //[TestClass]

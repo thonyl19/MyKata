@@ -18,20 +18,15 @@ using MyKata.Lib;
 namespace CSharp.Plugin {
     //[TestClass]
     public class t_SQLite {
-        public static string db_MvcMovie = $"data source={FileApp.getRelatePath(@"Plugin\MvcMovie.db") };version=3;";
+        public static string db_MvcMovie = xpath(@"Plugin_ex\MvcMovie.db");
  
-        public static string db_Chinook = $"data source={ FileApp.getRelatePath(@"Plugin\chinook.db") };version=3;";
-         
-        public static IDbConnection cnn  {
-            get{
-                return new SQLiteConnection(db_MvcMovie);
-            }
+        public static string db_Chinook = xpath(@"Plugin_ex\chinook.db");
+          
+        static string xpath(string path){
+            var _path = FileApp.getRelatePath(path);
+            return  $"data source={ _path };version=3;";
         }
-        public static IDbConnection cnn_chinook  {
-            get{
-                return new SQLiteConnection(db_Chinook);
-            }
-        } 
+
 		[TestMethod]
 		public void T_db連線設置(){
 			using (var context = new MvcMovieContext())
@@ -102,7 +97,7 @@ namespace CSharp.Plugin {
         public DbSet<Movie> Movie { get; set; }
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-            string path = Path.GetFullPath("../../../plugin/MvcMovie.db");
+            //string path = Path.GetFullPath("../../../plugin/MvcMovie.db");
             /*
             這段 語法不可以用,會產生 SQLite Error 1: 'no such table 的錯誤
                 但後來又變可以用了, 一開始不知其所以然,
