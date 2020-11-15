@@ -95,7 +95,7 @@ namespace CSharp.Plugin
         /// 
         /// </summary>
         [TestMethod]
-        public void t_使用SqlCmd_Join(){
+        public void t_使用SqlCmd_混搭DapperAndDynLinq(){
             using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
                 try
                 {
