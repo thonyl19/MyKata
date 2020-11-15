@@ -8,7 +8,7 @@ using FluentValidation.TestHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharp.Plugin {
-    //[TestClass]
+    [TestClass]
     public class t_FluentValidation {
         private PersonValidator validator;
 

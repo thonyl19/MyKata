@@ -16,7 +16,7 @@ using System.IO;
 using MyKata.Lib;
 
 namespace CSharp.Plugin {
-    //[TestClass]
+    [TestClass]
     public class t_SQLite {
         public static string db_MvcMovie = xpath(@"Plugin_ex\MvcMovie.db");
  
@@ -24,7 +24,7 @@ namespace CSharp.Plugin {
           
         static string xpath(string path){
             var _path = FileApp.getRelatePath(path);
-            return  $"data source={ _path };version=3;";
+            return  $"data source={_path};version=3;";
         }
 
 		[TestMethod]
@@ -108,9 +108,12 @@ namespace CSharp.Plugin {
             但後來搞懂了,主要是因為 程序會把路徑指向 .\bin\Debug\netcoreapp2.2 ,
                 而非 預期的 .\Plugin 底下,所以 才會造成上述的問題
             */
-            // var x = FileApp.getRelatePath(@"Plugin\MvcMovie.db");
-			// optionsBuilder.UseSqlite($"Data Source={x}");
-			optionsBuilder.UseSqlite(t_SQLite.db_MvcMovie);
+            var x = FileApp.getRelatePath(@"Plugin_ex\MvcMovie.db");
+			optionsBuilder.UseSqlite($"Data Source={x}");
+            /*
+            直接使用以下語句 ,會出現 支援  virsion 的錯誤 
+            */
+			//optionsBuilder.UseSqlite(t_SQLite.db_MvcMovie);
 
 			//optionsBuilder.UseSqlite("Data Source=MvcMovie.db");
 			//Database.EnsureCreated();

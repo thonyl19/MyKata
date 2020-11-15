@@ -140,6 +140,31 @@ namespace CSharp.Plugin {
         /// <summary>
         /// </summary>
         [TestMethod]
+		public void t_混搭DynLinq_0(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
+			{
+                try
+                {
+                    var sql 
+                        = @"SELECT A.*  
+                        FROM    albums A  
+                        ";
+                    var _r = cnn.Query(sql).AsQueryable()
+                        .ToList();
+                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
+                    
+                }
+                catch (System.Exception ex)
+                {
+                    
+                    
+                }
+			}
+		}
+
+        /// <summary>
+        /// </summary>
+        [TestMethod]
 		public void t_混搭DynLinq(){
             using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
 			{
@@ -156,11 +181,12 @@ namespace CSharp.Plugin {
                     parameter.Add("@Title","Big Ones",DbType.String,ParameterDirection.Input);
                     var _r = cnn.Query(sql, 
                         parameter)
-                        //.ToList();
                         .AsQueryable()
                         .OrderBy("A.ArtistId desc")
                         .PageResult(1,5)
-                        .Queryable.ToList();
+                        .Queryable
+                        .AsQueryable()
+                        .ToList();
                     FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
                     
                 }
@@ -187,15 +213,19 @@ namespace CSharp.Plugin {
                                     ON A.ArtistId = B.ArtistId
                         WHERE   A.Title like @Title
                         ";
-                    //var Title = new {Title = new DbString {Value = "A", IsFixedLength = false, IsAnsi = true}};
+                    /*
+                    經測試,只能使用 A% 的語法,如果是直接 在 sql 中,
+                        使用 like @Title'%' 則會報錯
+                    */
                     var parameter = new DynamicParameters();
                     parameter.Add("@Title","A%",DbType.String,ParameterDirection.Input);
                     var _r = cnn.Query(sql, 
                         parameter).AsQueryable()
                         .OrderBy("A.ArtistId desc")
-                        .ToList<dynamic>();
+                        .ToList()
                         // .PageResult(1,5)
-                        // .Queryable.ToList<dynamic>();
+                        // .Queryable.ToList();
+                        ;
                     FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
                 }
                 catch (System.Exception ex)
