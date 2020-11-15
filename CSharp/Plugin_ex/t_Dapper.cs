@@ -39,6 +39,31 @@ namespace CSharp.Plugin {
 				var x = cnn.Query<Movie>(_sql).ToList();
 			}
 		}
+
+        /// <summary>
+        /// </summary>
+        [TestMethod]
+		public void t_Query_動態物件(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
+			{
+                try
+                {
+                    var sql 
+                        = @"SELECT A.*  
+                        FROM    albums A  
+                        ";
+                    var _r = cnn.Query(sql)
+                        .AsQueryable()
+                        .ToList();
+                    
+                }
+                catch (System.Exception ex)
+                {
+                    
+                    
+                }
+			}
+		}
  
         /// <summary>
         /// [https://docs.microsoft.com/zh-tw/dotnet/standard/data/sqlite/dapper-limitations]
@@ -137,30 +162,7 @@ namespace CSharp.Plugin {
 			}
 		}
 
-        /// <summary>
-        /// </summary>
-        [TestMethod]
-		public void t_混搭DynLinq_0(){
-            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
-			{
-                try
-                {
-                    var sql 
-                        = @"SELECT A.*  
-                        FROM    albums A  
-                        ";
-                    var _r = cnn.Query(sql).AsQueryable()
-                        .ToList();
-                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
-                    
-                }
-                catch (System.Exception ex)
-                {
-                    
-                    
-                }
-			}
-		}
+        
 
         /// <summary>
         /// </summary>
@@ -179,13 +181,12 @@ namespace CSharp.Plugin {
                         ";
                     var parameter = new DynamicParameters();
                     parameter.Add("@Title","Big Ones",DbType.String,ParameterDirection.Input);
-                    var _r = cnn.Query(sql, 
+                    var _r = cnn.Query<albums_ext>(sql, 
                         parameter)
                         .AsQueryable()
-                        .OrderBy("A.ArtistId desc")
+                        .OrderBy(c=>c.ArtistId)
                         .PageResult(1,5)
                         .Queryable
-                        .AsQueryable()
                         .ToList();
                     FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
                     
@@ -219,13 +220,13 @@ namespace CSharp.Plugin {
                     */
                     var parameter = new DynamicParameters();
                     parameter.Add("@Title","A%",DbType.String,ParameterDirection.Input);
-                    var _r = cnn.Query(sql, 
-                        parameter).AsQueryable()
-                        .OrderBy("A.ArtistId desc")
-                        .ToList()
-                        // .PageResult(1,5)
-                        // .Queryable.ToList();
-                        ;
+                    var _r = cnn.Query<albums_ext>(sql, 
+                        parameter)
+                        .AsQueryable()
+                        .OrderBy("ArtistId desc")
+                        .PageResult(1,5)
+                        .Queryable
+                        .ToList();
                     FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
                 }
                 catch (System.Exception ex)
