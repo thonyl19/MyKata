@@ -133,7 +133,7 @@ namespace CSharp.Plugin
         /// 2.因為 原始資料中,缺少了 REPORT ,所以需要再後補.
         /// 而這個案例的重點就在下方註記中,處理 join 補資料的那一段 
         /// </summary>
-        public void t_案例(){
+        public void t_案例_Join(){
             /*
             public static Result QueryWORKT(PagerQuery PQuery)
             {
