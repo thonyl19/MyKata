@@ -22,6 +22,9 @@ var list_number = [
   "-10.1%",
 ];
 var fn = {
+	"_"(){
+		
+	},
 	物件複製() {
 		var A = { a: 1, b: 2 };
 		var B = { A, c: 3 };
