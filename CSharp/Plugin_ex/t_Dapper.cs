@@ -135,6 +135,7 @@ namespace CSharp.Plugin {
 
 			}
 		}
+        
 
         /// <summary>
         /// https://dapper-tutorial.net/parameter-string
@@ -162,6 +163,25 @@ namespace CSharp.Plugin {
 			}
 		}
 
+        /// <summary>
+        /// https://ithelp.ithome.com.tw/articles/10229915
+        /// </summary>
+        [TestMethod]
+        public void t_Parameter_Dynamic_簡式(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
+                string _sql = @"
+                    SELECT  A.* , B.Name 
+                    FROM    albums A 
+                            INNER JOIN artists B 
+                                ON A.ArtistId = B.ArtistId
+                            --: 跟 @ 用法等價
+                    WHERE   A.Title = :Title";
+                
+                var args = new { Title = "Big Ones"};
+                var _list = cnn.Query(_sql , args)
+                        .ToList();
+            }
+        }
         
 
         /// <summary>
@@ -188,7 +208,7 @@ namespace CSharp.Plugin {
                         .PageResult(1,5)
                         .Queryable
                         .ToList();
-                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
+                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin_ex\t_Dapper.json"));
                     
                 }
                 catch (System.Exception ex)
@@ -208,7 +228,7 @@ namespace CSharp.Plugin {
                 {
                     var sql 
                         //= "SELECT * FROM Movie WHERE Genre = @Genre;";
-                        = @"SELECT A.* , B.Name 
+                        = @"SELECT B.Name , A.* 
                         FROM    albums A 
                                 INNER JOIN artists B 
                                     ON A.ArtistId = B.ArtistId
@@ -227,7 +247,7 @@ namespace CSharp.Plugin {
                         .PageResult(1,5)
                         .Queryable
                         .ToList();
-                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
+                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin_ex\t_Dapper.json"));
                 }
                 catch (System.Exception ex)
                 {
@@ -257,6 +277,33 @@ namespace CSharp.Plugin {
 		}
 
         
+        /// <summary>
+        /// https://ithelp.ithome.com.tw/articles/10229915
+        /// </summary>
+        [TestMethod]
+        public void t_MultiMapping(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
+                string _sql = @"
+                    SELECT  A.* , B.Name 
+                    FROM    albums A 
+                            INNER JOIN artists B 
+                                ON A.ArtistId = B.ArtistId
+                            --: 跟 @ 用法等價
+                    WHERE   A.Title = :Title"
+                    ;
+                
+                var args = new { Title = "Big Ones"};
+                var _list = cnn.Query<albums_ext,artist,albums_ext>
+                    (_sql ,
+                    (A,B)=>{
+                        A.Name = B.Name;
+                        return A;
+                    }
+                    ,args
+                    ,splitOn: "ArtistId")
+                    .ToList();
+            }
+        }
 
         
         
