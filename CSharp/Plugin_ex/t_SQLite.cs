@@ -125,7 +125,7 @@ namespace CSharp.Plugin {
 	public class Chinook : DbContext
     {
         public DbSet<albums> albums { get; set; }
-        public DbSet<artist> artist { get; set; }
+        public DbSet<artists> artists { get; set; }
  
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -144,7 +144,7 @@ namespace CSharp.Plugin {
         public decimal Price { get; set; }
     }
 
-    public class artist
+    public class artists
     {
         public int ArtistId { get; set; }
         public string Name { get; set; }

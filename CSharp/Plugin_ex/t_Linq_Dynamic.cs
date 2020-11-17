@@ -60,7 +60,7 @@ namespace CSharp.Plugin
             using (var cnn = new Chinook())
 			{
                 var r = cnn.albums
-                    .Join(cnn.artist
+                    .Join(cnn.artists
                         ,a0 => a0.ArtistId
                         ,a1 => a1.ArtistId
                         ,(a0, a1) => new {

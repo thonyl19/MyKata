@@ -101,9 +101,9 @@ namespace CSharp.Plugin
                 {
                     var qb = t_DynamicLinqQueryBuilder.Query_SQLite();
                     /*使用 自定SQL 有個重點 ,就是必須搭配 物件去承接,
-                        才能讓 BuildQuery 有效作用, 如此案例,
-                        只要設一個 albums_ext 來承接兩個表 join 後的結果,
-                        就可以正常的 work
+                        BuildQuery 才能有效作用, 就像此案例,
+                        必須要設一個 albums_ext 來承接兩個表 join 後的結果,
+                        就可以正常的 work 
                     */
                     var sql = @"SELECT A.* , B.Name 
                                 FROM    albums A 

@@ -240,7 +240,7 @@ namespace CSharp.Plugin {
                     */
                     var parameter = new DynamicParameters();
                     parameter.Add("@Title","A%",DbType.String,ParameterDirection.Input);
-                    var _r = cnn.Query<albums_ext>(sql, 
+                    var _r = cnn.Query(sql, 
                         parameter)
                         .AsQueryable()
                         .OrderBy("ArtistId desc")
@@ -257,28 +257,11 @@ namespace CSharp.Plugin {
 			}
 		}
 
-        
-  
-        /// <summary>
-        ///https://dapper-tutorial.net/result-multi-mapping
-        // 未完成
-        /// </summary>
-        [TestMethod]
-		public void _QueryMultiMapping(){
-            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
-			{
-                var sql = "SELECT * FROM albums A INNER JOIN artists B ON A.ArtistId = B.ArtistId ";
-                //var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
-                // var _r = cnn.Query<albums,artist,albums_ext>(sql,(albums,artist)=>{
-                //     //albums_ext _obj = albums;
-                    
-                // });
-			}
-		}
-
+   
         
         /// <summary>
         /// https://ithelp.ithome.com.tw/articles/10229915
+        /// https://dapper-tutorial.net/result-multi-mapping
         /// </summary>
         [TestMethod]
         public void t_MultiMapping(){
@@ -293,7 +276,7 @@ namespace CSharp.Plugin {
                     ;
                 
                 var args = new { Title = "Big Ones"};
-                var _list = cnn.Query<albums_ext,artist,albums_ext>
+                var _list = cnn.Query<albums_ext,artists,albums_ext>
                     (_sql ,
                     (A,B)=>{
                         A.Name = B.Name;
@@ -306,7 +289,27 @@ namespace CSharp.Plugin {
         }
 
         
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestMethod]
+        public void t_Transaction(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
+                string sql = "INSERT INTO artists (Name) Values (@Name);";
+                cnn.Open();
+                using (var transaction = cnn.BeginTransaction())
+                    {
+                        var args =  new {Name = "Mark"};
+                        var affectedRows = cnn.Execute
+                            (sql
+                            , args
+                            , transaction);
+                        
+                        transaction.Rollback();
+                        
+                    }
+            }
+        }
         
     }
 }
