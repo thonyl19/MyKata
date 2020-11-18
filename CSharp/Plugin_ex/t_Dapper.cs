@@ -135,6 +135,7 @@ namespace CSharp.Plugin {
 
 			}
 		}
+        
 
         /// <summary>
         /// https://dapper-tutorial.net/parameter-string
@@ -162,6 +163,25 @@ namespace CSharp.Plugin {
 			}
 		}
 
+        /// <summary>
+        /// https://ithelp.ithome.com.tw/articles/10229915
+        /// </summary>
+        [TestMethod]
+        public void t_Parameter_Dynamic_簡式(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
+                string _sql = @"
+                    SELECT  A.* , B.Name 
+                    FROM    albums A 
+                            INNER JOIN artists B 
+                                ON A.ArtistId = B.ArtistId
+                            --: 跟 @ 用法等價
+                    WHERE   A.Title = :Title";
+                
+                var args = new { Title = "Big Ones"};
+                var _list = cnn.Query(_sql , args)
+                        .ToList();
+            }
+        }
         
 
         /// <summary>
@@ -188,7 +208,7 @@ namespace CSharp.Plugin {
                         .PageResult(1,5)
                         .Queryable
                         .ToList();
-                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
+                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin_ex\t_Dapper.json"));
                     
                 }
                 catch (System.Exception ex)
@@ -208,7 +228,7 @@ namespace CSharp.Plugin {
                 {
                     var sql 
                         //= "SELECT * FROM Movie WHERE Genre = @Genre;";
-                        = @"SELECT A.* , B.Name 
+                        = @"SELECT B.Name , A.* 
                         FROM    albums A 
                                 INNER JOIN artists B 
                                     ON A.ArtistId = B.ArtistId
@@ -220,14 +240,14 @@ namespace CSharp.Plugin {
                     */
                     var parameter = new DynamicParameters();
                     parameter.Add("@Title","A%",DbType.String,ParameterDirection.Input);
-                    var _r = cnn.Query<albums_ext>(sql, 
+                    var _r = cnn.Query(sql, 
                         parameter)
                         .AsQueryable()
                         .OrderBy("ArtistId desc")
                         .PageResult(1,5)
                         .Queryable
                         .ToList();
-                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin\t_Dapper.json"));
+                    FileApp.Write_SerializeJson(_r,FileApp.getRelatePath(@"Plugin_ex\t_Dapper.json"));
                 }
                 catch (System.Exception ex)
                 {
@@ -237,29 +257,59 @@ namespace CSharp.Plugin {
 			}
 		}
 
+   
         
-  
         /// <summary>
-        ///https://dapper-tutorial.net/result-multi-mapping
-        // 未完成
+        /// https://ithelp.ithome.com.tw/articles/10229915
+        /// https://dapper-tutorial.net/result-multi-mapping
         /// </summary>
         [TestMethod]
-		public void _QueryMultiMapping(){
-            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook))
-			{
-                var sql = "SELECT * FROM albums A INNER JOIN artists B ON A.ArtistId = B.ArtistId ";
-                //var Genre = new {Genre = new DbString {Value = "Comedy", IsFixedLength = false, IsAnsi = true}};
-                // var _r = cnn.Query<albums,artist,albums_ext>(sql,(albums,artist)=>{
-                //     //albums_ext _obj = albums;
-                    
-                // });
-			}
-		}
+        public void t_MultiMapping(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
+                string _sql = @"
+                    SELECT  A.* , B.Name 
+                    FROM    albums A 
+                            INNER JOIN artists B 
+                                ON A.ArtistId = B.ArtistId
+                            --: 跟 @ 用法等價
+                    WHERE   A.Title = :Title"
+                    ;
+                
+                var args = new { Title = "Big Ones"};
+                var _list = cnn.Query<albums_ext,artists,albums_ext>
+                    (_sql ,
+                    (A,B)=>{
+                        A.Name = B.Name;
+                        return A;
+                    }
+                    ,args
+                    ,splitOn: "ArtistId")
+                    .ToList();
+            }
+        }
 
         
-
-        
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestMethod]
+        public void t_Transaction(){
+            using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
+                string sql = "INSERT INTO artists (Name) Values (@Name);";
+                cnn.Open();
+                using (var transaction = cnn.BeginTransaction())
+                    {
+                        var args =  new {Name = "Mark"};
+                        var affectedRows = cnn.Execute
+                            (sql
+                            , args
+                            , transaction);
+                        
+                        transaction.Rollback();
+                        
+                    }
+            }
+        }
         
     }
 }

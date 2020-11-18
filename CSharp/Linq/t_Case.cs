@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Reflection;
 using CSharp.Linq;
+using CSharp.Plugin;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharp.Linq {
@@ -12,22 +14,7 @@ namespace CSharp.Linq {
     /// </summary>
     [TestClass]
     public class t_Case {
-        [TestMethod]
-        public void t_L01 () {
-            // try {
-            //     string CategoryName = "CategoryName";
-            //     var param = new ObjectParameter[] { 
-            //             new ObjectParameter ("Name", CategoryName)
-            //     };
-            //     var query = base.CurrentDataSource.Categories
-            //         .Where("it.CategoryName = @Name"
-            //             , param }
-            //         );
-            // } catch (Exception) {
-            //     throw;
-            // }
-            // return query;
-        }
+         
 
         [TestMethod]
         public void t_02(){
