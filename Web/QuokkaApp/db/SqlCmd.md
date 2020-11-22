@@ -35,6 +35,7 @@
     with TT AS (
         select   * from EmployeeDashboardData E
         where WindowsID in ('PW40' ,'hl55','pt95','al1j')
+        --with 內,不可以使用 OrderBy
         --order by E.Percentage desc
     )
     select  Guid,Percentage, EmployeeNo,NickName

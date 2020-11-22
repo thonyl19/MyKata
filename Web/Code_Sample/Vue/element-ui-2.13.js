@@ -2917,7 +2917,36 @@ var __fn = (
 			return {_vue,_css};
 		},
 	}
- 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,Dialog,原生元件,程式產生器};
+	var 工作日誌 = {
+		'*def'() {
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<el-date-picker
+							v-model="value1"
+							type="date"
+							placeholder="选择日期">
+							</el-date-picker>
+						</div>
+					`,
+					data(){
+						return {
+							value1:null
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+	}
+ 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,Dialog,原生元件,程式產生器,工作日誌};
 }
 (function () {
 	var arr = [

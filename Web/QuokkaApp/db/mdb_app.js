@@ -89,27 +89,40 @@ var ut = {
 }
 
 
+//資料庫基礎程序
 var _base = {
+	//Connect 
 	Conn:{
-		async v2020607(cfg) {
-			var cts = `Provider=Microsoft.ACE.OLEDB.12.0;Data Source=${cfg.filePath};Persist Security Info=False;`;
+		v2020607(cfg) {
+			//cfg
+			var cts = `Provider=Microsoft.Jet.OLEDB.4.0;Data Source=${cfg.filePath};`
+			//var cts = `Provider=Microsoft.ACE.OLEDB.12.0;Data Source=${cfg.filePath};Persist Security Info=False;`;
 			return ADODB.open(cts);
 		}
 	},
+	//執行查詢
 	Exec:{
 		async v2020607(sql){
-			let {_App,cfg} = this;
-			//cfg
+			let {Conn,cfg}  = this;
+			console.log({Conn,cfg})
 			//mdb_app.jsconsole.log(_App);
-			var db = await _App.Conn(cfg);
-			return await db.query(sql);
+			return await Conn(cfg).query(sql);
 		}
 	},
+	//參數對映程序
 	Prep:{
 		v2020607(sql,arg,def={}){
-			arg = _.merge(def,arg);
-			let {_App} = this;
-			return _App.parsePrep(this,sql,arg);
+			var curDB=this;
+			return {
+				curDB,
+				get Code(){
+					return _base.parseCode.v2020607(sql,arg);
+				},
+				async exec(){
+					//console.log({Code:this.Code}); 
+					return await curDB.Exec(this.Code);
+				}
+			}
 		}
 	},
 	parseCode:{
@@ -117,7 +130,7 @@ var _base = {
 	},
 	parsePrep:{
 		v2020607(curDB,sql,arg){
-			//console.log({curDB});
+			//console.log({curDB}); 
 			return {
 				curDB,
 				get Code(){
@@ -132,14 +145,8 @@ var _base = {
 	},
 	parseCfg:{
 		v2020607(cfg,base){
-			cfg = cfg!=null
-				? cfg
-				:{
-					cfg:{
-						filePath:path.join(__dirname,'./_demo.mdb')
-					}
-				};
 			var r =  _.merge(cfg,base);
+			//console.log({'parseCfg_v2020607':r});
 			return r;
 		}
 	}
@@ -150,12 +157,15 @@ let mdbApp = {
 		parseCode:_base.parseCode.v2020607,
 		parsePrep:_base.parsePrep.v2020607,
 		parseCfg:_base.parseCfg.v2020607,
-		Conn:_base.Conn.v2020607,
-		Init(){
+		//資料物件初始化程序
+		Init(cfg){
 			var _App = mdbApp.v2020607;
-			return _App.parseCfg(this,
+			var _self = this;
+			if (cfg!=null) _self.cfg = cfg;
+			//console.log({'v2020607.Init':_self});
+			return _App.parseCfg(_self,
 			{
-				_App,
+				Conn:_base.Conn.v2020607,
 				Exec:_base.Exec.v2020607,
 				Prep:_base.Prep.v2020607,
 			})
@@ -169,38 +179,72 @@ var mdb_demo = {
 	},
 	User:{
 		def:{
-			UserId:null
+			UserSId:null
 		},
 		Select(arg={},isTest=false){
 			var sql = `
-			select 	* 
-			from Users 
-			where 	:UserId is null
-					OR (:UserId <> null 
-						And  UserId =:UserId)
+			SELECT 	* 
+			FROM	[User] 
+			WHERE	:UserSId is null
+					OR (:UserSId <> null 
+						And  UserSId =:UserSId)
 			`;
+
 			return mdb_demo.Prep(sql,arg,this.def);
 		}
 	},
 	Log:{
 		Select(arg={},isTest=false){
+			//console.log( this.def);
 			var sql = `
-			select 	* 
-			from 	Log 
+			SELECT 	* 
+			FROM 	Log 
 			`;
 			return mdb_demo.Prep(sql,arg,this.def);
 		} 
+	},
+	Ping:{
+		Select(arg={},isTest=false){
+			var sql = `
+			SELECT 	* 
+			FROM 	Ping 
+			`;
+			return mdb_demo.Prep(sql,arg,this.def);
+		}
 	}
 }.Init();
 
 
 var t = {
-	async 'A'(){
-		r= "_A"
-		var db = mdbApp.v2020607.Init();
-		//console.log(db)
-		var r = await db.Exec('select * from Users');
+	async '動態指定DB'(){
+		/*
+		在這個案例中碰到一個很奇怪的問題,
+		_demo.mdb 怎麼弄都無法調用成功, 但 官網的 node-adodb.mdb 就可以 ,
+		但是相同的使用程序 ,在 [使用 mdb_demo.TableFunction] 就可以正常的 work ,
+		經研判,應該是該表 有問題才會造成無法成功讀取,
+		後來無意間猜想,會不會是有名稱上衝突的問題,故特別改成 [user] ,
+		結果問題 就自然解決了.
+		*/
+		var cfg = {
+			filePath:path.join(__dirname,'./_demo.mdb')
+			//filePath:path.join(__dirname,'../../node_modules/node-adodb/examples/node-adodb.mdb')
+		};
+		var _app = mdbApp.v2020607.Init(cfg);
+		console.log({'動態指定DB':_app});
+		var r = await _app.Exec('select * from [user]');
 		r;
+	},
+	async '使用 mdb_demo.TableFunction'(){
+		mdb_demo;
+		var z = await mdb_demo.Log.Select().exec();
+		console.log({z});
+		
+	},
+	async '使用 mdb_demo.TableFunction_params'(){
+		mdb_demo;
+		var z = await mdb_demo.User.Select({UserSId:3}).exec();
+		console.log({z});
+		
 	},
 	async 'B'(){
 		var db = mdbApp.v2020607.Init();
@@ -210,7 +254,7 @@ var t = {
 		var r = await db.Prep('select :A as A',arg).exec();
 		r
 	},
-	async 'C'(){
+	async '用mdb_demo'(){
 		mdb_demo;
 		var z = await mdb_demo.User.Select().exec();
 		console.log({z});
@@ -219,22 +263,15 @@ var t = {
 		var z1 = await mdb_demo.User.Select(arg).exec();
 		z1
 	},
-	async '_C1'(){
-		mdb_demo;
-		var z = await mdb_demo.Log.Select().exec();
-
-		
-		console.log({z});
-		
-	}
+	
 }
-// _.each([t],fn=>{
-// 	_.each(fn,(e,k)=>{
-// 		if (k.substr(0,1)=="_"){
-// 			e();
-// 		}
-// 	})
-// })
+_.each([t],fn=>{
+	_.each(fn,(e,k)=>{
+		if (k.substr(0,1)=="*"){
+			e();
+		}
+	})
+})
 
  
 

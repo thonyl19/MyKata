@@ -195,7 +195,7 @@
 	}
 	_.each([QueryMode],fn=>{
 		_.each(fn,(e,k)=>{
-			if (k.substr(0,1)=="_"){
+			if (k.substr(0,1)=="*"){
 				e();
 			}
 		})
