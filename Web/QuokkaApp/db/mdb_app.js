@@ -276,5 +276,5 @@ _.each([t],fn=>{
  
 
 module.exports = {
-	mdbApp
+	mdb_demo
 };
