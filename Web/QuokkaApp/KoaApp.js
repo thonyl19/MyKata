@@ -101,7 +101,7 @@ var fn = {
         ]
         KoaRouterApp.Mode_A(x);
     },
-    '_Router_modelC'(){
+    '*Router_modelC'(){
         /*
             mode B 主要的改量,就是在模組內, 以 urlPath 做為基礎,
                 再往下展開 Verbs , 為了使處理便進一步簡化,就直接以 CRUD 的方式,
@@ -131,7 +131,11 @@ var fn = {
 }
 
 _.each(fn,(e,k)=>{
-    if (k.substr(0,1)=="_"){
+    if (k.substr(0,1)=="*"){
         e();
     }
 })
+
+module.exports = {
+	KoaRouterApp
+};

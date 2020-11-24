@@ -95,7 +95,7 @@ var _base = {
 	Conn:{
 		v2020607(cfg) {
 			//cfg
-			var cts = `Provider=Microsoft.Jet.OLEDB.4.0;Data Source=${cfg.filePath};`
+			var cts = `Provider=Microsoft.Jet.OLEDB.4.0;Data Source=${cfg.filePath};`;
 			//var cts = `Provider=Microsoft.ACE.OLEDB.12.0;Data Source=${cfg.filePath};Persist Security Info=False;`;
 			return ADODB.open(cts);
 		}
@@ -186,7 +186,7 @@ var mdb_demo = {
 			SELECT 	* 
 			FROM	[User] 
 			WHERE	:UserSId is null
-					OR (:UserSId <> null 
+					OR (:UserSId is not null 
 						And  UserSId =:UserSId)
 			`;
 
@@ -208,6 +208,21 @@ var mdb_demo = {
 			var sql = `
 			SELECT 	* 
 			FROM 	Ping 
+			`;
+			return mdb_demo.Prep(sql,arg,this.def);
+		}
+	},
+	Opction:{
+		def:{
+			grp_type:null
+		},
+		Select(arg={},isTest=false){
+			var sql = `
+			SELECT 	* 
+			FROM 	Opction 
+			WHERE	:grp_type is null
+					OR (:grp_type is not null 
+						And  grp_type =:grp_type)
 			`;
 			return mdb_demo.Prep(sql,arg,this.def);
 		}

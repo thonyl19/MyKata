@@ -102,6 +102,7 @@ var __req_cfg = {
 			`${window.gEx.local_path}bootstrap/dist/css/bootstrap.min`
 			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min"
 		],
+		axios:`${window.gEx.local_path}axios/dist/axios.min`,
  		Vue_Utility:"../Vue_Prd/Vue_Utility",
 		UI_App:"../Vue_Prd/UI_App",
 		UI_AppExt:"../Vue_Prd/UI_AppExt",
