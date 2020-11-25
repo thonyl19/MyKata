@@ -125,6 +125,12 @@ var _base = {
 			}
 		}
 	},
+	ViewTable:{
+		async v20201125(tableName){
+			var sql = `select * from ${tableName};`;
+			return await this.Exec(sql);
+		}
+	},
 	parseCode:{
 		v2020607: ut.queryFormat
 	},
@@ -144,30 +150,45 @@ var _base = {
 		}
 	},
 	parseCfg:{
+		/*
+		增加轉出 Views 的功能
+		 */
+		v20201125(dbApp,baseFn){
+			let {Views} = dbApp;
+			if (Views!=null){
+				_.each(Views,(view)=>{
+					var _target = dbApp[view]
+					var isNotHas = _target !=null;
+					 
+				})
+			}
+			var r =  _.merge(dbApp,base);
+			return r;
+		},
 		v2020607(cfg,base){
 			var r =  _.merge(cfg,base);
 			//console.log({'parseCfg_v2020607':r});
 			return r;
-		}
+		},
+		
+
 	}
 }
 
 let mdbApp = {
 	v2020607:{
-		parseCode:_base.parseCode.v2020607,
-		parsePrep:_base.parsePrep.v2020607,
-		parseCfg:_base.parseCfg.v2020607,
 		//資料物件初始化程序
 		Init(cfg){
 			var _App = mdbApp.v2020607;
 			var _self = this;
 			if (cfg!=null) _self.cfg = cfg;
 			//console.log({'v2020607.Init':_self});
-			return _App.parseCfg(_self,
+			return _base.parseCfg.v2020607(_self,
 			{
 				Conn:_base.Conn.v2020607,
 				Exec:_base.Exec.v2020607,
 				Prep:_base.Prep.v2020607,
+				ViewTable:_base.ViewTable.v20201125,
 			})
 		}
 	}
@@ -226,7 +247,7 @@ var mdb_demo = {
 			`;
 			return mdb_demo.Prep(sql,arg,this.def);
 		}
-	}
+	},
 }.Init();
 
 
@@ -258,6 +279,12 @@ var t = {
 	async '使用 mdb_demo.TableFunction_params'(){
 		mdb_demo;
 		var z = await mdb_demo.User.Select({UserSId:3}).exec();
+		console.log({z});
+		
+	},
+	async '查詢'(){
+		mdb_demo;
+		var z = await mdb_demo.ViewTable('DayLog_1_PingAdd');
 		console.log({z});
 		
 	},

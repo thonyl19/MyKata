@@ -4,7 +4,7 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 var __fn = (
 	$, _ , styled, Vue,Mock,moment,
-	ELEMENT,UI_AppExt
+	ELEMENT,UI_AppExt,axios
 )=> 
 {
 	//debugger;
@@ -2934,25 +2934,62 @@ var __fn = (
 							type="date"
 							placeholder="选择日期">
 							</el-date-picker>
+						<el-table
+							:data="tableData"
+							style="width: 100%">
+							<el-table-column
+								v-for="{ prop, label } in colConfigs"
+								:key="prop"
+								:prop="prop"
+								:label="label">
+								</el-table-column>
+							
+							 
+						  </el-table>
 						</div>
 					`,
 					data(){
 						return {
-							value1:null
+							value1:null,
+							tableData:[],
+							colConfigs : [
+								{ prop: 'nickName', label: '簡稱' },
+								{ prop: 'progress', label: '進度' },
+								{ prop: 'sts', label: '狀態' }
+							  ]
 						}
-					} 
-				   }
+					},
+					mounted() {
+						var _self = this;
+						var _arg =  {headers: 
+							{'Access-Control-Allow-Origin': '*' 
+							,'Access-Control-Allow-Headers': '*'},
+						// proxy: {
+						// 	host: '192.168.0.104',
+						// 	port: 3000
+						//   }
+						};
+						axios.get('http://192.168.0.104:3000/api/view/DayLog_1_PingAdd')
+							.then((res)=>{
+								console.log(res);
+								let {data} = res
+								_self.tableData = data;
+							})
+					}, 
+				}
 			};
 			return _obj;
 		},
 	}
- 	return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,Dialog,原生元件,程式產生器,工作日誌};
+	 return {Tool ,Views ,Row,Group ,Case,Fail,Vue_Prd,Table,Dialog
+		,原生元件,程式產生器,工作日誌};
 }
 (function () {
 	var arr = [
 		"jquery","lodash","styled","vue",'Mock','moment',
 		'ELEMENT'
 		,'UI_AppExt'
+		,'axios'
 	 ];
 	 var cfg = {
 		paths: {

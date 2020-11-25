@@ -2,6 +2,10 @@
 const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
 const Router = require('koa-router')();
+const cors =require('@koa/cors');
+const morgan =require('morgan');
+
+
 //有空再試
 //const KoaRouterApp = require('../QuokkaApp/KoaApp');
 const {mdb_demo} = require('../QuokkaApp/db/mdb_app');
@@ -36,9 +40,12 @@ Router.get('/api/view/:view',async(ctx, next)=>{
 
  
 console.log({mdb_demo});
+// enable CORS - Cross Origin Resource Sharing
 app.use(index);
 app.use(bodyParser());
+app.use(cors());
 app.use(Router.routes());
+app.use(morgan('dev'));
 
 app.listen(3000);
  
