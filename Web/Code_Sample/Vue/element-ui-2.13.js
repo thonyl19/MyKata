@@ -2735,7 +2735,9 @@ var __fn = (
 			  })
  
 			var _obj = {
-				_css:``,
+				_css:`
+				
+				`,
 				_vue: {
 					template: `
 						<div>
@@ -2924,7 +2926,11 @@ var __fn = (
 			   </pre>
 			   `;
 			var _obj = {
-				_css:``,
+				_css:`
+				.el-table td, .el-table th {
+					padding: 5px 0;
+				}
+				`,
 				_vue: {
 					template: `
 						<div>
@@ -2934,6 +2940,12 @@ var __fn = (
 							type="date"
 							placeholder="选择日期">
 							</el-date-picker>
+						<el-input
+							type="textarea"
+							:rows="15"
+							placeholder="请输入内容"
+							v-model="input_txt">
+						  </el-input>
 						<el-table
 							:data="tableData"
 							style="width: 100%">
@@ -2950,6 +2962,7 @@ var __fn = (
 					`,
 					data(){
 						return {
+							input_txt:'',
 							value1:null,
 							tableData:[],
 							colConfigs : [
@@ -2964,10 +2977,6 @@ var __fn = (
 						var _arg =  {headers: 
 							{'Access-Control-Allow-Origin': '*' 
 							,'Access-Control-Allow-Headers': '*'},
-						// proxy: {
-						// 	host: '192.168.0.104',
-						// 	port: 3000
-						//   }
 						};
 						axios.get('http://192.168.0.104:3000/api/view/DayLog_1_PingAdd')
 							.then((res)=>{
