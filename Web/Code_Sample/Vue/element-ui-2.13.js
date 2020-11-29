@@ -4,7 +4,7 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 var __fn = (
 	$, _ , styled, Vue,Mock,moment,
-	ELEMENT,UI_AppExt,axios
+	ELEMENT,UI_AppExt,axios,draggable
 )=> 
 {
 	//debugger;
@@ -2920,9 +2920,88 @@ var __fn = (
 		},
 	}
 	var 工作日誌 = {
+		'PartA'() {
+			 
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						
+						<div class="row">
+							<div class="col-lg-6">
+ 
+							<draggable   
+								:list="list_src"
+								class="list-group"
+								ghost-class="ghost"
+								draggable=".item"
+								group="a" >
+								<div
+									class="list-group-item item"
+									v-for="(el,idx) in list_src"
+									:key="idx" >
+							  		{{el}}
+								</div>
+						  </draggable>
+		 
+						</div>
+						<div class="col-lg-6">
+							<table class="table table-striped">
+								<thead class="thead-dark">
+									<tr>
+									
+									<th scope="col">TaskSID</th>
+									<th scope="col">簡稱</th>
+									<th scope="col">進度</th>
+									<th scope="col">狀態</th>
+									</tr>
+								</thead>
+								
+									
+									<draggable v-model="item" tag="tr" v-for="item in list_tar" :key="item.TaskSID"
+										group="a">
+										<td scope="row">{{ item.TaskSID }}</td>
+									<td scope="row">{{ item.nickName }}</td>
+									<td>{{ item.sts }}</td>
+									<td>
+										{{item.list}}</td>
+									</draggable>
+								
+							</table>
+							</div>
+						</div>
+						
+						</div>
+					`,
+					props:{
+						list_src:{
+							type:Array
+						},
+						list_tar:{
+							type:Array
+						} 
+					} ,
+					methods: {
+						add: function() {
+						  this.list.push({ name: "Juan " + id, id: id++ });
+						},
+						replace: function() {
+						  this.list = [{ name: "Edgard", id: id++ }];
+						},
+						checkMove: function(e) {
+						  window.console.log("Future index: " + e.draggedContext.futureIndex);
+						}
+				
+					}
+				}
+			};
+			return _obj;
+		},
 		'*def'() {
 			var _note = `
 			   <pre>
+			   
 			   </pre>
 			   `;
 			var _obj = {
@@ -2932,44 +3011,47 @@ var __fn = (
 				}
 				`,
 				_vue: {
+					components:{'part-a':工作日誌.PartA()._vue},
 					template: `
 						<div>
 						${_note}
-						<el-date-picker
-							v-model="value1"
-							type="date"
-							placeholder="选择日期">
-							</el-date-picker>
+						
+							{{Sum}}
 						<el-input
 							type="textarea"
 							:rows="15"
 							placeholder="请输入内容"
+							 
+						 
 							v-model="input_txt">
 						  </el-input>
-						<el-table
-							:data="tableData"
-							style="width: 100%">
-							<el-table-column
-								v-for="{ prop, label } in colConfigs"
-								:key="prop"
-								:prop="prop"
-								:label="label">
-								</el-table-column>
-							
-							 
-						  </el-table>
+						<el-date-picker
+						  v-model="value1"
+						  type="date"
+						  placeholder="选择日期">
+						</el-date-picker>
+						<part-a :list_src="list_src" :list_tar="tableData"></part-a>
+						
 						</div>
 					`,
 					data(){
 						return {
+							Sum:0,
 							input_txt:'',
 							value1:null,
 							tableData:[],
+							list_src:[],
 							colConfigs : [
 								{ prop: 'nickName', label: '簡稱' },
 								{ prop: 'progress', label: '進度' },
 								{ prop: 'sts', label: '狀態' }
-							  ]
+							  ],
+							  dbx:null
+						}
+					},
+					watch:{
+						'input_txt'(val){
+							this.dbx(val);
 						}
 					},
 					mounted() {
@@ -2984,7 +3066,31 @@ var __fn = (
 								let {data} = res
 								_self.tableData = data;
 							})
+						this.dbx = _.debounce((val)=>{
+							var _sum = 0;
+							debugger
+							var arr = val.split('\n');
+							var _list_src = [];
+							_.each(arr,(el)=>{
+								let [item,time=""] = el.split('(');
+								time = item==""?0:eval(time);
+								_sum+=time;
+								_list_src.push({
+									item,time 
+								})
+							})
+							_self.Sum = _sum;
+							_self.list_src = _list_src;
+						} , 750
+						,{ 'leading': false,
+							//'trailing': false
+						});
 					}, 
+					methods:{
+						change(){
+							console.log(this.input_txt);
+						}
+					}
 				}
 			};
 			return _obj;
@@ -2999,16 +3105,18 @@ var __fn = (
 		'ELEMENT'
 		,'UI_AppExt'
 		,'axios'
+		,"vuedraggable"
 	 ];
 	 var cfg = {
 		paths: {
-			'Vue':"https://cdn.jsdelivr.net/npm/vue/dist/vue"
+			vuedraggable:'https://cdn.jsdelivr.net/npm/vuedraggable@2.24.2/dist/vuedraggable.umd.min',
+			'sortablejs':'https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min',
 		},
 		shim:{
 		}
 	};
 	if (typeof define === 'function' && define.amd) {
-		define({arr,__fn});
+		define({arr,cfg,__fn});
 	}else{
 		window.sample = __fn();
 	}
