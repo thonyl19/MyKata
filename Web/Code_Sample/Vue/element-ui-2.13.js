@@ -4,7 +4,7 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 var __fn = (
 	$, _ , styled, Vue,Mock,moment,
-	ELEMENT,UI_AppExt,axios,draggable
+	ELEMENT,UI_AppExt,axios,draggable,InfiniteLoading
 )=> 
 {
 	//debugger;
@@ -2604,7 +2604,86 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'?infinite-loading'() {
+			var _note = `
+			   <pre>
+			   https://jsfiddle.net/PeachScript/uyjb6z34/
+			   未完成 ,因為移植的範例 API ,無法做 CROSS 調用
+			   </pre>
+			   `;
+			const api = 'https://hn.algolia.com/api/v1/search_by_date?tags=story';
+			var _obj = {
+				_css:`
+					.el-table .cell {
+						white-space: nowrap;
+						overflow: hidden;
+					}
+				`,
+				_vue: {
+					components: {
+						InfiniteLoading,
+					  },
+					template: `
+						<div>
+						${_note}
+						<el-table
+							:data="list"
+							height="624"
+							border>
+							<el-table-column
+								prop="title"
+								label="Hacker News Title">
+							</el-table-column>
+							<el-table-column
+								prop="author"
+								label="Author"
+								width="125">
+							</el-table-column>
 
+							<infinite-loading
+								slot="append"
+								@infinite="infiniteHandler"
+								force-use-infinite-wrapper=".el-table__body-wrapper">
+								</infinite-loading>
+						</el-table>
+						</div>
+					`,
+					data() {
+						return {
+						   page: 1,
+							list: [],
+					  	};
+					},
+					mounted() {
+						this.infiniteHandler(this.$state);
+					},
+					methods: {
+					  	infiniteHandler($state) {
+							alert('test')
+							console.log(api);
+							axios.get(api, {
+								headers: 
+									{'Access-Control-Allow-Origin': '*' 
+									,'Access-Control-Allow-Headers': '*'},
+								
+								params: {
+						 		page: this.page,
+								},		
+					 		}).then(({ data }) => {
+								if (data.hits.length) {
+									this.page += 1;
+									this.list = this.list.concat(data.hits);
+									$state.loaded();
+								} else {
+									$state.complete();
+								}
+							});
+					  	},
+					}
+				}
+			};
+			return _obj;
+		},
 	}
 	var Dialog = {
 		'拖曳寛高'() {
@@ -3106,11 +3185,13 @@ var __fn = (
 		,'UI_AppExt'
 		,'axios'
 		,"vuedraggable"
+		,"InfiniteLoading"
 	 ];
 	 var cfg = {
 		paths: {
 			vuedraggable:'https://cdn.jsdelivr.net/npm/vuedraggable@2.24.2/dist/vuedraggable.umd.min',
 			'sortablejs':'https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min',
+			"InfiniteLoading":'https://unpkg.com/vue-infinite-loading@2.4.5/dist/vue-infinite-loading'
 		},
 		shim:{
 		}
