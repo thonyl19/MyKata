@@ -2655,7 +2655,7 @@ var __fn = (
 					  	};
 					},
 					mounted() {
-						this.infiniteHandler(this.$state);
+						//this.infiniteHandler(this.$state);
 					},
 					methods: {
 					  	infiniteHandler($state) {
@@ -3009,15 +3009,13 @@ var __fn = (
 						
 						<div class="row">
 							<div class="col-lg-6">
- 
 							<draggable   
 								:list="list_src"
 								class="list-group"
 								ghost-class="ghost"
 								draggable=".item"
 								group="a" >
-								<div
-									class="list-group-item item"
+								<div class="list-group-item item"
 									v-for="(el,idx) in list_src"
 									:key="idx" >
 							  		{{el}}
@@ -3029,15 +3027,12 @@ var __fn = (
 							<table class="table table-striped">
 								<thead class="thead-dark">
 									<tr>
-									
 									<th scope="col">TaskSID</th>
 									<th scope="col">簡稱</th>
 									<th scope="col">進度</th>
 									<th scope="col">狀態</th>
 									</tr>
 								</thead>
-								
-									
 									<draggable v-model="item" tag="tr" v-for="item in list_tar" :key="item.TaskSID"
 										group="a">
 										<td scope="row">{{ item.TaskSID }}</td>

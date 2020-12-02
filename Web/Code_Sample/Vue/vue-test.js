@@ -1,9 +1,9 @@
 ﻿/*
 
 */
-var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
+var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 	var VueTheMask= {
-		'*def'() {
+		'?def'() {
 			Vue.use(VueMask);
 			var _note = `
 			<pre>
@@ -28,6 +28,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 			return _obj;
 		},
 	}
+	//https://sortablejs.github.io/Vue.Draggable/#/simple
 	var VueDraggable = {
 
 		'Simple'() {
@@ -214,7 +215,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 								</thead>
 								<draggable v-model="list" tag="tbody">
 									<tr v-for="item in list" :key="item.name">
-									<td scope="row">{{ item.id }}</td>
+									<td>{{ item.id }}</td>
 									<td>{{ item.name }}</td>
 									<td>{{ item.sport }}</td>
 									</tr>
@@ -333,10 +334,11 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 			};
 			return _obj;
 		},
-		'*into row'() {
+		'?into row'() {
 			var _note = `
 			   <pre>
 			   draggable .draggable 是用來指定,要拖曳的對象
+			   未完成,因為 在 置入整列 的處理上 ,沒能達到想要的效果
 			   </pre>
 			   `;
 			var _obj = {
@@ -364,6 +366,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 		 
 						</div>
 						<div class="col-lg-6">
+							<h3>置入特定欄位</h3>
 							<table class="table table-striped">
 								<thead class="thead-dark">
 									<tr>
@@ -376,13 +379,38 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 								<td scope="row">{{ item.id }}</td>
 								<td>{{ item.name }}</td>
 								<td><draggable v-model="item.list" 
-									  draggable=".item" group="a">
+									  group="a">
 									{{item.list.length}}
 								</draggable></td>
 								</tr>
 								
 							</table>
-							</div>
+							<h3>置入整列</h3>
+							<table class="table table-striped">
+								<thead class="thead-dark">
+									<tr>
+									<th scope="col">Id</th>
+									<th scope="col">Name</th>
+									<th scope="col">Items</th>
+									</tr>
+								</thead>
+								<draggable
+									v-model="list_table"
+									tag="tbody" 
+									@change="log"
+									@add="add"
+									draggable=".item"
+									group="a"
+									>
+									<tr v-for="item in list_table" 
+										:key="item.name" >
+										<td>{{ item.id }}</td>
+										<td>{{ item.name }}</td>
+										<td>{{ item.list.length }}</td>
+									</tr>
+								</draggable>  
+							</table>
+						</div>
 						</div>
 						
 						</div>
@@ -401,6 +429,9 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 						}
 					} ,
 					methods: {
+						log: function(evt) {
+							window.console.log(evt);
+						  },
 						add: function() {
 						  this.list.push({ name: "Juan " + id, id: id++ });
 						},
@@ -415,7 +446,179 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 				}
 			};
 			return _obj;
+		}
+	};
+
+	var vue_drag_drop = {
+		//https://github.com/cameronhimself/vue-drag-drop/
+		'base'() {
+			Vue.use(VueDragDrop);
+			var _note = `
+			   <pre>
+			   https://jsfiddle.net/cameronhimself/hvvaadk9/
+			   </pre>
+			   `;
+			var _obj = {
+				_css:`
+					.drag,
+					.drop {
+					font-family: sans-serif;
+					display: inline-block;
+					border-radius: 10px;
+					background: #ccc;
+					position: relative;
+					padding: 30px;
+					text-align: center;
+					vertical-align: top;
+					}
+
+					.drag {
+					color: #fff;
+					cursor: move;
+					background: #777;
+					border-right: 2px solid #555;
+					border-bottom: 2px solid #555;
+					}
+
+					.drop {
+					background: #eee;
+					border-top: 2px solid #ccc;
+					border-left: 2px solid #ccc;
+					}
+
+				`,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<drag class="drag" :transfer-data="{ draggable }">Drag Me</drag>
+  						<drop class="drop" @drop="handleDrop">Dropzone</drop>
+						</div>
+					`,
+					data(){
+						return {
+							 draggable: 'Drag Me'
+						}
+					} ,
+					methods: {
+						handleDrop(data, event) {
+						  alert(`You dropped with data: ${JSON.stringify(data)}`);
+						},
+					  },
+				   }
+			};
+			return _obj;
 		},
+		'*into row'() {
+			var _note = `
+			   <pre>
+			   draggable .draggable 是用來指定,要拖曳的對象
+			   未完成,因為 在 置入整列 的處理上 ,沒能達到想要的效果
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						<div class="row">
+							<div class="col-lg-6">
+							<ul>
+							<drag class="drag list-group-item item" tag="li"
+								v-for="element in list" 
+								:key="element.name">
+									{{ element.id }}-{{ element.name }}
+								</drag>
+							</ul>
+						</div>
+						<div class="col-lg-6">
+							
+							<h3>置入特定欄位</h3>
+							<table class="table table-striped">
+								<thead class="thead-dark">
+									<tr>
+									<th scope="col">Id</th>
+									<th scope="col">Name</th>
+									<th scope="col">Items</th>
+									</tr>
+								</thead>
+								<tr v-for="item in list_table" :key="item.name">
+								<td scope="row">{{ item.id }}</td>
+								<td>{{ item.name }}</td>
+								<td><drop class="drop" @drop="handleDrop" v-model="item.list">
+									{{item.list.length}}
+									</drop>
+								</td>
+								</tr>
+								
+							</table>
+							<h3>置入整列</h3>
+							<table class="table table-striped">
+								<thead class="thead-dark">
+									<tr>
+									<th scope="col">Id</th>
+									<th scope="col">Name</th>
+									<th scope="col">Items</th>
+									</tr>
+								</thead>
+								<draggable
+									v-model="list_table"
+									tag="tbody" 
+									@change="log"
+									@add="add"
+									draggable=".item"
+									group="a"
+									>
+									<tr v-for="item in list_table" 
+										:key="item.name" >
+										<td>{{ item.id }}</td>
+										<td>{{ item.name }}</td>
+										<td>{{ item.list.length }}</td>
+									</tr>
+								</draggable>  
+							</table>
+						</div>
+						</div>
+						
+						</div>
+					`,
+					data(){
+						return {
+							enabled: true,
+							list:  window.gEx.mydata,
+							list_table: [
+								{ id: 1, name: "Abby", sport: "basket" ,list:[]},
+								{ id: 2, name: "Brooke", sport: "foot" ,list:[]},
+								{ id: 3, name: "Courtenay", sport: "volley" ,list:[]},
+								{ id: 4, name: "David", sport: "rugby",list:[] }
+							],
+							dragging: false
+						}
+					} ,
+					methods: {
+						handleDrop(data, event) {
+							debugger
+							alert(`You dropped with data: ${JSON.stringify(data)}`);
+						},
+						log: function(evt) {
+							window.console.log(evt);
+						  },
+						add: function() {
+						  this.list.push({ name: "Juan " + id, id: id++ });
+						},
+						replace: function() {
+						  this.list = [{ name: "Edgard", id: id++ }];
+						},
+						checkMove: function(e) {
+						  window.console.log("Future index: " + e.draggedContext.futureIndex);
+						}
+				
+					}
+				}
+			};
+			return _obj;
+		}
 	};
 	var vue_easy_dnd = {
 		/*
@@ -449,6 +652,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 	};
 	return { VueTheMask
 		, VueDraggable 
+		, vue_drag_drop
 		//,vue_easy_dnd 
 	};
 };
@@ -456,6 +660,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 	var arr = ["jquery", "lodash", "styled", "vue","bts337"
 		,"VueTheMask"
 		,"vuedraggable"
+		,"vue-drag-drop"
 	  	//,"VueEasyDnD"
 	];
 	var cfg = {
@@ -464,6 +669,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable) => {
 			vuedraggable:'https://cdn.jsdelivr.net/npm/vuedraggable@2.24.2/dist/vuedraggable.umd.min',
 			'sortablejs':'https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min',
 			//VueEasyDnD:`https://cdn.jsdelivr.net/npm/vue-dnd@0.1.1/index.min`,
+			'vue-drag-drop':'https://cdn.jsdelivr.net/npm/vue-drag-drop@1.1.4/dist/vue-drag-drop.browser',
 		},
  
 		//依賴
