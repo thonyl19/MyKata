@@ -1,7 +1,7 @@
 ﻿/*
 
 */
-var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
+var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,VueDraggable  ) => {
 	var VueTheMask= {
 		'?def'() {
 			Vue.use(VueMask);
@@ -29,7 +29,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 		},
 	}
 	//https://sortablejs.github.io/Vue.Draggable/#/simple
-	var VueDraggable = {
+	var Vue_Draggable = {
 
 		'Simple'() {
 			debugger
@@ -491,18 +491,23 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 					template: `
 						<div>
 						${_note}
+						{{list}}
 						<drag class="drag" :transfer-data="{ draggable }">Drag Me</drag>
-  						<drop class="drop" @drop="handleDrop">Dropzone</drop>
+  						<drop class="drop" v-model="list"  @drop="handleDrop">Dropzone</drop>
 						</div>
 					`,
 					data(){
 						return {
-							 draggable: 'Drag Me'
+							 draggable: 'Drag Me',
+							 list:[]
 						}
 					} ,
 					methods: {
 						handleDrop(data, event) {
-						  alert(`You dropped with data: ${JSON.stringify(data)}`);
+							var _vm = event.currentTarget.__vue__;
+							_vm.$attrs.value.push(data);
+							_vm.$emit('input',_vm.$attrs.value);
+						  	//alert(`You dropped with data: ${JSON.stringify(data)}`);
 						},
 					  },
 				   }
@@ -512,8 +517,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 		'*into row'() {
 			var _note = `
 			   <pre>
-			   draggable .draggable 是用來指定,要拖曳的對象
-			   未完成,因為 在 置入整列 的處理上 ,沒能達到想要的效果
+			   
 			   </pre>
 			   `;
 			var _obj = {
@@ -527,13 +531,13 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 							<ul>
 							<drag class="drag list-group-item item" tag="li"
 								v-for="element in list" 
-								:key="element.name">
+								:key="element.name"
+								:transfer-data="element">
 									{{ element.id }}-{{ element.name }}
 								</drag>
 							</ul>
 						</div>
 						<div class="col-lg-6">
-							
 							<h3>置入特定欄位</h3>
 							<table class="table table-striped">
 								<thead class="thead-dark">
@@ -562,21 +566,12 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 									<th scope="col">Items</th>
 									</tr>
 								</thead>
-								<draggable
-									v-model="list_table"
-									tag="tbody" 
-									@change="log"
-									@add="add"
-									draggable=".item"
-									group="a"
-									>
-									<tr v-for="item in list_table" 
-										:key="item.name" >
+								<drop class="drop" @drop="handleDrop" v-for="item in list_table" 
+									v-model="item.list" tag="tr">
 										<td>{{ item.id }}</td>
 										<td>{{ item.name }}</td>
 										<td>{{ item.list.length }}</td>
-									</tr>
-								</draggable>  
+								<drop>  
 							</table>
 						</div>
 						</div>
@@ -598,8 +593,10 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 					} ,
 					methods: {
 						handleDrop(data, event) {
-							debugger
-							alert(`You dropped with data: ${JSON.stringify(data)}`);
+							var _vm = event.currentTarget.__vue__;
+							_vm.$attrs.value.push(data);
+							_vm.$emit('input',_vm.$attrs.value);
+							//alert(`You dropped with data: ${JSON.stringify(data)}`);
 						},
 						log: function(evt) {
 							window.console.log(evt);
@@ -649,10 +646,158 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 			};
 			return _obj;
 		},	
+		
 	};
+	var vue_draggable = {
+		'?def'() {
+			//console.log(VueDraggable);
+			//let { VueDraggableDirective } =  VueDraggable;
+			Vue.use(VueDraggable.default);
+			var _note = `
+			   <pre>
+			   https://github.com/Vivify-Ideas/vue-draggable
+			   己可呈現拖曳,但試不出 範例的效果
+			   </pre>
+			   `;
+			var _obj = {
+				_css:`
+				.drag-wrapper {
+					display: flex;
+					justify-content: center;
+				  }
+				  
+				  .drag-wrapper ul {
+					display: flex;
+					flex-direction: column;
+					padding: 3px !important;
+					min-height: 70vh;
+					width: 100px;
+					float:left;
+					list-style-type:none;
+					overflow-y:auto;
+					border:2px solid #888;
+					border-radius:0.2em;
+					background:#8adccc;
+					color:#555;
+					margin-right: 5px;
+				  }
+				  
+				  /* drop target state */
+				  .drag-wrapper ul[aria-dropeffect="move"] {
+					border-color:#68b;
+					background:#fff;
+				  }
+				  
+				  /* drop target focus and dragover state */
+				  .drag-wrapper ul[aria-dropeffect="move"]:focus,
+				  .drag-wrapper ul[aria-dropeffect="move"].dragover
+				  {
+					outline:none;
+					box-shadow:0 0 0 1px #fff, 0 0 0 3px #68b;
+				  }
+				  
+				  /* draggable items */
+				  li {
+					display:block;
+					list-style-type:none;
+					margin:0 0 2px 0;
+					padding:0.2em 0.4em;
+					border-radius:0.2em;
+					line-height:1.3;
+				  }
+				  
+				  li:hover {
+					box-shadow:0 0 0 2px #68b, inset 0 0 0 1px #ddd;
+				  }
+				  
+				  /* items focus state */
+				  li:focus
+				  {
+					outline:none;
+					box-shadow:0 0 0 2px #68b, inset 0 0 0 1px #ddd;
+				  }
+				  
+				  /* items grabbed state */
+				  li[aria-grabbed="true"]
+				  {
+					background:#5cc1a6;
+					color:#fff;
+				  }
+				  
+				  @keyframes nodeInserted {
+					  from { opacity: 0.2; }
+					  to { opacity: 0.8; }
+				  }
+				  
+				  .item-dropzone-area {
+					  height: 2rem;
+					  background: #888;
+					  opacity: 0.8;
+					  animation-duration: 0.5s;
+					  animation-name: nodeInserted;
+				  }
+				`,
+				_vue: {
+					// directives: {
+					// 	dragAndDrop: VueDraggableDirective
+					//   },
+					template: `
+						<div>
+						${_note}
+							<div  v-drag-and-drop:options="options"
+								class="drag-wrapper">
+								<ul>
+								<li>Item 1</li>
+								<li>Item 2</li>
+								<li>Item 3</li>
+								</ul>
+								<ul  >
+								<li>Item 4</li>
+								<li>Item 5</li>
+								<li>Item 6</li>
+								</ul>
+								<ul>
+								<li>Item 7</li>
+								<li>Item 8</li>
+								<li>Item 9</li>
+								</ul>
+							</div>
+						</div>
+					`,
+					data(){
+						const componentInstance = this;
+						return {
+							options: {
+								// dropzoneSelector: 'ul',
+								// draggableSelector: 'li',
+								// handlerSelector: null,
+								// reactivityEnabled: true,
+								multipleDropzonesItemsDraggingEnabled: true,
+								// showDropzoneAreas: true,
+								onDragend(event) {
+									componentInstance.someDummyMethod();
+						  
+									if (!event.droptarget) {
+									  console.log('event is dropped out');
+									}
+								}
+							}
+						}
+				  },
+				  methods: {
+					someDummyMethod() {
+					  console.log('Hello from someDummyMethod');
+					}
+				  } 
+				}
+			};
+			return _obj;
+		},		
+	}
 	return { VueTheMask
-		, VueDraggable 
+		, Vue_Draggable 
 		, vue_drag_drop
+		, vue_draggable
 		//,vue_easy_dnd 
 	};
 };
@@ -661,6 +806,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 		,"VueTheMask"
 		,"vuedraggable"
 		,"vue-drag-drop"
+		,"VueDraggable"
 	  	//,"VueEasyDnD"
 	];
 	var cfg = {
@@ -670,6 +816,7 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop ) => {
 			'sortablejs':'https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min',
 			//VueEasyDnD:`https://cdn.jsdelivr.net/npm/vue-dnd@0.1.1/index.min`,
 			'vue-drag-drop':'https://cdn.jsdelivr.net/npm/vue-drag-drop@1.1.4/dist/vue-drag-drop.browser',
+			'VueDraggable':"https://cdn.jsdelivr.net/npm/vue-draggable@2.0.6/lib/vue-draggable.min",
 		},
  
 		//依賴
