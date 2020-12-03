@@ -1,7 +1,10 @@
-﻿/*
+﻿ 
+/*
 
 */
-var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,VueDraggable  ) => {
+var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,SmoothDnD,VueSmoothDnd 
+	,VueDraggable
+	) => {
 	var VueTheMask= {
 		'?def'() {
 			Vue.use(VueMask);
@@ -794,10 +797,57 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,VueDraggable 
 			return _obj;
 		},		
 	}
+
+	var vue_smooth_dnd = {
+		'??def'() {
+			var _note = `
+			   <pre>
+			   https://kutlugsahin.github.io/vue-smooth-dnd/#/drag-class
+			   https://github.com/kutlugsahin/vue-smooth-dnd
+			   未完成
+			   </pre>
+			   `;
+			debugger
+			let { Container, Draggable }  =  VueSmoothDnd;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+							<div class="simple-page">
+								<Container @drop="onDrop">            
+								<Draggable v-for="item in items" :key="item.id">
+									<div class="draggable-item">
+									{{item.data}}
+									</div>
+								</Draggable>
+								</Container>
+							</div>
+						</div>
+					`,
+					components: { Container, Draggable },
+					data() {
+						return {
+						items: generateItems(50, i => ({ id: i, data: "Draggable " + i }))
+						};
+					},
+					methods: {  
+						onDrop(dropResult) {
+						this.items = applyDrag(this.items, dropResult);
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+	}
+	
 	return { VueTheMask
 		, Vue_Draggable 
 		, vue_drag_drop
 		, vue_draggable
+		, vue_smooth_dnd
 		//,vue_easy_dnd 
 	};
 };
@@ -806,7 +856,10 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,VueDraggable 
 		,"VueTheMask"
 		,"vuedraggable"
 		,"vue-drag-drop"
-		,"VueDraggable"
+		,"smooth-dnd"
+		,"vue-smooth-dnd"
+		,"smooth-dnd"
+		//,"VueDraggable"
 	  	//,"VueEasyDnD"
 	];
 	var cfg = {
@@ -816,6 +869,8 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,VueDraggable 
 			'sortablejs':'https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min',
 			//VueEasyDnD:`https://cdn.jsdelivr.net/npm/vue-dnd@0.1.1/index.min`,
 			'vue-drag-drop':'https://cdn.jsdelivr.net/npm/vue-drag-drop@1.1.4/dist/vue-drag-drop.browser',
+			'vue-smooth-dnd':'https://cdn.jsdelivr.net/npm/vue-smooth-dnd@0.8.1/dist/vue-smooth-dnd.min',
+			'smooth-dnd':'https://cdn.jsdelivr.net/npm/smooth-dnd@0.12.1/dist/index.min',
 			'VueDraggable':"https://cdn.jsdelivr.net/npm/vue-draggable@2.0.6/lib/vue-draggable.min",
 		},
  
@@ -824,6 +879,9 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,VueDraggable 
 			VueEasyDnD: {
 				deps: ["vue"],
 			},
+			"vue-smooth-dnd":{
+				deps: ["vue","smooth-dnd"],
+			}
 		},
 		// urlArgs: function(id, url) {
 		// 	debugger
