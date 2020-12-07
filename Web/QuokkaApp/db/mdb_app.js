@@ -250,6 +250,62 @@ var mdb_demo = {
 	},
 }.Init();
 
+var mdb_demo1 = {
+	Init:mdbApp.v2020607.Init,
+	cfg:{
+		filePath:path.join(__dirname,'../../../_demo.mdb')
+	},
+	User:{
+		def:{
+			UserSId:null
+		},
+		Select(arg={},isTest=false){
+			var sql = `
+			SELECT 	* 
+			FROM	[User] 
+			WHERE	:UserSId is null
+					OR (:UserSId is not null 
+						And  UserSId =:UserSId)
+			`;
+
+			return mdb_demo.Prep(sql,arg,this.def);
+		}
+	},
+	Log:{
+		Select(arg={},isTest=false){
+			//console.log( this.def);
+			var sql = `
+			SELECT 	* 
+			FROM 	Log 
+			`;
+			return mdb_demo.Prep(sql,arg,this.def);
+		} 
+	},
+	Ping:{
+		Select(arg={},isTest=false){
+			var sql = `
+			SELECT 	* 
+			FROM 	Ping 
+			`;
+			return mdb_demo.Prep(sql,arg,this.def);
+		}
+	},
+	Opction:{
+		def:{
+			grp_type:null
+		},
+		Select(arg={},isTest=false){
+			var sql = `
+			SELECT 	* 
+			FROM 	Opction 
+			WHERE	:grp_type is null
+					OR (:grp_type is not null 
+						And  grp_type =:grp_type)
+			`;
+			return mdb_demo.Prep(sql,arg,this.def);
+		}
+	},
+}.Init();
 
 var t = {
 	async '動態指定DB'(){
@@ -319,4 +375,5 @@ _.each([t],fn=>{
 
 module.exports = {
 	mdb_demo
+	,mdb_demo1
 };

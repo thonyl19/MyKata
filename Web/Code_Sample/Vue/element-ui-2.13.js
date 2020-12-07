@@ -4,7 +4,7 @@ https://github.com/ElemeFE/element/tree/dev/packages
 */
 var __fn = (
 	$, _ , styled, Vue,Mock,moment,
-	ELEMENT,UI_AppExt,axios,draggable,InfiniteLoading
+	ELEMENT,UI_AppExt,axios,VueDragDrop,InfiniteLoading
 )=> 
 {
 	//debugger;
@@ -3009,40 +3009,31 @@ var __fn = (
 						
 						<div class="row">
 							<div class="col-lg-6">
-							<draggable   
-								:list="list_src"
-								class="list-group"
-								ghost-class="ghost"
-								draggable=".item"
-								group="a" >
-								<div class="list-group-item item"
-									v-for="(el,idx) in list_src"
-									:key="idx" >
-							  		{{el}}
-								</div>
-						  </draggable>
-		 
-						</div>
-						<div class="col-lg-6">
-							<table class="table table-striped">
-								<thead class="thead-dark">
-									<tr>
-									<th scope="col">TaskSID</th>
-									<th scope="col">簡稱</th>
-									<th scope="col">進度</th>
-									<th scope="col">狀態</th>
-									</tr>
-								</thead>
-									<draggable v-model="item" tag="tr" v-for="item in list_tar" :key="item.TaskSID"
-										group="a">
-										<td scope="row">{{ item.TaskSID }}</td>
-									<td scope="row">{{ item.nickName }}</td>
-									<td>{{ item.sts }}</td>
-									<td>
-										{{item.list}}</td>
-									</draggable>
-								
-							</table>
+								<ul>
+									<drag class="drag list-group-item item" tag="li"
+										v-for="el in list_src" 
+										:key="el.item"
+										:transfer-data="el">
+											{{ el.item }}({{ el.time }}
+										</drag>
+								</ul>
+							</div>
+							<div class="col-lg-6">
+									<table class="table table-striped">
+									<thead class="thead-dark">
+										<tr>
+										<th scope="col">TaskSID</th>
+										<th scope="col">NickName</th>
+										<th scope="col">Items</th>
+										</tr>
+									</thead>
+									<drop class="drop" @drop="handleDrop" v-for="item in list_tar" 
+										v-model="item.list" tag="tr">
+											<td>{{ item.TaskSID }}</td>
+											<td>{{ item.nickName }}</td>
+											<td>{{ item }}</td>
+									<drop>  
+								</table>
 							</div>
 						</div>
 						
@@ -3057,6 +3048,12 @@ var __fn = (
 						} 
 					} ,
 					methods: {
+						handleDrop(data, event) {
+							var _vm = event.currentTarget.__vue__;
+							_vm.$attrs.value.push(data);
+							_vm.$emit('input',_vm.$attrs.value);
+							//alert(`You dropped with data: ${JSON.stringify(data)}`);
+						},
 						add: function() {
 						  this.list.push({ name: "Juan " + id, id: id++ });
 						},
@@ -3111,7 +3108,7 @@ var __fn = (
 					data(){
 						return {
 							Sum:0,
-							input_txt:'',
+							input_txt:'A(5B(5',
 							value1:null,
 							tableData:[],
 							list_src:[],
@@ -3179,11 +3176,12 @@ var __fn = (
 		'ELEMENT'
 		,'UI_AppExt'
 		,'axios'
-		,"vuedraggable"
+		,"vue-drag-drop"
 		,"InfiniteLoading"
 	 ];
 	 var cfg = {
 		paths: {
+			'vue-drag-drop':'https://cdn.jsdelivr.net/npm/vue-drag-drop@1.1.4/dist/vue-drag-drop.browser',
 			vuedraggable:'https://cdn.jsdelivr.net/npm/vuedraggable@2.24.2/dist/vuedraggable.umd.min',
 			'sortablejs':'https://cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min',
 			"InfiniteLoading":'https://unpkg.com/vue-infinite-loading@2.4.5/dist/vue-infinite-loading'

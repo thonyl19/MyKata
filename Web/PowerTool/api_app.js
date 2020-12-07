@@ -8,7 +8,7 @@ const morgan =require('morgan');
 
 //有空再試
 //const KoaRouterApp = require('../QuokkaApp/KoaApp');
-const {mdb_demo} = require('../QuokkaApp/db/mdb_app');
+const {mdb_demo1:mdb_demo} = require('../QuokkaApp/db/mdb_app');
 
 const app = new koa();
 
@@ -41,9 +41,9 @@ Router.get('/api/view/:view',async(ctx, next)=>{
  
 console.log({mdb_demo});
 // enable CORS - Cross Origin Resource Sharing
+app.use(cors());
 app.use(index);
 app.use(bodyParser());
-app.use(cors());
 app.use(Router.routes());
 app.use(morgan('dev'));
 
