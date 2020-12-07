@@ -3018,20 +3018,21 @@ var __fn = (
 										</drag>
 								</ul>
 							</div>
+							
 							<div class="col-lg-6">
 									<table class="table table-striped">
 									<thead class="thead-dark">
 										<tr>
-										<th scope="col">TaskSID</th>
-										<th scope="col">NickName</th>
-										<th scope="col">Items</th>
+										<th scope="col">時數</th>
+										<th scope="col">工作項</th>
+										<th scope="col">時數</th>
 										</tr>
 									</thead>
-									<drop class="drop" @drop="handleDrop" v-for="item in list_tar" 
-										v-model="item.list" tag="tr">
-											<td>{{ item.TaskSID }}</td>
+									<drop class="drop" @drop="handleDrop" v-for="(item,idx) in tar_list" 
+										:idx="idx" tag="tr">
+											<td>{{ item.times }}</td>
 											<td>{{ item.nickName }}</td>
-											<td>{{ item }}</td>
+											<td>{{ item.list }}</td>
 									<drop>  
 								</table>
 							</div>
@@ -3039,6 +3040,11 @@ var __fn = (
 						
 						</div>
 					`,
+					data(){
+						return {
+							tar_list:[]
+						}
+					},
 					props:{
 						list_src:{
 							type:Array
@@ -3047,12 +3053,32 @@ var __fn = (
 							type:Array
 						} 
 					} ,
+					watch: {
+						list_tar(){
+							var arr = [];
+							var _self = this;
+							_.each(this.list_tar,(el)=>{
+								let {list} = el ;
+								if (list==null){
+									_self.$set(el,'list',[]);
+								}
+								arr.push(el);
+							})
+							this.tar_list = arr ;
+						}
+					},
 					methods: {
-						handleDrop(data, event) {
+						Dragend(data, event) {
+							debugger
 							var _vm = event.currentTarget.__vue__;
-							_vm.$attrs.value.push(data);
-							_vm.$emit('input',_vm.$attrs.value);
-							//alert(`You dropped with data: ${JSON.stringify(data)}`);
+							var idx = _vm.$attrs.idx;
+							this.tar_list[idx].list.push(data);
+						},
+						handleDrop(data, event) {
+							debugger
+							var _vm = event.currentTarget.__vue__;
+							var idx = _vm.$attrs.idx;
+							this.tar_list[idx].list.push(data);
 						},
 						add: function() {
 						  this.list.push({ name: "Juan " + id, id: id++ });
@@ -3101,7 +3127,7 @@ var __fn = (
 						  type="date"
 						  placeholder="选择日期">
 						</el-date-picker>
-						<part-a :list_src="list_src" :list_tar="tableData"></part-a>
+						<part-a :list_src.sync="list_src" :list_tar.sync="tableData"></part-a>
 						
 						</div>
 					`,
@@ -3126,40 +3152,47 @@ var __fn = (
 						}
 					},
 					mounted() {
-						var _self = this;
-						var _arg =  {headers: 
-							{'Access-Control-Allow-Origin': '*' 
-							,'Access-Control-Allow-Headers': '*'},
-						};
-						axios.get('http://192.168.0.104:3000/api/view/DayLog_1_PingAdd')
-							.then((res)=>{
-								console.log(res);
-								let {data} = res
-								_self.tableData = data;
-							})
-						this.dbx = _.debounce((val)=>{
-							var _sum = 0;
-							debugger
-							var arr = val.split('\n');
-							var _list_src = [];
-							_.each(arr,(el)=>{
-								let [item,time=""] = el.split('(');
-								time = item==""?0:eval(time);
-								_sum+=time;
-								_list_src.push({
-									item,time 
-								})
-							})
-							_self.Sum = _sum;
-							_self.list_src = _list_src;
-						} , 750
-						,{ 'leading': false,
-							//'trailing': false
-						});
+						this.f_工項輸入();
+						this.query();
 					}, 
 					methods:{
 						change(){
 							console.log(this.input_txt);
+						},
+						query(){
+							var _self = this;
+							var _arg =  {headers: 
+								{'Access-Control-Allow-Origin': '*' 
+								,'Access-Control-Allow-Headers': '*'},
+							};
+							axios.get('http://192.168.0.104:3000/api/view/DayLog_1_PingAdd')
+								.then((res)=>{
+									console.log(res);
+									let {data} = res
+									_self.tableData = data;
+								})
+						},
+						f_工項輸入(){
+							var _self = this;
+							this.dbx = _.debounce((val)=>{
+								var _sum = 0;
+								debugger
+								var arr = val.split('\n');
+								var _list_src = [];
+								_.each(arr,(el)=>{
+									let [item,time=""] = el.split('(');
+									time = item==""?0:eval(time);
+									_sum+=time;
+									_list_src.push({
+										item,time 
+									})
+								})
+								_self.Sum = _sum;
+								_self.list_src = _list_src;
+							} , 750
+							,{ 'leading': false,
+								//'trailing': false
+							});
 						}
 					}
 				}

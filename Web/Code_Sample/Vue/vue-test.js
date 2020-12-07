@@ -535,7 +535,8 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,SmoothDnD,Vue
 							<drag class="drag list-group-item item" tag="li"
 								v-for="element in list" 
 								:key="element.name"
-								:transfer-data="element">
+								:transfer-data="element"
+								@dragend="myListener">
 									{{ element.id }}-{{ element.name }}
 								</drag>
 							</ul>
@@ -595,6 +596,11 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,SmoothDnD,Vue
 						}
 					} ,
 					methods: {
+						myListener(data, event) {
+							var _vm = event.currentTarget.__vue__;
+							console.log(_vm.$attrs.idx)
+							// myArg === 'foo'
+						},
 						handleDrop(data, event) {
 							var _vm = event.currentTarget.__vue__;
 							_vm.$attrs.value.push(data);
