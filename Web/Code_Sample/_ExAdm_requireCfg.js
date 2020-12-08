@@ -25,6 +25,7 @@ window.gEx = {
 			'bootstrap3.3.7',
 			'bootstrap4.5.0',
 			'bulma0.9.1',
+			'Vuetify_2x',
 		],
 		Chart:[
 			'c3_0.7.15',
@@ -102,6 +103,9 @@ var __req_cfg = {
 			`${window.gEx.local_path}bootstrap/dist/css/bootstrap.min`
 			,"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min"
 		],
+		"vuetify2x":"https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify",
+		"vuetify2x-css":"https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min",
+		"vuetify2x-icon":'https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min',
 		axios:`${window.gEx.local_path}axios/dist/axios.min`,
  		Vue_Utility:"../Vue_Prd/Vue_Utility",
 		UI_App:"../Vue_Prd/UI_App",
@@ -123,7 +127,8 @@ var __req_cfg = {
 		vuex:{deps:['vue']},
 		bts337:{deps: ['css!bts337-css']},
 		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
-		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']}
+		vuetify2x:{deps:['vue','css!vuetify2x-css','css!fa_css','css!vuetify2x-icon']},
+		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']},
  	}
 }
 require.config(__req_cfg);
@@ -131,8 +136,12 @@ require.config(__req_cfg);
 
 
 require
-	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled","bts337"]
-	, ($, _, Vue ,Vuex , ELEMENT, styled, bts337) => {
+	(["jquery", 'lodash', "vue","vuex", "ELEMENT","styled"
+	//,"bts337"
+]
+	, ($, _, Vue ,Vuex , ELEMENT, styled
+		//, bts337
+		) => {
 	Vue.use(Vuex);
 	ELEMENT.install(Vue);
 	window.Vue = Vue;

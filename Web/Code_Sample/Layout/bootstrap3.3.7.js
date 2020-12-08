@@ -960,6 +960,12 @@
 						${_note}
 						<h3 style="display:inline-block;margin-right:.3em;"><label class="label label-info bevel-z">變更上傳狀態</label></h3>
 						<h3 style="display:inline-block;margin-right:.3em;"><label class="label label-info bevel-z">變更</label></h3>
+						<ul class="list-group">
+							<li class="list-group-item">
+								<span class="badge">14</span>
+								<i class="glyphicon glyphicon-remove-circle" ></i>Cras justo odio
+							</li>
+							</ul>
 					</div>
 					`,
 					data(){
@@ -1012,7 +1018,7 @@
 		},
 	}
 	var Pagination = {
-		'*def'() {
+		'pagination'() {
 			var _note = `
 			   <pre>
 			   </pre>
