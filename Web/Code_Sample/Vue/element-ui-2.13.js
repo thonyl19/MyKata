@@ -3000,25 +3000,23 @@ var __fn = (
 	}
 	var 工作日誌 = {
 		'PartA'() {
-			 
 			var _obj = {
 				_css:``,
 				_vue: {
 					template: `
-						<div>
-						
+					<div>
 						<div class="row">
 							<div class="col-lg-6">
 								<ul>
 									<drag class="drag list-group-item item" tag="li"
-										v-for="el in list_src" 
-										:key="el.item"
-										:transfer-data="el">
-											{{ el.item }}({{ el.time }}
+										v-for="(el,idx) in list_src" 
+										:idx="idx"
+										:transfer-data="el"
+										@dragend="Dragend">
+											{{idx}}.{{ el.item }}({{ el.time }}
 										</drag>
 								</ul>
 							</div>
-							
 							<div class="col-lg-6">
 									<table class="table table-striped">
 									<thead class="thead-dark">
@@ -3028,7 +3026,7 @@ var __fn = (
 										<th scope="col">時數</th>
 										</tr>
 									</thead>
-									<drop class="drop" @drop="handleDrop" v-for="(item,idx) in tar_list" 
+									<drop class="drop" @drop="Drop" v-for="(item,idx) in tar_list" 
 										:idx="idx" tag="tr">
 											<td>{{ item.times }}</td>
 											<td>{{ item.nickName }}</td>
@@ -3037,8 +3035,7 @@ var __fn = (
 								</table>
 							</div>
 						</div>
-						
-						</div>
+					</div>
 					`,
 					data(){
 						return {
@@ -3072,24 +3069,18 @@ var __fn = (
 							debugger
 							var _vm = event.currentTarget.__vue__;
 							var idx = _vm.$attrs.idx;
-							this.tar_list[idx].list.push(data);
+							this.list_src.splice(idx,1);
+							this.$emit('update:list_src',this.list_src);
 						},
-						handleDrop(data, event) {
-							debugger
+						Drop(data, event) {
+							//debugger
 							var _vm = event.currentTarget.__vue__;
 							var idx = _vm.$attrs.idx;
-							this.tar_list[idx].list.push(data);
+							var _item = this.list_tar[idx];
+							_item.list.push(data);
+							_item.times = _.sumBy(_item.list,'time');
+							this.$emit('update:list_tar',this.list_tar);
 						},
-						add: function() {
-						  this.list.push({ name: "Juan " + id, id: id++ });
-						},
-						replace: function() {
-						  this.list = [{ name: "Edgard", id: id++ }];
-						},
-						checkMove: function(e) {
-						  window.console.log("Future index: " + e.draggedContext.futureIndex);
-						}
-				
 					}
 				}
 			};
@@ -3118,8 +3109,6 @@ var __fn = (
 							type="textarea"
 							:rows="15"
 							placeholder="请输入内容"
-							 
-						 
 							v-model="input_txt">
 						  </el-input>
 						<el-date-picker
@@ -3176,7 +3165,7 @@ var __fn = (
 							var _self = this;
 							this.dbx = _.debounce((val)=>{
 								var _sum = 0;
-								debugger
+								//debugger
 								var arr = val.split('\n');
 								var _list_src = [];
 								_.each(arr,(el)=>{
