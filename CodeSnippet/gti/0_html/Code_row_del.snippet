@@ -21,7 +21,7 @@
 	<template slot-scope="scope">
 		<div class="btn-group mb-2 tpl-gridAct">
 			<div class="input-group">
-				<button class="btn btn-default btn-sm " :title="i18n.刪除" @@click="Del(scope.$index)">
+				<button class="btn btn-default btn-sm " :title="i18n.刪除" @@click="Del(scope.$$index)">
 					<i class="fa fa-2x fa-remove fa-fw"></i>
 				</button>
 			</div>

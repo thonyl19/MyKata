@@ -15,8 +15,11 @@
       <Shortcut>grp-gt-lot-query</Shortcut>
     </Header>
     <Snippet>
-      <Code Language="html" Delimiter="$"><![CDATA[<gt-lot-query :label="i18n.LOT" v-model="LOT"
+      <Code Language="html" Delimiter="$"><![CDATA[<gt-lot-query label="@RES.BLL.Face.LotNoT" v-model="LOT"
         placeholder="@RES.BLL.Message.PleaseScanTheBarcodeOrUseKeywords"
+        :layout_mode="['col-lg-1','col-lg-11']"
+		col_sty="col-lg-12"
+        :query_lot="Query"
 	    :callback="QueryLOT"
         :check_repeat="tableData"></gt-lot-query>
 
@@ -32,7 +35,7 @@ QueryLOT(LOT) {
 		if (isSameOPER) {
 			this.lot_list.push(LOT);
 		} else {
-			this.$Alert.Err(this.i18n.msg_MustSameOPER);
+			this.$$Alert.Err(this.i18n.msg_MustSameOPER);
 		}
 	}
 },]]></Code>
