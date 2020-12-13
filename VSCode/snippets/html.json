@@ -10,5 +10,18 @@
       "</div>"
     ],
     "description": "test"
+  },
+  "vue_notify": {
+    "prefix": "vue_notify\r",
+    "description": "",
+    "body": [
+      "\r",
+      "\r",
+      "this.\\$notify({\r",
+      "\ttitle: 'HTML 片段',\r",
+      "\tdangerouslyUseHTMLString: true,\r",
+      "\tmessage: '<strong>这是 <i>HTML</i> 片段</strong>'\r",
+      "});"
+    ]
   }
 }
