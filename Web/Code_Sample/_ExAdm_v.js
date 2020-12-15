@@ -138,15 +138,16 @@ require.config(__req_cfg);
 
 require
 	(["jquery", 'lodash', "vue","vuex","styled",
-	"ELEMENT",
+	"vuetify2x",
 	"bts337"
 ]
 	, ($, _, Vue ,Vuex ,styled,
-		ELEMENT,
+		Vuetify,
 		bts337
-		) => {
+			) => {
+				debugger
 	Vue.use(Vuex);
-	ELEMENT.install(Vue);
+	//Vue.use(Vuetify);
 	window.Vue = Vue;
 	window._ = _;
 	var tpl_sample = {
@@ -269,33 +270,30 @@ require
 			template: `<div>test</div>`
 		},
 		main: {
-			template: `<div>
-			<header>
-				<x-tpl-sample-switch></x-tpl-sample-switch>
-			</header>
-        <el-scrollbar class="part-A " tag="div">
-            <el-scrollbar class="left" 
-                :noresize="false"
-            >
-                <x-tpl-sample-left :action.sync="currentTab"></x-tpl-sample-left>
-            </el-scrollbar>
-            <div class="main" v-loading="loading">
-                <div>
-                    <input type="button" value="Copy" @click="copy" />
-                    <input type="button" value="Copy Components" @click="copy_com" />
-                    <textarea v-model="Code" @blur="change()"></textarea>
-                    <component v-bind:is="currentComponent"
-                        ></component>
-                </div>
-            </div>
-		</el-scrollbar>
-		</div>
+			template: `<v-app id="inspire">
+			<v-navigation-drawer
+			  v-model="drawer"
+			  app
+			>
+			  <!--  -->
+			</v-navigation-drawer>
+		
+			<v-app-bar app>
+			  <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+		
+			  <v-toolbar-title>Application</v-toolbar-title>
+			</v-app-bar>
+		
+			<v-main>
+			  <!--  -->
+			</v-main>
+		  </v-app>
 			`,
 			data() {
 				return {
 					currentTab: 'tpl-sample-test',
-					Code: ''
-					
+					Code: '',
+					drawer: null 
 				}
 			},
 			computed: {
@@ -395,6 +393,7 @@ require
 	});
 	new Vue({
 		el: '#app',
+		Vuetify,
 		store,
 		mounted() {
 			this.$store.commit('chgUrl', window.gEx.getCurrentEx());
