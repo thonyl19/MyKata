@@ -441,7 +441,33 @@ var __fn = ($,_,Vue,ELEMENT
 		//https://interactjs.io/docs/
 
 	}
+	var Example = {
+		'?scroll效果'() {
+			var _note = `
+			   <pre>
+			   參考 https://webduino.io/
+			   捲動時,headToolBar 的動態效果
+			   </pre>
+			   `;
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						${_note}
+						</div>
+					`,
+					data(){
+						return {
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+	}
 	return {
+		Example,
 		輕型套件 ,
 		QueryBuilder,
 		Interact

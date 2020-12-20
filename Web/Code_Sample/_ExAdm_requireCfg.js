@@ -113,7 +113,7 @@ var __req_cfg = {
 		UI_AppExt:"../Vue_Prd/UI_AppExt",
 		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
- 
+		run_prettify:'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify',
 	},
 	map: {
 		"*": {
@@ -127,7 +127,7 @@ var __req_cfg = {
 		lodash:{exports: '_'},
 		vuex:{deps:['vue']},
 		bts337:{deps: ['css!bts337-css']},
-		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'] },
+		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css',,'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=sons-of-obsidian&autoload=true'] },
 		vuetify2x:{deps:['vue','css!fa_css','css!vuetify2x-icon','css!vuetify2x-css']},
 		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']},
  	}
@@ -140,10 +140,12 @@ require
 	(["jquery", 'lodash', "vue","vuex","styled",
 	"ELEMENT",
 	"bts337"
-]
+	//,'run_prettify'
+	]
 	, ($, _, Vue ,Vuex ,styled,
 		ELEMENT,
 		bts337
+		//, run_prettify
 		) => {
 	Vue.use(Vuex);
 	ELEMENT.install(Vue);
@@ -183,7 +185,7 @@ require
 		switch:{
 			template: `
 			<div>
-				<el-button type="text" @click="ShowModules">切換範例集合</el-button>
+				<el-button type="primary"  size="small" round @click="ShowModules">切換範例集合</el-button>
 				<el-dialog
 					:visible.sync="SwitchModulesDialog"
 					width="70%"
@@ -268,34 +270,81 @@ require
 		test: {
 			template: `<div>test</div>`
 		},
+		info:{
+			template: `
+			<el-tabs v-model="activeName" >
+				<el-tab-pane label="Note" name="note"><pre>
+{{parse_Note}}</pre></el-tab-pane>
+				<el-tab-pane label="Code" name="code">
+					<input type="button" value="Copy" @click="copy" />
+					<input type="button" value="Copy Components" @click="copy_com" />
+					<pre class="prettyprint lang-html linenums"><code class="language-js">{{Code}}</code> </pre>
+					<textarea v-model="Code" @blur="change()"></textarea>
+				</el-tab-pane>
+			</el-tabs>
+
+			
+			`,
+			props:{
+				Code:{
+					type:String
+				},
+				Note:{
+					type:String
+				},
+			},
+			data() {
+				return {
+					activeName: 'code',
+				}
+			},
+			computed:{
+				parse_Note(){
+					var arr = this.Note.split('\n');
+					_.remove(arr , (el)=>{ return el.trim()==""});
+					let [r0] = arr;
+					if (r0 != null){
+						var _reg = /^\t+/g;
+						let [m0] = r0.match(_reg);
+						if (m0 !=null){
+							var _reg1 = new RegExp(`${m0}`, 'g');
+							arr = _.map(arr,(el=>{
+								return el.replace(_reg1,"");
+							}));
+						}
+					}
+					return arr.join('\n');
+				}
+			},
+			methods: {
+				copy(){},
+				copy_com(){}
+			},
+		},
 		main: {
 			template: `<div>
 			<header>
 				<x-tpl-sample-switch></x-tpl-sample-switch>
 			</header>
-        <el-scrollbar class="part-A " tag="div">
-            <el-scrollbar class="left" 
-                :noresize="false"
-            >
-                <x-tpl-sample-left :action.sync="currentTab"></x-tpl-sample-left>
-            </el-scrollbar>
-            <div class="main" v-loading="loading">
-                <div>
-                    <input type="button" value="Copy" @click="copy" />
-                    <input type="button" value="Copy Components" @click="copy_com" />
-                    <textarea v-model="Code" @blur="change()"></textarea>
-                    <component v-bind:is="currentComponent"
-                        ></component>
-                </div>
-            </div>
-		</el-scrollbar>
+			<el-scrollbar class="part-A " tag="div">
+				<el-scrollbar class="left" 
+					:noresize="false"
+					>
+					<x-tpl-sample-left :action.sync="currentTab"></x-tpl-sample-left>
+				</el-scrollbar>
+				<div class="main" v-loading="loading">
+					<x-tpl-sample-info :Code="Code" :Note="Note"></x-tpl-sample-info>
+					<component v-bind:is="currentComponent"
+						></component>
+				</div>
+			</el-scrollbar>
 		</div>
 			`,
 			data() {
 				return {
 					currentTab: 'tpl-sample-test',
-					Code: ''
-					
+					Code: '',
+					Note:''
 				}
 			},
 			computed: {
@@ -308,12 +357,14 @@ require
 					return  _self.$store.state.exFn;
 				},
 				currentComponent() {
+					debugger
 					var isString = typeof (this.currentTab) == "string";
 					if (isString) {
 						return `x-${this.currentTab}`;
 					}
 					this.Code = this.currentTab;
-					var { _vue, _css } = this.currentTab();
+					var { _vue, _css ,_note =""} = this.currentTab();
+					this.Note = _note;
 					if (_css != null) styled.injectGlobal`${_css}`;
 					return _vue;
 				}
@@ -326,12 +377,6 @@ require
 					eval('var _fn = function ' + _code);
 					this.currentTab = _fn;
 				},
-				copy() {
-	
-				},
-				copy_com() {
-	
-				}
 			},
 		},
 		'view-raw':{

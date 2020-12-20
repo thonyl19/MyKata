@@ -62,7 +62,7 @@ var fn = {
     },
     '手機號碼'() {
         //"XXX-XXXXXXX"、"XXXX-XXXXXXXX"、"XXX-XXXXXXX"、"XXX-XXXXXXXX"、"XXXXXXX"和"XXXXXXXX
-        var _reg = /^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$/g;
+        //var _reg = /^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$/g;
     },
     '處理逸脫字元'() {
         /*
@@ -70,6 +70,7 @@ var fn = {
             將  reg 字串, 轉換成 相應的 逸脫字元 表示式 (escaped)
 
         */
+       return ;
         var fn = {
             pattern: RegExp("[" + "{}[]-/\\()*+?.%$|".replace(RegExp(".", "g"), "\\$&") + "]", "g"),
             dispatch: {
@@ -113,11 +114,22 @@ var fn = {
         var v2 = fn.sanitize_for_regex_v2("\t");
         var _reg_v2 = new RegExp(v2, 'gi');
         alert('1\t2'.replace(_reg_v2, ','));
-    }
+    },
+    '?取得\t,不work'(){
+        //var _reg = /\\t/i;
+        var _reg = /\^\\t+/gm;
+        var x = `
+            For more information,          see Chapter 3.4.5.1`;
+        var z = x.match(_reg);
+        z
+    },
+    'Regex 使用變數'(){
+        new RegExp(`\d{${YOUR_VALUE_GOES_HERE}}`, 'igm');
+    },
 }
 
 _.each(fn, (e, k) => {
-    if (k.substr(0, 1) == "_") {
+    if (k.substr(0, 1) == "*") {
         e();
     }
 })

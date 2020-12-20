@@ -1369,11 +1369,14 @@ var __fn = ($,_,Vue)=>{
 	var Background = {
 		'*gradient'() {
 			var _note = `
-			   <pre>
-			   
-			   </pre>
-			   `;
+			我們是一個高雄的熱血創意團隊，成員有韌體工程師、網頁前後端工程師
+				以及視覺設計師，憑著一股對網頁技術無止盡的愛，
+			在 2015 年，實現了真正用 Web 跨入 IOT 的完整過程，
+			創造出物聯網嶄新的服務：Webduino，透過純粹撰寫 HTML 
+				與 Javascript 的網頁語法，就能夠玩轉各式各樣物聯網好玩的應用，為廣大的開發者和網頁設計師，創造了前所未有的開發模式，這個開發模式，將引領物聯網的潮流，將翻轉物聯網的生態，帶來各式各樣的創意與契機！ 
+			`;
 			var _obj = {
+				_note,
 				_css:`
 				div.base{
 					height:5em;
@@ -1382,7 +1385,6 @@ var __fn = ($,_,Vue)=>{
 				_vue: {
 					template: `
 						<div>
-						${_note}
 						{{range}}<input type="range" min="1" max="100" v-model="range" class="slider" id="myRange">
 						<div class='base' ref="styObj"> </div>
 						<textarea  v-model="csstxt"></textarea>

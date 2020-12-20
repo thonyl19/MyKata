@@ -116,6 +116,11 @@ header{
   top: 0;
   z-index: 1500;
   border-bottom: 1px groove black;
+  background-color:hsl(100 54% 49% / .75);
+  padding: .7rem 1.5rem;
+}
+header .el-button--text {
+  color: white;
 }
 .part-A{
   /*
@@ -130,7 +135,8 @@ header{
 修掉 x 軸的顯示
 */
 .part-A .el-scrollbar__wrap,
-.left .el-scrollbar__wrap{
+.left .el-scrollbar__wrap
+.right .el-scrollbar__wrap{
   overflow-x: hidden;
 }
 
