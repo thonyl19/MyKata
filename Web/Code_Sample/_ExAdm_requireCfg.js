@@ -114,6 +114,12 @@ var __req_cfg = {
 		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
 		run_prettify:'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify',
+		vue_codemirror:'https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min',
+		codemirror:[
+			//'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript',
+			'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min'
+		],
+		'../../lib/codemirror':'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min',
 	},
 	map: {
 		"*": {
@@ -127,10 +133,27 @@ var __req_cfg = {
 		lodash:{exports: '_'},
 		vuex:{deps:['vue']},
 		bts337:{deps: ['css!bts337-css']},
-		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css',,'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=sons-of-obsidian&autoload=true'] },
+		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'
+			//,'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=sons-of-obsidian&autoload=true&lang=css'
+			,'vue_codemirror'
+		]},
+		vue_codemirror:{deps:['codemirror'
+			,'css!https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror'
+			,'css!https://cdn.jsdelivr.net/npm/codemirror@5.59.0/theme/darcula'
+		]},
+		//codemirror:{deps:['../../lib/codemirror']},
 		vuetify2x:{deps:['vue','css!fa_css','css!vuetify2x-icon','css!vuetify2x-css']},
 		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']},
- 	}
+	 },
+	 urlArgs: function(id, url) {
+			debugger
+			var args = 'v=1';
+			if (url.indexOf('view.html') !== -1) {
+				args = 'v=2'
+			}
+	
+			return (url.indexOf('?') === -1 ? '?' : '&') + args;
+		}
 }
 require.config(__req_cfg);
 
@@ -139,15 +162,18 @@ require.config(__req_cfg);
 require
 	(["jquery", 'lodash', "vue","vuex","styled",
 	"ELEMENT",
-	"bts337"
+	"bts337",
+	'vue_codemirror'
 	//,'run_prettify'
 	]
 	, ($, _, Vue ,Vuex ,styled,
 		ELEMENT,
-		bts337
+		bts337,
+		VueCodemirror
 		//, run_prettify
 		) => {
 	Vue.use(Vuex);
+	Vue.use(VueCodemirror);
 	ELEMENT.install(Vue);
 	window.Vue = Vue;
 	window._ = _;
@@ -271,6 +297,7 @@ require
 			template: `<div>test</div>`
 		},
 		info:{
+			//<pre class="prettyprint lang-html linenums"><code class="language-js" v-html="parse_Code"></code> </pre>
 			template: `
 			<el-tabs v-model="activeName" >
 				<el-tab-pane label="Note" name="note"><pre>
@@ -278,7 +305,11 @@ require
 				<el-tab-pane label="Code" name="code">
 					<input type="button" value="Copy" @click="copy" />
 					<input type="button" value="Copy Components" @click="copy_com" />
-					<pre class="prettyprint lang-html linenums"><code class="language-js">{{Code}}</code> </pre>
+					<codemirror
+						ref="cmEditor"
+						v-model="parse_Code"
+						:options="cmOptions"
+						/>
 					<textarea v-model="Code" @blur="change()"></textarea>
 				</el-tab-pane>
 			</el-tabs>
@@ -296,6 +327,13 @@ require
 			data() {
 				return {
 					activeName: 'code',
+					cmOptions: {
+						tabSize: 4,
+						mode: 'text/javascript',
+						theme: 'darcula',
+						lineNumbers: true,
+						line: true,
+					  }
 				}
 			},
 			computed:{
@@ -314,6 +352,11 @@ require
 						}
 					}
 					return arr.join('\n');
+				},
+				parse_Code(){
+					debugger
+					//var x =  PR.prettyPrintOne(this.Code.toString());
+					return this.Code.toString();
 				}
 			},
 			methods: {

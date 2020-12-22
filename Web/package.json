@@ -10,6 +10,7 @@
     "axios": "^0.21.0",
     "bootstrap": "^3.3.7",
     "child_process": "^1.0.2",
+    "codemirror": "^5.59.0",
     "cors": "^2.8.5",
     "edge-js": "^14.3.2",
     "edge.js": "^1.1.4",
