@@ -115,11 +115,14 @@ var __req_cfg = {
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
 		run_prettify:'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify',
 		vue_codemirror:'https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min',
-		codemirror:[
-			//'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript',
-			'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min'
-		],
-		'../../lib/codemirror':'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min',
+		// codemirror_js:[
+		// 	'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript',
+		// 	//'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min'
+		// ],
+		// codemirror:[
+		// 	'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min',
+		// ],
+		//'../../lib/codemirror':'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min',
 	},
 	map: {
 		"*": {
@@ -137,23 +140,50 @@ var __req_cfg = {
 			//,'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=sons-of-obsidian&autoload=true&lang=css'
 			,'vue_codemirror'
 		]},
-		vue_codemirror:{deps:['codemirror'
+		vue_codemirror:{deps:[
+			//'codemirror'
+			//,
+			'clike',
+			'codemirror_js'//,
 			,'css!https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror'
-			,'css!https://cdn.jsdelivr.net/npm/codemirror@5.59.0/theme/darcula'
+			,'css!https://cdn.jsdelivr.net/npm/codemirror@5.59.0/theme/darcula',
+			//,'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript.js'
 		]},
-		//codemirror:{deps:['../../lib/codemirror']},
+		//codemirror:{deps:[
+		// 	'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.js',
+		// 	//'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript.js'
+		// 	//,'../../lib/codemirror'
+		// ]},
 		vuetify2x:{deps:['vue','css!fa_css','css!vuetify2x-icon','css!vuetify2x-css']},
 		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']},
 	 },
 	 urlArgs: function(id, url) {
-			debugger
+		 	console.log({id, url});
 			var args = 'v=1';
 			if (url.indexOf('view.html') !== -1) {
 				args = 'v=2'
 			}
 	
 			return (url.indexOf('?') === -1 ? '?' : '&') + args;
-		}
+		},
+	"packages": [
+		{
+			name: "codemirror",
+			location: "https://cdn.jsdelivr.net/npm/codemirror@5.59.0",
+			main: "lib/codemirror.min"
+		},
+		{
+			name: "codemirror_js",
+			location: "https://cdn.jsdelivr.net/npm/codemirror@5.59.0",
+			main: "mode/javascript/javascript"
+		},
+		{
+			name: "clike",
+			location: "https://cdn.jsdelivr.net/npm/codemirror@5.59.0",
+			main: "mode/clike/clike"
+		},
+ 
+]
 }
 require.config(__req_cfg);
 
@@ -163,13 +193,13 @@ require
 	(["jquery", 'lodash', "vue","vuex","styled",
 	"ELEMENT",
 	"bts337",
-	'vue_codemirror'
+	'vue_codemirror' 
 	//,'run_prettify'
 	]
 	, ($, _, Vue ,Vuex ,styled,
 		ELEMENT,
 		bts337,
-		VueCodemirror
+		VueCodemirror 
 		//, run_prettify
 		) => {
 	Vue.use(Vuex);
@@ -310,7 +340,7 @@ require
 						v-model="parse_Code"
 						:options="cmOptions"
 						/>
-					<textarea v-model="Code" @blur="change()"></textarea>
+					
 				</el-tab-pane>
 			</el-tabs>
 
@@ -329,10 +359,12 @@ require
 					activeName: 'code',
 					cmOptions: {
 						tabSize: 4,
+						//mode: {name: "javascript", json: false},//'text/javascript',
 						mode: 'text/javascript',
 						theme: 'darcula',
 						lineNumbers: true,
 						line: true,
+						styleActiveLine: true,
 					  }
 				}
 			},
