@@ -115,14 +115,6 @@ var __req_cfg = {
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
 		run_prettify:'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify',
 		vue_codemirror:'https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min',
-		// codemirror_js:[
-		// 	'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript',
-		// 	//'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min'
-		// ],
-		// codemirror:[
-		// 	'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min',
-		// ],
-		//'../../lib/codemirror':'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.min',
 	},
 	map: {
 		"*": {
@@ -141,13 +133,42 @@ var __req_cfg = {
 			,'vue_codemirror'
 		]},
 		vue_codemirror:{deps:[
-			//'codemirror'
-			//,
-			'clike',
-			'codemirror_js'//,
-			,'css!https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror'
-			,'css!https://cdn.jsdelivr.net/npm/codemirror@5.59.0/theme/darcula',
-			//,'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript.js'
+			'codemirror/mode/javascript/javascript'
+			// active-line.js
+  			,'codemirror/addon/selection/active-line'
+			// styleSelectedText
+			, 'codemirror/addon/selection/mark-selection'
+			, 'codemirror/addon/search/searchcursor'
+			// highlightSelectionMatches
+			, 'codemirror/addon/scroll/annotatescrollbar'
+			, 'codemirror/addon/search/matchesonscrollbar'
+			, 'codemirror/addon/search/searchcursor'
+			, 'codemirror/addon/search/match-highlighter'
+
+			// keyMap
+			, 'codemirror/mode/clike/clike'
+			, 'codemirror/addon/edit/matchbrackets'
+			, 'codemirror/addon/comment/comment'
+			, 'codemirror/addon/dialog/dialog'
+			, 'css!codemirror/addon/dialog/dialog'
+			, 'codemirror/addon/search/searchcursor'
+			, 'codemirror/addon/search/search'
+			, 'codemirror/keymap/sublime'
+
+			// foldGutter
+			, 'css!codemirror/addon/fold/foldgutter'
+			, 'codemirror/addon/fold/brace-fold'
+			, 'codemirror/addon/fold/comment-fold'
+			, 'codemirror/addon/fold/foldcode'
+			, 'codemirror/addon/fold/foldgutter'
+			, 'codemirror/addon/fold/indent-fold'
+			, 'codemirror/addon/fold/markdown-fold'
+			, 'codemirror/addon/fold/xml-fold'
+
+
+			, 'css!codemirror/lib/codemirror'
+			, 'css!codemirror/theme/darcula'
+			//, 'css!codemirror/theme/base16-dark'
 		]},
 		//codemirror:{deps:[
 		// 	'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.js',
@@ -172,18 +193,7 @@ var __req_cfg = {
 			location: "https://cdn.jsdelivr.net/npm/codemirror@5.59.0",
 			main: "lib/codemirror.min"
 		},
-		{
-			name: "codemirror_js",
-			location: "https://cdn.jsdelivr.net/npm/codemirror@5.59.0",
-			main: "mode/javascript/javascript"
-		},
-		{
-			name: "clike",
-			location: "https://cdn.jsdelivr.net/npm/codemirror@5.59.0",
-			main: "mode/clike/clike"
-		},
- 
-]
+	]
 }
 require.config(__req_cfg);
 
@@ -359,13 +369,24 @@ require
 					activeName: 'code',
 					cmOptions: {
 						tabSize: 4,
-						//mode: {name: "javascript", json: false},//'text/javascript',
-						mode: 'text/javascript',
+						mode: {name: "javascript", json: true},//'text/javascript',
+						//mode: 'text/javascript',
 						theme: 'darcula',
 						lineNumbers: true,
 						line: true,
 						styleActiveLine: true,
-					  }
+						//keyMap: "sublime",
+						matchBrackets: true,
+					  },
+					x:{
+						tabSize: 4,
+					styleActiveLine: true,
+					lineNumbers: true,
+					line: true,
+					mode: 'text/javascript',
+					lineWrapping: true,
+					theme: 'default'
+					}
 				}
 			},
 			computed:{
