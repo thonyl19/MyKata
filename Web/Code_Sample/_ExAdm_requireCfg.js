@@ -114,11 +114,12 @@ var __req_cfg = {
 		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
 		run_prettify:'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify',
-		vue_codemirror:'https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror.min',
+		vue_codemirror:'https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror',
 	},
 	map: {
 		"*": {
 			css: "https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.10/css.min.js",
+			//sass:'https://cdn.jsdelivr.net/npm/sass.js@0.11.1/dist/sass.sync.min.js',
 		},
 	},
 	//依賴
@@ -168,6 +169,7 @@ var __req_cfg = {
 
 			, 'css!codemirror/lib/codemirror'
 			, 'css!codemirror/theme/darcula'
+			//, 'sass!'
 			//, 'css!codemirror/theme/base16-dark'
 		]},
 		//codemirror:{deps:[
@@ -203,13 +205,15 @@ require
 	(["jquery", 'lodash', "vue","vuex","styled",
 	"ELEMENT",
 	"bts337",
-	'vue_codemirror' 
+	'vue_codemirror' ,
+	//'codemirror/keymap/sublime'
 	//,'run_prettify'
 	]
 	, ($, _, Vue ,Vuex ,styled,
 		ELEMENT,
 		bts337,
-		VueCodemirror 
+		VueCodemirror ,
+		//sublime
 		//, run_prettify
 		) => {
 	Vue.use(Vuex);
@@ -375,8 +379,9 @@ require
 						lineNumbers: true,
 						line: true,
 						styleActiveLine: true,
-						//keyMap: "sublime",
+						keyMap: "emacsy",
 						matchBrackets: true,
+						lineWrapping: true,
 					  },
 					x:{
 						tabSize: 4,
@@ -409,6 +414,7 @@ require
 				parse_Code(){
 					debugger
 					//var x =  PR.prettyPrintOne(this.Code.toString());
+					//return CodeMirror.fromTextArea(this.Code.toString());
 					return this.Code.toString();
 				}
 			},
@@ -453,7 +459,7 @@ require
 					return  _self.$store.state.exFn;
 				},
 				currentComponent() {
-					debugger
+					//debugger
 					var isString = typeof (this.currentTab) == "string";
 					if (isString) {
 						return `x-${this.currentTab}`;
