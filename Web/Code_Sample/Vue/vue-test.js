@@ -506,8 +506,11 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,SmoothDnD,Vue
 						}
 					} ,
 					methods: {
+						//處理放下事件
 						handleDrop(data, event) {
+							//取得事件對象的 vue 實體
 							var _vm = event.currentTarget.__vue__;
+							//對 vue 實體 的 value 放入資料
 							_vm.$attrs.value.push(data);
 							_vm.$emit('input',_vm.$attrs.value);
 						  	//alert(`You dropped with data: ${JSON.stringify(data)}`);
@@ -574,7 +577,17 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,SmoothDnD,Vue
 									v-model="item.list" tag="tr">
 										<td>{{ item.id }}</td>
 										<td>{{ item.name }}</td>
-										<td>{{ item.list.length }}</td>
+										<td>
+											<ul>
+												<drag class="drag list-group-item item" tag="li"
+													v-for="element in item.list" 
+													:key="element.name"
+													:transfer-data="element"
+													@dragend="myListener">
+														{{ element.id }}-{{ element.name }}
+												</drag>
+											</ul>
+										</td>
 								<drop>  
 							</table>
 						</div>
@@ -597,11 +610,14 @@ var __fn = ($, _, styled, Vue,bts337,VueMask,draggable,VueDragDrop,SmoothDnD,Vue
 					} ,
 					methods: {
 						myListener(data, event) {
+							//處理項目被移除後,資料異動程序
+							debugger
 							var _vm = event.currentTarget.__vue__;
 							console.log(_vm.$attrs.idx)
 							// myArg === 'foo'
 						},
 						handleDrop(data, event) {
+							debugger
 							var _vm = event.currentTarget.__vue__;
 							_vm.$attrs.value.push(data);
 							_vm.$emit('input',_vm.$attrs.value);

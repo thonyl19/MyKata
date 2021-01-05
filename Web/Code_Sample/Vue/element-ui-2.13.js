@@ -3012,9 +3012,10 @@ var __fn = (
 										v-for="(el,idx) in list_src" 
 										:idx="idx"
 										:transfer-data="el"
-										@dragend="Dragend">
+										@dragend="Dragend" 
+										>
 											{{idx}}.{{ el.item }}({{ el.time }}
-										</drag>
+									</drag>
 								</ul>
 							</div>
 							<div class="col-lg-6">
@@ -3022,15 +3023,24 @@ var __fn = (
 									<thead class="thead-dark">
 										<tr>
 										<th scope="col">時數</th>
-										<th scope="col">工作項</th>
-										<th scope="col">時數</th>
+										<th scope="col">Task</th>
+										<th scope="col">項目</th>
 										</tr>
 									</thead>
-									<drop class="drop" @drop="Drop" v-for="(item,idx) in tar_list" 
+									<drop class="drop" @drop="Drop"  v-for="(item,idx) in tar_list" 
 										:idx="idx" tag="tr">
 											<td>{{ item.times }}</td>
 											<td>{{ item.nickName }}</td>
-											<td>{{ item.list }}</td>
+											<td><ul>
+													<drag class="drag list-group-item item" tag="li"
+														v-for="(el,idx) in item.list" 
+														:idx="idx"
+														:transfer-data="el"
+														@dragend="Dragend1" >
+															{{idx}}.{{ el.item }}({{ el.time }}
+													</drag>
+												</ul>
+											</td>
 									<drop>  
 								</table>
 							</div>
@@ -3066,14 +3076,27 @@ var __fn = (
 					},
 					methods: {
 						Dragend(data, event) {
+							//提取,拖曳排序事件
 							debugger
 							var _vm = event.currentTarget.__vue__;
 							var idx = _vm.$attrs.idx;
 							this.list_src.splice(idx,1);
 							this.$emit('update:list_src',this.list_src);
 						},
+						Dragend1(data, event) {
+							debugger
+							var _vm = event.currentTarget.__vue__;
+							var idx = _vm.$attrs.idx;
+							_vm.$attrs.value.splice(idx,1);
+							// var _item = this.list_tar[idx];
+							// _item.list.push(data);
+							// _item.times = _.sumBy(_item.list,'time');
+							// this.list_src.splice(idx,1);
+							// this.$emit('update:list_src',this.list_src);
+						},
 						Drop(data, event) {
-							//debugger
+							//放下,置入事件
+							debugger
 							var _vm = event.currentTarget.__vue__;
 							var idx = _vm.$attrs.idx;
 							var _item = this.list_tar[idx];
@@ -3086,20 +3109,48 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'PartB'() {
+			var _obj = {
+				_css:``,
+				_vue: {
+					template: `
+					<ul>
+						<drag class="drag list-group-item item" tag="li"
+							v-for="(el,idx) in value" 
+							:idx="idx"
+							:transfer-data="el"
+							@dragend="Dragend">
+								{{idx}}.{{ el.item }}({{ el.time }}
+						</drag>
+					</ul>
+					`,
+					props:{
+						value:{
+							type:Array
+						},
+						dragend:{
+							type:Function
+						}
+					}  
+				}
+			};
+			return _obj;
+		},
 		'*def'() {
 			var _note = `
-			   <pre>
-			   
-			   </pre>
+			有以下問題無法解決
+			1.生成的工作項,如果沒有拖入 drop 前就放手,工作項會不見
+			2.拖入 drop 的項目,沒辦法做二次拖曳移動的處理
 			   `;
 			var _obj = {
+				_note,
 				_css:`
 				.el-table td, .el-table th {
 					padding: 5px 0;
 				}
 				`,
 				_vue: {
-					components:{'part-a':工作日誌.PartA()._vue},
+					components:{'part-a':工作日誌.PartA()._vue,'part-b':工作日誌.PartB()._vue},
 					template: `
 						<div>
 						${_note}
