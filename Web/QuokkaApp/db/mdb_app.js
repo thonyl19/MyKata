@@ -268,7 +268,7 @@ var mdb_demo1 = {
 						And  UserSId =:UserSId)
 			`;
 
-			return mdb_demo.Prep(sql,arg,this.def);
+			return mdb_demo1.Prep(sql,arg,this.def);
 		}
 	},
 	Log:{
@@ -278,7 +278,7 @@ var mdb_demo1 = {
 			SELECT 	* 
 			FROM 	Log 
 			`;
-			return mdb_demo.Prep(sql,arg,this.def);
+			return mdb_demo1.Prep(sql,arg,this.def);
 		} 
 	},
 	Ping:{
@@ -287,7 +287,7 @@ var mdb_demo1 = {
 			SELECT 	* 
 			FROM 	Ping 
 			`;
-			return mdb_demo.Prep(sql,arg,this.def);
+			return mdb_demo1.Prep(sql,arg,this.def);
 		}
 	},
 	Opction:{
@@ -302,7 +302,7 @@ var mdb_demo1 = {
 					OR (:grp_type is not null 
 						And  grp_type =:grp_type)
 			`;
-			return mdb_demo.Prep(sql,arg,this.def);
+			return mdb_demo1.Prep(sql,arg,this.def);
 		}
 	},
 }.Init();
@@ -334,8 +334,8 @@ var t = {
 	},
 	async '使用 mdb_demo.TableFunction_params'(){
 		mdb_demo;
-		var z = await mdb_demo.User.Select({UserSId:3}).exec();
-		console.log({z});
+		var z = await mdb_demo1.User.Select({UserSId:2}).exec();
+		console.log(z);
 		
 	},
 	async '查詢'(){

@@ -17,6 +17,7 @@ var user = {
 	':sid':{
 		async r(ctx,next){
 			let {sid} = ctx.params;
+			//console.log(sid);
 			var _r = await mdb_demo.User.Select({UserSId:sid}).exec();
 			ctx.body = _r ;
 		}
