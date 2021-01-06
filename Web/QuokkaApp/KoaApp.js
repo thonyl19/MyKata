@@ -5,7 +5,7 @@ https://regex101.com/codegen?language=csharp
 https://regexr.com/
 */
 
-import * as _ from 'lodash';
+var _ = require("lodash");
 var list_number = [
     '100.11',
     '100',
@@ -22,6 +22,7 @@ var list_number = [
 ];
 
 var KoaRouterApp = {
+    _router:null,
     map_crud:{
         c:'post',
         r:'get',
@@ -38,7 +39,8 @@ var KoaRouterApp = {
             })
         })
     },
-    Mode_C(rootGrp){
+    Mode_C(rootGrp,router=null) {
+        KoaRouterApp._router = router;
         _.each(rootGrp,(root,rootName)=>{
             KoaRouterApp.Mode_B(rootName,root);
         })
@@ -48,7 +50,7 @@ var KoaRouterApp = {
             case "/api/":
                 _.each(root,KoaRouterApp.Ctrs(rootName))
                 break;
-            case "/page/":
+            case "/page":
                 _.each(root,KoaRouterApp.Verbs(rootName,""))
                 break;
         }
@@ -60,13 +62,13 @@ var KoaRouterApp = {
     },
     Verbs(rootName,ctrName){
         return (Verbs,path)=>{
-            var _url = `${rootName}${ctrName}${path}`;
+            var _url = `${rootName}${ctrName}/${path}`;
             if (_.isFunction(Verbs)){
                 switch(rootName){
                     case "/api/":
                         KoaRouterApp.bindVerb(_url)(Verbs,"c");
                         break;
-                    case "/page/":
+                    case "/page":
                         KoaRouterApp.bindVerb(_url)(Verbs,"r");
                         break;
                 }
@@ -78,8 +80,14 @@ var KoaRouterApp = {
     bindVerb(_url){
         return (fn,crud)=>{
             var _verb =  KoaRouterApp.map_crud[crud];
-            //router[_verb](_url,fn);
-            console.log(`${_verb}:${_url}`);
+            if (KoaRouterApp._router!=null){
+                KoaRouterApp._router[_verb](_url,fn);
+                console.log(`${_verb}:${_url}`);
+                console.log(fn);
+            }else{
+                console.log(`${crud}:${_verb}:${_url}`);
+            }
+
         }
     }
 }
@@ -112,19 +120,19 @@ var fn = {
        var employe = {
             ''(){},
             'id/:id':{
-                c(){},
-                r(){}
+                async c(){},
+                async r(){}
             }
         }
         var page = {
-            ''(){}
-            ,async 'id/:id'(){
-                return await {};
+            ''(){},
+            async 'id/:id'(){
+                return await "";
             }
         }
         var _router = {
             '/api/':{employe},
-            '/page/':page
+            '/page':page
         };
         KoaRouterApp.Mode_C(_router);
     }
