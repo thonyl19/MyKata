@@ -1544,6 +1544,44 @@ var __fn = (
 			};
 			return _obj;
 		},
+		/* eslint-disable */
+		
+		'*def'() {
+			var _note = `
+			   `;
+			var _obj = {
+				_note,
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+							<div class="pull-left">
+								<el-button round>圆角按钮</el-button>
+								<el-button  size="medium" type="primary" round>主要按钮</el-button>
+								<el-button  size="medium" type="success" round>成功按钮</el-button>
+								<el-button  size="medium" type="info" round>信息按钮</el-button>
+								<el-button  size="medium" type="warning" round>警告按钮</el-button>
+								<el-button  size="medium" type="danger" round >危险按钮</el-button>
+							</div>
+							<div class="pull-right">
+								<el-switch
+									v-model="value1"
+									active-text="按月付费"
+									inactive-text="按年付费">
+								</el-switch>
+							</div>
+						</div>
+					`,
+					data(){
+						return {
+							value1:true
+						}
+
+					} 
+				   }
+			};
+			return _obj;
+		},
 	}
 	let Tool = {
 		'pw-form-cfg'() {
@@ -2166,7 +2204,7 @@ var __fn = (
 	
 	}
 	var Table = {
-		'*兩欄併一行'() {
+		'兩欄併一行'() {
 			var _note = `
 			   <pre>
 			   </pre>
@@ -3136,7 +3174,7 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'*def'() {
+		'def'() {
 			var _note = `
 			有以下問題無法解決
 			1.生成的工作項,如果沒有拖入 drop 前就放手,工作項會不見

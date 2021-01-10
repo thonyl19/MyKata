@@ -65,7 +65,7 @@ ul.tpl li.over-fun a{
   color: black;
 }
 
-.over-fun.sel a{
+ul.tpl .over-fun.sel a{
   color: blue;
 }
 
