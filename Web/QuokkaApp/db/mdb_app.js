@@ -1,8 +1,11 @@
+//https://github.com/d-band/koa-mapper
+
 const path = require("path");
 const ADODB = require("node-adodb");
 var _ = require("lodash");
 const util = require("util");
 const strip = require('sql-strip-comments');
+const { parse } = require("path");
 var ut = {
 	//http://shamansir.github.io/JavaScript-Garden/#types.typeof
 	is(type, obj) {
@@ -57,6 +60,7 @@ var ut = {
 
 	// named parameters
 	queryFormat (sql, values) {
+		values
 		sql = strip(sql);
 
 		// if (!values) return sql;
@@ -82,6 +86,7 @@ var ut = {
 
 				return res;
 			}
+			
 			return txt;
 		});
 	}
@@ -103,6 +108,7 @@ var _base = {
 	//執行查詢
 	Exec:{
 		async v2020607(sql){
+			sql
 			let {Conn,cfg}  = this;
 			console.log({Conn,cfg})
 			//mdb_app.jsconsole.log(_App);
@@ -116,7 +122,9 @@ var _base = {
 			return {
 				curDB,
 				get Code(){
-					return _base.parseCode.v2020607(sql,arg);
+					var _arg = _.merge(def,arg);
+					//console.log({def,arg,_arg});
+					return _base.parseCode.v2020607(sql,_arg);
 				},
 				async exec(){
 					//console.log({Code:this.Code}); 
@@ -203,6 +211,7 @@ var mdb_demo = {
 			UserSId:null
 		},
 		Select(arg={},isTest=false){
+			//console.log(arg);
 			var sql = `
 			SELECT 	* 
 			FROM	[User] 
@@ -265,9 +274,12 @@ var mdb_demo1 = {
 			FROM	[User] 
 			WHERE	:UserSId is null
 					OR (:UserSId is not null 
-						And  UserSId =:UserSId)
+						And UserSId = :UserSId)
 			`;
-
+			let {UserSId} = arg;
+			if (UserSId!=null){
+				//arg.UserSId = parseInt(UserSId);
+			}
 			return mdb_demo1.Prep(sql,arg,this.def);
 		}
 	},
@@ -352,13 +364,13 @@ var t = {
 		var r = await db.Prep('select :A as A',arg).exec();
 		r
 	},
-	async '用mdb_demo'(){
+	async '*用mdb_demo'(){
 		mdb_demo;
-		var z = await mdb_demo.User.Select().exec();
+		var z = await mdb_demo1.User.Select().exec();
 		console.log({z});
 		
-		var arg = {UserId:1};
-		var z1 = await mdb_demo.User.Select(arg).exec();
+		var arg = {UserSId:1};
+		var z1 = await mdb_demo1.User.Select(arg).exec();
 		z1
 	},
 	
