@@ -109,7 +109,7 @@ var fn = {
         ]
         KoaRouterApp.Mode_A(x);
     },
-    '*Router_modelC'(){
+    'Router_modelC'(){
         /*
             mode B 主要的改量,就是在模組內, 以 urlPath 做為基礎,
                 再往下展開 Verbs , 為了使處理便進一步簡化,就直接以 CRUD 的方式,

@@ -6,6 +6,9 @@ var _ = require("lodash");
 const util = require("util");
 const strip = require('sql-strip-comments');
 const { parse } = require("path");
+const moment = require('moment');
+
+
 var ut = {
 	//http://shamansir.github.io/JavaScript-Garden/#types.typeof
 	is(type, obj) {
@@ -112,6 +115,15 @@ var _base = {
 			let {Conn,cfg}  = this;
 			console.log({Conn,cfg})
 			//mdb_app.jsconsole.log(_App);
+			return await Conn(cfg).execute(sql);
+		},
+		async v20210117(sql,isUpdate){
+			sql
+			let {Conn,cfg}  = this;
+			console.log({Conn,cfg})
+			if (isUpdate){
+				return await Conn(cfg).execute(sql);
+			}
 			return await Conn(cfg).query(sql);
 		}
 	},
@@ -129,6 +141,20 @@ var _base = {
 				async exec(){
 					//console.log({Code:this.Code}); 
 					return await curDB.Exec(this.Code);
+				}
+			}
+		},
+		//因應 Update 的處理需求 
+		v20210117(sql,arg,def,isUpdate=false){
+			var curDB=this;
+			return {
+				curDB,
+				get Code(){
+					var _arg = _.merge(def,arg);
+					return _base.parseCode.v2020607(sql,_arg);
+				},
+				async exec(){
+					return await curDB.Exec(this.Code,isUpdate);
 				}
 			}
 		}
@@ -199,6 +225,22 @@ let mdbApp = {
 				ViewTable:_base.ViewTable.v20201125,
 			})
 		}
+	},
+	v20210117:{
+		//資料物件初始化程序
+		Init(cfg){
+			var _App = mdbApp.v2020607;
+			var _self = this;
+			if (cfg!=null) _self.cfg = cfg;
+			//console.log({'v2020607.Init':_self});
+			return _base.parseCfg.v2020607(_self,
+			{
+				Conn:_base.Conn.v2020607,
+				Exec:_base.Exec.v20210117,
+				Prep:_base.Prep.v20210117,
+				ViewTable:_base.ViewTable.v20201125,
+			})
+		}
 	}
 }
 var mdb_demo = {
@@ -260,7 +302,7 @@ var mdb_demo = {
 }.Init();
 
 var mdb_demo1 = {
-	Init:mdbApp.v2020607.Init,
+	Init:mdbApp.v20210117.Init,
 	cfg:{
 		filePath:path.join(__dirname,'../../../_demo.mdb')
 	},
@@ -278,20 +320,50 @@ var mdb_demo1 = {
 			`;
 			let {UserSId} = arg;
 			if (UserSId!=null){
-				//arg.UserSId = parseInt(UserSId);
+				arg.UserSId = parseInt(UserSId);
 			}
 			return mdb_demo1.Prep(sql,arg,this.def);
 		}
 	},
 	Log:{
+		def:{
+			LogSID:null
+		},
 		Select(arg={},isTest=false){
-			//console.log( this.def);
 			var sql = `
 			SELECT 	* 
 			FROM 	Log 
+			WHERE	:LogSID is null
+					OR (:LogSID is not null 
+						And LogSID = :LogSID)
 			`;
+			let {LogSID} = arg;
+			if (LogSID!=null){
+				arg.LogSID = parseInt(LogSID);
+			}
 			return mdb_demo1.Prep(sql,arg,this.def);
-		} 
+		},
+		Update(arg={},isTest=false){
+			var sql = `
+			UPDATE	Log 
+			SET		TaskSID = :TaskSID,
+					[note] = :note,
+					work_times = :work_times,
+					start_time = :start_time,
+					end_time = :end_time,
+					Loger = :Loger,
+					mapSID = :mapSID,
+					flag = :flag
+			WHERE	LogSID = :LogSID
+			`;
+			
+			arg.LogSID = parseInt(arg.LogSID);
+			arg.work_times = moment(arg.work_times).toDate();
+			arg.start_time = moment(arg.start_time).toDate();
+			arg.end_time = moment(arg.end_time).toDate();
+			console.log(arg);
+			return mdb_demo1.Prep(sql,arg,this.def,true);
+		},
 	},
 	Ping:{
 		Select(arg={},isTest=false){
@@ -364,7 +436,7 @@ var t = {
 		var r = await db.Prep('select :A as A',arg).exec();
 		r
 	},
-	async '*用mdb_demo'(){
+	async '用mdb_demo'(){
 		mdb_demo;
 		var z = await mdb_demo1.User.Select().exec();
 		console.log({z});
@@ -372,6 +444,20 @@ var t = {
 		var arg = {UserSId:1};
 		var z1 = await mdb_demo1.User.Select(arg).exec();
 		z1
+	},
+	async '*Update'(){
+		var start_time = "2020-05-28T16:00:00Z";
+		start_time
+		var arg = {"LogSID":1,"TaskSID":68,"note":null,"work_times":5
+		,start_time
+		,"end_time":new Date("1970-01-01T00:00:00Z")
+		,"Loger":1
+		,"editTime":new Date("1970-01-01T00:00:00Z")
+		,"mapSID":0,"flag":null}
+		var z = await mdb_demo1.Log.Update(arg).exec();
+		z
+		console.log({z});
+		 
 	},
 	
 }

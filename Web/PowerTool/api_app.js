@@ -26,6 +26,29 @@ var user = {
 		}
 	}
 }
+var log = {
+	'':{
+		async c(ctx,next){
+			let {sid} = ctx.params;
+			var _r = await mdb_demo.Log.Select({LogSID:sid}).exec();
+			ctx.body = _r ;
+		   },
+		async u(ctx,next){
+			ctx.request.body
+			let arg = ctx.request.body;
+			var _r = await mdb_demo.Log.Update(arg).exec();
+			ctx.body = arg ;
+	   	},
+	},
+	'sid/:sid':{
+		async r(ctx,next){
+ 			let {sid} = ctx.params;
+			var _r = await mdb_demo.Log.Select({LogSID:sid}).exec();
+			ctx.body = _r ;
+		}
+	}
+}
+
 var opction = {
 	//http://192.168.0.104:3000/api/opction/grp_type/taskSts
 	'grp_type/:grp_type':{
@@ -69,7 +92,7 @@ var page = {
 }
 
 var _router = {
-	'/api/':{employe,user,view,opction},
+	'/api/':{employe,user,view,opction,log},
 	'/page':page
 };
 KoaRouterApp.Mode_C(_router,Router);
