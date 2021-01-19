@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using CSharp.Linq;
@@ -62,6 +63,14 @@ namespace CSharp.Linq {
             dyna.s = "darkthread";
             dyna.a = new JArray(1, 2, 3, 4, 5);
             Console.WriteLine("JSON:{0}", dyna.ToString(Formatting.None));
+        }
+        
+
+        [TestMethod]
+        public void t_ExpandoObject () {
+            var arg = new ExpandoObject() as IDictionary<string, Object>;
+			var x = "AAA";
+			arg[x] = "test";
         }
         
     }

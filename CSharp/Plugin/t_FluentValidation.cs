@@ -138,9 +138,10 @@ namespace CSharp.Plugin {
                         });
                     break;
                 case PersonValidator_flag.All:
-                    Include(new PersonValidator());
-                    Include(new PersonValidator(PersonValidator_flag.DependentRules));
-                    Include(new PersonValidator_DependentRules());
+                    //整合式查詢
+                    Include(new PersonValidator());//基本式查詢
+                    Include(new PersonValidator(PersonValidator_flag.DependentRules));//個案條件
+                    Include(new PersonValidator_DependentRules());//加入其他 類別
                     break;
                 case PersonValidator_flag.When:
                     RuleFor(x => x.Name).NotNull()
