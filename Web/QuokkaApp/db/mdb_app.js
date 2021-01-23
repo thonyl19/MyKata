@@ -7,7 +7,9 @@ const util = require("util");
 const strip = require('sql-strip-comments');
 const { parse } = require("path");
 const moment = require('moment');
-
+var _demo  = require('test/__demo');
+var x = _demo.User.Select;
+x
 
 var ut = {
 	//http://shamansir.github.io/JavaScript-Garden/#types.typeof
@@ -125,7 +127,8 @@ var _base = {
 				return await Conn(cfg).execute(sql);
 			}
 			return await Conn(cfg).query(sql);
-		}
+		},
+		 
 	},
 	//參數對映程序
 	Prep:{
@@ -146,15 +149,15 @@ var _base = {
 		},
 		//因應 Update 的處理需求 
 		v20210117(sql,arg,def,isUpdate=false){
-			var curDB=this;
+			var __curDB=this;
 			return {
-				curDB,
+				__curDB,
 				get Code(){
 					var _arg = _.merge(def,arg);
 					return _base.parseCode.v2020607(sql,_arg);
 				},
 				async exec(){
-					return await curDB.Exec(this.Code,isUpdate);
+					return await __curDB.Exec(this.Code,isUpdate);
 				}
 			}
 		}
@@ -185,15 +188,14 @@ var _base = {
 	},
 	parseCfg:{
 		/*
-		增加轉出 Views 的功能
+		增加轉出 Views 全表讀取的功能
 		 */
-		v20201125(dbApp,baseFn){
+		v20201125(dbApp,base){
 			let {Views} = dbApp;
 			if (Views!=null){
 				_.each(Views,(view)=>{
 					var _target = dbApp[view]
 					var isNotHas = _target !=null;
-					 
 				})
 			}
 			var r =  _.merge(dbApp,base);
@@ -206,6 +208,38 @@ var _base = {
 		},
 		
 
+	}
+	,Init:{
+		v20210123(cfg,dbapp){
+			var _db = {
+				cfg,
+				Conn:_base.Conn.v2020607,
+				Exec:_base.Exec.v20210117
+			}
+			_.each(dbapp,(el,key)=>{
+				switch(key){
+					case "schema":
+						break;
+					default:
+						key
+						_.each(el,(fn,fn_name)=>{
+							el[fn_name] = function(_arg={}){
+								let {sql,arg,isUpdate=false} = fn;
+								return {
+									get Code(){
+										_arg = _.merge(arg,_arg);
+										return _base.parseCode.v2020607(sql,_arg);
+									},
+									async exec(){
+										return await _db.Exec(this.Code,isUpdate);
+									}
+								}
+							}
+						})
+						break;
+				}
+			})
+		}
 	}
 }
 
@@ -301,6 +335,38 @@ var mdb_demo = {
 	},
 }.Init();
 
+ 
+/*{
+	Init(){},
+	cfg:{
+		filePath:path.join(__dirname,'../../../_demo.mdb')
+	},
+	Views:[],
+	Users:{
+		Select(_arg={},isTest=false){
+			let {sql,arg} = _demo.User.Select;
+			let {UserSId} = _arg;
+			if (UserSId!=null){
+				arg.UserSId = parseInt(UserSId);
+			}
+			return mdb_demo1.Prep
+				(sql
+				,arg
+				,this.def);
+		}
+	},
+	db_sp:{
+
+	}
+
+};//.Init();
+*/
+// var x = new mdb_demo2();
+// var x1 = x.User.Select;
+// var x2 = x1.sql;
+// x2
+ 
+
 var mdb_demo1 = {
 	Init:mdbApp.v20210117.Init,
 	cfg:{
@@ -310,59 +376,48 @@ var mdb_demo1 = {
 		def:{
 			UserSId:null
 		},
-		Select(arg={},isTest=false){
-			var sql = `
-			SELECT 	* 
-			FROM	[User] 
-			WHERE	:UserSId is null
-					OR (:UserSId is not null 
-						And UserSId = :UserSId)
-			`;
-			let {UserSId} = arg;
+		Select(_arg={},isTest=false){
+			var {sql,arg} = _demo.User.Select;
+			
+			let {UserSId} = _arg;
 			if (UserSId!=null){
-				arg.UserSId = parseInt(UserSId);
+				_arg.UserSId = parseInt(UserSId);
 			}
-			return mdb_demo1.Prep(sql,arg,this.def);
+			return mdb_demo1.Prep
+				(sql
+				,arg
+				,this.def);
 		}
 	},
 	Log:{
 		def:{
 			LogSID:null
+			,TaskSID:null
+			,note:null
+			,work_times:null
+			,start_time:null
+			,end_time:null
+			,Loger:null
+			,editTime:null
+			,mapSID:null
+			,flag:null
 		},
-		Select(arg={},isTest=false){
-			var sql = `
-			SELECT 	* 
-			FROM 	Log 
-			WHERE	:LogSID is null
-					OR (:LogSID is not null 
-						And LogSID = :LogSID)
-			`;
-			let {LogSID} = arg;
+		Select(_arg={},isTest=false){
+			var {sql,arg} = _demo.Log.Select;
+			let {LogSID} = _arg;
 			if (LogSID!=null){
-				arg.LogSID = parseInt(LogSID);
+				_arg.LogSID = parseInt(LogSID);
 			}
-			return mdb_demo1.Prep(sql,arg,this.def);
+			return mdb_demo1.Prep(sql,_arg,arg);
 		},
-		Update(arg={},isTest=false){
-			var sql = `
-			UPDATE	Log 
-			SET		TaskSID = :TaskSID,
-					[note] = :note,
-					work_times = :work_times,
-					start_time = :start_time,
-					end_time = :end_time,
-					Loger = :Loger,
-					mapSID = :mapSID,
-					flag = :flag
-			WHERE	LogSID = :LogSID
-			`;
-			
-			arg.LogSID = parseInt(arg.LogSID);
-			arg.work_times = moment(arg.work_times).toDate();
-			arg.start_time = moment(arg.start_time).toDate();
-			arg.end_time = moment(arg.end_time).toDate();
-			console.log(arg);
-			return mdb_demo1.Prep(sql,arg,this.def,true);
+		Update(_arg={},isTest=false){
+			var {sql,arg} = _demo.Log.Update ;
+			_arg.LogSID = parseInt(_arg.LogSID);
+			_arg.work_times = moment(_arg.work_times).toDate();
+			_arg.start_time = moment(_arg.start_time).toDate();
+			_arg.end_time = moment(_arg.end_time).toDate();
+			console.log(_arg);
+			return mdb_demo1.Prep(sql,_arg,arg,true);
 		},
 	},
 	Ping:{
@@ -445,15 +500,19 @@ var t = {
 		var z1 = await mdb_demo1.User.Select(arg).exec();
 		z1
 	},
-	async '*Update'(){
+	async 'Update'(){
 		var start_time = "2020-05-28T16:00:00Z";
 		start_time
-		var arg = {"LogSID":1,"TaskSID":68,"note":null,"work_times":5
+		var arg = {"LogSID":1
+		//,"TaskSID":null
+		,"note":null,"work_times":6
 		,start_time
 		,"end_time":new Date("1970-01-01T00:00:00Z")
-		,"Loger":1
+		//,"Loger":1
 		,"editTime":new Date("1970-01-01T00:00:00Z")
-		,"mapSID":0,"flag":null}
+		,"mapSID":0
+		//,"flag":null
+		}
 		var z = await mdb_demo1.Log.Update(arg).exec();
 		z
 		console.log({z});
@@ -461,7 +520,93 @@ var t = {
 	},
 	
 }
-_.each([t],fn=>{
+
+var t_結構測試 ={
+	基礎結構 :{
+		schema:{
+			User:{
+				UserSId:null
+			}
+		},
+		User:{
+			Select:{
+				sql:`
+				SELECT 	* 
+					FROM	[User] 
+					WHERE	:UserSId is null
+							OR (:UserSId is not null 
+								And UserSId = :UserSId)
+				`,
+				get arg(){
+					let {UserSId} = t_結構測試.基礎結構.schema.User;
+					return {UserSId};
+				} 
+			}
+		}
+	},
+
+	'取得 sql,arg'(){
+		var {sql,arg} = t_結構測試.基礎結構.User.Select;
+		sql;
+		arg;
+	},
+	'串加函數原型'(){
+		(()=>{
+			let {Select} = t_結構測試.基礎結構.User;
+			//動態加入函數
+			t_結構測試.基礎結構.User.Select = function(_arg){
+				Select
+				let {sql,arg} = Select;
+				return {
+					exec(){
+						return sql;
+					}
+				}
+			};
+		})();
+		//測試執行
+		var z = t_結構測試.基礎結構.User.Select({}).exec();
+		z
+		console.log(t_結構測試.基礎結構.User)
+	},
+	'串加函數_實際執行query'(){
+		(()=>{
+			var cfg = {
+				filePath:path.join(__dirname,'./_demo.mdb')
+			};
+			var curDB = _base.Conn.v2020607(cfg);
+			let {Select} = t_結構測試.基礎結構.User;
+			//動態加入函數
+			t_結構測試.基礎結構.User.Select = function(_arg={}){
+				Select
+				let {sql,arg} = Select;
+				return {
+					get Code(){
+						_arg = _.merge(arg,_arg);
+						return _base.parseCode.v2020607(sql,_arg);
+					},
+					async exec(){
+						return await curDB.query(this.Code);
+					}
+				}
+			};
+		})();
+		//測試執行
+		var z = t_結構測試.基礎結構.User.Select().exec();
+		z
+		console.log(t_結構測試.基礎結構.User)
+	},
+	'*串加函數_實作'(){
+		var cfg = {
+			filePath:path.join(__dirname,'./_demo.mdb')
+		}; 
+		_base.Init.v20210123(cfg,t_結構測試.基礎結構);
+		var z = t_結構測試.基礎結構.User.Select().exec();
+		z
+		console.log(t_結構測試.基礎結構.User)
+	}
+}
+_.each([t,t_結構測試],fn=>{
 	_.each(fn,(e,k)=>{
 		if (k.substr(0,1)=="*"){
 			e();
