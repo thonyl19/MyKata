@@ -1,0 +1,395 @@
+﻿<!DOCTYPE html>
+<html
+    class="backgroundsize bgpositionshorthand bgpositionxy bgrepeatround bgrepeatspace bgsizecover borderradius cssanimations csscalc csstransforms supports csstransforms3d csstransitions no-flexboxtweener fontface inlinesvg localstorage multiplebgs preserve3d sessionstorage no-smil svgclippaths svgfilters svgforeignobject canvas todataurljpeg todataurlpng no-todataurlwebp no-touch"
+    lang="en">
+
+<head>
+    <title></title>
+    <style>
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .print-area {
+            margin-top: 7rem;
+        }
+
+        .gti-toolbar {
+            padding: 1rem;
+            -moz-box-shadow: 0px 3px 5px #aacab8;
+            box-shadow: 0px 3px 5px #aacab8;
+            width: 100%;
+            background-color:hsla(169, 59%, 74%, 0.85);
+            position: fixed;
+            top: 0px;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        html {
+            font-family: sans-serif;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            font-size: 10px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            direction: ltr;
+            height: 100%;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            overflow-x: hidden;
+        }
+
+
+
+
+
+
+        .btn {
+            display: inline-block;
+            margin-bottom: 0px;
+            font-weight: normal;
+            text-align: center;
+            vertical-align: middle;
+            touch-action: manipulation;
+            cursor: pointer;
+            background-image: none;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            padding: 6px 16px;
+            font-size: 14px;
+            line-height: 1.5285;
+            border-radius: 4px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #5d9cec;
+            border-color: #5899eb;
+        }
+
+        .btn {
+            border-radius: 3px;
+            font-size: 13px;
+            border-color: transparent;
+            -webkit-appearance: none;
+            outline: none !important;
+            -webkit-transition: all 0.1s;
+            -o-transition: all 0.1s;
+            transition: all 0.1s;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0px;
+            background-color: transparent;
+        }
+
+        td,
+        th {
+            padding: 0;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        .sty-tabel th,
+        .sty-tabel td {
+            text-align: center;
+        }
+
+        .sty-tabel thead>tr>th,
+        tbody>tr>td {
+            border-style: solid;
+            border-width: thin;
+        }
+
+        .sty-tabel td {
+            font-size: 9px;
+        }
+
+        .sty-tabel thead>tr:first-child,
+        thead>tr:first-child>th {
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="gti-toolbar"><button class="btn btn-primary">列印</button></div>
+        <table align="center" class="print-area sty-tabel">
+            <thead>
+                <tr>
+                    <th colspan="14" style="font-weight: 900; font-size: x-large;">生產歷程</th>
+                </tr>
+                <tr>
+                    <th width="8%">工單編號</th>
+                    <th width="16%" colspan="3">WO001</th>
+                    <th width="10%">料號</th>
+                    <th width="16%" colspan="3">K1210310230 </th>
+                    <th width="4%">品名</th>
+                    <th width="10%">系統預設產品資料</th>
+                    <th width="8%">子批批號</th>
+                    <th width="10%">WO0-20200210-00001</th>
+                    <th width="4%">客戶</th>
+                    <th width="6%"></th>
+                </tr>
+                <tr>
+                    <th>工單備註</th>
+                    <th colspan="3"></th>
+                    <th>主用料批號</th>
+                    <th colspan="3"></th>
+                    <th>流程</th>
+                    <th>SMD1206分選途程</th>
+                    <th>子批數量</th>
+                    <th>90</th>
+                    <th>單位</th>
+                    <th>EA</th>
+                </tr>
+                <tr>
+                    <th>站別</th>
+                    <th>負責人</th>
+                    <th>投入<br>日期</th>
+                    <th>投入<br>時間</th>
+                    <th>產出<br>日期</th>
+                    <th>產出<br>時間</th>
+                    <th width="4%">良品<br>數量</th>
+                    <th width="4%">報廢<br>數量</th>
+                    <th>機台</th>
+                    <th>站別資訊<br>(工程參數)</th>
+                    <th colspan="2">生產條件</th>
+                    <th>驗收</th>
+                    <th>分選Bin</th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 7px;">
+                <tr>
+                    <td>裁板</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td>N
+                        N
+                    </td>
+                    <td colspan="2">製程參數A:1=1</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>切割</td>
+                    <td>徐美鈴</td>
+                    <td>2020-02-10</td>
+                    <td>下午 01:45</td>
+                    <td>2020-02-14</td>
+                    <td>下午 02:53</td>
+                    <td>100</td>
+                    <td>1</td>
+                    <td>切割機</td>
+                    <td>1
+                        1
+                        1
+                    </td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>IPQC檢驗</td>
+                    <td>余萬成</td>
+                    <td>2020-03-20</td>
+                    <td>下午 02:22</td>
+                    <td>2020-10-17</td>
+                    <td>上午 08:10</td>
+                    <td>99</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>UV照光</td>
+                    <td>徐美鈴</td>
+                    <td>2020-10-17</td>
+                    <td>上午 08:11</td>
+                    <td>2020-10-17</td>
+                    <td>上午 09:20</td>
+                    <td>99</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>剝粒</td>
+                    <td>湯夢</td>
+                    <td>2020-10-17</td>
+                    <td>上午 09:21</td>
+                    <td>2020-10-17</td>
+                    <td>上午 09:21</td>
+                    <td>99</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>組值預先分選</td>
+                    <td></td>
+                    <td>2020-10-17</td>
+                    <td>上午 09:44</td>
+                    <td>2020-10-17</td>
+                    <td>下午 06:47</td>
+                    <td>99</td>
+                    <td>10</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>熱烘烤</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>室溫回溫</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>乾燥/抽真空</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>熱處理</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>分選</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>FQC檢測</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>包裝</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>冷熱衝擊</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
