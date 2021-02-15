@@ -94,7 +94,7 @@ namespace CSharp.Plugin {
                 Name= null ,
                 Age = 10
             };
-            var _v8n = new PersonValidator(PersonValidator_flag.When)
+            var _v8n = new PersonValidator(PersonValidator.Flag.When)
                 .Validate (model_1);
             var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
         }
@@ -111,46 +111,48 @@ namespace CSharp.Plugin {
 
 
 
-    public enum PersonValidator_flag
-    {
-        DependentRules,
-        All,  
-        When, 
-    }
+    
     public class PersonValidator : AbstractValidator<Person> {
+        public enum Flag
+        {
+            DependentRules,
+            All,  
+            When, 
+        }
         public PersonValidator () {
             RuleFor (person => person.Name).NotNull ();
         }
 
-        /// <summary>
-        /// 省卻開多個 class 懶人做法
-        /// </summary>
-        /// <param name="flag"></param>
-        public PersonValidator(PersonValidator_flag flag) {
-            switch (flag){
-                case PersonValidator_flag.DependentRules:
-                    RuleFor (person => person.Name)
-                        .NotNull ()
-                        //相依於前一個檢查條件,成功才會往下執行到這一條 
-                        .DependentRules(() =>
-                        {
-                            RuleFor(x => x.Name).NotNull();
-                        });
-                    break;
-                case PersonValidator_flag.All:
-                    Include(new PersonValidator());
-                    Include(new PersonValidator(PersonValidator_flag.DependentRules));
-                    Include(new PersonValidator_DependentRules());
-                    break;
-                case PersonValidator_flag.When:
-                    RuleFor(x => x.Name).NotNull()
-                        .When(x => x.Age > 0)
-                        .WithMessage("當 Age > 0 , Name 不得為 Null")
-                        ;
-                    break;
+        public PersonValidator (params Flag[] flags) {
+            foreach(var flag in flags){
+                switch (flag){
+                    case Flag.DependentRules:
+                        RuleFor (person => person.Name)
+                            .NotNull ()
+                            //相依於前一個檢查條件,成功才會往下執行到這一條 
+                            .DependentRules(() =>
+                            {
+                                RuleFor(x => x.Name).NotNull();
+                            });
+                        break;
+                    case Flag.All:
+                        Include(new PersonValidator());
+                        Include(new PersonValidator
+                            (Flag.DependentRules
+                            ,Flag.When));
+                        break;
+                    case Flag.When:
+                        RuleFor(x => x.Name).NotNull()
+                            .When(x => x.Age > 0)
+                            .WithMessage("當 Age > 0 , Name 不得為 Null")
+                            ;
+                        break;
+                }
             }
         }
     }
+    /*
+    //不是很好用的做法,己被 PersonValidator.Flag 取代
     public class PersonValidator_DependentRules : AbstractValidator<Person> {
         public PersonValidator_DependentRules () {
             RuleFor (person => person.Name)
@@ -162,6 +164,7 @@ namespace CSharp.Plugin {
             });
         }
     }
+    */
 
  
 
