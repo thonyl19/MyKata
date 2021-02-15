@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq.Dynamic.Core;
 using MyKata.Lib;
 using System.Dynamic;
+using Dapper.Transaction;
 
 namespace CSharp.Plugin {
     [TestClass]
@@ -53,7 +54,6 @@ namespace CSharp.Plugin {
                         FROM    albums A  
                         ";
                     var _r = cnn.Query(sql)
-                        .AsQueryable()
                         .ToList();
                     
                 }
@@ -107,8 +107,13 @@ namespace CSharp.Plugin {
                 var sql = "SELECT * FROM Movie WHERE Genre IN @Kind;";
                 var Kind = new[] {"Comedy"
                     , "Romantic Comedy"};
-                var invoices = cnn.Query<Movie>(sql, 
-                    new {Kind}).ToList();
+                var invoices1 = cnn.Query<Movie>(sql,   new {Kind})
+                        .ToList();
+
+                var arg = new {Kind = new string[]{"Comedy"
+                    , "Romantic Comedy"}};
+                var invoices2 = cnn.Query<Movie>(sql,  arg)
+                        .ToList();
 			}
 		}
 
@@ -288,6 +293,8 @@ namespace CSharp.Plugin {
             }
         }
 
+
+        
         
         /// <summary>
         /// 
@@ -297,19 +304,42 @@ namespace CSharp.Plugin {
             using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
                 string sql = "INSERT INTO artists (Name) Values (@Name);";
                 cnn.Open();
-                using (var transaction = cnn.BeginTransaction())
-                    {
+                using (var transaction = cnn.BeginTransaction())  {
                         var args =  new {Name = "Mark"};
+                        //使用 Dapper 
                         var affectedRows = cnn.Execute
                             (sql
                             , args
                             , transaction);
-                        
+
+                        //使用 Dapper.Transaction
+                        var affectedRows_1 = transaction.Execute
+                            (sql
+                            , args
+                            );
                         transaction.Rollback();
                         
                     }
             }
         }
+
+        	/// <summary>
+            /// https://dapper-tutorial.net/stored-procedure
+            /// 未完成
+            /// </summary>
+            [TestMethod]
+            public void _StoredProcedure(){
+                using (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){
+                    var sql = "Invoice_Insert";
+                    cnn.Open();
+                    using (var transaction = cnn.BeginTransaction())  {
+                    	// var affectedRows = connection.Execute(sql,
+                        // new {Kind = InvoiceKind.WebInvoice, Code = "Single_Insert_1"},
+                        // commandType: CommandType.StoredProcedure);
+                    }
+                }
+ 
+            }
         
     }
 }
