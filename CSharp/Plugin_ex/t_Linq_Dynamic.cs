@@ -56,7 +56,7 @@ namespace CSharp.Plugin
         /// <summary>
         /// </summary>
         [TestMethod]
-		public void t_Jon(){
+		public void t_Join(){
             using (var cnn = new Chinook())
 			{
                 var r = cnn.albums
