@@ -94,10 +94,44 @@ namespace CSharp.Plugin {
                 Name= null ,
                 Age = 10
             };
+            //當 Age > 0 , Name 不得為 Null
             var _v8n = new PersonValidator(PersonValidator.Flag.When)
                 .Validate (model_1);
             var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
         }
+
+        [TestMethod]
+        public void t_AgeThen10() {
+            var model_1 = new Person { 
+                Age = 9
+            };
+            var _v8n = new PersonValidator(PersonValidator.Flag.AgeThen10)
+                .Validate (model_1);
+            var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
+        }
+
+        /// <summary>
+        /// 測試 WithName 用法
+        /// </summary>
+        [TestMethod]
+        public void t_WithName() {
+            var _v8n = new PersonValidator(PersonValidator.Flag.WithName)
+                .Validate (new Person());
+            var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
+        }
+
+        /// <summary>
+        /// [Ref]
+        /// https://docs.fluentvalidation.net/en/latest/built-in-validators.html
+        /// </summary>
+        [TestMethod]
+        public void t_PlaceHolders() {
+            var _v8n = new PersonValidator(PersonValidator.Flag.PlaceHolders)
+                .Validate (new Person(){Addres="ABCEFG"});
+            var msg = string.Join("\r\n", _v8n.Errors.Select(e => e.ErrorMessage));
+        }
+
+        
 
         /// <summary>
         /// https://stackoverflow.com/questions/56648664/notempty-validation-for-multiple-fields
@@ -117,7 +151,14 @@ namespace CSharp.Plugin {
         {
             DependentRules,
             All,  
-            When, 
+            When,
+            /// <summary>
+            /// 年紀必須大於10
+            /// </summary>
+            /// <returns></returns>
+            AgeThen10,
+            WithName,
+            PlaceHolders
         }
         public PersonValidator () {
             RuleFor (person => person.Name).NotNull ();
@@ -145,6 +186,36 @@ namespace CSharp.Plugin {
                         RuleFor(x => x.Name).NotNull()
                             .When(x => x.Age > 0)
                             .WithMessage("當 Age > 0 , Name 不得為 Null")
+                            ;
+                        break;
+                    case Flag.AgeThen10:
+                        RuleFor(x => x.Age)
+                            .GreaterThan(10)
+                            .WithMessage("Age 必須大於 0")
+                            ;
+                        break;
+                    case Flag.WithName:
+                        /*
+                        WithName 有個特別之處,就是它放在最後一個也能生效,
+                            但就是不能直接放在 RuleFor 之後 
+                        */
+                        RuleFor(x => x.Addres)
+                            .NotEmpty()
+                            .WithMessage("{PropertyName} 不得為空值")
+                            .Length(0, 5)
+                            .WithMessage("{PropertyName} 長度必須為 0~5")
+                            .WithName("[地址]")
+                            ;
+                        RuleFor(x => x.Age)
+                            .NotEmpty()
+                            .WithMessage("{PropertyName} 不得為空值")
+                            ;
+                        break;
+                    case Flag.PlaceHolders:
+                        RuleFor(x => x.Addres)
+                            .Length(0, 5)
+                            .WithMessage("{PropertyName} 長度必須為 {MinLength}~{MaxLength} ,當前輸入 - {PropertyValue} 只有 {TotalLength} 字元")
+                            .WithName("[地址]")
                             ;
                         break;
                 }
