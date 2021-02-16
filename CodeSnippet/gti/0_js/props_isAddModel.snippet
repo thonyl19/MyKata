@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>props_isAddModel</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="javascript" Delimiter="$"><![CDATA[isAddMode()
+{
+    var url = new URL(location);
+    var WO_SID = url.searchParams.get('WO_SID') ?? "";
+    var isAddMode = (WO_SID == "");
+    if (isAddMode)
+    {
+        this.form.STATUS = "Create"
+
+                        this.form.BONDED_FLAG = "F";
+    };
+    //console.log({ WO_SID });
+    return isAddMode;
+}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

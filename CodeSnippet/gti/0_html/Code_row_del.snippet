@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Code_row_del</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>Code_row_del</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="html" Delimiter="$"><![CDATA[<el-table-column label = "@RES.BLL.Face.gvAction"
+					width="60"
+					v-if="readonly==false">
+	<template slot-scope="scope">
+		<div class="btn-group mb-2 tpl-gridAct">
+			<div class="input-group">
+				<button class="btn btn-default btn-sm " :title="i18n.刪除" @@click="Del(scope.$$index)">
+					<i class="fa fa-2x fa-remove fa-fw"></i>
+				</button>
+			</div>
+		</div>
+	</template>
+</el-table-column>]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

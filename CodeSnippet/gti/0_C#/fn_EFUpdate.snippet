@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>fni_EFUpdate</Title>
+      <Author>
+      </Author>
+      <Description>fk</Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>fni_EFUpdate</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>EFModel</ID>
+          <ToolTip>EFModel</ToolTip>
+          <Default>EFModel</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp" Delimiter="$" Kind="method decl"><![CDATA[public IResult $EFModel$_UpData(mdl.$EFModel$ newEntity, bool isTest = false)
+		{
+			Result result = new Result(true);
+
+			using (var dbContext = new MDL.MESContext())
+			{
+				var _list = $EFModel$(newEntity.SID, MDL.SearchKey.SID);
+				#region check
+				if (_list.Count == 0)
+				{
+					return new Result(RES.BLL.Message.NoDataFound, ErrCode.DB.NoData);
+				}
+
+				var oldEntity = _list[0];
+				if (oldEntity.STATUS != "I")
+				{
+					//TODO-i18n:狀態必須為維護中才可刪除.
+					var _msg = "狀態必須為維護中才可刪除.";
+					return new Result(_msg, ErrCode.False);
+				}
+
+				result = chk_$EFModel$(newEntity);
+				if (!result.Success) return result;
+
+				#endregion
+				try
+				{
+					var currentUser = isTest
+						? new CurrentLoginUserModel() { UserName = "admin_test" }
+						: GetLoginUser();
+
+					newEntity.UPDATE_USER = currentUser.UserName;
+					newEntity.UPDATE_DATE = GetSysDBTime();
+
+					var _AD_LOG = new mdl.AD_LOG()
+					{
+						FUN_NAME = "Maintain",
+						ACTION = "UPDATE",
+						TARGET_TABLE = "$EFModel$",
+						TARGET_PK = newEntity.SID,
+						TARGET_IDENTITY = newEntity.LOT,
+						VALUE_LINK_SID = GetSID(),
+						CREATE_USER = currentUser.UserName,
+						CREATE_DATE = GetSysDBTime(),
+					};
+					dbContext.AD_LOG.Add(_AD_LOG);
+
+					var _list_AD_LOG_VALUE = newEntity.parseLogValues
+						(oldEntity
+						, _AD_LOG
+						);
+
+					dbContext.AD_LOG_VALUE.AddRange(_list_AD_LOG_VALUE);
+
+					dbContext
+						.Entry<mdl.$EFModel$>(oldEntity)
+						.State = EntityState.Modified;
+					dbContext.SaveChanges();
+				}
+				catch (Exception ex)
+				{
+
+					result.Success = false;
+					result.Message = ex.Message;
+				}
+				result.Data = newEntity;
+				return result;
+
+			}
+		}
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

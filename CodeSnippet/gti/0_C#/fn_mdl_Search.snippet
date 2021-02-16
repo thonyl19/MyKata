@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>fn_mdl_Search</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>mdl</ID>
+          <ToolTip>mdl Model</ToolTip>
+          <Default>EFModel</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>SID</ID>
+          <ToolTip>SID</ToolTip>
+          <Default>SID</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>Name</ID>
+          <ToolTip>Name</ToolTip>
+          <Default>Name</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>NO</ID>
+          <ToolTip>NO</ToolTip>
+          <Default>NO</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="csharp" Delimiter="$"><![CDATA[    public List<mdl.$mdl$> $mdl$(string Search = null, MDL.SearchKey SearchType = MDL.SearchKey.SID)
+	{
+		List<mdl.$mdl$> _r = null;
+		if (Search == "%") Search = "";
+		using (var dbContext = new MDL.MESContext())
+		{
+			_r = (from t in dbContext.$mdl$
+					where
+						(SearchType == MDL.SearchKey.SID && t.$SID$ == Search)
+						|| (SearchType == MDL.SearchKey.Name && t.$Name$ == Search)
+						|| (SearchType == MDL.SearchKey.No && t.$NO$ == Search)
+						|| (SearchType == MDL.SearchKey.All
+							&& (t.$SID$.Contains(Search)
+							|| t.$Name$.Contains(Search)
+							|| t.$NO$.Contains(Search)))
+					select t)
+				.ToList();
+		}
+		return _r;
+	}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

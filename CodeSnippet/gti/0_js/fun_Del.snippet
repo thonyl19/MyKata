@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>fun_Del</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>fun_Del</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="javascript" Delimiter="$"><![CDATA[    Del(row) {
+	    var _url = `$${location.origin}$${location.pathname}`
+        var title = `請確認放棄當前的資料`;
+        var _ops = this.$$Alert.genConfirm({ title });
+        Swal.fire(_ops).then(result => {
+	        let { value } = result;
+	        if (value)
+	        {
+		        location = _url;
+	        }
+        });
+    },]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

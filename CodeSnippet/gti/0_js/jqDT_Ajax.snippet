@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>jqDT_Ajax</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>jqDT_Ajax</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="javascript" Delimiter="$"><![CDATA[jqDT_Ajax(data, callback, settings)
+{
+	let { draw, length, start } = data;
+	var page = start == 0
+		? 1
+		: (start / length) + 1
+		;
+	var _self = this;
+	var _ajax = {
+		url:'@Url.Action("ListData")',
+        type: 'get',
+        param: {
+			rows: length
+			, sidx: 'CREATE_DATE'
+			, sord: 'asc'
+			, page
+		},
+		success(data) {
+			let { rows = [], code = null } = data;
+			if (code == 500) return;
+			data.draw = draw;
+			callback(data);
+		}
+	};
+    $$.submitForm(_ajax);
+},]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>vue_selectize</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal Editable="true">
+          <ID>Name</ID>
+          <ToolTip>Name</ToolTip>
+          <Default>Name</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="html" Delimiter="$"><![CDATA[<vue-selectize ref="ddl_$Name$" 
+				v-model="ddl_$Name$.val"
+				:options="ddl_$Name$.src"
+                :selectize_ops="ddl_$Name$.ops"
+                render_sty="GTIMES" />
+
+ddl_$Name$:{
+    val:
+    src:
+    ops:
+}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

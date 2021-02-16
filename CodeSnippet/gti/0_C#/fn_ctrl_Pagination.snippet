@@ -5,7 +5,7 @@
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
       </SnippetTypes>
-      <Title>mvc_Pagination</Title>
+      <Title>fn_ctrl_Pagination</Title>
       <Author>
       </Author>
       <Description>
@@ -16,17 +16,17 @@
       </Shortcut>
     </Header>
     <Snippet>
-      <Code Language="csharp" Delimiter="$"><![CDATA[		public ActionResult QueryWORKT(Pagination pagination)
+      <Code Language="csharp" Delimiter="$"><![CDATA[	public ActionResult QueryWORKT(Pagination pagination)
+	{
+		var data = new
 		{
-			var data = new
-			{
-				data = ZZServices.QueryWORKT(pagination),
-				recordsTotal = pagination.records,
-				recordsFiltered = pagination.records,
-				records = pagination.records
-			};
-			return Content((data).ToJson(true));
-		}]]></Code>
+			data = ZZServices.QueryWORKT(pagination),
+			recordsTotal = pagination.records,
+			recordsFiltered = pagination.records,
+			records = pagination.records
+		};
+		return Content((data).ToJson(true));
+	}]]></Code>
     </Snippet>
   </CodeSnippet>
 </CodeSnippets>
