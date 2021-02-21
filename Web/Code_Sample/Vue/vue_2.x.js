@@ -248,7 +248,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             };
             return _obj;
         },
-        '*directive numbers'() {
+        'directive numbers'() {
             var _note = `
                <pre>
                [Ref]https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/230874/
@@ -388,6 +388,69 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
                         }
                     } 
                    }
+            };
+            return _obj;
+        },
+        '?directive-numberInt'(){
+            var _note = `
+            https://www.jb51.net/article/148657.htm
+            `;
+            var _obj = {
+                _note,
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                    <form>
+                        <input type="email" v-model="email" v-validation="{ className: 'form-control'}">
+                        <input type=submit text=submit />
+                    </form>
+                    </div>
+                    `,
+
+                }
+            }
+            return _obj;
+        },
+        '*V-validation'() {
+            var _note = `
+            https://hackmd.io/@paiLearningNote/r1mZ3FHzI#%E4%BA%94%E3%80%81%E4%BD%BF%E7%94%A8-Directive-%E9%96%8B%E7%99%BC%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BA%92%E5%8B%95-UI
+            `;
+            Vue.directive('validation',{
+                bind: function (el ,binding ,vnode ) {
+                    debugger
+                    //找到 v-model 內的值
+                    var vModel = vnode.data.directives.find(function(item){
+                        return item.name === "model";
+                    }).expression;
+                    console.log('vModel',vModel); // vModel email
+                    // 找到 email 裡面的值
+                    let value = vnode.context[vModel];//因為 v-model 的值不會固定，所以用 [] 表示
+                    console.log('vModel',vModel,value); // vModel email csc@fff.com
+                }
+            })
+              
+            var _obj = {
+                _note,
+                _css:``,
+                _vue: {
+                    template: `
+                    <div>
+                    <form>
+                        <input type="email" v-model="email" v-validation="{ className: 'form-control'}">
+                        <input type=submit text=submit />
+                    </form>
+                    </div>
+                    `,
+                    data(){
+                        return {
+                            email: 'csc@fff.com',
+                        }
+                    },
+                    mounted: function() {
+                        console.log('Vue init:', this)
+                    }
+                }
             };
             return _obj;
         },

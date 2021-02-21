@@ -398,7 +398,7 @@ require
 					let [r0] = arr;
 					if (r0 != null){
 						var _reg = /^\t+/g;
-						let [m0] = r0.match(_reg);
+						let [m0] = r0.match(_reg)||[];
 						if (m0 !=null){
 							var _reg1 = new RegExp(`${m0}`, 'g');
 							arr = _.map(arr,(el=>{
