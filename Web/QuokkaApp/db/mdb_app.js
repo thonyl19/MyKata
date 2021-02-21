@@ -419,6 +419,14 @@ var mdb_demo1 = {
 			console.log(_arg);
 			return mdb_demo1.Prep(sql,_arg,arg,true);
 		},
+		JobList(_arg={},isTest=false){
+			var {sql,arg} = _demo.vJobList ;
+			if (_arg.start_time!=null){
+				_arg.start_time = moment(_arg.start_time).toDate();
+			}
+			console.log({JobList:{_arg,sql,arg}});
+			return mdb_demo1.Prep(sql,_arg,arg);
+		},
 	},
 	Ping:{
 		Select(arg={},isTest=false){

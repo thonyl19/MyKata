@@ -966,7 +966,8 @@ var _note = {
 <pre>${_note.jdt_table_cfg}</pre>
 					</el-tab-pane>
 					<el-tab-pane label="Input" name="B">
-                        <pw-input v-model="input_val" :Exec="GenConfig"/>
+                        <pw-input v-model="input_val" 
+                            :Exec="GenConfig"/>
 					</el-tab-pane>
 					<el-tab-pane label="Config" name="C">
 						<el-tabs v-model="tabC">

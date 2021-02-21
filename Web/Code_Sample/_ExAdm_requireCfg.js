@@ -108,7 +108,8 @@ var __req_cfg = {
 		"vuetify2x-icon":'https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min',
 		//"rescss":"https://cdn.jsdelivr.net/npm/rest-css@0.1.2/src/rest",
 		axios:`${window.gEx.local_path}axios/dist/axios.min`,
- 		Vue_Utility:"../Vue_Prd/Vue_Utility",
+		Vue_Utility:"../Vue_Prd/Vue_Utility",
+		ImgSrc:"../img", 
 		UI_App:"../Vue_Prd/UI_App",
 		UI_AppExt:"../Vue_Prd/UI_AppExt",
 		Mock:"https://cdn.jsdelivr.net/npm/mockjs@1.1.0/dist/mock-min",
@@ -172,30 +173,26 @@ var __req_cfg = {
 			//, 'sass!'
 			//, 'css!codemirror/theme/base16-dark'
 		]},
-		//codemirror:{deps:[
-		// 	'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/lib/codemirror.js',
-		// 	//'https://cdn.jsdelivr.net/npm/codemirror@5.59.0/mode/javascript/javascript.js'
-		// 	//,'../../lib/codemirror'
-		// ]},
 		vuetify2x:{deps:['vue','css!fa_css','css!vuetify2x-icon','css!vuetify2x-css']},
 		UI_AppExt:{deps:['vue','Vue_Utility','UI_App']},
-	 },
-	 urlArgs: function(id, url) {
-		 	console.log({id, url});
-			var args = 'v=1';
-			if (url.indexOf('view.html') !== -1) {
-				args = 'v=2'
-			}
-	
-			return (url.indexOf('?') === -1 ? '?' : '&') + args;
-		},
+	},
+	urlArgs: function(id, url) {
+		console.log({id, url});
+		var args = 'v=1';
+		if (url.indexOf('view.html') !== -1) {
+			args = 'v=2'
+		}
+
+		return (url.indexOf('?') === -1 ? '?' : '&') + args;
+	},
 	"packages": [
 		{
 			name: "codemirror",
 			location: "https://cdn.jsdelivr.net/npm/codemirror@5.59.0",
 			main: "lib/codemirror.min"
 		},
-	]
+	],
+	
 }
 require.config(__req_cfg);
 

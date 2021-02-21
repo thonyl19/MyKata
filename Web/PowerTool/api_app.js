@@ -34,7 +34,7 @@ var log = {
 			ctx.body = _r ;
 		   },
 		async u(ctx,next){
-			ctx.request.body
+			//ctx.request.body
 			let arg = ctx.request.body;
 			var _r = await mdb_demo.Log.Update(arg).exec();
 			ctx.body = arg ;
@@ -44,6 +44,14 @@ var log = {
 		async r(ctx,next){
  			let {sid} = ctx.params;
 			var _r = await mdb_demo.Log.Select({LogSID:sid}).exec();
+			ctx.body = _r ;
+		}
+	},
+	'joblist':{
+		async r(ctx, next){
+			//let  = ctx.params;
+			let {start_time = null} = ctx.query;
+			var _r = await mdb_demo.Log.JobList({start_time}).exec();
 			ctx.body = _r ;
 		}
 	}
@@ -68,7 +76,8 @@ var view = {
 			var _r = await mdb_demo.Exec(_sql);
 			ctx.body = _r ;
 		}
-	}
+	},
+	
 }
  
 var employe = {

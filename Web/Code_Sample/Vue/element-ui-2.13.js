@@ -3037,6 +3037,137 @@ var __fn = (
 		},
 	}
 	var 工作日誌 = {
+		/* eslint-disable */
+		/* eslint-disable */
+		
+		'JobRec'() {
+			var _note = `
+			   `;
+			var _obj = {
+				_note,
+				_css:``,
+				_vue: {
+					template: `
+					<el-form ref="form" :model="form" label-width="80px">
+						<el-form-item label="日期">
+							<el-date-picker type="date" 
+								  v-model="form.date1" 
+								style="width: 100%;"></el-date-picker>
+						</el-form-item>
+						<el-form-item label="Task">
+							<el-input v-model="form.times" ></el-input>
+						</el-form-item>
+						<el-form-item label="時數">
+							<el-input v-model="form.times" ></el-input>
+						</el-form-item>
+						<el-form-item label="事項">
+							<el-input type='textarea' v-model="form.Note"></el-input>
+						</el-form-item>
+					</el-form>
+					
+					`,
+					data(){
+						return {
+						}
+					} ,
+					props:{
+						form:{
+							type:Array,
+							default(){
+								return {
+									date1:'2021/2/1',
+									times:15,
+									Note:"abe/ab"
+								}
+							}
+						}
+					}
+				}
+			};
+			return _obj;
+		},
+		'TaskList'() {
+			var _note = `
+			   `;
+			var _obj = {
+				_note,
+				_css:``,
+				_vue: {
+					template: `
+					<el-table
+						:data="tableData"
+						style="width: 100%">
+							<el-table-column
+								prop="times"
+								label="時數"
+								width="80">
+							</el-table-column>
+							<el-table-column
+								prop="nickName"
+								label="nickName"
+								width="180">
+							</el-table-column>
+							<el-table-column
+								prop="Task"
+								label="Task"
+								>
+							</el-table-column>
+					</el-table>
+					`,
+					data(){
+						return {
+						}
+					},
+					props:{
+						tableData:{
+							type:Array,
+							default(){
+								return [{OwnerSID: 1, TaskSID: 42, nickName: "雜事", progress: 0, sts: 1, _order: 0.1, ext: null}
+								,{OwnerSID: 1, TaskSID: 86, nickName: "雜事_PJ", progress: 0, sts: 1, _order: 0.2, ext: 1}]
+							}
+						},
+					},
+				}
+			};
+			return _obj;
+		},
+		/* eslint-disable */
+		
+		'*Main'() {
+			var _note = `
+			   `;
+			var _obj = {
+				_note,
+				_css:``,
+				_vue: {
+					components:{'job-rec':工作日誌.JobRec()._vue,'task-list':工作日誌.TaskList()._vue},
+					template: `
+					<div>
+						<el-form label-width="100px" class="demo-ruleForm">
+							<el-form-item label="日期" prop="name">
+								<el-date-picker
+									v-model="sData"
+									type="date"
+									>
+								</el-date-picker>
+							</el-form-item>
+						</el-form>
+							
+						<el-row>
+							<el-col :span="14"><task-list></task-list></el-col>
+							<el-col :span="10"></div></el-col>
+						</el-row>
+					</div>
+					`,
+					data(){
+						return {
+							sData: Date.now()
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
 		'PartA'() {
 			var _obj = {
 				_css:``,
