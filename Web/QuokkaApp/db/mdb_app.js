@@ -98,6 +98,9 @@ var ut = {
 
 }
 
+var mdbapp_enum = {
+	isUpdate:true
+}
 
 //資料庫基礎程序
 var _base = {
@@ -417,7 +420,7 @@ var mdb_demo1 = {
 			_arg.start_time = moment(_arg.start_time).toDate();
 			_arg.end_time = moment(_arg.end_time).toDate();
 			console.log(_arg);
-			return mdb_demo1.Prep(sql,_arg,arg,true);
+			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.isUpdate);
 		},
 		JobList(_arg={},isTest=false){
 			var {sql,arg} = _demo.vJobList ;
@@ -625,6 +628,7 @@ _.each([t,t_結構測試],fn=>{
  
 
 module.exports = {
-	mdb_demo
+	mdbapp_enum
+	,mdb_demo
 	,mdb_demo1
 };

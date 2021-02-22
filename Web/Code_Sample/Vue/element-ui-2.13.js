@@ -3040,7 +3040,7 @@ var __fn = (
 		/* eslint-disable */
 		/* eslint-disable */
 		
-		'JobRec'() {
+		'*JobRec'() {
 			var _note = `
 			   `;
 			var _obj = {
@@ -3058,7 +3058,12 @@ var __fn = (
 							<el-input v-model="form.times" ></el-input>
 						</el-form-item>
 						<el-form-item label="時數">
-							<el-input v-model="form.times" ></el-input>
+							<el-col :span="4">
+								<el-input v-model="form.times" width="100" ></el-input>
+							</el-col>
+							<el-col :span="20">
+								<span>　{{form.times}}</span>
+							</el-col>
 						</el-form-item>
 						<el-form-item label="事項">
 							<el-input type='textarea' v-model="form.Note"></el-input>
@@ -3133,7 +3138,7 @@ var __fn = (
 		},
 		/* eslint-disable */
 		
-		'*Main'() {
+		'Main'() {
 			var _note = `
 			   `;
 			var _obj = {
