@@ -1,5 +1,8 @@
 {
-  "scripts": {},
+  "scripts": {
+    "api_app":"nodemon PowerTool/api_app.js"
+
+  },
   "devDependencies": {},
   "dependencies": {
     "@hscmap/vue-window": "^2.4.2",
@@ -27,6 +30,7 @@
     "moment": "^2.29.1",
     "morgan": "^1.10.0",
     "node-adodb": "^5.0.3",
+    "nodemon": "^2.0.7",
     "path": "^0.12.7",
     "require": "^2.4.20",
     "requirejs": "^2.3.6",

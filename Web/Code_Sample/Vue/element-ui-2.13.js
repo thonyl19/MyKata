@@ -3040,7 +3040,7 @@ var __fn = (
 		/* eslint-disable */
 		/* eslint-disable */
 		
-		'*JobRec'() {
+		'JobRec'() {
 			var _note = `
 			   `;
 			var _obj = {
@@ -3051,42 +3051,65 @@ var __fn = (
 					<el-form ref="form" :model="form" label-width="80px">
 						<el-form-item label="日期">
 							<el-date-picker type="date" 
-								  v-model="form.date1" 
+								  v-model="form.start_time" 
 								style="width: 100%;"></el-date-picker>
 						</el-form-item>
 						<el-form-item label="Task">
-							<el-input v-model="form.times" ></el-input>
+							<el-select v-model="form.TaskSID" 
+								filterable 
+								:remote-method="remoteMethod"
+    							:loading="loading">
+								<el-option
+									v-for="item in options"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+								</el-option>
+							</el-select>
 						</el-form-item>
 						<el-form-item label="時數">
 							<el-col :span="4">
-								<el-input v-model="form.times" width="100" ></el-input>
+								<el-input v-model="form.work_times" width="100" ></el-input>
 							</el-col>
 							<el-col :span="20">
-								<span>　{{form.times}}</span>
+								<span>　{{form.work_times}}</span>
 							</el-col>
 						</el-form-item>
 						<el-form-item label="事項">
-							<el-input type='textarea' v-model="form.Note"></el-input>
+							<el-input type='textarea' v-model="form.Note" clearable="true"></el-input>
 						</el-form-item>
 					</el-form>
 					
 					`,
 					data(){
 						return {
+							loading :false,
+							options:[]
 						}
 					} ,
 					props:{
 						form:{
-							type:Array,
+							type:Object,
 							default(){
-								return {
-									date1:'2021/2/1',
-									times:15,
-									Note:"abe/ab"
-								}
+								return {}
 							}
 						}
-					}
+					},
+					methods: {
+						remoteMethod(query) {
+							if (query !== '') {
+								var _url = `http://192.168.0.104:3000/api/joblist/user/Anthony/start_time/${_date}`;
+								axios.get(_url)
+									.then((res)=>{
+										console.log(res);
+										let {data} = res
+										_self.tableData = data;
+									})
+							} else {
+							  this.options = [];
+							}
+						}
+					},
 				}
 			};
 			return _obj;
@@ -3096,25 +3119,34 @@ var __fn = (
 			   `;
 			var _obj = {
 				_note,
-				_css:``,
+				_css:`
+				
+				`,
 				_vue: {
 					template: `
 					<el-table
 						:data="tableData"
 						style="width: 100%">
 							<el-table-column
-								prop="times"
+								prop="work_times"
 								label="時數"
-								width="80">
+								width="60"
+								align="right"
+								>
+								<template slot-scope="scope">
+									<el-button size="mini" icon="el-icon-plus" circle v-if="scope.row.work_times==null" @click="e_add(scope.row,true)"></el-button>
+									<span @click="e_add(scope.row)">{{scope.row.work_times}}</span>
+							  	</template>
 							</el-table-column>
 							<el-table-column
 								prop="nickName"
 								label="nickName"
-								width="180">
+								width="100">
 							</el-table-column>
 							<el-table-column
-								prop="Task"
+								prop="TaskPath"
 								label="Task"
+								width="440"
 								>
 							</el-table-column>
 					</el-table>
@@ -3131,6 +3163,17 @@ var __fn = (
 								,{OwnerSID: 1, TaskSID: 86, nickName: "雜事_PJ", progress: 0, sts: 1, _order: 0.2, ext: 1}]
 							}
 						},
+						e_add:{
+							type:Function
+						}
+					},
+					methods: {
+						formatTask(row){
+							debugger
+							let {Task,TaskType ,Root} = row;
+							if (Root == null) return '';
+							return `${Root}\\${TaskType}\\${Task}`;
+						}
 					},
 				}
 			};
@@ -3138,38 +3181,98 @@ var __fn = (
 		},
 		/* eslint-disable */
 		
-		'Main'() {
+		'*Main'() {
 			var _note = `
 			   `;
 			var _obj = {
 				_note,
-				_css:``,
+				_css:`
+				.el-form-item{
+					margin-bottom: 0px !important;
+				}
+				.el-table td {
+					padding: 3px 0;
+				}
+				`,
 				_vue: {
 					components:{'job-rec':工作日誌.JobRec()._vue,'task-list':工作日誌.TaskList()._vue},
 					template: `
-					<div>
-						<el-form label-width="100px" class="demo-ruleForm">
-							<el-form-item label="日期" prop="name">
-								<el-date-picker
-									v-model="sData"
-									type="date"
-									>
-								</el-date-picker>
-							</el-form-item>
-						</el-form>
-							
+					<div> 
+						<el-dialog  title="TaskEdit" :visible.sync="dialogTaskEdit">
+							{{cur_row}}
+							<job-rec :form="cur_row"></job-rec>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="dialogTaskEdit = false">取消</el-button>
+								<el-button type="primary" @click="e_SaveTask">儲存</el-button>
+							</span>
+						</el-dialog>
 						<el-row>
-							<el-col :span="14"><task-list></task-list></el-col>
+							<el-form label-width="100px" class="demo-ruleForm">
+								<el-form-item label="日期" prop="name">
+									<el-col :span="12">
+										<el-date-picker
+											v-model="sData"
+											type="date" >
+										</el-date-picker>
+									</el-col>
+									<el-col :span="12">
+										<el-button icon="el-icon-arrow-left" circle @click="chg_date(-1)"></el-button>
+										<el-button icon="el-icon-arrow-right" circle @click="chg_date(1)"></el-button>
+									</el-col>
+								</el-form-item>
+							</el-form>
+						</el-row>
+						<el-row>
+							<el-col :span="14"><task-list :tableData="tableData" :e_add="add_item"></task-list></el-col>
 							<el-col :span="10"></div></el-col>
 						</el-row>
+						
 					</div>
 					`,
 					data(){
 						return {
-							sData: Date.now()
+							dialogTaskEdit:false,
+							sData: moment('2020/8/5').toDate(),
+							cur_row:{},
+							tableData:[{"OwnerSID":1,"Owner":"Anthony","TaskSID":75,"nickName":"討論_5.0","progress":0,"sts":1,"_order":10.1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":74,"nickName":"討論_PJ","progress":0,"sts":1,"_order":10.01,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":42,"nickName":"雜事","progress":0,"sts":1,"_order":0.1,"ext":null},{"OwnerSID":1,"Owner":"Anthony","TaskSID":59,"nickName":"討論_rpt","progress":null,"sts":1,"_order":10.2,"ext":null},{"OwnerSID":1,"Owner":"Anthony","TaskSID":82,"nickName":"討論_4.50","progress":0,"sts":1,"_order":10.3,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":86,"nickName":"雜事_PJ","progress":0,"sts":1,"_order":0.2,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":71,"nickName":"週會","progress":null,"sts":11,"_order":99,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":73,"nickName":"討論","progress":null,"sts":0,"_order":10,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":72,"nickName":"文書","progress":0,"sts":1,"_order":0.3,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":83,"nickName":null,"progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":84,"nickName":"Debug_PJ","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":78,"nickName":"包裝出站","progress":70,"sts":13,"_order":3.1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":92,"nickName":"Debug_4.5","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":93,"nickName":"產品","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":94,"nickName":"Debug_產品","progress":0,"sts":0,"_order":1,"ext":0},{"OwnerSID":1,"Owner":"Anthony","TaskSID":94,"nickName":"Debug_產品","progress":0,"sts":0,"_order":1,"ext":0},{"OwnerSID":1,"Owner":"Anthony","TaskSID":95,"nickName":"程式開發","progress":0,"sts":1,"_order":3.001,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":92,"nickName":"會議","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":36,"nickName":"其他會議","progress":0,"sts":11,"_order":99.1,"ext":1}]
 						}
-					} 
-				   }
+					},
+					mounted(){
+						this.query_joblist();
+					},
+					watch:{
+						sData(){
+							this.query_joblist();
+						}
+					}
+					,methods: {
+						e_SaveTask(){
+							//Todo:PostSave,ReLoad
+						},
+						add_item(row,isAdd=false){
+							this.cur_row = Object.assign({}, row);
+							if (isAdd){
+								this.cur_row.start_time = this.sData;
+							}
+							this.dialogTaskEdit = true;
+						},
+						chg_date(val){
+							this.sData = moment(this.sData).add(val, 'day').toDate();
+						},
+						query_joblist(){
+							var _self = this;
+							var _date = moment(this.sData).format("YYYY-MM-DD");
+							var _url = `http://192.168.0.104:3000/api/joblist/user/Anthony/start_time/${_date}`;
+							axios.get(_url)
+								.then((res)=>{
+									console.log(res);
+									let {data} = res
+									_self.tableData = data;
+								})
+						},
+						
+					},
+				}
 			};
 			return _obj;
 		},

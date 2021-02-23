@@ -9,7 +9,6 @@ const { parse } = require("path");
 const moment = require('moment');
 var _demo  = require('test/__demo');
 var x = _demo.User.Select;
-x
 
 var ut = {
 	//http://shamansir.github.io/JavaScript-Garden/#types.typeof
@@ -116,14 +115,12 @@ var _base = {
 	//執行查詢
 	Exec:{
 		async v2020607(sql){
-			sql
 			let {Conn,cfg}  = this;
 			console.log({Conn,cfg})
 			//mdb_app.jsconsole.log(_App);
 			return await Conn(cfg).execute(sql);
 		},
 		async v20210117(sql,isUpdate){
-			sql
 			let {Conn,cfg}  = this;
 			console.log({Conn,cfg})
 			if (isUpdate){
@@ -427,7 +424,23 @@ var mdb_demo1 = {
 			if (_arg.start_time!=null){
 				_arg.start_time = moment(_arg.start_time).toDate();
 			}
-			console.log({JobList:{_arg,sql,arg}});
+			if (_arg.loger==null){
+				//TODO: 檢核丟例外 
+			}
+			var _prop =  mdb_demo1.Prep(sql,_arg,arg);
+			console.log({JobList:_prop.Code});	
+			return mdb_demo1.Prep(sql,_arg,arg);
+		},
+		PingTasks(_arg={},isTest=false){
+			var {sql,arg} = _demo.vPingTasks ;
+			if (_arg.start_time!=null){
+				_arg.start_time = moment(_arg.start_time).toDate();
+			}
+			if (_arg.loger==null){
+				//TODO: 檢核丟例外 
+			}
+			var _prop =  mdb_demo1.Prep(sql,_arg,arg);
+			console.log({PingTasks:_prop.Code});	
 			return mdb_demo1.Prep(sql,_arg,arg);
 		},
 	},

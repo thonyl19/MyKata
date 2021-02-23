@@ -22,9 +22,15 @@ var fn = {
             fs.mkdirSync(dir);
         }
     },
-    '*將文字轉成日期物件'(){
+    '將文字轉成日期物件'(){
         var start_time = "2020-05-28T16:00:00Z";
         var z = moment(start_time).toDate();
+        z;
+    },
+    '*offset'(){
+        var start_time = Date.now();
+        start_time
+        var z = moment(start_time).add(1, 'day').toDate();
         z;
     }
 }

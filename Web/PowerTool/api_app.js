@@ -47,16 +47,22 @@ var log = {
 			ctx.body = _r ;
 		}
 	},
-	'joblist':{
+	
+}
+var joblist = {
+	'user/:loger':{
 		async r(ctx, next){
-			//let  = ctx.params;
-			let {start_time = null} = ctx.query;
-			var _r = await mdb_demo.Log.JobList({start_time}).exec();
+			var _r = await mdb_demo.Log.JobList(ctx.params).exec();
+			ctx.body = _r ;
+		}
+	},
+	'user/:user/start_time/:start_time':{
+		async r(ctx, next){
+			var _r = await mdb_demo.Log.PingTasks(ctx.params).exec();
 			ctx.body = _r ;
 		}
 	}
 }
-
 var opction = {
 	//http://192.168.0.104:3000/api/opction/grp_type/taskSts
 	'grp_type/:grp_type':{
@@ -73,6 +79,7 @@ var view = {
 		async r(ctx, next){
 			let {view} = ctx.params;
 			var _sql = `select * from [${view}];`;
+			console.log({view:_sql})
 			var _r = await mdb_demo.Exec(_sql);
 			ctx.body = _r ;
 		}
@@ -101,7 +108,7 @@ var page = {
 }
 
 var _router = {
-	'/api/':{employe,user,view,opction,log},
+	'/api/':{employe,user,view,opction,log,joblist},
 	'/page':page
 };
 KoaRouterApp.Mode_C(_router,Router);
@@ -126,7 +133,7 @@ Router.get('/api/user/:sid',async(ctx, next)=>{
     ctx.body = _r ;
 })
 */
-
+ 
 console.log({mdb_demo});
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
