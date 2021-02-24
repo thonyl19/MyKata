@@ -9,7 +9,7 @@ const morgan =require('morgan');
 
 //有空再試
 const {KoaRouterApp} = require('../QuokkaApp/KoaApp');
-const {mdb_demo1:mdb_demo} = require('../QuokkaApp/db/mdb_app');
+const {mdb_demo1} = require('../QuokkaApp/db/mdb_app');
 
 const app = new koa();
 //parameter(app); 
@@ -21,7 +21,13 @@ var user = {
 			// 	sid: { type: "number"}
 			// })
 			let {sid} = ctx.params;
-			var _r = await mdb_demo.User.Select({UserSId:sid}).exec();
+			var _r = await mdb_demo1.User.Select({UserSId:sid}).exec();
+			ctx.body = _r ;
+		}
+	},
+	':UserSId/task/:Task':{
+		async r(ctx,next){
+			var _r = await mdb_demo1.User.Tasks(ctx.params).exec();
 			ctx.body = _r ;
 		}
 	}
@@ -30,20 +36,20 @@ var log = {
 	'':{
 		async c(ctx,next){
 			let {sid} = ctx.params;
-			var _r = await mdb_demo.Log.Select({LogSID:sid}).exec();
+			var _r = await mdb_demo1.Log.Select({LogSID:sid}).exec();
 			ctx.body = _r ;
 		   },
 		async u(ctx,next){
 			//ctx.request.body
 			let arg = ctx.request.body;
-			var _r = await mdb_demo.Log.Update(arg).exec();
+			var _r = await mdb_demo1.Log.Update(arg).exec();
 			ctx.body = arg ;
 	   	},
 	},
 	'sid/:sid':{
 		async r(ctx,next){
  			let {sid} = ctx.params;
-			var _r = await mdb_demo.Log.Select({LogSID:sid}).exec();
+			var _r = await mdb_demo1.Log.Select({LogSID:sid}).exec();
 			ctx.body = _r ;
 		}
 	},
@@ -52,13 +58,13 @@ var log = {
 var joblist = {
 	'user/:loger':{
 		async r(ctx, next){
-			var _r = await mdb_demo.Log.JobList(ctx.params).exec();
+			var _r = await mdb_demo1.Log.JobList(ctx.params).exec();
 			ctx.body = _r ;
 		}
 	},
 	'user/:user/start_time/:start_time':{
 		async r(ctx, next){
-			var _r = await mdb_demo.Log.PingTasks(ctx.params).exec();
+			var _r = await mdb_demo1.Log.PingTasks(ctx.params).exec();
 			ctx.body = _r ;
 		}
 	}
@@ -69,7 +75,7 @@ var opction = {
 		async r(ctx,next){
 			let {grp_type} = ctx.params;
 			console.log(grp_type);
-			var _r = await mdb_demo.Opction.Select({grp_type}).exec();
+			var _r = await mdb_demo1.Opction.Select({grp_type}).exec();
 			ctx.body = _r ;
 		}
 	}
@@ -80,7 +86,7 @@ var view = {
 			let {view} = ctx.params;
 			var _sql = `select * from [${view}];`;
 			console.log({view:_sql})
-			var _r = await mdb_demo.Exec(_sql);
+			var _r = await mdb_demo1.Exec(_sql);
 			ctx.body = _r ;
 		}
 	},
@@ -134,7 +140,7 @@ Router.get('/api/user/:sid',async(ctx, next)=>{
 })
 */
  
-console.log({mdb_demo});
+console.log({mdb_demo1});
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 //app.use(index);

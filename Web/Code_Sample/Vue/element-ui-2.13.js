@@ -3040,7 +3040,7 @@ var __fn = (
 		/* eslint-disable */
 		/* eslint-disable */
 		
-		'JobRec'() {
+		'*JobRec'() {
 			var _note = `
 			   `;
 			var _obj = {
@@ -3055,15 +3055,16 @@ var __fn = (
 								style="width: 100%;"></el-date-picker>
 						</el-form-item>
 						<el-form-item label="Task">
-							<el-select v-model="form.TaskSID" 
-								filterable 
+							<el-select v-model="form.TaskSID" style="display:block;"
+								filterable
+								remote 
 								:remote-method="remoteMethod"
     							:loading="loading">
 								<el-option
 									v-for="item in options"
-									:key="item.value"
-									:label="item.label"
-									:value="item.value">
+									:key="item.TaskSID"
+									:label="item.FullName"
+									:value="item.TaskSID">
 								</el-option>
 							</el-select>
 						</el-form-item>
@@ -3072,11 +3073,14 @@ var __fn = (
 								<el-input v-model="form.work_times" width="100" ></el-input>
 							</el-col>
 							<el-col :span="20">
-								<span>　{{form.work_times}}</span>
+								<span>　{{dynTimes}}</span>
 							</el-col>
 						</el-form-item>
 						<el-form-item label="事項">
-							<el-input type='textarea' v-model="form.Note" clearable="true"></el-input>
+							<el-input type='textarea' 
+								v-model="form.Note" 
+								clearable="true"
+								debounce="700"></el-input>
 						</el-form-item>
 					</el-form>
 					
@@ -3084,7 +3088,11 @@ var __fn = (
 					data(){
 						return {
 							loading :false,
-							options:[]
+							dynTimes:0,
+							options:[
+
+							],
+							list_src:[]
 						}
 					} ,
 					props:{
@@ -3095,19 +3103,51 @@ var __fn = (
 							}
 						}
 					},
+					mounted() {
+						this.f_工項輸入();
+					}, 
+					watch:{
+						'form.Note'(val){
+							this.dbx(val);
+						}
+					},
 					methods: {
 						remoteMethod(query) {
+							var _self = this;
 							if (query !== '') {
-								var _url = `http://192.168.0.104:3000/api/joblist/user/Anthony/start_time/${_date}`;
+								var _url = `http://192.168.0.104:3000/api/user/1/task/${query}`;
 								axios.get(_url)
 									.then((res)=>{
 										console.log(res);
 										let {data} = res
-										_self.tableData = data;
+										_self.options = data;
 									})
 							} else {
 							  this.options = [];
 							}
+						},
+						 
+						f_工項輸入(){
+							var _self = this;
+							this.dbx = _.debounce((val)=>{
+								var _sum = 0;
+								//debugger
+								var arr = val.split('\n');
+								var _list_src = [];
+								_.each(arr,(el)=>{
+									let [item,time=""] = el.split('(');
+									time = item==""?0:eval(time);
+									_sum+=time;
+									_list_src.push({
+										item,time 
+									})
+								})
+								_self.dynTimes = _sum;
+								_self.list_src = _list_src;
+							} , 750
+							,{ 'leading': false,
+								//'trailing': false
+							});
 						}
 					},
 				}
@@ -3134,8 +3174,8 @@ var __fn = (
 								align="right"
 								>
 								<template slot-scope="scope">
-									<el-button size="mini" icon="el-icon-plus" circle v-if="scope.row.work_times==null" @click="e_add(scope.row,true)"></el-button>
-									<span @click="e_add(scope.row)">{{scope.row.work_times}}</span>
+									<el-button size="mini" icon="el-icon-plus" circle v-if="scope.row.work_times==null" @click="e_add(scope,true)"></el-button>
+									<span @click="e_add(scope)">{{scope.row.work_times}}</span>
 							  	</template>
 							</el-table-column>
 							<el-table-column
@@ -3181,7 +3221,7 @@ var __fn = (
 		},
 		/* eslint-disable */
 		
-		'*Main'() {
+		'Main'() {
 			var _note = `
 			   `;
 			var _obj = {
@@ -3199,7 +3239,6 @@ var __fn = (
 					template: `
 					<div> 
 						<el-dialog  title="TaskEdit" :visible.sync="dialogTaskEdit">
-							{{cur_row}}
 							<job-rec :form="cur_row"></job-rec>
 							<span slot="footer" class="dialog-footer">
 								<el-button @click="dialogTaskEdit = false">取消</el-button>
@@ -3233,7 +3272,8 @@ var __fn = (
 						return {
 							dialogTaskEdit:false,
 							sData: moment('2020/8/5').toDate(),
-							cur_row:{},
+							cur_Idx:null,
+							cur_row:null,
 							tableData:[{"OwnerSID":1,"Owner":"Anthony","TaskSID":75,"nickName":"討論_5.0","progress":0,"sts":1,"_order":10.1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":74,"nickName":"討論_PJ","progress":0,"sts":1,"_order":10.01,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":42,"nickName":"雜事","progress":0,"sts":1,"_order":0.1,"ext":null},{"OwnerSID":1,"Owner":"Anthony","TaskSID":59,"nickName":"討論_rpt","progress":null,"sts":1,"_order":10.2,"ext":null},{"OwnerSID":1,"Owner":"Anthony","TaskSID":82,"nickName":"討論_4.50","progress":0,"sts":1,"_order":10.3,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":86,"nickName":"雜事_PJ","progress":0,"sts":1,"_order":0.2,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":71,"nickName":"週會","progress":null,"sts":11,"_order":99,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":73,"nickName":"討論","progress":null,"sts":0,"_order":10,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":72,"nickName":"文書","progress":0,"sts":1,"_order":0.3,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":83,"nickName":null,"progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":84,"nickName":"Debug_PJ","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":78,"nickName":"包裝出站","progress":70,"sts":13,"_order":3.1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":92,"nickName":"Debug_4.5","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":93,"nickName":"產品","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":94,"nickName":"Debug_產品","progress":0,"sts":0,"_order":1,"ext":0},{"OwnerSID":1,"Owner":"Anthony","TaskSID":94,"nickName":"Debug_產品","progress":0,"sts":0,"_order":1,"ext":0},{"OwnerSID":1,"Owner":"Anthony","TaskSID":95,"nickName":"程式開發","progress":0,"sts":1,"_order":3.001,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":92,"nickName":"會議","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":36,"nickName":"其他會議","progress":0,"sts":11,"_order":99.1,"ext":1}]
 						}
 					},
@@ -3249,8 +3289,10 @@ var __fn = (
 						e_SaveTask(){
 							//Todo:PostSave,ReLoad
 						},
-						add_item(row,isAdd=false){
-							this.cur_row = Object.assign({}, row);
+						add_item(data,isAdd=false){
+							let {$index} = data;
+							this.cur_Idx = $index;
+							this.cur_row = Object.assign({},data.row);
 							if (isAdd){
 								this.cur_row.start_time = this.sData;
 							}

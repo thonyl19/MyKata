@@ -385,9 +385,24 @@ var mdb_demo1 = {
 			}
 			return mdb_demo1.Prep
 				(sql
-				,arg
-				,this.def);
-		}
+				,_arg
+				,arg);
+		},
+		Tasks(_arg={},isTest=false){
+			var {sql,arg} = _demo.User.Tasks;
+			let {UserSId,Task} = _arg;
+			if (UserSId!=null){
+				_arg.UserSId = parseInt(UserSId);
+			}
+			if (Task!=null){
+				_arg.Task = `%${Task}%`;
+			}
+			return mdb_demo1.Prep
+				(sql
+				,_arg
+				,arg);
+		},
+
 	},
 	Log:{
 		def:{
@@ -468,8 +483,8 @@ var mdb_demo1 = {
 			return mdb_demo1.Prep(sql,arg,this.def);
 		}
 	},
-}.Init();
-
+};
+mdb_demo1 = mdb_demo1.Init()
 var t = {
 	async '動態指定DB'(){
 		/*
@@ -496,14 +511,12 @@ var t = {
 		
 	},
 	async '使用 mdb_demo.TableFunction_params'(){
-		mdb_demo;
-		var z = await mdb_demo1.User.Select({UserSId:2}).exec();
+		var z = await mdb_demo1.User.Select({UserSId:1}).exec();
 		console.log(z);
 		
 	},
 	async '查詢'(){
-		mdb_demo;
-		var z = await mdb_demo.ViewTable('DayLog_1_PingAdd');
+		var z = await mdb_demo1.ViewTable('Tasks');
 		console.log({z});
 		
 	},
@@ -538,6 +551,19 @@ var t = {
 		//,"flag":null
 		}
 		var z = await mdb_demo1.Log.Update(arg).exec();
+		z
+		console.log({z});
+		 
+	},
+	async 'Tasks'(){
+		var arg = { 
+			UserSId:1,
+			Task:'G'
+		}
+		var x = mdb_demo1.User.Tasks(arg); 
+		var _sql =  x.Code;             
+		_sql 
+		var z = await x.exec();
 		z
 		console.log({z});
 		 
