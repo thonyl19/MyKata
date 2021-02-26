@@ -11,6 +11,7 @@ var _demo
 	//= require('test/__demo');
 	= require('./__demo');
 var x = _demo.User.Select;
+const v8n = require('v8n');
 
 var ut = {
 	//http://shamansir.github.io/JavaScript-Garden/#types.typeof
@@ -592,6 +593,27 @@ var t_結構測試 ={
 				get arg(){
 					let {UserSId} = t_結構測試.基礎結構.schema.User;
 					return {UserSId};
+				}
+				,check(arg){
+					var isValid = v8n()
+						.schema({
+							LogSID: v8n()
+								.not.undefined()
+								.number()
+								.positive(),
+							start_time: v8n()
+								.not.undefined()
+								.instanceOf(Date),
+							work_times: v8n()
+								.not.undefined()
+								.number()
+								.positive()
+						})
+						.test(arg);
+					return {
+						isValid,
+						arg
+					}
 				} 
 			}
 		}
@@ -648,7 +670,7 @@ var t_結構測試 ={
 		z
 		console.log(t_結構測試.基礎結構.User)
 	},
-	'*串加函數_實作'(){
+	'串加函數_實作'(){
 		var cfg = {
 			filePath:path.join(__dirname,'./_demo.mdb')
 		}; 
@@ -656,7 +678,12 @@ var t_結構測試 ={
 		var z = t_結構測試.基礎結構.User.Select().exec();
 		z
 		console.log(t_結構測試.基礎結構.User)
-	}
+	},
+	'*檢核機制'(){
+		var arg = {LogSID:1,start_time:new Date(),work_times:null}; 
+		var r = t_結構測試.基礎結構.User.Select.check(arg); 
+		r;
+	},
 }
 _.each([t,t_結構測試],fn=>{
 	_.each(fn,(e,k)=>{

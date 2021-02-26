@@ -3135,9 +3135,12 @@ var __fn = (
 								var arr = val.split('\n');
 								var _list_src = [];
 								_.each(arr,(el)=>{
-									let [item,time=""] = el.split('(');
-									time = item==""?0:eval(time);
-									_sum+=time;
+									var arr1 =  el.split('(');
+									let [item,time=""] = arr1;
+									if (arr1.length==2){
+										time = _.trim(item)==""?0:eval(time);
+										_sum+=time;
+									}
 									_list_src.push({
 										item,time 
 									})
