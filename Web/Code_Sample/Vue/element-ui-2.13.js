@@ -3115,7 +3115,7 @@ var __fn = (
 						remoteMethod(query) {
 							var _self = this;
 							if (query !== '') {
-								var _url = `http://192.168.0.104:3000/api/user/1/task/${query}`;
+								var _url = `http://127.0.0.1:3000/api/user/1/task/${query}`;
 								axios.get(_url)
 									.then((res)=>{
 										console.log(res);
@@ -3304,7 +3304,7 @@ var __fn = (
 						query_joblist(){
 							var _self = this;
 							var _date = moment(this.sData).format("YYYY-MM-DD");
-							var _url = `http://192.168.0.104:3000/api/joblist/user/Anthony/start_time/${_date}`;
+							var _url = `http://127.0.0.1:3000/api/joblist/user/Anthony/start_time/${_date}`;
 							axios.get(_url)
 								.then((res)=>{
 									console.log(res);
@@ -3524,7 +3524,7 @@ var __fn = (
 								{'Access-Control-Allow-Origin': '*' 
 								,'Access-Control-Allow-Headers': '*'},
 							};
-							axios.get('http://192.168.0.104:3000/api/view/DayLog_1_PingAdd')
+							axios.get('http://127.0.0.1:3000/api/view/DayLog_1_PingAdd')
 								.then((res)=>{
 									console.log(res);
 									let {data} = res

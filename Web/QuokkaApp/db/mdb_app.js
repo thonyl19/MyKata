@@ -7,7 +7,9 @@ const util = require("util");
 const strip = require('sql-strip-comments');
 const { parse } = require("path");
 const moment = require('moment');
-var _demo  = require('test/__demo');
+var _demo  
+	//= require('test/__demo');
+	= require('./__demo');
 var x = _demo.User.Select;
 
 var ut = {

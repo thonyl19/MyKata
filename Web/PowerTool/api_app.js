@@ -5,7 +5,8 @@ const Router = require('koa-router')();
 const cors =require('@koa/cors');
 //const parameter = require('koa-parameter');
 const morgan =require('morgan');
-
+let ip = require('ip');
+var os = require( 'os' );
 
 //有空再試
 const {KoaRouterApp} = require('../QuokkaApp/KoaApp');
@@ -139,8 +140,12 @@ Router.get('/api/user/:sid',async(ctx, next)=>{
     ctx.body = _r ;
 })
 */
+var networkInterfaces = os.networkInterfaces();
+var arr = networkInterfaces['Local Area Connection 3']
+var ip = arr[1].address
  
 console.log({mdb_demo1});
+console.log(`http://${ip}:3000/api`);
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 //app.use(index);
