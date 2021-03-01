@@ -1,4 +1,6 @@
-﻿var schema ={
+﻿
+const v8n = require('v8n');
+var schema ={
 	User:{
 		UserSId:null
 	},
@@ -33,6 +35,8 @@ var vPingTasks={
 					,v1.TaskType
 					,v1.Root
 					,v1.Note
+					,iif(v0.TaskSID is null,v1.TaskSID,v0.TaskSID) as  _TaskSID
+					,iif(v0.TaskSID is null,v1.Task,v0.TaskPath) as  _TaskPath
 			FROM 	[@PingTasks] v0
 					${isLeftJoin?"LEFT JOIN":"RIGHT JOIN"} (
 						${_sql01}
