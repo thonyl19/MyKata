@@ -456,7 +456,7 @@ var mdb_demo1 = {
 				//TODO: 檢核丟例外 
 			}
 			var _prop =  mdb_demo1.Prep(sql,_arg,arg);
-			console.log({PingTasks:_prop.Code});	
+			console.log(`PingTasks) ${_prop.Code}`);	
 			return mdb_demo1.Prep(sql,_arg,arg);
 		},
 	},

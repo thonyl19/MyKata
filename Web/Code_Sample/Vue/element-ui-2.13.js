@@ -1,4 +1,6 @@
-﻿/*
+﻿const { grep } = require("jquery");
+
+/*
 https://v3.bootcss.com/getting-started/
 https://github.com/ElemeFE/element/tree/dev/packages
 */
@@ -3037,10 +3039,7 @@ var __fn = (
 		},
 	}
 	var 工作日誌 = {
-		/* eslint-disable */
-		/* eslint-disable */
-		
-		'*JobRec'() {
+		'JobRec'() {
 			var _note = `
 			   `;
 			var _obj = {
@@ -3049,6 +3048,7 @@ var __fn = (
 				_vue: {
 					template: `
 					<el-form ref="form" :model="form" label-width="80px">
+					{{form}}
 						<el-form-item label="日期">
 							<el-date-picker type="date" 
 								  v-model="form.start_time" 
@@ -3099,19 +3099,28 @@ var __fn = (
 						form:{
 							type:Object,
 							default(){
-								return {}
+								return {LogSID:-1}
 							}
 						}
 					},
 					mounted() {
 						this.f_工項輸入();
+						this.bind_select();
 					}, 
 					watch:{
 						'form.Note'(val){
 							this.dbx(val);
+						},
+						'form.LogSID'(val){
+							this.bind_select();
 						}
 					},
 					methods: {
+						bind_select(){
+							let {_TaskSID:TaskSID,_TaskPath:FullName} = this.form;
+							var ops = {FullName,TaskSID};
+							this.options = [ops];
+						},
 						remoteMethod(query) {
 							var _self = this;
 							if (query !== '') {
@@ -3163,17 +3172,19 @@ var __fn = (
 			var _obj = {
 				_note,
 				_css:`
-				
 				`,
 				_vue: {
 					template: `
 					<el-table
 						:data="tableData"
-						style="width: 100%">
+						style="width: 100%"
+						height="400"
+						class="task-list"
+						>
 							<el-table-column
 								prop="work_times"
 								label="時數"
-								width="60"
+								width="75"
 								align="right"
 								>
 								<template slot-scope="scope">
@@ -3210,6 +3221,7 @@ var __fn = (
 							type:Function
 						}
 					},
+					
 					methods: {
 						formatTask(row){
 							debugger
@@ -3218,13 +3230,70 @@ var __fn = (
 							return `${Root}\\${TaskType}\\${Task}`;
 						}
 					},
+					
 				}
 			};
 			return _obj;
 		},
-		/* eslint-disable */
 		
-		'Main'() {
+		'RecList'() {
+			var _note = `
+			   `;
+			var _obj = {
+				_note,
+				_css:``,
+				_vue: {
+					template: `
+						<div class="rec-list">
+							<h4><span class="label label-default">總數時</span> {{total}}</h4>
+							<div v-for="(item,key) in group" >
+									<h3><span class="label label-success">{{key}}</span></h3>
+									<ul class="list-group" >
+										<li v-for="(el,idx) in item" class="list-group-item" @click="Edit(el)">
+											<span class="badge">{{el.work_times}}</span>
+											<h3  class="label label-primary">{{el['v1.TaskType']}} \\ {{el['v1.Task']}} </h3>
+											<div class="s-note">{{el.Note}}</div>
+										</li>
+									</ul>
+								</div>
+						</div>
+					`,
+					 
+					data(){
+						return {
+						}
+					},
+					computed:{
+						total(){
+							return _.sumBy(this.list, 'work_times');;
+						},
+						group(){
+							var grp = _.groupBy(this.list, 'v1.Root');
+							return grp;
+						}
+					},
+					props:{
+						list:{
+							type:Array ,
+							default(){
+								return [ { "OwnerSID": 1, "Owner": "Anthony", "TaskSID": 74, "nickName": "討論_PJ", "progress": 0, "sts": 1, "_order": 10.01, "ext": 1, "TaskPath": "聚鼎MES導入專案 \\ JP001 專案討論 \\ 工作討論", "LogSID": 164, "start_time": "2020-08-04T16:00:00Z", "work_times": 1.5, "v1.Task": "工作討論", "v1.TaskType": "JP001 專案討論", "v1.Root": "聚鼎MES導入專案", "Note": "跟 joseph 討論工單過站 和 客製專案分柝架構的問題" }, { "OwnerSID": null, "Owner": null, "TaskSID": null, "nickName": null, "progress": null, "sts": null, "_order": null, "ext": null, "TaskPath": " \\ \\ ", "LogSID": 163, "start_time": "2020-08-04T16:00:00Z", "work_times": 6.5, "v1.Task": "SA-WIP-002_工時維護", "v1.TaskType": "JP006 專案Coding", "v1.Root": "聚鼎MES導入專案", "Note": null } ];
+							}
+						},
+						edit_item:{
+							type:Function
+						}
+					},
+					methods: {
+						Edit(el){
+							var _arg = {row:el,$index:-1};
+							this.edit_item(_arg);
+						}
+					},
+				}
+			};
+			return _obj;
+		},
+		'*Main'() {
 			var _note = `
 			   `;
 			var _obj = {
@@ -3236,9 +3305,27 @@ var __fn = (
 				.el-table td {
 					padding: 3px 0;
 				}
+				.rec-list .s-note{
+					white-space: pre;
+					padding-left:1.5rem;
+				}
+				.rec-list .list-group-item {
+					padding:5px;
+				}
+				.rec-list .list-group ,
+				.rec-list h3
+				{
+					margin-top: 0px;
+					margin-bottom: 5px;
+				}
+ 
 				`,
 				_vue: {
-					components:{'job-rec':工作日誌.JobRec()._vue,'task-list':工作日誌.TaskList()._vue},
+					components:{
+						'job-rec':工作日誌.JobRec()._vue
+						,'task-list':工作日誌.TaskList()._vue
+						,'rec-list':工作日誌.RecList()._vue
+					},
 					template: `
 					<div> 
 						<el-dialog  title="TaskEdit" :visible.sync="dialogTaskEdit">
@@ -3256,17 +3343,17 @@ var __fn = (
 											v-model="sData"
 											type="date" >
 										</el-date-picker>
-									</el-col>
-									<el-col :span="12">
 										<el-button icon="el-icon-arrow-left" circle @click="chg_date(-1)"></el-button>
 										<el-button icon="el-icon-arrow-right" circle @click="chg_date(1)"></el-button>
+									</el-col>
+									<el-col :span="12">
 									</el-col>
 								</el-form-item>
 							</el-form>
 						</el-row>
 						<el-row>
 							<el-col :span="14"><task-list :tableData="tableData" :e_add="add_item"></task-list></el-col>
-							<el-col :span="10"></div></el-col>
+							<el-col :span="10"><rec-list :list="rec_list" :edit_item="add_item"></rec-list></el-col>
 						</el-row>
 						
 					</div>
@@ -3283,6 +3370,13 @@ var __fn = (
 					mounted(){
 						this.query_joblist();
 					},
+					computed:{
+						rec_list(){
+							var _list = _.filter(this.tableData,(o)=>{return o.work_times !=null;})
+							return _list;
+						}
+
+					},
 					watch:{
 						sData(){
 							this.query_joblist();
@@ -3293,6 +3387,7 @@ var __fn = (
 							//Todo:PostSave,ReLoad
 						},
 						add_item(data,isAdd=false){
+							console.log(data);
 							let {$index} = data;
 							this.cur_Idx = $index;
 							this.cur_row = Object.assign({},data.row);
