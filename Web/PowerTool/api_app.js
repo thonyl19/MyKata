@@ -17,9 +17,6 @@ const app = new koa();
 var user = {
 	'sid/:sid':{
 		async r(ctx,next){
-			// ctx.verifyParams({
-			// 	sid: { type: "number"}
-			// })
 			let {sid} = ctx.params;
 			var _r = await mdb_demo1.User.Select({UserSId:sid}).exec();
 			ctx.body = _r ;
@@ -35,7 +32,7 @@ var user = {
 var log = {
 	'':{
 		async c(ctx,next){
-			var _r = await mdb_demo1.Log.Insert(ctx.params).exec();
+			var _r = await mdb_demo1.Log.Insert(ctx.request.body).exec();
 			ctx.body = _r ;
 		   },
 		async u(ctx,next){
