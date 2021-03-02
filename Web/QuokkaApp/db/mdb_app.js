@@ -428,6 +428,15 @@ var mdb_demo1 = {
 			}
 			return mdb_demo1.Prep(sql,_arg,arg);
 		},
+		Insert(_arg={},isTest=false){
+			var {sql,arg} = _demo.Log.Insert;
+			let {LogSID} = _arg;
+			if (LogSID!=null){
+				_arg.LogSID = parseInt(LogSID);
+			}
+			return mdb_demo1.Prep(sql,_arg,arg);
+		},
+
 		Update(_arg={},isTest=false){
 			var {sql,arg} = _demo.Log.Update ;
 			_arg.LogSID = parseInt(_arg.LogSID);
@@ -458,7 +467,7 @@ var mdb_demo1 = {
 				//TODO: 檢核丟例外 
 			}
 			var _prop =  mdb_demo1.Prep(sql,_arg,arg);
-			console.log({PingTasks:_prop.Code});	
+			console.log(`PingTasks) ${_prop.Code}`);	
 			return mdb_demo1.Prep(sql,_arg,arg);
 		},
 	},
@@ -539,6 +548,25 @@ var t = {
 		var arg = {UserSId:1};
 		var z1 = await mdb_demo1.User.Select(arg).exec();
 		z1
+	},
+	async '*Insert'(){
+		var start_time = "2020-05-28T16:00:00Z";
+		start_time
+		var arg = {"LogSID":1
+		//,"TaskSID":null
+		,"note":null,"work_times":6
+		,start_time
+		,"end_time":new Date("1970-01-01T00:00:00Z")
+		//,"Loger":1
+		,"editTime":new Date("1970-01-01T00:00:00Z")
+		,"mapSID":0
+		//,"flag":null
+		}
+		var x = mdb_demo1.Log.Insert(arg);
+		console.log(x.Code)
+		var z = await x.exec();
+		z
+		console.log({z});
 	},
 	async 'Update'(){
 		var start_time = "2020-05-28T16:00:00Z";
@@ -679,7 +707,7 @@ var t_結構測試 ={
 		z
 		console.log(t_結構測試.基礎結構.User)
 	},
-	'*檢核機制'(){
+	'檢核機制'(){
 		var arg = {LogSID:1,start_time:new Date(),work_times:null}; 
 		var r = t_結構測試.基礎結構.User.Select.check(arg); 
 		r;

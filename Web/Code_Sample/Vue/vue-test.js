@@ -1237,12 +1237,53 @@ var __fn = ($, _, styled, Vue,bts337
 			return _obj;
 		},
 	}
+	var code_gen = {
+		/* eslint-disable */
+		
+		'*def'() {
+			var _note = `
+			   `;
+			var _obj = {
+				_note,
+				_css:``,
+				_vue: {
+					template: `
+						<pre v-text="msg">
+						</pre>
+					`,
+					data(){
+						return {
+							test:{A:1,B:2},
+							msg:`
+							public StaffMaster(
+								int staffId,
+								string staffName,
+								string address,
+								DateTime createdDate
+							)
+							${test}
+							{
+								StaffId = staffId;
+								StaffName = staffName;
+								Address = address;
+								CreatedDate = createdDate;
+							}						
+							`
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
+
+	}
 	return { VueTheMask
 		, Vue_Draggable 
 		, vue_drag_drop
 		, vue_draggable
 		, vue_smooth_dnd
 		, vue_Fullcalendar
+		, code_gen
 		//, fullCalendar
 		//,vue_easy_dnd 
 	};
