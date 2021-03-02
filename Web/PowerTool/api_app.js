@@ -35,8 +35,7 @@ var user = {
 var log = {
 	'':{
 		async c(ctx,next){
-			let {sid} = ctx.params;
-			var _r = await mdb_demo1.Log.Select({LogSID:sid}).exec();
+			var _r = await mdb_demo1.Log.Insert(ctx.params).exec();
 			ctx.body = _r ;
 		   },
 		async u(ctx,next){
@@ -148,5 +147,9 @@ app.use(bodyParser());
 app.use(Router.routes());
 app.use(morgan('dev'));
 
+app.on('error', (err, ctx) => {
+	console.log({koa_err:err});	
+});  
+
 app.listen(3000);
- 
+  

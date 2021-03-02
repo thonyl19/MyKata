@@ -427,10 +427,18 @@ var mdb_demo1 = {
 			return mdb_demo1.Prep(sql,_arg,arg);
 		},
 		Insert(_arg={},isTest=false){
-			var {sql,arg} = _demo.Log.Insert;
-			let {LogSID} = _arg;
-			if (LogSID!=null){
-				_arg.LogSID = parseInt(LogSID);
+			_arg.editTime = new Date();
+			_arg.start_time = moment(_arg.start_time).toDate();
+			_arg.work_times = parseInt(_arg.work_times);
+			_arg.LogSID = parseInt(_arg.LogSID); 
+ 
+			var {sql,arg,check} = _demo.Log.Insert;
+			var isValid = v8n()
+				.schema(check)
+				.testAll(_arg);  
+			if (isValid.length != 0 ){
+				//console.dir(isValid[0]) 
+				throw new Error(JSON.stringify(isValid));
 			}
 			return mdb_demo1.Prep(sql,_arg,arg);
 		},
@@ -547,20 +555,23 @@ var t = {
 		var z1 = await mdb_demo1.User.Select(arg).exec();
 		z1
 	},
-	async '*Insert'(){
+	async 'Insert'(){
 		var start_time = "2020-05-28T16:00:00Z";
 		start_time
 		var arg = {"LogSID":1
-		//,"TaskSID":null
+		,"TaskSID":1
 		,"note":null,"work_times":6
-		,start_time
+		,start_time:new Date("1970-01-01T00:00:00Z")
 		,"end_time":new Date("1970-01-01T00:00:00Z")
 		//,"Loger":1
 		,"editTime":new Date("1970-01-01T00:00:00Z")
 		,"mapSID":0
+		,"Loger":1
 		//,"flag":null
 		}
-		var x = mdb_demo1.Log.Insert(arg);
+
+		var arg1 = {"LogSID":null,"TaskSID":71,"note":"B(5","work_times":"5","start_time":"2020-08-04T16:00:00.000Z","Loger":1}
+		var x = mdb_demo1.Log.Insert(arg1);
 		console.log(x.Code)
 		var z = await x.exec();
 		z

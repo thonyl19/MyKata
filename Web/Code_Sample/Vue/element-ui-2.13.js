@@ -3055,7 +3055,7 @@ var __fn = (
 								style="width: 100%;"></el-date-picker>
 						</el-form-item>
 						<el-form-item label="Task">
-							<el-select v-model="form.TaskSID" style="display:block;"
+							<el-select v-model="form._TaskSID" style="display:block;"
 								filterable
 								remote 
 								:remote-method="remoteMethod"
@@ -3111,7 +3111,8 @@ var __fn = (
 						'form.Note'(val){
 							this.dbx(val);
 						},
-						'form.LogSID'(val){
+						'form._TaskSID'(val){
+							debugger
 							this.bind_select();
 						}
 					},
@@ -3332,7 +3333,7 @@ var __fn = (
 							<job-rec :form="cur_row"></job-rec>
 							<span slot="footer" class="dialog-footer">
 								<el-button @click="dialogTaskEdit = false">取消</el-button>
-								<el-button type="primary" @click="e_SaveTask">儲存</el-button>
+								<el-button type="primary" @click="e_SaveTask">{{v_act}}</el-button>
 							</span>
 						</el-dialog>
 						<el-row>
@@ -3374,8 +3375,11 @@ var __fn = (
 						rec_list(){
 							var _list = _.filter(this.tableData,(o)=>{return o.work_times !=null;})
 							return _list;
+						},
+						v_act(){
+							let {LogSID = null}= this.cur_row ||{}
+							return LogSID == null ?'新增':'儲存';
 						}
-
 					},
 					watch:{
 						sData(){
@@ -3384,7 +3388,43 @@ var __fn = (
 					}
 					,methods: {
 						e_SaveTask(){
+							//{ "OwnerSID": 1, "Owner": "Anthony", "TaskSID": 74, "nickName": "討論_PJ", "progress": 0, "sts": 1, "_order": 10.01, "ext": 1, "TaskPath": "聚鼎MES導入專案 \\ JP001 專案討論 \\ 工作討論", "LogSID": 164, "start_time": "2020-08-04T16:00:00Z", "work_times": 1.5, "v1.Task": "工作討論", "v1.TaskType": "JP001 專案討論", "v1.Root": "聚鼎MES導入專案", "Note": "跟 joseph 討論工單過站 和 客製專案分柝架構的問題", "_TaskSID": 74, "_TaskPath": "聚鼎MES導入專案 \\ JP001 專案討論 \\ 工作討論" }
 							//Todo:PostSave,ReLoad
+							/*
+										SELECT 	:TaskSID as TaskSID 
+									,:note as [note]
+									,:work_times as work_times
+									,:start_time as start_time
+									,:end_time as end_time
+									,:Loger as Loger
+									,:mapSID as mapSID
+									,:editTime as editTime
+							
+							*/
+							debugger
+							let {
+								LogSID,
+								_TaskSID:TaskSID,
+								Note:note,
+								work_times,
+								start_time,
+								OwnerSID:Loger,
+							} = this.cur_row;
+							var args = {
+								LogSID,
+								TaskSID,
+								note,
+								work_times,
+								start_time,
+								Loger
+							};
+							var _url = `http://192.168.0.104:3000/api/log/`;
+							axios.post(_url,args)
+								.then((res)=>{
+									console.log(res);
+									let {data} = res
+									//_self.tableData = data;
+								})
 						},
 						add_item(data,isAdd=false){
 							console.log(data);
