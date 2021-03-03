@@ -75,7 +75,7 @@
     }
     let UIUT = {
         save(data){
-            fs.writeFileSync('./quka/Txt_App.txt',data,'utf-8');
+            fs.writeFileSync('./QuokkaApp/Txt_App.txt',data,'utf-8');
         },
         formatTab(data,tabs){
             let _tab = _.repeat('\t',tabs);
@@ -236,7 +236,7 @@ ${Txt_App.FormatTab(paramCode,2)}
     UiSet
     let code = UIUT.getUI(UiSet);
     code
-    UIUT.save(code);
+    //UIUT.save(code);
     let z 
         //= UIUT.Exec1(UiSet.右斜轉左斜);
         //= Txt_App.條件換行("1,\t2,3","\t")

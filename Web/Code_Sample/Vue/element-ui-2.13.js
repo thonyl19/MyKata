@@ -3048,7 +3048,6 @@ var __fn = (
 				_vue: {
 					template: `
 					<el-form ref="form" :model="form" label-width="80px">
-					{{form}}
 						<el-form-item label="日期">
 							<el-date-picker type="date" 
 								  v-model="form.start_time" 
@@ -3072,8 +3071,9 @@ var __fn = (
 							<el-col :span="4">
 								<el-input v-model.number="form.work_times" width="100" ></el-input>
 							</el-col>
-							<el-col :span="20">
-								<span>　{{dynTimes}}</span>
+							<el-col :span="1"><br /></el-col>
+							<el-col :span="19">
+								<el-tag  @click="f_confirm"> {{dynTimes}}</el-button>
 							</el-col>
 						</el-form-item>
 						<el-form-item label="事項">
@@ -3081,6 +3081,9 @@ var __fn = (
 								v-model="form.Note" 
 								clearable="true"
 								debounce="700"></el-input>
+							<h5 class="input-group txt-grp" >
+								<span class="label label-default input-group-addon" @click="f_trim">清除前後空白</span>
+							</h5>
 						</el-form-item>
 					</el-form>
 					
@@ -3117,6 +3120,16 @@ var __fn = (
 						}
 					},
 					methods: {
+						f_confirm(){
+							this.form.work_times =  this.dynTimes;
+						},
+						f_trim(){
+							var arr = this.form.Note.split('\n');
+							_.each(arr,(el,idx)=>{
+								arr[idx] = el.trim();
+							})
+							this.form.Note = arr.join("\n");
+						},
 						bind_select(){
 							let {_TaskSID:TaskSID,_TaskPath:FullName} = this.form;
 							var ops = {FullName,TaskSID};
@@ -3319,7 +3332,10 @@ var __fn = (
 					margin-top: 0px;
 					margin-bottom: 5px;
 				}
- 
+				.txt-grp{
+					margin-top: 0px;
+					margin-bottom: 5px;
+				}
 				`,
 				_vue: {
 					components:{
