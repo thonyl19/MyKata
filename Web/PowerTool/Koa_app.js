@@ -37,7 +37,7 @@ Router.get('/favicon.ico',async(ctx, next)=>{
 
 // enable CORS - Cross Origin Resource Sharing
 // 解決 CORS 調用的問題
-app.use(cors());
+app.use(cors()); 
 //app.use(index);
 app.use(bodyParser());
 app.use(Router.routes());
