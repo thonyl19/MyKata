@@ -1,0 +1,17 @@
+<gt-searchcd active_names="1" class="gt-form form-horizontal">
+    <gt-form-col label="@RES.BLL.Face.lblSetSequenceNo"
+                    v-model="form.ENCODE_FORMAT_NO"
+                    :readonly="readonly"></gt-form-col>
+    <gt-form-col label="@RES.BLL.Face.lblSetSequenceName"
+                    v-model="form.ENCODE_FORMAT_NAME"
+                    :readonly="readonly"></gt-form-col>
+    <gt-form-col label="@RES.BLL.Face.ENABLE_FLAG"
+                    v-model="form.ENABLE_FLAG"
+                    :readonly="readonly">
+        <el-radio-group v-model="form.ENABLE_FLAG">
+            <el-radio label="T">@RES.BLL.Face.Enable</el-radio>
+            <el-radio label="F">@RES.BLL.Face.Disable</el-radio>
+            <el-radio label="All">@RES.BLL.Face.AllStatus</el-radio>
+        </el-radio-group>
+    </gt-form-col>
+</gt-searchcd>

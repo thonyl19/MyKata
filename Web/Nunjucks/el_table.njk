@@ -1,0 +1,40 @@
+        <el-table empty-text=" " style="width: 100%"
+                  @@sort-change="sort_change"
+                  :data="grid.data"
+                  :default-sort="{prop: 'CREATE_DATE', order: 'ascending'}">
+                <el-table-column :label="i18n.操作" min-width="20">
+                    <template slot-scope="scope">
+                        <el-button size="small" circle class="s-VIEW"
+								   autofocus="true"
+                                   type="danger"
+                                   icon="el-icon-delete"
+                                   :disabled="scope.row.QUOTE_ONCE=='T'"
+                                   @@click="e_del(scope.row.ENCODE_FORMAT_SID)"
+								   ></el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column min-width="115" prop="ENCODE_FORMAT_NO" sortable="custom"
+                                 :sort-orders="$UT.sort_order"
+                                 label="@RES.BLL.Face.lblSetSequenceNo">
+                    <template slot-scope="scope">
+                        <!--需要調整-->
+                        <el-button type="text" @@click="act_Item(scope.row.ENCODE_FORMAT_SID)">{{scope.row.ENCODE_FORMAT_NO}}</el-button>
+                    </template>
+                </el-table-column>
+                {% for key, val in filed %}<el-table-column :label="i18n.{{key}}"
+                                 prop="{{key}}" sortable="custom"
+                                 :sort-orders="$UT.sort_order">
+                </el-table-column>{% endfor %}
+            </el-table>
+        <el-pagination background
+                        @@size-change="e_SizeChange"
+                        @@current-change="e_CurrentChange"
+                        :current-page="grid.Page.Index"
+                        :page-sizes="[5,10,15]"
+                        :page-size="grid.Page.Size"
+                        layout="prev, pager, next"
+                        :total="grid.row_count"></el-pagination>
+
+i18n:{ {% for key, val in filed %}
+    {{key}}:'{{key}}',{% endfor %}
+}
