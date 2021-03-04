@@ -19,9 +19,6 @@ const app = new koa();
 var user = {
 	'sid/:sid':{
 		async r(ctx,next){
-			// ctx.verifyParams({
-			// 	sid: { type: "number"}
-			// })
 			let {sid} = ctx.params;
 			var _r = await mdb_demo1.User.Select({UserSId:sid}).exec();
 			ctx.body = _r ;
@@ -32,13 +29,21 @@ var user = {
 			var _r = await mdb_demo1.User.Tasks(ctx.params).exec();
 			ctx.body = _r ;
 		}
+	},
+	'test':{
+		async r(ctx,next){
+			 
+			ctx.body = `
+			A
+			B
+			` ;
+		}
 	}
 }
 var log = {
 	'':{
 		async c(ctx,next){
-			let {sid} = ctx.params;
-			var _r = await mdb_demo1.Log.Select({LogSID:sid}).exec();
+			var _r = await mdb_demo1.Log.Insert(ctx.request.body).exec();
 			ctx.body = _r ;
 		   },
 		async u(ctx,next){
@@ -116,6 +121,7 @@ var page = {
 }
 
 var _router = {
+	'/tpl/':{employe,user,view,opction,log,joblist},
 	'/api/':{employe,user,view,opction,log,joblist},
 	'/page':page
 };
@@ -154,5 +160,9 @@ app.use(bodyParser());
 app.use(Router.routes());
 app.use(morgan('dev'));
 
+app.on('error', (err, ctx) => {
+	console.log({koa_err:err});	
+});  
+
 app.listen(3000);
- 
+  

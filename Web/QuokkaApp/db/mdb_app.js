@@ -101,7 +101,12 @@ var ut = {
 }
 
 var mdbapp_enum = {
-	isUpdate:true
+	isUpdate:true,
+	ExecMode:{
+		Query:0,
+		Ins:1,
+		Updata:2,
+	}
 }
 
 //資料庫基礎程序
@@ -131,6 +136,21 @@ var _base = {
 			}
 			return await Conn(cfg).query(sql);
 		},
+		async v20210303(sql,ExecMode){
+			let {Conn,cfg}  = this;
+			console.log({Conn,cfg})
+			switch (ExecMode) {
+				case mdbapp_enum.ExecMode.Query:
+					return await Conn(cfg).query(sql);
+					break;
+				case mdbapp_enum.ExecMode.Ins:
+					return await Conn(cfg).execute(sql,'SELECT @@Identity AS id');
+					break;
+				case mdbapp_enum.ExecMode.Query:
+					return await Conn(cfg).execute(sql);
+					break;
+			}
+		},
 		 
 	},
 	//參數對映程序
@@ -151,7 +171,7 @@ var _base = {
 			}
 		},
 		//因應 Update 的處理需求 
-		v20210117(sql,arg,def,isUpdate=false){
+		v20210117(sql,arg,def={},isUpdate=false){
 			var __curDB=this;
 			return {
 				__curDB,
@@ -161,6 +181,20 @@ var _base = {
 				},
 				async exec(){
 					return await __curDB.Exec(this.Code,isUpdate);
+				}
+			}
+		},
+		//因應 Update 的處理需求 
+		v20210303(sql,arg,def={},ExecMode=mdbapp_enum.ExecMode.Query){
+			var __curDB=this;
+			return {
+				__curDB,
+				get Code(){
+					var _arg = _.merge(def,arg);
+					return _base.parseCode.v2020607(sql,_arg);
+				},
+				async exec(){
+					return await __curDB.Exec(this.Code,ExecMode);
 				}
 			}
 		}
@@ -278,6 +312,23 @@ let mdbApp = {
 				ViewTable:_base.ViewTable.v20201125,
 			})
 		}
+	},
+	//修正 insert/update 的問題
+	v20210303:{
+		//資料物件初始化程序
+		Init(cfg){
+			var _App = mdbApp.v2020607;
+			var _self = this;
+			if (cfg!=null) _self.cfg = cfg;
+			//console.log({'v2020607.Init':_self});
+			return _base.parseCfg.v2020607(_self,
+			{
+				Conn:_base.Conn.v2020607,
+				Exec:_base.Exec.v20210303,
+				Prep:_base.Prep.v20210303,
+				ViewTable:_base.ViewTable.v20201125,
+			})
+		}
 	}
 }
 var mdb_demo = {
@@ -371,7 +422,7 @@ var mdb_demo = {
  
 
 var mdb_demo1 = {
-	Init:mdbApp.v20210117.Init,
+	Init:mdbApp.v20210303.Init,
 	cfg:{
 		filePath:path.join(__dirname,'../../../_demo.mdb')
 	},
@@ -429,22 +480,34 @@ var mdb_demo1 = {
 			return mdb_demo1.Prep(sql,_arg,arg);
 		},
 		Insert(_arg={},isTest=false){
-			var {sql,arg} = _demo.Log.Insert;
-			let {LogSID} = _arg;
-			if (LogSID!=null){
-				_arg.LogSID = parseInt(LogSID);
+			_arg.editTime = new Date();
+			_arg.start_time = moment(_arg.start_time).toDate();
+			_arg.work_times = parseInt(_arg.work_times);
+			_arg.LogSID = parseInt(_arg.LogSID); 
+			console.dir({_arg});
+			var {sql,arg,check} = _demo.Log.Insert;
+			var isValid = v8n()
+				.schema(check)
+				.testAll(_arg);  
+			if (isValid.length != 0 ){
+				//console.dir(isValid[0]) 
+				throw new Error(JSON.stringify(isValid,null,4));
 			}
-			return mdb_demo1.Prep(sql,_arg,arg);
+			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.ExecMode.Ins);
 		},
 
 		Update(_arg={},isTest=false){
-			var {sql,arg} = _demo.Log.Update ;
+			var {sql,arg,check} = _demo.Log.Update ;
 			_arg.LogSID = parseInt(_arg.LogSID);
-			_arg.work_times = moment(_arg.work_times).toDate();
 			_arg.start_time = moment(_arg.start_time).toDate();
 			_arg.end_time = moment(_arg.end_time).toDate();
-			console.log(_arg);
-			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.isUpdate);
+			var isValid = v8n()
+				.schema(check)
+				.testAll(_arg);  
+			if (isValid.length != 0 ){
+				throw new Error(JSON.stringify(isValid,null,4));
+			}
+			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.ExecMode.Updata);
 		},
 		JobList(_arg={},isTest=false){
 			var {sql,arg} = _demo.vJobList ;
@@ -549,21 +612,24 @@ var t = {
 		var z1 = await mdb_demo1.User.Select(arg).exec();
 		z1
 	},
-	async '*Insert'(){
+	async 'Insert'(){
 		var start_time = "2020-05-28T16:00:00Z";
 		start_time
 		var arg = {"LogSID":1
-		//,"TaskSID":null
+		,"TaskSID":1
 		,"note":null,"work_times":6
-		,start_time
+		,start_time:new Date("1970-01-01T00:00:00Z")
 		,"end_time":new Date("1970-01-01T00:00:00Z")
 		//,"Loger":1
 		,"editTime":new Date("1970-01-01T00:00:00Z")
 		,"mapSID":0
+		,"Loger":1
 		//,"flag":null
 		}
-		var x = mdb_demo1.Log.Insert(arg);
-		console.log(x.Code)
+
+		var arg1 = {"LogSID":null,"TaskSID":71,"note":"B(5","work_times":"5","start_time":"2020-08-04T16:00:00.000Z","Loger":1}
+		var x = mdb_demo1.Log.Insert(arg1);
+		console.log(x.Code) 
 		var z = await x.exec();
 		z
 		console.log({z});

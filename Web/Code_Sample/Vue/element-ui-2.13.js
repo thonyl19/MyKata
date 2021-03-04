@@ -3048,14 +3048,13 @@ var __fn = (
 				_vue: {
 					template: `
 					<el-form ref="form" :model="form" label-width="80px">
-					{{form}}
 						<el-form-item label="日期">
 							<el-date-picker type="date" 
 								  v-model="form.start_time" 
 								style="width: 100%;"></el-date-picker>
 						</el-form-item>
 						<el-form-item label="Task">
-							<el-select v-model="form.TaskSID" style="display:block;"
+							<el-select v-model="form._TaskSID" style="display:block;"
 								filterable
 								remote 
 								:remote-method="remoteMethod"
@@ -3070,10 +3069,11 @@ var __fn = (
 						</el-form-item>
 						<el-form-item label="時數">
 							<el-col :span="4">
-								<el-input v-model="form.work_times" width="100" ></el-input>
+								<el-input v-model.number="form.work_times" width="100" ></el-input>
 							</el-col>
-							<el-col :span="20">
-								<span>　{{dynTimes}}</span>
+							<el-col :span="1"><br /></el-col>
+							<el-col :span="19">
+								<el-tag  @click="f_confirm"> {{dynTimes}}</el-button>
 							</el-col>
 						</el-form-item>
 						<el-form-item label="事項">
@@ -3081,6 +3081,9 @@ var __fn = (
 								v-model="form.Note" 
 								clearable="true"
 								debounce="700"></el-input>
+							<h5 class="input-group txt-grp" >
+								<span class="label label-default input-group-addon" @click="f_trim">清除前後空白</span>
+							</h5>
 						</el-form-item>
 					</el-form>
 					
@@ -3111,11 +3114,22 @@ var __fn = (
 						'form.Note'(val){
 							this.dbx(val);
 						},
-						'form.LogSID'(val){
+						'form._TaskSID'(val){
+							debugger
 							this.bind_select();
 						}
 					},
 					methods: {
+						f_confirm(){
+							this.form.work_times =  this.dynTimes;
+						},
+						f_trim(){
+							var arr = this.form.Note.split('\n');
+							_.each(arr,(el,idx)=>{
+								arr[idx] = el.trim();
+							})
+							this.form.Note = arr.join("\n");
+						},
 						bind_select(){
 							let {_TaskSID:TaskSID,_TaskPath:FullName} = this.form;
 							var ops = {FullName,TaskSID};
@@ -3318,7 +3332,10 @@ var __fn = (
 					margin-top: 0px;
 					margin-bottom: 5px;
 				}
- 
+				.txt-grp{
+					margin-top: 0px;
+					margin-bottom: 5px;
+				}
 				`,
 				_vue: {
 					components:{
@@ -3332,7 +3349,7 @@ var __fn = (
 							<job-rec :form="cur_row"></job-rec>
 							<span slot="footer" class="dialog-footer">
 								<el-button @click="dialogTaskEdit = false">取消</el-button>
-								<el-button type="primary" @click="e_SaveTask">儲存</el-button>
+								<el-button type="primary" @click="e_SaveTask">{{v_act}}</el-button>
 							</span>
 						</el-dialog>
 						<el-row>
@@ -3355,7 +3372,7 @@ var __fn = (
 							<el-col :span="14"><task-list :tableData="tableData" :e_add="add_item"></task-list></el-col>
 							<el-col :span="10"><rec-list :list="rec_list" :edit_item="add_item"></rec-list></el-col>
 						</el-row>
-						
+						{{tableData}}
 					</div>
 					`,
 					data(){
@@ -3374,8 +3391,11 @@ var __fn = (
 						rec_list(){
 							var _list = _.filter(this.tableData,(o)=>{return o.work_times !=null;})
 							return _list;
+						},
+						v_act(){
+							let {LogSID = null}= this.cur_row ||{}
+							return LogSID == null ?'新增':'儲存';
 						}
-
 					},
 					watch:{
 						sData(){
@@ -3384,13 +3404,80 @@ var __fn = (
 					}
 					,methods: {
 						e_SaveTask(){
-							//Todo:PostSave,ReLoad
+							switch (this.v_act) {
+								case "新增":
+									this.f_新增();
+									break;
+								case "儲存":
+									this.f_儲存();
+									break;
+							}
+						},
+						f_儲存(){
+							let {
+								LogSID,
+								_TaskSID:TaskSID,
+								Note:note,
+								work_times,
+								start_time,
+								OwnerSID:Loger,
+							} = this.cur_row;
+							var args = {
+								LogSID,
+								TaskSID,
+								note,
+								work_times,
+								start_time,
+								Loger
+							};
+							var _url = `http://192.168.0.104:3000/api/log/`;
+							var _self = this;
+							axios.patch(_url,args)
+								.then((res)=>{
+									console.log(res);
+									_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
+								})
+						},
+						f_新增(){
+							let {
+								LogSID,
+								_TaskSID:TaskSID,
+								Note:note,
+								work_times,
+								start_time,
+								OwnerSID:Loger,
+							} = this.cur_row;
+							var args = {
+								LogSID,
+								TaskSID,
+								note,
+								work_times,
+								start_time,
+								Loger
+							};
+							var _url = `http://192.168.0.104:3000/api/log/`;
+							var _self = this;
+							axios.post(_url,args)
+								.then((res)=>{
+									console.log(res);
+									let {data={}} = res;
+									let [rec={id:null}] = data;
+									if (rec.id !=null){
+										_self.cur_row.LogSID = rec.id ;
+										let [Root,TaskType,Task] = _self.cur_row._TaskPath.split('\\');
+										_self.cur_row['v1.Root'] = Root;
+										_self.cur_row['v1.TaskType'] = TaskType;
+										_self.cur_row['v1.Task'] = Task;
+										_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
+									} 
+								})
 						},
 						add_item(data,isAdd=false){
 							console.log(data);
 							let {$index} = data;
 							this.cur_Idx = $index;
 							this.cur_row = Object.assign({},data.row);
+							//this.cur_row = data.row;
 							if (isAdd){
 								this.cur_row.start_time = this.sData;
 							}
@@ -3634,6 +3721,7 @@ var __fn = (
 							this.dbx = _.debounce((val)=>{
 								var _sum = 0;
 								//debugger
+								if (val==null) return;
 								var arr = val.split('\n');
 								var _list_src = [];
 								_.each(arr,(el)=>{
