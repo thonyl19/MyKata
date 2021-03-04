@@ -1,19 +1,6 @@
-﻿const koa = require('koa');
-const router = require('koa-router')();
-const bodyParser = require('koa-bodyparser');
-const Router = require('koa-router')();
-const cors =require('@koa/cors');
-//const parameter = require('koa-parameter');
-const morgan =require('morgan'); 
- 
+﻿const {mdb_demo1} = require('../QuokkaApp/db/mdb_app');
 
-//有空再試
-const {KoaRouterApp} = require('../QuokkaApp/KoaApp');
-const {mdb_demo1} = require('../QuokkaApp/db/mdb_app');
-
-const app = new koa();
-//parameter(app); 
-
+console.log({mdb_demo1});
 var user = {
 	'sid/:sid':{
 		async r(ctx,next){
@@ -108,55 +95,7 @@ var employe = {
 		}
 	}
 }
-var page = {
-	async ''(ctx,next){
-		ctx.response.body = 'hello world';
-	}
-	,async 'id/:id'(ctx,next){
-		let {id} = ctx.params;
-		ctx.response.body = `[id]${id}`;
-	}
-}
 
-var _router = {
-	'/tpl/':{employe,user,view,opction,log,joblist},
-	'/api/':{employe,user,view,opction,log,joblist},
-	'/page':page
+module.exports = {
+	employe,user,view,opction,log,joblist
 };
-KoaRouterApp.Mode_C(_router,Router);
-/*
-const index = router.get('/', ctx => {
-    ctx.response.body = 'hello world';
-}).routes();
-
-
- 
-
-//http://192.168.0.104:3000/api/opction/taskSts
-
-Router.get('/api/opction/:grp_type',async(ctx, next)=>{
-	let {grp_type} = ctx.params;
-	var _r = await mdb_demo.Opction.Select({grp_type}).exec();
-    ctx.body = _r ;
-})
-Router.get('/api/user/:sid',async(ctx, next)=>{
-	let {sid} = ctx.params;
-	var _r = await mdb_demo.User.Select({UserSId:sid}).exec();
-    ctx.body = _r ;
-})
-*/
- 
-console.log({mdb_demo1});
-// enable CORS - Cross Origin Resource Sharing
-app.use(cors());
-//app.use(index);
-app.use(bodyParser());
-app.use(Router.routes());
-app.use(morgan('dev'));
-
-app.on('error', (err, ctx) => {
-	console.log({koa_err:err});	
-});  
-
-app.listen(3000);
-  
