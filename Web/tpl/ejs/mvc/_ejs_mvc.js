@@ -35,11 +35,10 @@ ejs._ = _;
           ]
     }
     var _tpl = {
-        gti_el_table_col:_.template(`<el-table-column :label="i18n.<%= filed%>"
-                    prop="<%= filed%>" sortable="custom"
-                    :sort-orders="$UT.sort_order"></el-table-column>`),
-        Insert:_.template(`<%= tab%>:<%= key%> as <%= key%>`),
-
+        gti_el_table_col(filed){return `<el-table-column :label="i18n.${filed}"
+    prop="${filed}" sortable="custom"
+    :sort-orders="$UT.sort_order"></el-table-column>`},
+    
 
     }
  
@@ -52,11 +51,11 @@ ejs._ = _;
                 TableColumn:[]
             }
             for(var filed in arg.row){
-                arg.TableColumn.push(_tpl.gti_el_table_col({filed}));
+                var arr = _tpl.gti_el_table_col(filed).split('\n');
+                arg.TableColumn = arg.TableColumn.concat(arr);
             }
-            
             var s = await ejs.renderFile('./tpl/ejs/mvc/el_table.ejs',arg );
-            ops.save(s,"_tmp.cshtml"); 
+            ops.save(s,"~tmp.cshtml"); 
         },
         async 'i18n_json'(){
             var arg = {

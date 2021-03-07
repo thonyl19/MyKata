@@ -22,8 +22,8 @@
                         <!--需要調整-->
                         <el-button type="text" @@click="act_Item(scope.row.ENCODE_FORMAT_SID)">{{scope.row.ENCODE_FORMAT_NO}}</el-button>
                     </template>
-                </el-table-column>
-                <%- TableColumn.join(' \n\t\t')%>
+                </el-table-column><% TableColumn.map((el)=>{ %>
+                <%- el %><% }) %>
             </el-table>
         <el-pagination background
                         @@size-change="e_SizeChange"

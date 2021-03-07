@@ -1,5 +1,3 @@
-i18n:{ 
-<% for(var el in filed){
-    var _r =`\t${el} = '${Prefix}${el}',\n`
-    echo(_r)   
-}%>},
+i18n:{<% Object.keys(filed).map(el=>{ %>
+    <%- el %> = '<%= Prefix%><%= el%>',<% })%>
+},
