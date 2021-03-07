@@ -94,7 +94,7 @@ ejs._ = _;
                 , arg 
                 , ops.echo );
             s 
-            ops.save(s,"_tmp.txt");  
+            ops.save(s,"~tmp.txt");  
         },
     }
 

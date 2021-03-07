@@ -169,7 +169,7 @@ ejs._ = _;
                 ,{users} 
                 //重點是要補上這一段
                 ,ops.echo);
-            fn.save(s,"_tmp.txt")
+            fn.save(s,"~tmp.txt")
         },
         async '*T04 - include 用法'(){
             let {users} = _data; 
@@ -179,7 +179,7 @@ ejs._ = _;
                 //重點是要補上這一段
                 ,ops.echo);
             s
-            fn.save(s,"_tmp.txt")
+            fn.save(s,"~tmp.txt")
         },
     } 
     //己移走
@@ -244,7 +244,7 @@ ejs._ = _;
         'el_table'(){
             var filed = _data.filed_1; 
             var s = ejs.renderFile('./tpl/ejs/el_table.ejs',{filed} );
-            fn.save(s,"./_tmp.txt"); 
+            fn.save(s,"./~tmp.txt"); 
         },
         async 'i18n_json'(){
             var filed = _data.filed_1; 
@@ -254,7 +254,7 @@ ejs._ = _;
                 ,{filed,Prefix}
                 , ops.echo );
             s 
-            fn.save(s,"./_tmp.txt");  
+            fn.save(s,"./~tmp.txt");  
         },
         async 'db_CRUD_mdb.ejs'(){
             var arg = {
@@ -275,7 +275,7 @@ ejs._ = _;
                 , arg 
                 , ops.echo );
             s 
-            fn.save(s,"./_tmp.txt");  
+            fn.save(s,"./~tmp.txt");  
         },
     }
 
