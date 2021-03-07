@@ -3354,7 +3354,6 @@ var __fn = (
 							</span>
 						</el-dialog>
 						<el-row>
-						{{sData}}
 							<el-form label-width="100px" class="demo-ruleForm">
 								<el-form-item label="日期" prop="name">
 									<el-col :span="12">
@@ -3457,7 +3456,8 @@ var __fn = (
 							axios.patch(_url,args)
 								.then((res)=>{
 									console.log(res);
-									_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
+									//_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
+									_self.query_joblist();
 								})
 						},
 						f_Log_Insert(){
