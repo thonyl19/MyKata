@@ -27,10 +27,14 @@ var fn = {
         var z = moment(start_time).toDate();
         z;
     },
-    '*offset'(){
+    'offset'(){
         var start_time = Date.now();
         start_time
         var z = moment(start_time).add(1, 'day').toDate();
+        z;
+    },
+    '*get toDay'(){
+        var z = moment().startOf('day').toDate();
         z;
     }
 }

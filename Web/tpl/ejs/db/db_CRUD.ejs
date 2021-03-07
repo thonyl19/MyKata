@@ -1,6 +1,6 @@
 <% if (schema !=null) {%>schema:{
-    <%= TableName%>:{
-        <%= Filed.join(': null ,\n\t\t')%>: null
+    <%= TableName%>:{  <% Filed.map(el=>{ %>
+        <%= el %>, <% }) %> 
     }
 }<%}%>
 <% if (Insert !=null) {%>Insert:{

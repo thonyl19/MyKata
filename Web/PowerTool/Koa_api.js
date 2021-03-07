@@ -36,14 +36,20 @@ var log = {
 			let arg = ctx.request.body;
 			var _r = await mdb_demo1.Log.Update(arg).exec();
 			ctx.body = arg ;
-	   	},
+		},
+		 
 	},
 	'sid/:sid':{
 		async r(ctx,next){
  			let {sid} = ctx.params;
 			var _r = await mdb_demo1.Log.Select({LogSID:sid}).exec();
 			ctx.body = _r ;
-		}
+		},
+		async d(ctx,next){
+			let {sid} = ctx.params;
+		   var _r = await mdb_demo1.Log.Delete({LogSID:sid}).exec();
+		   ctx.body = _r ;
+	   }
 	},
 	
 }

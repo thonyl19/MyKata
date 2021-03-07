@@ -108,7 +108,7 @@ module.exports = {
 		},
 		Insert:{
 			sql:`
-			INSERT 	INTO Log_
+			INSERT 	INTO Log
 			SELECT 	:TaskSID as TaskSID 
 					,:note as [note]
 					,:work_times as work_times
@@ -119,6 +119,32 @@ module.exports = {
 			` ,
 			get arg(){
 				return Object.assign({},schema.Log);
+			},
+			get check(){
+				return {
+					// LogSID: v8n()
+					// 	.not.undefined()
+					// 	.number()
+					// 	.positive(),
+					TaskSID: v8n()
+						.not.undefined()
+						.number()
+						.positive(),
+					start_time: v8n()
+						.not.undefined()
+						.instanceOf(Date),
+					work_times: v8n()
+						.not.undefined()
+						.number()
+						.positive(),
+					// end_time: v8n()
+					// 	.instanceOf(Date),
+					Loger: v8n()
+						.not.undefined()
+						.number()
+						.positive(),
+				}
+
 			}
 		},
 		Update:{

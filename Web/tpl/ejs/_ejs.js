@@ -171,11 +171,23 @@ ejs._ = _;
                 ,ops.echo);
             fn.save(s,"~tmp.txt")
         },
-        async '*T04 - include 用法'(){
+        async 'T04 - include 用法'(){
             let {users} = _data; 
             var s = await ejs.renderFile
                 ('./tpl/ejs/T04.ejs'
                 ,{users} 
+                //重點是要補上這一段
+                ,ops.echo);
+            s
+            fn.save(s,"~tmp.txt")
+        },
+        async '*T05 - 排版定位解法 '(){
+            var codelist = _tpl.f_confirm.split('\n');  
+            codelist
+            
+            var s = await ejs.renderFile 
+                ('./tpl/ejs/T05.ejs' 
+                ,{codelist} 
                 //重點是要補上這一段
                 ,ops.echo);
             s
@@ -238,6 +250,21 @@ ejs._ = _;
             })
             return arr;
         }
+    }
+    var _tpl = {
+        f_confirm:`f_confirm(key_msg,callback){
+    this.$confirm('請確認是否\${key_msg}?', '提示', {
+        type: 'info',
+		center: true
+	}).then(() => {
+		callback();
+	}).catch(() => {
+		this.$message({
+			type: 'info',
+			message: '已取消'
+		});
+	});
+},`    
     }
     //己移走
     var _case = {

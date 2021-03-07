@@ -5,8 +5,8 @@
 	}
 -%>
 <%= users %>
-<% for(var idx in users){ %>
-	<%# 使用未轉義輸出  %> 
-	<%- JSON.stringify(users[idx]) %><% } %>
+<% for(var idx in users){ _%>
+	<%# 使用未轉義輸出  %><%- JSON.stringify(users[idx]) %>
+<% } %>
 
  
