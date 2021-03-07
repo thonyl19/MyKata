@@ -1,0 +1,12 @@
+﻿<% 
+	for(var idx in users){
+		var _msg = `${idx} = ${JSON.stringify(users[idx])},\n`;
+		echo(_msg);
+	}
+-%>
+<%= users %>
+<% for(var idx in users){ %>
+	<%# 使用未轉義輸出  %> 
+	<%- JSON.stringify(users[idx]) %><% } %>
+
+ 

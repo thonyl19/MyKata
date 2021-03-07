@@ -46,9 +46,13 @@ var vPingTasks={
 			`
 		};
 		var _sql03 = `
+			SELECT A.*
+			FROM (
 			${_sql02()}
 			UNION ALL
 			${_sql02(false)}
+			) A
+			ORDER BY A.[_order]
 		`
 		return _sql03;
 	},
@@ -143,6 +147,7 @@ module.exports = {
 				AND (:start_time is null
 					OR (:start_time is not null 
 						And start_time = :start_time))
+		ORDER 	BY _order
 		` ,
 
 		get arg(){
