@@ -1016,6 +1016,50 @@
 			};
 			return _obj;
 		},
+		'*向右浮動'() {
+			var _note = `
+			   <pre> 在 v3.3.7 中,似乎沒有向右浮的樣式(~如果有,在 Glyphicons 樣式表中就會用上了).
+			   所以,只能自己刻了.
+			   </pre>
+			   `;
+			var _obj = {
+				_note,
+				_css:`
+				.list-group li{
+					float:left;
+					display:inline-block;
+					padding:3px 5px;
+					margin-right:7px;
+					background-color: #fff;
+					border: 1px solid #d9ecff;
+					color: #333;
+				}
+				`,
+				_vue: {
+					template: `
+						<ul class='list-group'>
+							<li> 0686 AAAAA</li>
+							<li> 0978 BBBBB</li>
+						</ul>
+					`,
+					data(){
+						return {
+							list:{
+								Vue:['vue_2.x',
+									'VuePager',
+									'element-ui-2.13'],
+								Layout:[
+									'CSS',
+									'bootstrap3.3.7',
+									'bootstrap4.5.0',
+								],
+							}
+						}
+					} 
+				   }
+			};
+			return _obj;
+		},
 	}
 	var Pagination = {
 		'pagination'() {

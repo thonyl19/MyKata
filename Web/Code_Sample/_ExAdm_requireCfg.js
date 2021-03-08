@@ -116,6 +116,7 @@ var __req_cfg = {
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
 		run_prettify:'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify',
 		vue_codemirror:'https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror',
+		screenfull:'https://cdn.jsdelivr.net/npm/screenfull@5.1.0/dist/screenfull.min',
 	},
 	map: {
 		"*": {
@@ -203,6 +204,7 @@ require
 	"ELEMENT",
 	"bts337",
 	'vue_codemirror' ,
+	'screenfull'
 	//'codemirror/keymap/sublime'
 	//,'run_prettify'
 	]
@@ -210,9 +212,11 @@ require
 		ELEMENT,
 		bts337,
 		VueCodemirror ,
+		screenfull
 		//sublime
 		//, run_prettify
 		) => {
+	debugger
 	Vue.use(Vuex);
 	Vue.use(VueCodemirror);
 	ELEMENT.install(Vue);
@@ -351,7 +355,6 @@ require
 						v-model="parse_Code"
 						:options="cmOptions"
 						/>
-					
 				</el-tab-pane>
 			</el-tabs>
 
@@ -433,8 +436,11 @@ require
 				</el-scrollbar>
 				<div class="main" v-loading="loading">
 					<x-tpl-sample-info :Code="Code" :Note="Note"></x-tpl-sample-info>
-					<component v-bind:is="currentComponent"
-						></component>
+					<div ref="max_area">
+						<el-button><i class="ds-switch fa fa-desktop" @click="Switch"></i></el-button>
+						<component v-bind:is="currentComponent" 
+							></component>
+					</div>
 				</div>
 			</el-scrollbar>
 		</div>
@@ -469,6 +475,12 @@ require
 				}
 			},
 			methods: {
+				Switch(){
+					debugger
+					//const element = document.getElementById('max_area');
+					const element = this.$refs.max_area;
+					window.screenfull.request(element);
+				},
 				change() {
 					if (this.Code == null) return;
 					var _code = this.Code.toString();

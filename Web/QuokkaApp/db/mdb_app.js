@@ -8,8 +8,8 @@ const strip = require('sql-strip-comments');
 const { parse } = require("path");
 const moment = require('moment');
 var _demo  
-	= require('test/__demo');
-	//= require('./__demo');
+	//= require('test/__demo');
+	= require('./__demo');
 var x = _demo.User.Select;
 const v8n = require('v8n');
 
