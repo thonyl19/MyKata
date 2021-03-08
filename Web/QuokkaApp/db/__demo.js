@@ -46,9 +46,13 @@ var vPingTasks={
 			`
 		};
 		var _sql03 = `
+			SELECT A.*
+			FROM (
 			${_sql02()}
 			UNION ALL
 			${_sql02(false)}
+			) A
+			ORDER BY A.[_order]
 		`
 		return _sql03;
 	},
@@ -104,7 +108,7 @@ module.exports = {
 		},
 		Insert:{
 			sql:`
-			INSERT 	INTO Log_
+			INSERT 	INTO Log
 			SELECT 	:TaskSID as TaskSID 
 					,:note as [note]
 					,:work_times as work_times
@@ -115,6 +119,32 @@ module.exports = {
 			` ,
 			get arg(){
 				return Object.assign({},schema.Log);
+			},
+			get check(){
+				return {
+					// LogSID: v8n()
+					// 	.not.undefined()
+					// 	.number()
+					// 	.positive(),
+					TaskSID: v8n()
+						.not.undefined()
+						.number()
+						.positive(),
+					start_time: v8n()
+						.not.undefined()
+						.instanceOf(Date),
+					work_times: v8n()
+						.not.undefined()
+						.number()
+						.positive(),
+					// end_time: v8n()
+					// 	.instanceOf(Date),
+					Loger: v8n()
+						.not.undefined()
+						.number()
+						.positive(),
+				}
+
 			}
 		},
 		Update:{
@@ -143,6 +173,7 @@ module.exports = {
 				AND (:start_time is null
 					OR (:start_time is not null 
 						And start_time = :start_time))
+		ORDER 	BY _order
 		` ,
 
 		get arg(){

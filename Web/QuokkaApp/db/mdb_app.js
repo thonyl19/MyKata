@@ -8,8 +8,8 @@ const strip = require('sql-strip-comments');
 const { parse } = require("path");
 const moment = require('moment');
 var _demo  
-	//= require('test/__demo');
-	= require('./__demo');
+	= require('test/__demo');
+	//= require('./__demo');
 var x = _demo.User.Select;
 const v8n = require('v8n');
 
@@ -136,9 +136,9 @@ var _base = {
 			}
 			return await Conn(cfg).query(sql);
 		},
-		async v20210303(sql,ExecMode){
+		async v20210303(sql,ExecMode=mdbapp_enum.ExecMode.Query){
 			let {Conn,cfg}  = this;
-			console.log({Conn,cfg})
+			console.log(`Exec_v20210303:${sql}`);
 			switch (ExecMode) {
 				case mdbapp_enum.ExecMode.Query:
 					return await Conn(cfg).query(sql);
@@ -146,7 +146,7 @@ var _base = {
 				case mdbapp_enum.ExecMode.Ins:
 					return await Conn(cfg).execute(sql,'SELECT @@Identity AS id');
 					break;
-				case mdbapp_enum.ExecMode.Query:
+				case mdbapp_enum.ExecMode.Updata:
 					return await Conn(cfg).execute(sql);
 					break;
 			}
@@ -459,18 +459,6 @@ var mdb_demo1 = {
 
 	},
 	Log:{
-		def:{
-			LogSID:null
-			,TaskSID:null
-			,note:null
-			,work_times:null
-			,start_time:null
-			,end_time:null
-			,Loger:null
-			,editTime:null
-			,mapSID:null
-			,flag:null
-		},
 		Select(_arg={},isTest=false){
 			var {sql,arg} = _demo.Log.Select;
 			let {LogSID} = _arg;
@@ -495,12 +483,22 @@ var mdb_demo1 = {
 			}
 			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.ExecMode.Ins);
 		},
-
+		Delete(_arg={},isTest=false){
+			var {sql,arg,check} = _demo.Log.Delete ;
+			_arg.LogSID = parseInt(_arg.LogSID);
+			// var isValid = v8n()
+			// 	.schema(check)
+			// 	.testAll(_arg);  
+			// if (isValid.length != 0 ){
+			// 	throw new Error(JSON.stringify(isValid,null,4));
+			// }
+			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.ExecMode.Updata);			
+		},
 		Update(_arg={},isTest=false){
 			var {sql,arg,check} = _demo.Log.Update ;
 			_arg.LogSID = parseInt(_arg.LogSID);
 			_arg.start_time = moment(_arg.start_time).toDate();
-			_arg.end_time = moment(_arg.end_time).toDate();
+			//_arg.end_time = moment(_arg.end_time).toDate();
 			var isValid = v8n()
 				.schema(check)
 				.testAll(_arg);  

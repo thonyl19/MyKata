@@ -1,0 +1,14 @@
+﻿	#可以有定位效果,但要計算 tab 數 
+	<%- codelist.join('\n\t') %>
+	# 定位效果最好, 但語法上不直觀 ,而且在處理頭尾條件上,很不便利
+	<% codelist.forEach(el=>{ %>
+		<%- el %><% }) %> 
+	# 與 forEach 等價,語法更簡便
+	<% codelist.map(el=>{ %>
+		<%- el %><% }) %> 
+	# 沒有定位效果
+	<% 
+		codelist.forEach(el=>{
+							echo(`${el}\n`);
+		})
+	%>

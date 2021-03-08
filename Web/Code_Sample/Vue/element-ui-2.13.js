@@ -3349,7 +3349,8 @@ var __fn = (
 							<job-rec :form="cur_row"></job-rec>
 							<span slot="footer" class="dialog-footer">
 								<el-button @click="dialogTaskEdit = false">取消</el-button>
-								<el-button type="primary" @click="e_SaveTask">{{v_act}}</el-button>
+								<el-button type="primary" @click="e_Log_Save">{{v_act}}</el-button>
+								<el-button type="danger" @click="f_confirm('刪除',f_Log_Del)" v-if="isAdd==false">刪除</el-button>
 							</span>
 						</el-dialog>
 						<el-row>
@@ -3378,7 +3379,7 @@ var __fn = (
 					data(){
 						return {
 							dialogTaskEdit:false,
-							sData: moment().toDate(),
+							sData: moment().startOf('day').toDate(),
 							cur_Idx:null,
 							cur_row:null,
 							tableData:[{"OwnerSID":1,"Owner":"Anthony","TaskSID":75,"nickName":"討論_5.0","progress":0,"sts":1,"_order":10.1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":74,"nickName":"討論_PJ","progress":0,"sts":1,"_order":10.01,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":42,"nickName":"雜事","progress":0,"sts":1,"_order":0.1,"ext":null},{"OwnerSID":1,"Owner":"Anthony","TaskSID":59,"nickName":"討論_rpt","progress":null,"sts":1,"_order":10.2,"ext":null},{"OwnerSID":1,"Owner":"Anthony","TaskSID":82,"nickName":"討論_4.50","progress":0,"sts":1,"_order":10.3,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":86,"nickName":"雜事_PJ","progress":0,"sts":1,"_order":0.2,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":71,"nickName":"週會","progress":null,"sts":11,"_order":99,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":73,"nickName":"討論","progress":null,"sts":0,"_order":10,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":72,"nickName":"文書","progress":0,"sts":1,"_order":0.3,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":83,"nickName":null,"progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":84,"nickName":"Debug_PJ","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":78,"nickName":"包裝出站","progress":70,"sts":13,"_order":3.1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":92,"nickName":"Debug_4.5","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":93,"nickName":"產品","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":94,"nickName":"Debug_產品","progress":0,"sts":0,"_order":1,"ext":0},{"OwnerSID":1,"Owner":"Anthony","TaskSID":94,"nickName":"Debug_產品","progress":0,"sts":0,"_order":1,"ext":0},{"OwnerSID":1,"Owner":"Anthony","TaskSID":95,"nickName":"程式開發","progress":0,"sts":1,"_order":3.001,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":92,"nickName":"會議","progress":0,"sts":1,"_order":1,"ext":1},{"OwnerSID":1,"Owner":"Anthony","TaskSID":36,"nickName":"其他會議","progress":0,"sts":11,"_order":99.1,"ext":1}]
@@ -3392,9 +3393,12 @@ var __fn = (
 							var _list = _.filter(this.tableData,(o)=>{return o.work_times !=null;})
 							return _list;
 						},
+						isAdd(){
+							let {LogSID = null}= this.cur_row ||{};
+							return LogSID == null;
+						},
 						v_act(){
-							let {LogSID = null}= this.cur_row ||{}
-							return LogSID == null ?'新增':'儲存';
+							return this.isAdd ?'新增':'儲存';
 						}
 					},
 					watch:{
@@ -3403,17 +3407,34 @@ var __fn = (
 						}
 					}
 					,methods: {
-						e_SaveTask(){
-							switch (this.v_act) {
-								case "新增":
-									this.f_新增();
-									break;
-								case "儲存":
-									this.f_儲存();
-									break;
-							}
+						f_confirm(key_msg,callback){
+							this.$confirm(`請確認是否${key_msg}?`, '提示', {
+								type: 'info',
+								center: true
+							}).then(() => {
+								callback();
+							}).catch(() => {
+								this.$message({
+									type: 'info',
+									message: '已取消'
+								});
+							});
 						},
-						f_儲存(){
+						e_Log_Save(){
+							var fn = this.isAdd ? this.f_Log_Insert : this.f_Log_Update;
+							this.f_confirm(this.v_act,fn);
+						},
+						f_Log_Del(){
+							let {LogSID} = this.cur_row;
+							var _url = `http://192.168.0.104:3000/api/log/sid/${LogSID}`;
+							var _self = this;
+							axios.delete(_url)
+								.then((res)=>{
+									console.log(res);
+									_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
+								})
+						},
+						f_Log_Update(){
 							let {
 								LogSID,
 								_TaskSID:TaskSID,
@@ -3435,10 +3456,11 @@ var __fn = (
 							axios.patch(_url,args)
 								.then((res)=>{
 									console.log(res);
-									_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
+									//_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
+									_self.query_joblist();
 								})
 						},
-						f_新增(){
+						f_Log_Insert(){
 							let {
 								LogSID,
 								_TaskSID:TaskSID,

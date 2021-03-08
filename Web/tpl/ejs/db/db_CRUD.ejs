@@ -1,0 +1,46 @@
+<% if (schema !=null) {%>schema:{
+    <%= TableName%>:{  <% Filed.map(el=>{ %>
+        <%= el %>, <% }) %> 
+    }
+}<%}%>
+<% if (Insert !=null) {%>Insert:{
+    sql:`
+    INSERT 	INTO <%= TableName%> 
+    SELECT 	<%= Insert.join(' ,\n\t\t\t')%>
+    ` 
+    ,get arg(){
+        return Object.assign({},schema.<%= TableName%>);
+    }
+},<%}%>
+<% if (SelectFiled !=null) {%>Select:{
+    sql:`
+    SELECT 	*, 
+            <%= SelectFiled.join(' ,\n\t\t\t') %>
+    FROM    <%= TableName%> 
+    WHERE   <%= WhereCD.join(' \n\t\t\tAND ')%>
+    `
+    ,get arg(){
+        return Object.assign({},schema.<%= TableName%>);
+    }
+},<%}%>
+<% if (UpDate !=null) {%>Update:{
+    sql:`
+    UPDATE	Log 
+    SET		<%= UpDate.join(' ,\n\t\t\t') %>
+    WHERE	<%= WhereCD.join(' \n\t\t\tAND ')%>
+    `
+    ,get arg(){
+        return Object.assign({},schema.<%= TableName%>);
+    }  
+},<%}%>
+<% if (Delete !=null) {%>Delete:{
+    sql:`
+    DELETE
+    FROM    <%= TableName%> 
+    WHERE   <%= WhereCD.join(' \n\t\t\tAND ')%>
+    `
+    ,get arg(){
+        return Object.assign({},schema.<%= TableName%>);
+    }
+},
+<%}%>

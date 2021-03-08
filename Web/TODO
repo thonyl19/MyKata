@@ -5,3 +5,16 @@ PowerTool:
   ☐ 
 
     
+[@JobList]
+  SELECT Log.start_time, Log.LogSID, Log.Loger, U1.nickname, Log.TaskSID, Log.note, Log.work_times, T1.Task, T1.TaskType, T1.Root, T1.sts, T1.sts_name
+FROM vUsers AS U1 RIGHT JOIN ([@TaskPath] AS T1 RIGHT JOIN Log ON T1.TaskSID = Log.TaskSID) ON U1.UserSID = Log.Loger;
+
+[@PingTasks]
+SELECT Ping.OwnerSID, vUsers.nickname AS Owner, Ping.TaskSID, Ping.nickName, Task.progress, Task.sts, Ping.order AS _order, Task.ext, [@TaskPath].FullName AS TaskPath
+FROM [@TaskPath] INNER JOIN (vUsers INNER JOIN (Ping INNER JOIN Task ON Ping.TaskSID = Task.TaskSID) ON vUsers.UserSID = Ping.OwnerSID) ON [@TaskPath].TaskSID = Ping.TaskSID
+WHERE (((Task.sts)<>19))
+ORDER BY Ping.order, Ping.SID;
+
+[@TaskPath]
+SELECT Task.creater AS UserSId, Task.TaskSID, Task.brief AS Task, TaskType.brief AS TaskType, Root.brief AS Root, Task.sts, vTaskSts.op_name AS sts_name, [Root] & " \ " & [TaskType] & " \ " & [Task] AS FullName
+FROM vTaskSts INNER JOIN ((Task INNER JOIN Task AS TaskType ON Task.ParenttSID = TaskType.TaskSID) INNER JOIN Task AS Root ON TaskType.ParenttSID = Root.TaskSID) ON vTaskSts.op_val = Task.sts;
