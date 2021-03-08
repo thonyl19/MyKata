@@ -270,7 +270,8 @@ require
 			template: `<div>test</div>`
 		},
 		main: {
-			template: `<v-app id="inspire">
+			template: `
+		 
 			<v-navigation-drawer
 			  v-model="drawer"
 			  app
@@ -287,7 +288,7 @@ require
 			<v-main>
 			  <!--  -->
 			</v-main>
-		  </v-app>
+	 
 			`,
 			data() {
 				return {
@@ -391,12 +392,35 @@ require
 			}
 		}
 	});
+	//Vue.use(Vuetify);
 	new Vue({
 		el: '#app',
-		Vuetify,
+		vuetify: new Vuetify(),
+		template: `<div>
+			<v-app id="inspire">
+				<div class="mx-10">
+					<v-tabs   ref="tabs">
+						<v-tabs-slider color="red"></v-tabs-slider>
+		
+						<!-- First tab  -->
+						<v-tab href="#tab-1" class="title text-capitalize black--text">
+							Fixed Text
+						</v-tab>
+		
+						<!-- Second tab  -->
+						<v-tab href="#tab-2" class="title text-capitalize black--text">
+						
+						</v-tab>
+					</v-tabs>
+				</div>
+				<div class="ma-10 text-xs-center">
+					<v-btn block color="primary"  >Change Text</v-btn>
+				</div>
+			</v-app></div>
+		`,
 		store,
 		mounted() {
-			this.$store.commit('chgUrl', window.gEx.getCurrentEx());
+			//this.$store.commit('chgUrl', window.gEx.getCurrentEx());
 		},
 	});
 });

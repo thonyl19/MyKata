@@ -139,6 +139,17 @@ header .el-button--text {
 .right .el-scrollbar__wrap{
   overflow-x: hidden;
 }
+.max_area{
+  background: white;
+  position:relative;
+}
+
+.ds-switch{
+  position: absolute;
+  right:10px;
+  top:10px;
+  z-index: 999;
+}
 
 #app .left{
   width: 240px;

@@ -116,7 +116,10 @@ var __req_cfg = {
 		moment:"https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min",
 		run_prettify:'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify',
 		vue_codemirror:'https://cdn.jsdelivr.net/npm/vue-codemirror@4.0.6/dist/vue-codemirror',
+		"es6-promise":'https://cdn.jsdelivr.net/npm/es6-promise@4.2.8/dist/es6-promise.auto.min',
 		screenfull:'https://cdn.jsdelivr.net/npm/screenfull@5.1.0/dist/screenfull.min',
+		//'https://cdn.jsdelivr.net/npm/es-screenfull@3.0.2-patch/dist/screenfull.min',
+		//'https://cdn.jsdelivr.net/npm/screenfull@5.1.0/dist/screenfull.min',
 	},
 	map: {
 		"*": {
@@ -130,6 +133,7 @@ var __req_cfg = {
 		jquery:{exports: '$'},
 		lodash:{exports: '_'},
 		vuex:{deps:['vue']},
+		screenfull:{deps: ['es6-promise']},
 		bts337:{deps: ['css!bts337-css']},
 		ELEMENT: { deps: ['vue', 'css!eui-css','css!fa_css'
 			//,'https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=sons-of-obsidian&autoload=true&lang=css'
@@ -222,6 +226,9 @@ require
 	ELEMENT.install(Vue);
 	window.Vue = Vue;
 	window._ = _;
+	// if (window.screenfull.enabled) {
+	// 	window.screenfull.request();
+	// }
 	var tpl_sample = {
 		range: {
 			template: `
@@ -436,8 +443,8 @@ require
 				</el-scrollbar>
 				<div class="main" v-loading="loading">
 					<x-tpl-sample-info :Code="Code" :Note="Note"></x-tpl-sample-info>
-					<div ref="max_area">
-						<el-button><i class="ds-switch fa fa-desktop" @click="Switch"></i></el-button>
+					<div class="max_area">
+						<i class="ds-switch fa fa-desktop" @click="Switch"></i>
 						<component v-bind:is="currentComponent" 
 							></component>
 					</div>
@@ -445,6 +452,8 @@ require
 			</el-scrollbar>
 		</div>
 			`,
+			// <el-button type="primary" plain circle>
+			// 			</el-button>
 			data() {
 				return {
 					currentTab: 'tpl-sample-test',
@@ -478,7 +487,7 @@ require
 				Switch(){
 					debugger
 					//const element = document.getElementById('max_area');
-					const element = this.$refs.max_area;
+					const element =  document.querySelector('.max_area');
 					window.screenfull.request(element);
 				},
 				change() {
