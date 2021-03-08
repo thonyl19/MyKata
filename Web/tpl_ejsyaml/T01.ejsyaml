@@ -1,0 +1,6 @@
+﻿# input data
+name: world
+--- |
+<%- $.outfile('~tmp1.js') _%>
+# EJS template
+hello <%- name %> 

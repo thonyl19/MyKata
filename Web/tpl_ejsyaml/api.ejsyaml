@@ -1,0 +1,12 @@
+﻿api:
+  - get2
+  - set2
+--- |
+<%- $.outfile('~tmp1.js') _%>
+
+<%_ for (let name of api) { _%>
+function <%- name %>() {
+  	return fetch('/<%- name %>');
+}
+<%_ } _%>
+ 

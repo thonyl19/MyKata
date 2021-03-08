@@ -1,18 +1,8 @@
         <el-table empty-text=" " style="width: 100%"
                 @@sort-change="sort_change"
                 :data="grid.data"
-                :default-sort="{prop: 'CREATE_DATE', order: 'ascending'}">
-                <el-table-column :label="i18n.操作" min-width="20">
-                    <template slot-scope="scope">
-                        <el-button size="small" circle class="s-VIEW"
-								   autofocus="true"
-                                   type="danger"
-                                   icon="el-icon-delete"
-                                   :disabled="scope.row.QUOTE_ONCE=='T'"
-                                   @@click="e_del(scope.row.ENCODE_FORMAT_SID)"
-								   ></el-button>
-                    </template>
-                </el-table-column>
+                :default-sort="{prop: 'CREATE_DATE', order: 'ascending'}"><% Table_操作欄位.map((el)=>{ %>
+                <%- el %><% }) %>
                 <el-table-column    min-width="115" 
                                     prop="ENCODE_FORMAT_NO" 
                                     sortable="custom"
