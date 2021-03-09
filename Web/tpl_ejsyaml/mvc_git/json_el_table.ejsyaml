@@ -1,0 +1,24 @@
+﻿# input data
+Prefix: '@Face.'
+row: {
+   CREATE_DATE: "2021-01-13 13:50:00"
+  ,CREATE_USER: "EIS"
+  ,ENCODE_FORMAT_CONTROL_SID: "GTI21011313500003072"
+  ,ENCODE_FORMAT_NAME: "LotNoRework"
+  ,ENCODE_FORMAT_NO: "LotNoRework"
+  ,ENCODE_FORMAT_SID: "GTI20111910362484429"
+  ,ENCODE_FORMAT_TYPE: "Lot"
+  ,RESET_FORMAT_MASK: "14-03-2224P...."
+  ,SERIAL_LAST_VALUE: "01"
+  ,UPDATE_DATE: "2021-01-13 13:50:00"
+  ,UPDATE_USER: "EIS"
+}
+--- |
+<%- $.outfile('~tmp1.cshtml') _%>
+<el-table empty-text=" " style="width: 100%"
+			:data="grid.data">
+	<%_ Object.keys(row).map(el=>{ _%>
+	<el-table-column prop="<%=el%>" <%=Prefix=='i18n.'?':':'' %>label="<%=Prefix%><%=el%>">
+		</el-table-column>
+  	<%_ }) _%>
+</el-table>

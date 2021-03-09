@@ -470,7 +470,7 @@ var mdb_demo1 = {
 		Insert(_arg={},isTest=false){
 			_arg.editTime = new Date();
 			_arg.start_time = moment(_arg.start_time).toDate();
-			_arg.work_times = parseInt(_arg.work_times);
+			_arg.work_times = parseFloat(_arg.work_times);
 			_arg.LogSID = parseInt(_arg.LogSID); 
 			console.dir({_arg});
 			var {sql,arg,check} = _demo.Log.Insert;
@@ -495,16 +495,18 @@ var mdb_demo1 = {
 			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.ExecMode.Updata);			
 		},
 		Update(_arg={},isTest=false){
+			console.log(_arg);
 			var {sql,arg,check} = _demo.Log.Update ;
 			_arg.LogSID = parseInt(_arg.LogSID);
+			//_arg.work_times = parseFloat(_arg.work_times);
 			_arg.start_time = moment(_arg.start_time).toDate();
 			//_arg.end_time = moment(_arg.end_time).toDate();
-			var isValid = v8n()
-				.schema(check)
-				.testAll(_arg);  
-			if (isValid.length != 0 ){
-				throw new Error(JSON.stringify(isValid,null,4));
-			}
+			// var isValid = v8n()
+			// 	.schema(check)
+			// 	.testAll(_arg);  
+			// if (isValid.length != 0 ){
+			// 	throw new Error(JSON.stringify(isValid,null,4));
+			// }
 			return mdb_demo1.Prep(sql,_arg,arg,mdbapp_enum.ExecMode.Updata);
 		},
 		JobList(_arg={},isTest=false){

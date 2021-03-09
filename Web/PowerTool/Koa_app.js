@@ -18,7 +18,7 @@ var page = {
 		ctx.response.body = 'hello world';
 	}
 	,async 'id/:id'(ctx,next){
-		let {id} = ctx.params;
+		let {id} = ctx.params; 
 		ctx.response.body = `[id]${id}`;
 	}
 }
