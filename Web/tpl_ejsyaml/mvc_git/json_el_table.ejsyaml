@@ -14,11 +14,8 @@ row: {
   ,UPDATE_USER: "EIS"
 }
 --- |
-<%- $.outfile('~tmp1.cshtml') _%>
-<el-table empty-text=" " style="width: 100%"
-			:data="grid.data">
-	<%_ Object.keys(row).map(el=>{ _%>
-	<el-table-column prop="<%=el%>" <%=Prefix=='i18n.'?':':'' %>label="<%=Prefix%><%=el%>">
-		</el-table-column>
-  	<%_ }) _%>
-</el-table>
+<%_ 
+ 	this.render('el_table.ejs', '~el_table.cshtml', this.data);
+	this.skip();
+_%>
+ 
