@@ -13,7 +13,7 @@
                     </template>
                 </el-table-column>
                 <%_ Object.keys(row).map(el=>{ _%>
-                <el-table-column prop="<%=el%>" <%=Prefix=='i18n.'?':':'' %>label="<%=Prefix%><%=el%>">
+                <el-table-column prop="<%=el%>" <%=label_前綴=='i18n.'?':':'' %>label="<%=label_前綴%><%=el%>">
                     </el-table-column>
                 <%_ }) _%>
             </el-table>

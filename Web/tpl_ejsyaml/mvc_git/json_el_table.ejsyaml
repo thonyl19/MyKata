@@ -1,5 +1,6 @@
 ﻿# input data
-Prefix: '@Face.'
+# 如果是 i18n. 則會自動加上 :
+label_前綴: '@Face.'
 row: {
    CREATE_DATE: "2021-01-13 13:50:00"
   ,CREATE_USER: "EIS"

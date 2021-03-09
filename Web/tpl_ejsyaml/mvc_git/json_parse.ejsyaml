@@ -14,9 +14,7 @@ row: {
   ,UPDATE_USER: "EIS"
 }
 --- |
-<%- $.outfile('~tmp1.js') _%>
-i18n:{
-  	<%_ Object.keys(row).map(el=>{ _%>
-	<%- el %> : '<%= Prefix%><%= el%>', 
-  	<%_ }) _%>
-},
+<%_ 
+ 	this.render('json_i18n.ejs', '~tmp.txt', this.data);
+	this.skip();
+_%>
