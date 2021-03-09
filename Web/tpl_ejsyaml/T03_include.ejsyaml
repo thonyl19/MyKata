@@ -1,0 +1,11 @@
+﻿# input data
+api: Book
+methods:
+- "getBook|id: string|Book"
+- "setBook|book: Book, force: boolean|boolean"
+arr: ['A','B']
+--- |
+
+<%- $.outfile('~tmp.txt') _%>
+
+<%- include('./T03_include.ejs') %>

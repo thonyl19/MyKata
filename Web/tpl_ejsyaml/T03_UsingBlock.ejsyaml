@@ -1,0 +1,14 @@
+﻿# input data
+types:
+- User
+- Company
+- Product
+- Order
+--- |
+
+<%- $.outfile('~tmp.txt') _%>
+import { <%- types.join(', ') %> } from "./types";
+
+<%- $.block('IMPORT') %>
+
+<%- $.block('IMPLEMENTATION') %>

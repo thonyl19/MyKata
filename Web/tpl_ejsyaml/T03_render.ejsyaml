@@ -1,0 +1,13 @@
+﻿# input data
+api: Book
+methods:
+- "getBook|id: string|Book"
+- "setBook|book: Book, force: boolean|boolean"
+arr: ['A','C']
+--- |
+<%_ 
+	// 與 include 功能相同,但效果更為好些
+ 	this.render('T03_include.ejs', '~tmp.txt', this.data);
+	//這個指令,決定了不會把資料輸出到 T03_render
+	this.skip();
+_%>

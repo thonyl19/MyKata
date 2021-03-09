@@ -1,0 +1,13 @@
+﻿# input data
+countryCodes: !fetchjson https://gist.githubusercontent.com/Goles/3196253/raw/9ca4e7e62ea5ad935bb3580dc0a07d9df033b451/CountryCodes.json
+jsonCodes: !readtext T04_fetch.json
+input_yaml: !readyaml T04_fetch.yaml
+--- |
+<%- $.outfile('~tmp.txt') _%>
+<%_ for (let color of input_yaml.colors) { _%>
+- <%- color %>
+<%_ } _%>
+<%- JSON.stringify(countryCodes, null, 2) %>
+<%- $.outfile('~tmp.js') _%>
+<%- jsonCodes %>
+<%- Object.keys(jsonCodes).join('\n') %>

@@ -1,0 +1,10 @@
+﻿interface I<%- api %>Client {
+<%
+	for (let api of methods) {
+		let [ name, params, type ] = api.split('|');
+-%>
+	<%- name %>(<%- params %>): Promise<<%- type %>>;
+<%  } -%>
+}
+
+[arr]:<%= arr.join(',')%>
