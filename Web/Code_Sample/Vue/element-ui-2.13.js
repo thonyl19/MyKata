@@ -3426,7 +3426,7 @@ var __fn = (
 						},
 						f_Log_Del(){
 							let {LogSID} = this.cur_row;
-							var _url = `http://192.168.0.104:3000/api/log/sid/${LogSID}`;
+							var _url = `http://127.0.0.1:3000/api/log/sid/${LogSID}`;
 							var _self = this;
 							axios.delete(_url)
 								.then((res)=>{
@@ -3451,7 +3451,7 @@ var __fn = (
 								start_time,
 								Loger
 							};
-							var _url = `http://192.168.0.104:3000/api/log/`;
+							var _url = `http://127.0.0.1:3000/api/log/`;
 							var _self = this;
 							axios.patch(_url,args)
 								.then((res)=>{
@@ -3477,7 +3477,7 @@ var __fn = (
 								start_time,
 								Loger
 							};
-							var _url = `http://192.168.0.104:3000/api/log/`;
+							var _url = `http://127.0.0.1:3000/api/log/`;
 							var _self = this;
 							axios.post(_url,args)
 								.then((res)=>{
