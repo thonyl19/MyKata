@@ -1,4 +1,18 @@
-﻿using BLL.MES;
+﻿<%#
+20210310
+	增設了 mode 判斷式,以預做更精確的產出
+_%>
+/*
+<%_
+	var mode = {
+		TypeServices:TypeServices == null ,
+		entity:entity == null 
+	};
+_%>
+TypeServices:<%= mode.TypeServices%>
+entity:<%= mode.entity %>
+*/
+using BLL.MES;
 using BLL.MES.DataViews;
 using Frame.Code;
 using Frame.Code.Web.Select;
@@ -13,7 +27,9 @@ namespace Genesis.Areas.<%=Areas%>.Controllers
 {
 	public class <%=FunctionName%>Controller : BaseController
 	{
-		ADMServices _svc = new ADMServices();
+		public <%=FunctionName%>TypeServices serv  { get; set; };
+		//<%=Areas%>Services _serv = new <%=Areas%>Services()
+		
 		#region == Page ==
 		public ActionResult <%=FunctionName%>()
 		{
@@ -60,22 +76,43 @@ namespace Genesis.Areas.<%=Areas%>.Controllers
 		}
 		#endregion
 		#region == API ==
+		[HttpPost]
+		public ActionResult ListData(PagerQuery obj)
+		{
+			//var Result = serv.QueryList(obj);
+			//return Content(Result.ToJson(true));
+			return Content(obj.ToJson(true));
+		}
 
 		[HttpPost]
 		public ActionResult Save(<%=FunctionName%>_PostData post,bool isAdd=false)
 		{
-			//var result = _svc.<%=FunctionName%>_Save(post,true);
+			//var result = _serv.<%=FunctionName%>_Save(post,true);
 			//return Content((result).ToJson(true));
 			return Content(post.ToJson(true));
 		}
 
+
 		[HttpPost]
-		public ActionResult ListData(PagerQuery obj)
+        [Common.HandlerAjaxOnly]
+        [ValidateAntiForgeryToken]
+        public ActionResult Insert(<%=entity%> entity)
+        {
+            var result = serv.InsertData(entity);
+            return Content(result.ToJson(true));
+        }
+
+        [HttpPost]
+        [Common.HandlerAjaxOnly]
+        [ValidateAntiForgeryToken]
+		public ActionResult Update(<%=entity%> entity)
 		{
-			//var Result = _svc.AD_ENCODE_FORMAT_PagerQuery(obj);
-			//return Content(Result.ToJson(true));
-			return Content(obj.ToJson(true));
+			var result //= serv.UpdateData(entity);
+				= "";
+			return Content(result.ToJson(true));
 		}
+
+
 
 		[HttpPost]
 		public ActionResult Delete(string SID)

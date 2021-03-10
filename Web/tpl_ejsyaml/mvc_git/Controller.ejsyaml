@@ -1,6 +1,8 @@
 ﻿# input data
 Areas: ADM
 FunctionName: SequenceNum
+entity: PF_OPERATION_TYPE
+TypeServices: 
 row: {
   CREATE_DATE: "2021-01-13 13:50:00"
   ,CREATE_USER: "EIS"
@@ -19,3 +21,7 @@ row: {
  	this.render('Controller.ejs', '~Controller.cs', this.data);
 	this.skip();
 _%>
+<%#
+20210310
+	搭配 了 ./Controller.ejs 增設了 entity, TypeServices 替選值
+%>

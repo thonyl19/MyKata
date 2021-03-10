@@ -15,6 +15,12 @@ row: {
 }
 --- |
 <%_ 
- 	this.render('json_i18n.ejs', '~tmp.txt', this.data);
+  this.render('json_i18n.ejs', '~tmp.txt', this.data);
+ 	this.render('json_c_struct.ejs', '~tmp.cs', this.data);
 	this.skip();
+_%>
+
+<%#
+TODO:
+	處理 filed 轉譯模式
 _%>
