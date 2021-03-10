@@ -2,10 +2,22 @@
 TODO:
 	處理 filed 轉譯模式
 _%>
-<%
+/*
+<%_
+	var mode = {
+		Filed:Fileds != null ,
+	};
 _%>
+FiledMode:<%= mode.Filed%>
+*/
 public struct _Struct {
-	<%_ Object.keys(row).map(el=>{ _%>
+<%_ if (mode.Filed){  
+	Fileds.map(el=>{ _%>
+	public <%- el.map_type.csharp %> <%- el.label %> {get;set;} 
+<%_ })  
+}else {
+	Object.keys(row).map(el=>{ _%>
 	public string <%- el %> {get;set;} 
-	<%_ }) _%>
+	<%_ })
+}_%>
 }

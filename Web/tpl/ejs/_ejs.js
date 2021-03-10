@@ -181,7 +181,7 @@ ejs._ = _;
             s
             fn.save(s,"~tmp.txt")
         },
-        async '*T05 - 排版定位解法 '(){
+        async 'T05 - 排版定位解法 '(){
             var codelist = _tpl.f_confirm.split('\n');  
             codelist
             
@@ -193,6 +193,11 @@ ejs._ = _;
             s
             fn.save(s,"~tmp.txt")
         },
+        '*'(){
+            var arg = {t :new Date("2021-03-10T13:33:41.955Z")}
+            var s = JSON.stringify(arg,null,2);
+            s
+        }
     } 
     //己移走
     var _sql = {
