@@ -8,4 +8,4 @@ colors:
 <%
 	var _ = require("lodash");
 %>
-<%= _.upperCase('test')%>
+<%# _.upperCase('test')%>

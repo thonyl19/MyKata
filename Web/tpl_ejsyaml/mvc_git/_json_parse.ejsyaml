@@ -65,7 +65,11 @@ row: {
 		}
 		this.data.Fileds.push(arg);
 	}
-	this.data.Fileds = null;
+	//把 Fileds 設 null ,以取消 Fileds Mode
+	//this.data.Fileds = null;
+
+
+	//測試 toJson ,以檢測 Json 內容
   	this.render('toJson.ejs', '~tmp.json', {arg:this.data.Fileds});
   	this.render('json_i18n.ejs', '~tmp.txt', this.data);
  	this.render('json_c_struct.ejs', '~tmp.cs', this.data);
@@ -73,6 +77,5 @@ row: {
 _%>
 
 <%#
-TODO:
-	處理 filed 轉譯模式
+
 _%>
