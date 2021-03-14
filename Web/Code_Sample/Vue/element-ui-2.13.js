@@ -3054,7 +3054,7 @@ var __fn = (
 								style="width: 100%;"></el-date-picker>
 						</el-form-item>
 						<el-form-item label="Task">
-							<el-select v-model="form._TaskSID" style="display:block;"
+							<el-select ref="tasks" v-model="form._TaskSID" style="display:block;"
 								filterable
 								remote 
 								:remote-method="remoteMethod"
@@ -3066,6 +3066,9 @@ var __fn = (
 									:value="item.TaskSID">
 								</el-option>
 							</el-select>
+							<ul>
+								<li v-for="(item) in hotKey" @click="remoteMethod(item,true)">{{item}}</li>
+							</ul>
 						</el-form-item>
 						<el-form-item label="時數">
 							<el-col :span="4">
@@ -3095,7 +3098,8 @@ var __fn = (
 							options:[
 
 							],
-							list_src:[]
+							list_src:[],
+							hotKey:['聚鼎','SSMES','科毅'],
 						}
 					} ,
 					props:{
@@ -3135,7 +3139,7 @@ var __fn = (
 							var ops = {FullName,TaskSID};
 							this.options = [ops];
 						},
-						remoteMethod(query) {
+						remoteMethod(query ,isAct=false) {
 							var _self = this;
 							if (query !== '') {
 								var _url = `http://127.0.0.1:3000/api/user/1/task/${query}`;
@@ -3144,6 +3148,8 @@ var __fn = (
 										console.log(res);
 										let {data} = res
 										_self.options = data;
+										if (isAct) _self.$refs.tasks.focus();
+
 									})
 							} else {
 							  this.options = [];
@@ -3336,6 +3342,10 @@ var __fn = (
 					margin-top: 0px;
 					margin-bottom: 5px;
 				}
+				.el-dialog__body ,
+				.el-dialog__header {
+					padding: 10px;
+				}
 				`,
 				_vue: {
 					components:{
@@ -3348,9 +3358,17 @@ var __fn = (
 						<el-dialog  title="TaskEdit" :visible.sync="dialogTaskEdit">
 							<job-rec :form="cur_row"></job-rec>
 							<span slot="footer" class="dialog-footer">
-								<el-button @click="dialogTaskEdit = false">取消</el-button>
-								<el-button type="primary" @click="e_Log_Save">{{v_act}}</el-button>
-								<el-button type="danger" @click="f_confirm('刪除',f_Log_Del)" v-if="isAdd==false">刪除</el-button>
+								<el-row >
+									<el-col :span="12" style="text-align: left;"> 
+										<br v-if="isAdd" />
+										<el-button type="success"  v-if="!isAdd"  @click="add_New">新增</el-button>
+										<el-button type="danger"  v-if="!isAdd" @click="f_confirm('刪除',f_Log_Del)" >刪除</el-button>
+									</el-col>
+									<el-col :span="12">
+										<el-button @click="dialogTaskEdit = false">取消</el-button>
+										<el-button type="primary" @click="e_Log_Save">儲存</el-button>
+									</el-col>
+								</el-row>
 							</span>
 						</el-dialog>
 						<el-row>
@@ -3493,6 +3511,25 @@ var __fn = (
 										_self.$set(_self.tableData,_self.cur_Idx,_self.cur_row);
 									} 
 								})
+						},
+						add_New(){
+							var _self = this;
+							this.$confirm(`請確認是否放棄當前資料?`, '新增', {
+								type: 'warning',
+								center: true
+							}).then(() => {
+								//alert('test');
+								_self.cur_row.LogSID = null;
+								_self.cur_row._TaskSID = null;
+								_self.cur_row.work_times = 0;
+								_self.cur_row.Note = "";
+							}).catch(() => {
+								this.$message({
+									type: 'info',
+									message: '已取消'
+								});
+							});
+							
 						},
 						add_item(data,isAdd=false){
 							console.log(data);
