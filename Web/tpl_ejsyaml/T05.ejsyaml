@@ -1,0 +1,9 @@
+﻿names:
+    - john
+    - bob
+    - marry
+--- |
+<%_
+    this.render('T05.ejs', '~tmp.txt', this.data);
+    this.skip();
+_%>
