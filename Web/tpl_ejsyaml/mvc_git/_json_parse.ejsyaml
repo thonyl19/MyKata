@@ -1,6 +1,20 @@
 ﻿# input data
 Prefix: '@Face.'
 row: {
+    "ROUTE_SID": "GTI20101517555209104",
+    "ROUTE_NO": "C030-19",
+    "ROUTE": "单面阳极板（子流程）",
+    "ROUTE_CATEGORY": "R",
+    "DEFAULT_VERSION": 1,
+    "VERSION_DESCRIPTION": null,
+    "MAX_VERSION": 2,
+    "CREATE_USER": "mes",
+    "CREATE_DATE": "2020-10-15 17:56:21",
+    "UPDATE_USER": "mes",
+    "UPDATE_DATE": "2020-10-30 14:13:41",
+    "ROUTE_VER_SID": "GTI20101517562109108"
+}
+row1: {
   Date: '2021-03-10T13:33:41.955Z'
   ,Float: 1.1
   ,Int: 1

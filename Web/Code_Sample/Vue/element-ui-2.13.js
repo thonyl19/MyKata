@@ -3072,7 +3072,7 @@ var __fn = (
 						</el-form-item>
 						<el-form-item label="時數">
 							<el-col :span="4">
-								<el-input v-model.number="form.work_times" width="100" ></el-input>
+								<el-input v-model="form.work_times" width="100" ></el-input>
 							</el-col>
 							<el-col :span="1"><br /></el-col>
 							<el-col :span="19">

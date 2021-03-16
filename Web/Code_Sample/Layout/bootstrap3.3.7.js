@@ -1119,7 +1119,52 @@
 			return _obj;
 		},
 	}
- 	return { Views, Tool, Group, Fail, Vue_Prd, Case, List,Pagination };
+	var Style = {
+		'*text'(){
+			var _note = `
+			   <pre>
+			   </pre>
+			   `;
+			var _obj = {
+				_css:`
+				.text  div{
+					width:100%;
+					border: 1px groove red;
+				}
+
+				.md-center{
+					height:5rem;
+					line-height:5rem;
+				}
+				`,
+				_vue: {
+					template: `
+						<div class="text">
+						${_note}
+							<div class="text-left">.text-left</div> 
+							<div class="text-right">.text-right</div> 
+							<div class="md-center">垂值置中</div> 
+						</div>
+					`,
+					data(){
+						return {
+							list:['sm','lg','def'],
+							idx:'def'
+						}
+					}
+					,computed:{
+						size(){
+							//var _sty = this.list[this.idx];
+							if (this.idx=="def")return "";
+							return 'pagination-'+ this.idx;
+						}
+					} 
+				   }
+			};
+			return _obj;
+		}
+	}
+ 	return { Views, Tool, Group, Fail, Vue_Prd, Case, List,Pagination ,Style };
 }
 (function () {
 	var arr = [
