@@ -33,10 +33,16 @@ var fn = {
         var z = moment(start_time).add(1, 'day').toDate();
         z;
     },
-    '*get toDay'(){
+    'get toDay'(){
         var z = moment().startOf('day').toDate();
         z;
+    },
+    'isDate'(){
+        var s = "2020-05-28T16:00:00Z";
+        var z = moment(s).isValid();
+        z;
     }
+
 }
 
 _.each([fn],fn=>{
