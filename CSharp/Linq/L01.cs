@@ -80,9 +80,11 @@ namespace CSharp.Linq
         public string SubUserID { get; set; }
     }
 
+
     public class L02
     {
         Employese[] emps = new Employese[5];
+        // Join 複合條件 
         public void fn(){
             var r = from A0 in emps
                 join A1 in emps
