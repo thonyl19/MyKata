@@ -2724,6 +2724,48 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'el-radio'(){
+			var _note = ``
+			var _obj = {
+				_note
+				,_css:`
+				.sty .el-radio__label{
+					font-size: 1.55rem !important;
+				}
+				.sty .el-radio__inner{
+					border-color: #909399;
+					border-width: 2px;
+				}
+				`
+				,_vue:{
+					template: `
+						<div>
+						<el-checkbox  v-model="B">套用樣式</el-checkbox>
+						<el-radio-group v-model="A" :class="sty">
+							<el-radio label="T">A</el-radio>
+							<el-radio label="F">B</el-radio>
+							<el-radio label="All">C</el-radio>
+						</el-radio-group>
+						</div>
+					`,
+					data() {
+						return {
+							A:'',
+							B:false
+					  	};
+					},
+					mounted() { },
+					computed:{
+						sty(){
+							return this.B?'sty':'';
+						}
+					},
+					methods: { }
+				}
+
+			}
+			return _obj;
+		},
 	}
 	var Dialog = {
 		'拖曳寛高'() {
@@ -3313,7 +3355,7 @@ var __fn = (
 			};
 			return _obj;
 		},
-		'*Main'() {
+		'Main'() {
 			var _note = `
 			   `;
 			var _obj = {

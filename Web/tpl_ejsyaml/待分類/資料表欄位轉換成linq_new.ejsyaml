@@ -1,0 +1,9 @@
+api:ROUTE_SID, ROUTE_NO, ROUTE, ROUTE_CATEGORY, DEFAULT_VERSION, VERSION_DESCRIPTION, MAX_VERSION, CREATE_USER, CREATE_DATE, UPDATE_USER, UPDATE_DATE
+--- |
+<%- $.outfile('~tmp1.js') _%>
+
+<%_ for (let name of api) { _%>
+function <%- name %>() {
+  	return fetch('/<%- name %>');
+}
+<%_ } _%>
