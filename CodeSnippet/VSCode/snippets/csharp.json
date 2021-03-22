@@ -1,0 +1,33 @@
+{
+  "t_Test": {
+    "prefix": "t_Test\r",
+    "description": "",
+    "body": [
+      "\r",
+      "\r",
+      "\r",
+      "\r",
+      "    /// <summary>\r",
+      "    /// \r",
+      "    /// </summary>\r",
+      "    [TestMethod]\r",
+      "    public void t_(){\r",
+      "    }"
+    ]
+  },
+  "t_TestSQLite": {
+    "prefix": "t_TestSQLite\r",
+    "description": "",
+    "body": [
+      "\t/// <summary>\r",
+      "\t/// \r",
+      "\t/// </summary>\r",
+      "\t[TestMethod]\r",
+      "\tpublic void t_(){\r",
+      "\t\tusing (var cnn = new SQLiteConnection(t_SQLite.db_Chinook)){\r",
+      "\t\t\t\r",
+      "\t\t}\r",
+      "\t}"
+    ]
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "describe": {
+    "prefix": "UT_Des\r",
+    "description": "Unit Test describe\r",
+    "body": [
+      "/* eslint-disable */\r",
+      "\r",
+      "describe('${1:array}', function() {\r",
+      "\t${2:test}\r",
+      "})"
+    ]
+  },
+  "It": {
+    "prefix": "UT_it",
+    "body": [
+      "it('$1', function() {",
+      "\t$2",
+      "})"
+    ],
+    "description": "Unit Test it"
+  },
+  "thunkify_cb": {
+    "prefix": "fn_cb",
+    "body": [
+      "var fn_cb = thunkify((cb)=>{",
+      "\tvar data = '';",
+      "\t$2",
+      "\tcb(null,data);",
+      "\t});"
+    ],
+    "description": "thunkify call back"
+  },
+  "dshow": {
+    "prefix": "dshow",
+    "description": "",
+    "body": [
+      "/* eslint-disable */\r",
+      "\r",
+      "/* eslint-disable */\r",
+      "\r",
+      "/* eslint-disable */\r",
+      "\r",
+      "/* eslint-disable */\r",
+      "\r",
+      "show(){\r",
+      "    this.setExpectedState(true)\r",
+      "    this.handleShowPopper()\r",
+      "};"
+    ]
+  },
+  "testFN": {
+    "prefix": "testFN\r",
+    "description": "",
+    "body": [
+      "${1:A010}:[async function(){\r",
+      "    let act = mssql_UT.parse_MssqlDesign(_msql_DesingData);\r",
+      "    this.be(act).eq();\r",
+      "},\"$2\"],"
+    ]
+  },
+  "vue_ex": {
+    "prefix": "vue_ex\r",
+    "description": "",
+    "body": [
+      "/* eslint-disable */\r",
+      "\r",
+      "'*def'() {\r",
+      "    var _note = `\r",
+      "       `;\r",
+      "    var _obj = {\r",
+      "        _note,\r",
+      "        _css:``,\r",
+      "        _vue: {\r",
+      "            template: `\r",
+      "                <div>\r",
+      "                </div>\r",
+      "            `,\r",
+      "            data(){\r",
+      "                return {\r",
+      "                }\r",
+      "            } \r",
+      "       \t}\r",
+      "    };\r",
+      "    return _obj;\r",
+      "},"
+    ]
+  },
+  "v-range": {
+    "prefix": "v-range\r",
+    "description": "",
+    "body": [
+      "<input type=\"range\" min=\"1\" max=\"10\" v-model=\"range\" >{{range}}"
+    ]
+  },
+  "v-chkbox": {
+    "prefix": "v-chkbox\r",
+    "description": "",
+    "body": [
+      "<input type=\"checkbox\" v-model=\"set\" />fa-fw <br />"
+    ]
+  },
+  "vue-watch-deep": {
+    "prefix": "vue-watch-deep\r",
+    "description": "",
+    "body": [
+      "value:{\r",
+      "    handler(val, oldName) {\r",
+      "        this.\\$emit('input',val);\r",
+      "    },\r",
+      "    // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法\r",
+      "    immediate: false,\r",
+      "    deep: true\r",
+      "}\r",
+      "\t\t\t\t"
+    ]
+  }
+}
