@@ -14,8 +14,9 @@ goto S0
 :S2
 @echo on 
 git commit -m "add"
-git push --progress "origin" MyKata_Drawio
+git push --progress "origin"  
 @echo off
+pause
 goto S0
 
 
