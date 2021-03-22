@@ -1,3 +1,4 @@
+<!-- #region [el-table]:VueTpl -->
 <el-table empty-text=" " style="width: 100%"
     @@sort-change="sort_change"
     :data="grid.data"
@@ -25,3 +26,4 @@
                 :page-size="grid.Page.Size"
                 layout="prev, pager, next"
                 :total="grid.row_count"></el-pagination>
+<!-- #endregion [el-table]:VueTpl-->

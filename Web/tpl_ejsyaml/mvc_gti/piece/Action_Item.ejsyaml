@@ -1,0 +1,15 @@
+﻿# input data
+label: ENCODE_FORMAT_NO
+SID: ENCODE_NO
+Prefix: '@Face.'
+--- |
+<%- $.outfile('~tmp.cshtml') _%>
+<el-table-column    min-width="115" 
+					prop="<%=label%>" 
+					sortable="custom"
+					:sort-orders="$UT.sort_order"
+					<%= Prefix=='i18n.'?':':'' %>label="<%= Prefix%><%=label%>">
+	<template slot-scope="scope">
+		<el-button type="text" @@click="Action_Item(scope.row.<%=SID%>)">{{scope.row.<%=label%>}}</el-button>
+	</template>
+</el-table-column>

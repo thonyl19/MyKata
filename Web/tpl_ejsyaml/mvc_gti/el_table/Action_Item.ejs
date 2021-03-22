@@ -1,0 +1,9 @@
+﻿<el-table-column    min-width="115" 
+	prop="ENCODE_FORMAT_NO" 
+	sortable="custom"
+	:sort-orders="$UT.sort_order"
+	label="@RES.BLL.Face.lblSetSequenceNo">
+	<template slot-scope="scope">
+		<el-button type="text" @@click="Action_Item(scope.row.ENCODE_FORMAT_SID)">{{scope.row.ENCODE_FORMAT_NO}}</el-button>
+	</template>
+</el-table-column>

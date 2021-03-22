@@ -27,10 +27,10 @@ ejs._ = _;
             return _arr.map(cb);
         },
         save(data,filename="test.txt"){
-            fs.writeFileSync(`./tpl_ejsyaml/mvc_git/${filename}`,data,'utf-8');
+            fs.writeFileSync(`./tpl_ejsyaml/mvc_gti/${filename}`,data,'utf-8');
         },
         ejs(fileName){
-            return `./tpl_ejsyaml/mvc_git/${fileName}.ejs`
+            return `./tpl_ejsyaml/mvc_gti/${fileName}.ejs`
         },
         testJson(data){
             var s = JSON.stringify(data,null,4);  
@@ -74,20 +74,42 @@ ejs._ = _;
                 fileds.push(arg);
             }
             return fileds;
+        },
+        parseFile(args,path=""){
+            for (var _name in args){
+                var _val = args[_name];
+                var _pathName = `${path}${_name}`;
+                _pathName
+                _val
+                if (_val == "" ){
+                    args[_name] =  ops.ejs(_pathName);
+                }else{
+                    _val
+                    ops.parseFile(args[_name] ,`${_pathName}/`);
+                }
+            }
+        },
+        parse_ext_rule(filed ,rule){
+            filed
+            rule
+            return [];
         }
     }
     var _file = {
         json_i18n:'',
         gt_toolbar:'',
-        el_table_0:'',
-        el_table_VueTpl:'',
-        el_table_VueData:'',
+        el_table:{
+            _main:'',
+            VueTpl:'',
+            VueData:'',
+            VueGridMethos:'',
+        },
         vue_data_form:'',
         vue_data_i18n:'',
     }
-    for (var e in _file){
-        _file[e] =  ops.ejs(e);
-    }
+    ops.parseFile(_file);
+    console.log(_file);
+
 
     var _tpl_gti_table = {
         gti_el_table_col(filed){return `<el-table-column :label="i18n.${filed}"
@@ -103,6 +125,9 @@ ejs._ = _;
                     ></el-button>
     </template>
 </el-table-column>`},
+        gti_el(){
+
+        },
  
     }
 
@@ -148,31 +173,42 @@ ejs._ = _;
             let {_fn} = ops;
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
+                mark:false, 
                 Prefix:'@Face.',
                 SID_Filed,
                 row:_data.filed_1,
                 Fileds:ops.parseFileds(_data.filed_1),
                 Table_操作欄位:_tpl_gti_table.gti_el_table_操作欄位(SID_Filed),
                 TableColumn:[],
+                ext_rule:{
+                    ROUTE_NO:{
+                        Action_Item:'ROUTE_SID'
+                    }
+                },
                 _fn
             }
             for(var filed in arg.row){
-                var arr = _tpl_gti_table.gti_el_table_col(filed).split('\n');
+                let ext_rule = arg['ext_rule'][filed];
+                var arr =  (ext_rule==null)
+                    ? _tpl_gti_table.gti_el_table_col(filed).split('\n')
+                    : ops.parse_ext_rule(filed,ext_rule);
+                    ;
                 arg.TableColumn = arg.TableColumn.concat(arr);
             }
-            //ops.testJson(arg); 
+            ops.testJson(arg); 
             
             var zz = {
-                html_tpl : await ejs.renderFile(_file.el_table_VueTpl,arg ),
-                vue_GridData : await ejs.renderFile(_file.el_table_VueData,{}),
+                html_tpl : await ejs.renderFile(_file.el_table.VueTpl,arg ),
+                vue_GridData : await ejs.renderFile(_file.el_table.VueData,{}),
+                vue_GridMethos:await ejs.renderFile(_file.el_table.VueGridMethos,{}),
                 vue_data_form : await ejs.renderFile(_file.vue_data_form,arg),
                 vue_data_i18n : await ejs.renderFile(_file.vue_data_i18n,arg),
                 _fn
             } 
-            ops.testJson(zz); 
+            //ops.testJson(zz); 
             //return ;
-            var zz1 = await ejs.renderFile(_file.el_table_0,zz );
-            ops.save(zz1,"~el_table.cshtml");    
+            var zz1 = await ejs.renderFile(_file.el_table._main,zz );
+            ops.save(zz1,"el_table/~tmp.cshtml");    
         },
         async 'el_table'(){
             arg
