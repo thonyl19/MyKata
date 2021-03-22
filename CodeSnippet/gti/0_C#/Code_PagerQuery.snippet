@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Code_PagerQuery</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>Code_PagerQuery</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp" Delimiter="$"><![CDATA[public static Result QueryWoInfo(PagerQuery PQuery)
+	{
+		var _result = PQuery.chk();
+		if (_result.Success)
+		{
+			using (var dbContext = new MDL.MESContext())
+			{
+				try
+				{
+					var _query = dbContext.WP_WO.BuildQuery(PQuery.Conditions);
+
+					if (PQuery?.Sort?.Code != "")
+					{
+						_query = _query.OrderBy(PQuery.Sort.Code);
+					}
+					if (PQuery.Page == null)
+					{
+
+						_result.Data = new { Queryable = _query.ToList() };
+					}
+					else
+					{
+						var PageInfo = _query.PageResult(PQuery.Page.Index, PQuery.Page.Size);
+						var Queryable = (
+								from wo in PageInfo.Queryable
+								join part in dbContext.PF_PARTNO_VER
+									on wo.PARTNO_VER_SID equals part.PARTNO_VER_SID
+								select new
+								{
+								#region [ wo.* ] 
+								#endregion
+								part.PART_NAME
+								}
+							)
+							.ToList();
+
+						_result.Data = new { Queryable, PageInfo = PQuery.parsePagedResult(PageInfo) };
+
+					}
+				}
+				catch (Exception Ex)
+				{
+					_result = new Result(ErrCode.GenericErrorMessage, ErrCode.False);
+				}
+			}
+		}
+		return _result;
+	}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

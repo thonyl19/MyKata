@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>Code_CUD_Page</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>Code_CUD_Page</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="csharp" Delimiter="$"><![CDATA[        ADMServices _svc = new ADMServices();
+        [HttpPost]
+		public ActionResult Query(PagerQuery obj)
+		{
+			var Result = _svc.AD_MESSAGE_DATA_PagerQuery(obj);
+			return Content(Result.ToJson(true));
+		}
+		public ActionResult Create(MDL.MES.AD_MESSAGE_DATA data)
+		{
+			var result = _svc.AD_MESSAGE_DATA_Create(data);
+			return Content((result).ToJson(true));
+		}
+
+		public ActionResult Update(MDL.MES.AD_MESSAGE_DATA data)
+		{
+			var result = _svc.AD_MESSAGE_DATA_Update(data);
+			return Content((result).ToJson(true));
+		}
+
+		public ActionResult Delete(string SID)
+		{
+			var result = _svc.AD_MESSAGE_DATA_DEL(SID);
+			return Content((result).ToJson(true));
+		}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

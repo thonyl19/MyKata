@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>code_getSelectedRow</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>code_getSelectedRow</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="javascript" Delimiter="$"><![CDATA['form.ATTEND_ITEM'() {
+	debugger
+	let _row = this.$refs.ATTEND_ITEM.getSelectedRow();
+	if (_row.length != 0) {
+		let { PARAMETER_VALUE } = _row[0];
+		this.form.LESS_FLAG = PARAMETER_VALUE;
+	}
+}]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

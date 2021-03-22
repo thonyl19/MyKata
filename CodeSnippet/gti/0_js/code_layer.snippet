@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>code_layer</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>code_layer</Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="javascript" Delimiter="$"><![CDATA[	//解決條件帶到子頁面的問題
+	window['tmp_Item_Single'] = this.form;
+	var arg = {
+		title: this.i18n.工時記錄,
+		content: `@Url.Action("Item_Single")`,
+		shadeClose: false,
+	}
+	this.$$UT.layer(arg);
+]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
