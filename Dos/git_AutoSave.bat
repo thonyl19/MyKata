@@ -16,6 +16,7 @@ goto S0
 git commit -m "add"
 git push --progress "origin"  
 @echo off
+TortoiseGitProc.exe /command:log
 pause
 goto S0
 
