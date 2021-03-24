@@ -93,7 +93,25 @@ ejs._ = _;
         parse_ext_rule(filed ,rule){
             return [];
         },
-        
+        async parse_toolbar(arg){
+            let {toolbar = {}} = arg; 
+            await _.each(toolbar,async(val,key)=>{
+                switch(val){ 
+                    case "1":
+                        var _key = `v_${key.substr(2)}`; 
+                        toolbar[key] =_key;
+                        var cfg = {key,fn:_key};
+                        cfg
+                        var zz  = await ejs.renderFile(_file.form.toolbar_mode_1,cfg),
+                        zz
+                        arg[_key] = zz;
+                        break;
+                    default:
+                        toolbar[key] = `${key}`;
+                        break;
+                }
+            })
+        }
     }
     var ut = {
         echo(data,cb){
@@ -110,7 +128,7 @@ ejs._ = _;
     }
     var _file = {
         el_table:{
-            _main:'',
+            _main:'cshtml',
             VueTpl:'',
             VueGridData:'',
             VueGridMethos:'',
@@ -118,6 +136,7 @@ ejs._ = _;
         },
         form:{
             SequenceNum_Item:'cshtml',
+            toolbar_mode_1:'',
         },
         piece:{
             json_i18n:'',
@@ -182,7 +201,7 @@ ejs._ = _;
  
  
     var _gti = {
-        async '*el_table'(){
+        async 'el_table'(){
             let {_fn} = ops;
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
@@ -226,10 +245,42 @@ ejs._ = _;
             var zz1 = await ejs.renderFile(_file.el_table._main,zz );
             ops.save(zz1,"el_table/~tmp.cshtml");    
         },
-        async 'el_table'(){
-            arg
-            var s = await ejs.renderFile('./tpl/ejs/mvc/el_table.ejs',arg );
-            ops.save(s,"~tmp.cshtml"); 
+        async '*SequenceNum_Item_Cfg'(){
+            let {_fn} = ops;
+            let {row} = _data;
+            var SID_Filed = 'ROUTE_SID'; 
+            var arg = {
+                Prefix:'',
+                SID_Filed,
+                row,
+                Fileds:ops.parseFileds(row),
+                ext_rule:{
+                    ROUTE_NO:{
+                        Action_Item:'ROUTE_SID'
+                    }
+                },
+                ut,
+                toolbar:{
+                    e_query:"1",
+                    e_add:"",
+                    e_del:"",
+                    e_save:"",
+                    e_clear:"",
+                    //e_import:""
+                }
+            }
+            await ops.parse_toolbar(arg);
+            // for(var filed in arg.row){
+            //     let ext_rule = arg['ext_rule'][filed];
+            //     var arr =  (ext_rule==null)
+            //         ? _tpl_gti_table.gti_el_table_col(filed).split('\n')
+            //         : ops.parse_ext_rule(filed,ext_rule);
+            //         ;
+            //     arg.TableColumn = arg.TableColumn.concat(arr);
+            // }
+            var arg_json = ops.testJson(arg,"form/SequenceNum_Item.json"); 
+            var s = await ejs.renderFile(_file.form.SequenceNum_Item, arg );
+            ops.save(s,"form/~tmp.cshtml"); 
         },
         async 'gt_toolbar'(){
             var arg = {

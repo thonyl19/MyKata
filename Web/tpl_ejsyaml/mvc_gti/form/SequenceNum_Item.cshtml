@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("編碼原則維護表單").RESOURCE_NAME;
     bool isSingleModel = (bool)ViewData["SingleModel"];
-
     if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml"; 
 }
 
@@ -9,10 +8,8 @@
 @eBundle.QRender_JS()
 @Html.AntiForgeryToken()
 <div id="app" v-cloak class="m-sm">
-    <gt-toolbar :e_add="e_add" :e_save="v_save" :e_del="v_del" :enable.sync="ENABLE_FLAG" fixed='top'>
-
+    <gt-toolbar <% for (var item in toolbar){ _%> :<%= item%>="<%= toolbar[item] _%>" <% } _%> :enable.sync="ENABLE_FLAG" fixed='top'>
     </gt-toolbar>
-
     <div Area-Main class=" panel b ">
         <div Area-Form class="panel-body form-horizontal gt-form">
             <div class="row ">
@@ -340,6 +337,9 @@
 
                 },
                 methods: {
+                    //#region [ToolBar 相關程序]
+                    <% for (var item in toolbar){ _%><%= item %>(){},
+                    <% } _%>//#endregion [ToolBar 相關程序]
                     //#region [Grid 相關程序]
                     OnEscapeKeyUp(event) {
                         if (event.which === 27) {
@@ -566,27 +566,5 @@
         });
 </script>
     <style>
-        .gt-sty .s-VIEW,
-        .s-NORMAL,
-        .s-FIX,
-        .s-INPUT,
-        .s-TIME,
-        .s-COLUMN,
-        .s-SERIAL,
-        .s-CUSTOM {
-            display: none;
-        }
-
-        .gt-sty .s-NORMAL {
-            display: inline-block;
-        }
-
-        .gt-sty.sFIX .s-FIX,
-        .gt-sty.sINPUT .s-INPUT,
-        .gt-sty.sTIME .s-TIME,
-        .gt-sty.sCOLUMN .s-COLUMN,
-        .gt-sty.sSERIAL .s-SERIAL,
-        .gt-sty.sCUSTOM .s-CUSTOM {
-            display: block;
-        }
+         
     </style>
