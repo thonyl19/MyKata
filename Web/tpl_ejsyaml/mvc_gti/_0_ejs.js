@@ -32,9 +32,10 @@ ejs._ = _;
         ejs(fileName){
             return `./tpl_ejsyaml/mvc_gti/${fileName}.ejs`
         },
-        testJson(data){
+        testJson(data,filename="~test.json"){
             var s = JSON.stringify(data,null,4);  
-            ops.save(s,"~test.json"); 
+            ops.save(s,filename); 
+            return s;
         },
         parseFileds(row){
             var fileds = [];
@@ -79,32 +80,42 @@ ejs._ = _;
             for (var _name in args){
                 var _val = args[_name];
                 var _pathName = `${path}${_name}`;
-                _pathName
-                _val
                 if (_val == "" ){
                     args[_name] =  ops.ejs(_pathName);
                 }else{
-                    _val
                     ops.parseFile(args[_name] ,`${_pathName}/`);
                 }
             }
         },
         parse_ext_rule(filed ,rule){
-            filed
-            rule
             return [];
+        },
+        
+    }
+    var ut = {
+        echo(data,cb){
+            var _arr = Array.isArray(data)
+                ?data
+                :data.split('\n')
+                ;
+            return _arr.map(cb);
+        },
+        parse_label(item,Prefix){
+            var _Prefix =  _.isEmpty(Prefix)?"i18n.":Prefix;
+            return `${_Prefix=="i18n."?':':''}label="${_Prefix}${item.label}"`;
         }
     }
     var _file = {
-        json_i18n:'',
-        gt_toolbar:'',
         el_table:{
             _main:'',
             VueTpl:'',
-            VueData:'',
+            VueGridData:'',
             VueGridMethos:'',
+            gt_form_col:'',
         },
         piece:{
+            json_i18n:'',
+            gt_toolbar:'',
             vue_data_form:'',
             vue_data_i18n:'',
         }
@@ -135,25 +146,11 @@ ejs._ = _;
 
     var _data = {
         row: {
-            "ROUTE_VER_OPER_SID": "GTI20101517580809121",
-            "ROUTE_VER_SID": "GTI20101517562109108",
-            "ROUTE_SID": "GTI20101517555209104",
             "ROUTE_NO": "C030-19",
             "ROUTE": "?面?极板（子流程）",
-            "VERSION": 1.0,
-            "OPER_CATEGORY": "O",
-            "OPER_SEQ": "001",
-            "OPER_SID": "GTI20101414441208510",
-            "OPERATION_NO": "C03-0020",
-            "OPERATION": "撕膜",
-            "IS_START": "T",
-            "IS_END": "F",
-            "CREATE_USER": "mes",
-            "CREATE_DATE": "2020-10-15 17:58:08",
-            "UPDATE_USER": "mes",
-            "UPDATE_DATE": "2020-10-15 17:58:08",
-            "OPERATION_TYPE": "PTTC.TW",
-            "OPERATION_TYPE_NAME": "聚鼎預設"
+            "ROUTE_CATEGORY": "R",
+            "DESCRIPTION": "",
+
           }, 
         filed_1 : {
             "ROUTE_SID": "GTI20101517555209104",
@@ -196,7 +193,8 @@ ejs._ = _;
                         Action_Item:'ROUTE_SID'
                     }
                 },
-                _fn
+                _fn,
+                ut,
             }
             for(var filed in arg.row){
                 let ext_rule = arg['ext_rule'][filed];
@@ -206,17 +204,18 @@ ejs._ = _;
                     ;
                 arg.TableColumn = arg.TableColumn.concat(arr);
             }
-            //ops.testJson(arg);  
+            var arg_json = ops.testJson(arg,"el_table/~arg.json");  
             
             var zz = { 
                 html_tpl : await ejs.renderFile(_file.el_table.VueTpl,arg ),
-                vue_GridData : await ejs.renderFile(_file.el_table.VueData,{}),
+                x : await ejs.renderFile(_file.el_table.gt_form_col,arg ),
+                vue_GridData : await ejs.renderFile(_file.el_table.VueGridData,{}),
                 vue_GridMethos:await ejs.renderFile(_file.el_table.VueGridMethos,{}),
                 vue_data_form : await ejs.renderFile(_file.piece.vue_data_form,arg),
                 vue_data_i18n : await ejs.renderFile(_file.piece.vue_data_i18n,arg),
                 _fn
             } 
-            //ops.testJson(zz); 
+            //ops.testJson(zz);   
             //return ;
             var zz1 = await ejs.renderFile(_file.el_table._main,zz );
             ops.save(zz1,"el_table/~tmp.cshtml");    
@@ -226,7 +225,7 @@ ejs._ = _;
             var s = await ejs.renderFile('./tpl/ejs/mvc/el_table.ejs',arg );
             ops.save(s,"~tmp.cshtml"); 
         },
-        async '*gt_toolbar'(){
+        async 'gt_toolbar'(){
             var arg = {
                 bts:[
                     'e_Add',
@@ -234,7 +233,7 @@ ejs._ = _;
                     'e_clear',
                 ]  
             } 
-            var s = await ejs.renderFile(_file.gt_toolbar,arg );
+            var s = await ejs.renderFile(_file.piece.gt_toolbar,arg ); 
             ops.save(s,"~tmp.html");  
         },
         async 'json_i18n'(){
