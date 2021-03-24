@@ -1,0 +1,592 @@
+﻿@{
+    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("編碼原則維護表單").RESOURCE_NAME;
+    bool isSingleModel = (bool)ViewData["SingleModel"];
+
+    if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml"; 
+}
+
+@eBundle.QRender_CSS()
+@eBundle.QRender_JS()
+@Html.AntiForgeryToken()
+<div id="app" v-cloak class="m-sm">
+    <gt-toolbar :e_add="e_add" :e_save="v_save" :e_del="v_del" :enable.sync="ENABLE_FLAG" fixed='top'>
+
+    </gt-toolbar>
+
+    <div Area-Main class=" panel b ">
+        <div Area-Form class="panel-body form-horizontal gt-form">
+            <div class="row ">
+                <gt-form-col label="@RES.BLL.Face.lblSetSequenceNo" v-model="form.ENCODE_FORMAT_NO">
+                </gt-form-col>
+                <gt-form-col label="@RES.BLL.Face.lblSetSequenceName" v-model="form.ENCODE_FORMAT_NAME">
+                </gt-form-col>
+                <gt-form-col label="@RES.BLL.Face.lblEncodeFormatType">
+                    <vue-selectize v-model="form.ENCODE_FORMAT_TYPE"
+                                   :options="options.EncodeFormatType" />
+                </gt-form-col>
+
+                <gt-form-col label="@RES.BLL.Face.lblMultiSerialDirection">
+                    <vue-selectize v-model="form.MULTI_SERIAL_DIRECTION"
+                                   :options="options.MultiSerialDirection" />
+                </gt-form-col>
+                <gt-form-col label="@RES.BLL.Face.Description">
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 4}"
+                              v-model="form.DESCRIPTION">
+                    </el-input>
+                </gt-form-col>
+            </div>
+            <el-tabs v-model="activeName">
+                <el-tab-pane label="@RES.BLL.Face.BaseInfo" name="first">
+                    <!-- #region [input_grid] -->
+                    <el-table empty-text=" " style="width: 100%" ref="input_grid" :height="grid_height"
+                              :row-class-name="RowStyle"
+                              :data="items">
+                        <el-table-column label="操作" min-width="120">
+                            <template slot="header" slot-scope="scope">
+                                <el-button size="small" class="s-VIEW"
+                                           type="primary"
+                                           icon="el-icon-plus"
+                                           @@click="AddItem"></el-button>
+                                {{i18n.操作}}
+                            </template>
+                            <template slot-scope="scope">
+                                <el-button size="small" circle class="s-VIEW"
+                                           type="success"
+                                           icon="el-icon-edit"
+                                           :disabled="ENABLE_FLAG"
+                                           @@click="Edit(scope.$index, scope.row)"></el-button>
+                                <el-button size="small" circle class="s-VIEW"
+                                           type="danger"
+                                           icon="el-icon-delete"
+                                           :disabled="ENABLE_FLAG"
+                                           @@click="DelRow(scope.$index, scope.row)"></el-button>
+                                <el-button size="small" circle class="s-NORMAL"
+                                           type="success"
+                                           icon="el-icon-check"
+                                           @@click="Confirm(scope.$index, scope.row)"></el-button>
+                                <el-button size="small" circle class="s-NORMAL"
+                                           type="danger"
+                                           icon="el-icon-refresh-right"
+                                           @@click="Cancel(scope.$index, scope.row)"></el-button>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column min-width="115" prop="ITEM_SEQ" :label="i18n.順序號">
+
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.ITEM_SEQ}}</div>
+                                <el-input class="s-NORMAL" type=text v-model="edit_row.ITEM_SEQ" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="115" prop="ITEM_TYPE"
+                                         :label="i18n.類別">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.ITEM_TYPE}}</div>
+                                <el-select class="s-NORMAL" v-model="edit_row.ITEM_TYPE" size="small">
+                                    <el-option v-for="item in list"
+                                               :key="item"
+                                               :label="item"
+                                               :value="item">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="115" prop="ITEM_VALUE_LENGTH"
+                                         :label="i18n.長度">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.ITEM_VALUE_LENGTH}}</div>
+                                <el-input class="s-NORMAL" type=text
+                                          v-model="edit_row.ITEM_VALUE_LENGTH" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="115" prop="ITEM_VALUE"
+                                         :label="i18n.值">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.ITEM_VALUE}}</div>
+                                <el-input class="s-FIX s-INPUT" type=text
+                                          v-model="edit_row.ITEM_VALUE" size="small" />
+                            </template>
+
+                        </el-table-column>
+                        <el-table-column min-width="115" prop="SERIAL_CHARS"
+                                         :label="i18n.可用字元列表">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.SERIAL_CHARS}}</div>
+                                <el-input class="s-FIX s-TIME s-COLUMN s-SERIAL s-CUSTOM" type=text
+                                          v-model="edit_row.SERIAL_CHARS" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="115" prop="TABLE_NAME"
+                                         :label="i18n.表名">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.TABLE_NAME}}</div>
+                                <el-input class="s-COLUMN" type=text v-model="edit_row.TABLE_NAME" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="115" prop="COLUMN_NAME"
+                                         :label="i18n.列名">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.COLUMN_NAME}}</div>
+                                <el-input class="s-COLUMN" type=text v-model="edit_row.COLUMN_NAME" size="small" />
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column min-width="115" prop="COLUMN_VALUE_START"
+                                         :label="i18n.列起始值">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.COLUMN_VALUE_START}}</div>
+                                <el-input class="s-COLUMN" type=text v-model="edit_row.COLUMN_VALUE_START" size="small" />
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column min-width="115" prop="SERIAL_START_VALUE"
+                                         :label="i18n.序號起始值">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.SERIAL_START_VALUE}}</div>
+                                <el-input class="s-SERIAL" type=text v-model="edit_row.SERIAL_START_VALUE" size="small" />
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column min-width="115" prop="CUSTOM_ENTRY_FUNCTION"
+                                         :label="i18n.入口函數">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{scope.row.CUSTOM_ENTRY_FUNCTION}}</div>
+                                <el-input class="s-CUSTOM" type=text v-model="edit_row.CUSTOM_ENTRY_FUNCTION" size="small" />
+                            </template>
+                        </el-table-column>
+                        <el-table-column min-width="115" prop="RESET_ON_CHANGED"
+                                         :label="i18n.是否重置">
+                            <template slot-scope="scope">
+                                <div class="s-VIEW">{{$UT.parse_Boolean(scope.row.RESET_ON_CHANGED)}}</div>
+                                <el-select class="s-NORMAL" v-model="edit_row.RESET_ON_CHANGED" size="small">
+                                    <el-option label="是" value="T"> </el-option>
+                                    <el-option label="否" value="F"> </el-option>
+                                </el-select>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- #endregion -->
+                </el-tab-pane>
+                <el-tab-pane label="@RES.BLL.Face.Other" name="second">
+                    <el-table empty-text=" " style="width: 100%" :height="grid_height"
+                                :data="ctrl_items">
+                        <el-table-column prop="RESET_FORMAT_MASK" label="@Face.RESET_FORMAT_MASK">
+                        </el-table-column>
+                        <el-table-column prop="SERIAL_LAST_VALUE" label="@Face.SERIAL_LAST_VALUE">
+                        </el-table-column>
+                        <el-table-column prop="UPDATE_DATE" label="@Face.UPDATE_DATE">
+                        </el-table-column>
+                        <el-table-column prop="UPDATE_USER" label="@Face.UPDATE_USER">
+                        </el-table-column>
+                    </el-table>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+        
+    </div>
+</div>
+
+
+<script>
+        var _data = @Html.Raw(ViewData["result"] ?? "{}");
+        console.log(_data);
+        let { EncodeFormatType = [], main = {},items,ctrl_items  } = _data;
+
+        if (main == null) {
+            main = {
+                ENCODE_FORMAT_NO: '',
+                ENCODE_FORMAT_NAME:'',
+                MULTI_SERIAL_DIRECTION: '1',
+            };
+        }
+        if (items == null)  items = [];
+        $(() => {
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        grid_height:350,
+                        items,
+                        ctrl_items,
+                        list: ["FIX", "INPUT", "YEAR", "MONTH", "DAY", "QUARTER", "WEEK", "COLUMN", "SERIAL", "CUSTOM"],
+                        fileds: [
+                            'ITEM_SEQ', 'ITEM_TYPE', 'ITEM_VALUE_LENGTH'
+                            , 'ITEM_VALUE', 'SERIAL_CHARS', 'TABLE_NAME'
+                            , 'COLUMN_NAME', 'COLUMN_VALUE_START', 'SERIAL_START_VALUE'
+                            , 'CUSTOM_ENTRY_FUNCTION'
+                        ],
+                        //outerVisible: false,
+                        currentRow:null,
+                        activeName:'first',
+                        enable:true,
+                        form: main,
+                        grid: {
+                            data: items,
+                            pageSize: 10,
+                            pageIdx: 1,
+                            row_count: 0,
+                            Sort: {
+                                Name: "CREATE_DATE",
+                                isAsc: true
+                            },
+                            Conditions: {},
+                            Page: {
+                                Index: 1,
+                                Size: 10,
+                            },
+                            get query_rule() {
+                                {
+                                    let { Conditions, Sort, Page } = this;
+                                    return {
+                                        Conditions, Sort, Page
+                                    }
+                                }
+                            }
+                        },
+                        edit_row: {},
+                        options: {
+                            EncodeFormatType,
+                            MultiSerialDirection:[
+                                { "No": "1", "Value": "1", "Display": "@RES.BLL.Face.MultiSerialDirectionBackToFront"},
+                                { "No": "2", "Value": "2", "Display": "@RES.BLL.Face.MultiSerialDirectionFrontToBack"}
+                            ],
+                        },
+                        //TODO-i18n:
+                        i18n: {
+                            順序號: "@RES.BLL.Face.ITEM_SEQ",
+                            類別: "@RES.BLL.Face.ITEM_TYPE",
+                            操作: "@RES.BLL.Face.Operate",
+                            長度: "@RES.BLL.Face.ITEM_VALUE_LENGTH",
+                            值: "@RES.BLL.Face.ITEM_VALUE",
+                            可用字元列表: "@RES.BLL.Face.SERIAL_CHARS",
+                            表名: "@RES.BLL.Face.TABLE_NAME",
+                            列名: "@RES.BLL.Face.COLUMN_NAME",
+                            列起始值: "@RES.BLL.Face.COLUMN_VALUE_START",
+                            序號起始值: "@RES.BLL.Face.SERIAL_START_VALUE",
+                            入口函數: "@RES.BLL.Face.CUSTOM_ENTRY_FUNCTION",
+                            是否重置: "@RES.BLL.Face.RESET_ON_CHANGED",
+                            ConfirmCancel: '請確認是否放棄當前的修改?',
+                            ConfirmDel: '請確認是否刪除這筆資料?',
+                            ConfirmAdd: '執行新增將跳離當前頁面，請確認.',
+                            ConfirmSave: '請確認,是否執行儲存?',
+                        }
+                        ,confirm_arg:{
+                            showClose:false,
+                            closeOnClickModal: false,
+                            closeOnPressEscape:false,
+                            dangerouslyUseHTMLString:true,
+                            confirmButtonText: `@RES.BLL.Face.FunctionBarConfirmButton`,
+                            cancelButtonText: `@RES.BLL.Face.FunctionBarCancelButton`,
+                            type: 'info'
+                        },
+                        isLock:false,
+                    }
+                },
+                computed: {
+                    ENABLE_FLAG:{
+                        get() {
+                            let { ENABLE_FLAG = 'F' } = this.form;
+                            return ENABLE_FLAG == 'T';
+                        },
+                        set(val) {
+                            //debugger
+                            this.form.ENABLE_FLAG = val? 'T':'F';
+                        }
+                    },
+                    isAddMode() {
+                        var url = new URL(location);
+                        var SID = url.searchParams.get('SID') ?? "";
+                        var isAddMode = (SID == "");
+                        return isAddMode;
+                    },
+                    isCanSave() {
+                        //debugger
+                        var mustHaveItem = this.items
+                            .filter(el => el['ENCODE_FORMAT_ITEM_SID'] != -1)
+                            .length > 0;
+                        var isNotEditing = this.currentRow == null;
+                        return mustHaveItem && isNotEditing;
+                    },
+                    v_del() {
+                        let { QUOTE_ONCE='F' } = this.form;
+                        return {
+                            visable: !this.isAddMode,
+                            enable: (!this.ENABLE_FLAG && QUOTE_ONCE =='F'),
+                            fn: this.e_del
+                        }
+                    },
+                    v_save() {
+                        return {
+                            enable: this.isCanSave,
+                            fn: this.e_save
+                        }
+                    }
+                },
+                watch: {
+                    currentRow() {
+                        if (this.currentRow == null) {
+                            window.removeEventListener("keyup", this.OnEscapeKeyUp);
+                        } else {
+                            window.addEventListener("keyup", this.OnEscapeKeyUp);
+                        }
+                    },
+                    ENABLE_FLAG(val) {
+                        if (!this.isLock) {
+                            this.isLock = true;
+                            this.e_enable(val);
+                        }
+                    },
+
+                },
+                methods: {
+                    //#region [Grid 相關程序]
+                    OnEscapeKeyUp(event) {
+                        if (event.which === 27) {
+                            this.Cancel();
+                        }
+                    },
+                    RowStyle(item) {
+                        let { row } = item;
+                        var isEditRow = row === this.currentRow;
+                        if (isEditRow) {
+                            let { ITEM_TYPE = "INPUT" } = this.edit_row;
+                            switch (ITEM_TYPE) {
+                                case "FIX":
+                                    this.SetNull(this.edit_row, 5, 6, 7, 8, 9);
+                                    break;
+                                case "INPUT":
+                                    this.SetNull(this.edit_row, 4, 5, 6, 7, 8, 9);
+                                    break;
+                                case "COLUMN":
+                                    this.SetNull(this.edit_row, 3, 8, 9);
+                                    break;
+                                case "SERIAL":
+                                    this.SetNull(this.edit_row, 3, 5, 6, 7, 9);
+                                    break;
+                                case "CUSTOM":
+                                    this.SetNull(this.edit_row, 3, 5, 6, 7, 8);
+                                    break;
+                                default:
+                                    ITEM_TYPE = "TIME";
+                                    this.SetNull(this.edit_row, 3, 5, 6, 7, 8, 9);
+                                    break;
+                            }
+                            return `gt-sty s${ITEM_TYPE}`;
+                        }
+                        return "";
+                    },
+                    SetNull(target, ...Idx) {
+                        var _self = this;
+                        _.each(Idx, (i) => {
+                            var key = _self.fileds[i];
+                            target[key] = null;
+                        })
+                    },
+
+                    AddItem() {
+                        var _self = this;
+                        var _fn = () => {
+                            var _obj = _.maxBy(this.items, (el) => { return el.ITEM_SEQ })
+                                || { ITEM_SEQ: 0 };
+                            var ITEM_SEQ = _obj.ITEM_SEQ + 1;
+                            var _new = { ITEM_SEQ, ITEM_TYPE: 'INPUT', RESET_ON_CHANGED: 'T', ENCODE_FORMAT_ITEM_SID: -1 };
+                            _self.SetNull(_new, 2, 3, 4, 5, 6, 7, 8, 9);
+                            _self.items.push(_new);
+                            _self.currentRow = _new;
+                            _self.edit_row = Object.assign({}, _new);
+                        }
+                        _self.CancelEdit(_fn);
+
+                    },
+                    Edit(idx, row) {
+                        var _self = this;
+                        var _fn = () => {
+                            _self.currentRow = row;
+                            _self.edit_row = Object.assign({}, row);
+                        }
+                        _self.CancelEdit(_fn);
+                    },
+                    CancelEdit(_fn) {
+                        var _self = this;
+                        if (_self.currentRow != null) {
+                            _self.$confirm(_self.i18n.ConfirmCancel, '提示', _self.confirm_arg).then(() => {
+                                _fn();
+                            });
+                        } else {
+                            _fn();
+                        }
+                    },
+                    Confirm(idx, row) {
+                        var _tar = this.items[idx];
+                        var isNew = false;
+                        _.each(this.edit_row, (el, key) => {
+                            _tar[key] = el;
+                            if (key == 'ENCODE_FORMAT_ITEM_SID' && el == -1) {
+                                _tar[key] = null;
+                            }
+                        })
+                        this.edit_row = {};
+                        this.currentRow = null;
+                    },
+                    Cancel(idx) {
+                        var _self = this;
+                        _self.$confirm(_self.i18n.ConfirmCancel, '提示', _self.confirm_arg).then(() => {
+                            debugger
+                            var isNew = _self.currentRow['ENCODE_FORMAT_ITEM_SID'] == -1;
+                            if (isNew) _self.items.splice(idx, 1);
+                            _self.edit_row = {};
+                            _self.currentRow = null;
+                        });
+                    },
+                    DelRow(idx, row) {
+                        var _self = this;
+                        _self.$confirm(_self.i18n.ConfirmDel, '提示', _self.confirm_arg).then(() => {
+                            _self.items.splice(idx, 1);
+                        });
+                    },
+                    //#endregion [input_grid]
+
+                    e_enable(Enable) {
+                        var _self = this;
+                        let param = {
+                            SID : this.form.ENCODE_FORMAT_SID,
+                            Enable
+                        }
+                        var url = '@Url.Action("Enable")';
+                        var _ajax = {
+                            url,
+                            param,
+                            type: 'post',
+                            async success(res) {
+                                //debugger
+                                let { Success, Data, Message = ""} = res;
+                                if (Success) {
+                                } else {
+                                    _self.form.ENABLE_FLAG = !Enable;
+                                    await _self.$nextTick();
+                                }
+                                _self.isLock = false;
+                                _self.$UT.parent_reload();
+                            }
+                        };
+                        return $.submitForm(_ajax);
+                    },
+                    _test() {
+                        var _self = this;
+                        _self.MessageMustInputOne();
+                    },
+                    e_add() {
+                        var _self = this;
+                        this.$confirm(_self.i18n.ConfirmAdd, '提示', _self.confirm_arg).then(() => {
+                            _self.$URL.chgSearchParam({ SID: null }, true);
+                        });
+                    },
+                    e_del() {
+                        //debugger
+                        var _self = this;
+                        let { ENCODE_FORMAT_SID } = _self.form;
+                        if (ENCODE_FORMAT_SID == null) {
+                            var msg = "@RES.BLL.Message.ErrorMessage".replace("{0}", "SID 不正確!");
+                            _self.$Alert.Err(msg);
+                            return;
+                        }
+                        this.leyer_idx = parent.layer.getFrameIndex(window.name);
+                        this.$confirm(_self.i18n.ConfirmDel, '提示', _self.confirm_arg).then(() => {
+                            var url = '@Url.Action("Delete")';
+                            var _ajax = {
+                                url,
+                                param: { SID: ENCODE_FORMAT_SID },
+                                type: 'post',
+                                success :_self.Ajax_success
+                            };
+                            $.submitForm(_ajax);
+                        });
+                    },
+                    e_save() {
+                        var _self = this;
+                        let param = {
+                            main: _self.form,
+                            items: _self.grid.data
+                        };
+                        if (param.items.length == 0) {
+                            _self.MessageMustInputOne();
+                            return;
+                        }
+                        this.$confirm(_self.i18n.ConfirmSave, '提示',_self.confirm_arg).then(() => {
+                            var url = _self.isAddMode
+                                ? '@Url.Action("Create")'
+                                : '@Url.Action("Update")'
+                                ;
+                            var _ajax = {
+                                url,
+                                param,
+                                type: 'post',
+                                success :_self.Ajax_success
+                            };
+                            //console.log(JSON.stringify(param,null));
+                            $.submitForm(_ajax);
+                        });
+                    },
+                    MessageMustInputOne() {
+                        var _msg = "@RES.BLL.Message.MustInputOne".replace("{0}","@RES.BLL.Face.SequenceDetail")
+                        this.$Alert.Err(_msg);
+                    },
+                    Ajax_success(res) {
+                        let { Success, Data, Message = ""} = res;
+                        if (Success) {
+                            var _self = this;
+                            var isDelMark = this.leyer_idx != null;
+                            var _msg = isDelMark
+                                ? '@RES.BLL.Message.DeleteSuccessfulmsg'
+                                : '@RES.BLL.Message.SaveSuccessful'
+                                ;
+                            this.$UT.parent_reload();
+                            this.$Alert.Success(_msg).then(() => {
+                                if (isDelMark) {
+                                    parent.layer.close(_self.leyer_idx);
+                                } else {
+                                    _self.reload(Data);
+                                }
+                            });
+                        } else {
+                            this.$Alert.Warning(Message);
+                        }
+                    },
+                    reload(Data) {
+                        if (this.isAddMode) {
+                            let { SID } = Data;
+                            this.$URL.chgSearchParam({ SID }, true);
+                        } else {
+                            location.replace(location.href);
+                        }
+                    },
+                }
+            })
+        });
+</script>
+    <style>
+        .gt-sty .s-VIEW,
+        .s-NORMAL,
+        .s-FIX,
+        .s-INPUT,
+        .s-TIME,
+        .s-COLUMN,
+        .s-SERIAL,
+        .s-CUSTOM {
+            display: none;
+        }
+
+        .gt-sty .s-NORMAL {
+            display: inline-block;
+        }
+
+        .gt-sty.sFIX .s-FIX,
+        .gt-sty.sINPUT .s-INPUT,
+        .gt-sty.sTIME .s-TIME,
+        .gt-sty.sCOLUMN .s-COLUMN,
+        .gt-sty.sSERIAL .s-SERIAL,
+        .gt-sty.sCUSTOM .s-CUSTOM {
+            display: block;
+        }
+    </style>

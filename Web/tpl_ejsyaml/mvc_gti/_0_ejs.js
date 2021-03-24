@@ -29,8 +29,8 @@ ejs._ = _;
         save(data,filename="test.txt"){
             fs.writeFileSync(`./tpl_ejsyaml/mvc_gti/${filename}`,data,'utf-8');
         },
-        ejs(fileName){
-            return `./tpl_ejsyaml/mvc_gti/${fileName}.ejs`
+        ejs(fileName,ext="ejs"){
+            return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`
         },
         testJson(data){
             var s = JSON.stringify(data,null,4);  
@@ -83,6 +83,9 @@ ejs._ = _;
                 _val
                 if (_val == "" ){
                     args[_name] =  ops.ejs(_pathName);
+                }else if (typeof(_val) === "string"){
+                    _val
+                    args[_name] =  ops.ejs(_pathName,_val);
                 }else{
                     _val
                     ops.parseFile(args[_name] ,`${_pathName}/`);
@@ -103,6 +106,9 @@ ejs._ = _;
             VueTpl:'',
             VueData:'',
             VueGridMethos:'',
+        },
+        form:{
+            SequenceNum_Item:'cshtml',
         },
         vue_data_form:'',
         vue_data_i18n:'',
@@ -215,7 +221,7 @@ ejs._ = _;
             var s = await ejs.renderFile('./tpl/ejs/mvc/el_table.ejs',arg );
             ops.save(s,"~tmp.cshtml"); 
         },
-        async '*gt_toolbar'(){
+        async 'gt_toolbar'(){
             var arg = {
                 bts:[
                     'e_Add',
