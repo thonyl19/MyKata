@@ -1,0 +1,11 @@
+﻿<div Area-Main class="panel b pt-lg form-horizontal gt-form ">
+	<div class="row">
+		<!-- #region [gt_form_col] -->
+		<%_ for(var item of Fileds){ _%>
+		<gt-form-col <%- ut.parse_label(item,Prefix)%>
+					v-model="form.<%=item.label%>"
+					></gt-form-col>
+		<%_} _%>
+		<!-- #endregion [gt_form_col] -->
+	</div>
+</div>

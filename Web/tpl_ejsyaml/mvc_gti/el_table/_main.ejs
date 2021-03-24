@@ -1,4 +1,6 @@
 <div id="app" v-cloak>
+    <%_ _fn(x,(el)=>{ _%>
+    <%- el %><% }) %>
     <%_ _fn(html_tpl,(el)=>{ _%>
     <%- el %><% }) %>
 </div>
@@ -45,14 +47,24 @@
 
                 // 子視窗查詢程序
                 Action_Item(arg) {
+                    var _self = this;
                     var SID =  _.isString(arg)
                         ? `&SID=${arg}`
                         :""
                         ;
                     var arg = {
                         title: this.i18n.編碼原則維護,
-                        content: `@Url.Action("SequenceNum_Item")?SingleMode=true${SID}`
+                        content: `@Url.Action("SequenceNum_Item")?SingleMode=true${SID}`,
+                        shadeClose: false,
+						cancel(index, layero) {
+                            //TODO:_self.$UT.confirm
+							if (confirm('關閉將造成尚未儲存的資料遺失，確定是否關閉?')) {
+                                layer.close(index)
+                            }
+                            return false;
+                        }
                     }
+                    
                     this.$UT.layer(arg, this);
                 },
                 //父視窗reload 功能
