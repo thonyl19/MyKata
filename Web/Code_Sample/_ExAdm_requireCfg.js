@@ -39,6 +39,7 @@ window.gEx = {
 			'jquery_dataTables',
 			'froala_2.7',
 			'layer_2.3',
+			'parse',
 		]
 	},
 	chgUrl(fnName){
