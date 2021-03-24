@@ -1,0 +1,50 @@
+@echo off
+SETLOCAL ENABLEDELAYEDEXPANSION
+cls
+
+REM ==指定要使用的.NET版本.==
+set NetVer=v4.0.30319
+set BuildInfoDir=bin
+set SdkToolsPath=C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin
+set NETFX="-p:Configuration=Debug;VisualStudioVersion=9.0;TargetFrameworkSDKToolsDirectory=C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools;GenerateSerializationAssemblies=Off"
+set NETFX_="-p:Configuration=Debug;VisualStudioVersion=16;VisualStudioVersion=16;TargetFrameworkSDKToolsDirectory=C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools;GenerateSerializationAssemblies=Off"
+set Builders?="C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"
+set Builders=%windir%\Microsoft.NET\Framework64\%NetVer%\MSBuild.exe
+echo Builders=%Builders%
+set Log=/flp:Summary;Verbosity=minimal;LogFile=%BuildInfoDir%\Note.txt /flp1:warningsonly;logfile=%BuildInfoDir%\Alter.txt  /flp2:errorsonly;logfile=%BuildInfoDir%\Error.txt
+echo Log=%Log%
+
+REM ==指定建置資訊結果資訊輸出的目錄==
+
+REM ==指定要編譯的方案檔==
+set SlnFile=<%=SlnFile%>
+
+:S1
+echo 步驟 ==.更新最新的程式.==
+git.exe fetch -v --progress "origin"
+git.exe pull --progress -v --no-rebase "origin"
+git.exe merge <%=MergeFrom%>
+set mima=
+set /p mima=S1)pull ,merge 完成 ,請決定執行步驟 S(1) / S2(def):
+echo %mima%
+if "%mima%"=="1" goto S1
+goto S2
+
+
+:S2
+REM 步驟 ==.開始執行建置動作.==
+REM 建立 摘要、警告、錯誤 log 文件
+echo %Builders% %SlnFile%
+msbuild %SlnFile% 
+echo "===[??? ? Push  ? Dev]==="
+set mima=
+set /p mima=S2)建置完成,請決定執行步驟 S(1) / S(2) / S3(def):
+if "%mima%"=="1" goto S1
+if "%mima%"=="2" goto S2
+goto S3
+
+:S3
+git.exe push --progress "origin" <%=PushTo%>
+TortoiseGitProc.exe /command:log
+pause
+goto S1

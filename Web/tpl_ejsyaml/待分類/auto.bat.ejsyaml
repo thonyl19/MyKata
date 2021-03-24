@@ -1,0 +1,14 @@
+﻿# input data
+SSMES:{
+    SlnFile: 'MES5_Build.sln',
+    MergeFrom: 'remotes/origin/Branch_Anthony'
+    PushTo: ''
+}
+
+Action: SSMES
+--- |
+<%_ 
+ 	//this.render('auto.bat.ejs', 'auto.bat', this.data);
+    this.render('../toJson.ejs', '~tmp.json', {arg:this.data});
+	this.skip();
+_%>

@@ -104,8 +104,10 @@ ejs._ = _;
             VueData:'',
             VueGridMethos:'',
         },
-        vue_data_form:'',
-        vue_data_i18n:'',
+        piece:{
+            vue_data_form:'',
+            vue_data_i18n:'',
+        }
     }
     ops.parseFile(_file);
     console.log(_file);
@@ -133,18 +135,26 @@ ejs._ = _;
 
     var _data = {
         row: {
-            CREATE_DATE: "2021-01-13 13:50:00"
-            ,CREATE_USER: "EIS"
-            ,ENCODE_FORMAT_CONTROL_SID: "GTI21011313500003072"
-            ,ENCODE_FORMAT_NAME: "LotNoRework"
-            ,ENCODE_FORMAT_NO: "LotNoRework"
-            ,ENCODE_FORMAT_SID: "GTI20111910362484429"
-            ,ENCODE_FORMAT_TYPE: "Lot"
-            ,RESET_FORMAT_MASK: "14-03-2224P...."
-            ,SERIAL_LAST_VALUE: "01"
-            ,UPDATE_DATE: "2021-01-13 13:50:00"
-            ,UPDATE_USER: "EIS"
-        },
+            "ROUTE_VER_OPER_SID": "GTI20101517580809121",
+            "ROUTE_VER_SID": "GTI20101517562109108",
+            "ROUTE_SID": "GTI20101517555209104",
+            "ROUTE_NO": "C030-19",
+            "ROUTE": "?面?极板（子流程）",
+            "VERSION": 1.0,
+            "OPER_CATEGORY": "O",
+            "OPER_SEQ": "001",
+            "OPER_SID": "GTI20101414441208510",
+            "OPERATION_NO": "C03-0020",
+            "OPERATION": "撕膜",
+            "IS_START": "T",
+            "IS_END": "F",
+            "CREATE_USER": "mes",
+            "CREATE_DATE": "2020-10-15 17:58:08",
+            "UPDATE_USER": "mes",
+            "UPDATE_DATE": "2020-10-15 17:58:08",
+            "OPERATION_TYPE": "PTTC.TW",
+            "OPERATION_TYPE_NAME": "聚鼎預設"
+          }, 
         filed_1 : {
             "ROUTE_SID": "GTI20101517555209104",
             "ROUTE_NO": "C030-19",
@@ -171,13 +181,14 @@ ejs._ = _;
     var _gti = {
         async '*el_table'(){
             let {_fn} = ops;
+            let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
                 mark:false, 
-                Prefix:'@Face.',
+                Prefix:'',
                 SID_Filed,
-                row:_data.filed_1,
-                Fileds:ops.parseFileds(_data.filed_1),
+                row,
+                Fileds:ops.parseFileds(row),
                 Table_操作欄位:_tpl_gti_table.gti_el_table_操作欄位(SID_Filed),
                 TableColumn:[],
                 ext_rule:{
@@ -195,14 +206,14 @@ ejs._ = _;
                     ;
                 arg.TableColumn = arg.TableColumn.concat(arr);
             }
-            ops.testJson(arg); 
+            //ops.testJson(arg);  
             
-            var zz = {
+            var zz = { 
                 html_tpl : await ejs.renderFile(_file.el_table.VueTpl,arg ),
                 vue_GridData : await ejs.renderFile(_file.el_table.VueData,{}),
                 vue_GridMethos:await ejs.renderFile(_file.el_table.VueGridMethos,{}),
-                vue_data_form : await ejs.renderFile(_file.vue_data_form,arg),
-                vue_data_i18n : await ejs.renderFile(_file.vue_data_i18n,arg),
+                vue_data_form : await ejs.renderFile(_file.piece.vue_data_form,arg),
+                vue_data_i18n : await ejs.renderFile(_file.piece.vue_data_i18n,arg),
                 _fn
             } 
             //ops.testJson(zz); 
