@@ -8,7 +8,7 @@
 @eBundle.QRender_JS()
 @Html.AntiForgeryToken()
 <div id="app" v-cloak class="m-sm">
-    <gt-toolbar <% for (var item in toolbar){ _%> :<%= item%>="<%= toolbar[item] _%>" <% } _%> :enable.sync="ENABLE_FLAG" fixed='top'>
+    <gt-toolbar<%- html.toolbar %> :enable.sync="ENABLE_FLAG" fixed='top'>
     </gt-toolbar>
     <div Area-Main class=" panel b ">
         <div Area-Form class="panel-body form-horizontal gt-form">
@@ -281,6 +281,8 @@
                     }
                 },
                 computed: {
+                    <%_ ut.echo(VueComputedToolbar,(el)=>{ _%>
+                    <%- el %><% }) %>
                     ENABLE_FLAG:{
                         get() {
                             let { ENABLE_FLAG = 'F' } = this.form;

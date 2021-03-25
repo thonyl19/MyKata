@@ -7,7 +7,6 @@ import path from "path";
 let ejs = require('ejs');
 let moment = require('moment');
 const fs = require('fs');
-ejs._ = _;
 (()=>{
     var map_csharpType = {
 		"string":"string",
@@ -115,6 +114,7 @@ ejs._ = _;
         }
     }
     var ut = {
+        _,
         echo(data,cb){
             var _arr = Array.isArray(data)
                 ?data
@@ -137,6 +137,7 @@ ejs._ = _;
         },
         form:{
             SequenceNum_Item:'cshtml',
+            VueComputedToolbar:'',
             toolbar_mode_1:'',
         },
         piece:{
@@ -239,7 +240,7 @@ ejs._ = _;
                 vue_GridMethos:await ejs.renderFile(_file.el_table.VueGridMethos,{}),
                 vue_data_form : await ejs.renderFile(_file.piece.vue_data_form,arg),
                 vue_data_i18n : await ejs.renderFile(_file.piece.vue_data_i18n,arg),
-                _fn
+                _fn,
             } 
             //ops.testJson(zz);   
             //return ;
@@ -280,6 +281,8 @@ ejs._ = _;
             //     arg.TableColumn = arg.TableColumn.concat(arr);
             // }
             var arg_json = ops.testJson(arg,"form/SequenceNum_Item.json"); 
+            
+            arg.VueComputedToolbar = await ejs.renderFile(_file.form.VueComputedToolbar,arg);
             var s = await ejs.renderFile(_file.form.SequenceNum_Item, arg );
             ops.save(s,"form/~tmp.cshtml"); 
         },

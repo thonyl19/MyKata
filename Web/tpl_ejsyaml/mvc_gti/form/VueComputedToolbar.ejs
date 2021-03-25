@@ -1,0 +1,16 @@
+﻿<%_
+	var toolbar = ut._.get(vue, 'computed.toolbar', null);
+	if(toolbar!=null){
+_%>
+/// #region [VueComupteToolbar] 
+<%_ for (var key in toolbar){ _%>
+<%= key%>() {
+	return {
+		//TODO:
+		visable: true,
+		enable: true,
+		fn: this.<%= toolbar[key]%>
+	}
+},
+<% }}_%>
+/// #endregion [VueComupteToolbar] 
