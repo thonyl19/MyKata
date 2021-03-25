@@ -95,22 +95,23 @@ ejs._ = _;
         },
         async parse_toolbar(arg){
             let {toolbar = {}} = arg; 
+            var html_toolbar = "";
+            var vue_computed = {};
             await _.each(toolbar,async(val,key)=>{
-                switch(val){ 
-                    case "1":
-                        var _key = `v_${key.substr(2)}`; 
-                        toolbar[key] =_key;
-                        var cfg = {key,fn:_key};
-                        cfg
-                        var zz  = await ejs.renderFile(_file.form.toolbar_mode_1,cfg),
-                        zz
-                        arg[_key] = zz;
-                        break;
+                switch(key){
                     default:
-                        toolbar[key] = `${key}`;
+                        var fun = `${key}`;
+                        if (val=="1"){
+                            fun = `v_${key.substr(2)}`;
+                            vue_computed[fun]=key;
+                            //vue_computed.push({key,fun});
+                        } 
+                        html_toolbar += ` :${key}="${fun}"`;
                         break;
                 }
             })
+            _.set(arg, 'html.toolbar', html_toolbar);
+            _.set(arg, 'vue.computed.toolbar', vue_computed);
         }
     }
     var ut = {

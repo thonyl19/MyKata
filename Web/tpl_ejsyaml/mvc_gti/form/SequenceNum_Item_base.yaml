@@ -1,0 +1,69 @@
+"ut": fn,
+"Prefix": i18n,
+"SID_Filed": "ROUTE_SID",
+"row": {
+        "ROUTE_NO": "C030-19",
+        "ROUTE": "?面?极板（子流程）",
+        "ROUTE_CATEGORY": "R",
+        "DESCRIPTION": ""
+    },
+"Fileds": [
+    {
+        "label": "ROUTE_NO",
+        "val": "C030-19",
+        "map_type": {
+            "JS": "string",
+            "csharp": "string"
+        }
+    },
+    {
+        "label": "ROUTE",
+        "val": "?面?极板（子流程）",
+        "map_type": {
+            "JS": "string",
+            "csharp": "string"
+        }
+    },
+    {
+        "label": "ROUTE_CATEGORY",
+        "val": "R",
+        "map_type": {
+            "JS": "string",
+            "csharp": "string"
+        }
+    },
+    {
+        "label": "DESCRIPTION",
+        "val": "",
+        "map_type": {
+            "JS": "string",
+            "csharp": "string"
+        }
+    }
+]
+--------------------    
+ 
+"html":{
+    "toolbar": {
+        "e_query": "v_query",
+        "e_add": "e_add",
+        "e_del": "e_del",
+        "e_save": "e_save",
+        "e_clear": "e_clear"
+    },
+    form
+    tabs:
+        grid
+    grid
+},
+vue
+    data
+        form
+        i18n
+        grid
+        tabs
+    ,
+    computed
+    watch
+    methods
+ 
