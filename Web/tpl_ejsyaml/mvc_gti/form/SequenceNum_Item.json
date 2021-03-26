@@ -46,7 +46,18 @@
             "Action_Item": "ROUTE_SID"
         }
     },
-    "ut": {},
+    "ut": {
+        "_": {
+            "VERSION": "4.17.15",
+            "templateSettings": {
+                "escape": {},
+                "evaluate": {},
+                "interpolate": {},
+                "variable": "",
+                "imports": {}
+            }
+        }
+    },
     "toolbar": {
         "e_query": "1",
         "e_add": "",
