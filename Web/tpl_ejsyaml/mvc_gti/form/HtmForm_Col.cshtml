@@ -1,0 +1,19 @@
+﻿<gt-form-col label="@RES.BLL.Face.lblSetSequenceNo" v-model="form.ENCODE_FORMAT_NO">
+                </gt-form-col>
+                <gt-form-col label="@RES.BLL.Face.lblSetSequenceName" v-model="form.ENCODE_FORMAT_NAME">
+                </gt-form-col>
+                <gt-form-col label="@RES.BLL.Face.lblEncodeFormatType">
+                    <vue-selectize v-model="form.ENCODE_FORMAT_TYPE"
+                                   :options="options.EncodeFormatType" />
+                </gt-form-col>
+
+                <gt-form-col label="@RES.BLL.Face.lblMultiSerialDirection">
+                    <vue-selectize v-model="form.MULTI_SERIAL_DIRECTION"
+                                   :options="options.MultiSerialDirection" />
+                </gt-form-col>
+                <gt-form-col label="@RES.BLL.Face.Description">
+                    <el-input type="textarea"
+                              :autosize="{ minRows: 4}"
+                              v-model="form.DESCRIPTION">
+                    </el-input>
+                </gt-form-col>

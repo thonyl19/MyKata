@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("編碼原則維護表單").RESOURCE_NAME;
+    bool isSingleModel = (bool)ViewData["SingleModel"];
+    if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml";
+}
+
+@eBundle.QRender_CSS()
+@eBundle.QRender_JS()
+@Html.AntiForgeryToken()
+<div id="app" v-cloak class="m-sm">
+    <gt-toolbar<%- html.toolbar %> :enable.sync="ENABLE_FLAG" fixed='top'>
+    </gt-toolbar>
+    <div Area-Main class=" panel b ">
+        <div Area-Form class="panel-body form-horizontal gt-form">
+            <div class="row ">
+                <%- include('./HtmForm_Col.cshtml') %>
+            </div>
+            <el-tabs v-model="tabName">
+                <el-tab-pane label="@RES.BLL.Face.BaseInfo" name="first">
+                    <%- include('./HtmTab_BaseInfo.cshtml') %>
+                </el-tab-pane>
+                <el-tab-pane label="@RES.BLL.Face.Other" name="second">
+                    <%- include('./HtmTab_Other.cshtml') %>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+        var _data = @Html.Raw(ViewData["result"] ?? "{}");
+        console.log(_data);
+        let {form = {}} = _data;
+        /*
+        if (main == null) {
+            main = {
+                ENCODE_FORMAT_NO: '',
+                ENCODE_FORMAT_NAME:'',
+                MULTI_SERIAL_DIRECTION: '1',
+            };
+        }
+        */
+        $(() => {
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        <%- include('./VueDataI18n.js') %>
+                        <%- include('./VueDataGrid.js') %>
+                        form,
+                        tabName:'first',
+                        enable:true,
+                        isLock:false,
+                        ,confirm_arg:{
+                            showClose:false,
+                            closeOnClickModal: false,
+                            closeOnPressEscape:false,
+                            dangerouslyUseHTMLString:true,
+                            confirmButtonText: `@RES.BLL.Face.FunctionBarConfirmButton`,
+                            cancelButtonText: `@RES.BLL.Face.FunctionBarCancelButton`,
+                            type: 'info'
+                        },
+                    }
+                },
+                computed: {
+                    <%_ ut.echo(VueComputedToolbar,(el)=>{ _%>
+                    <%- el %><% }) %>
+                    <%- include('./VueComputed_isAddMode.js') %>
+                    <%- include('./VueComputed_ENABLE_FLAG.js') %>
+                    isCanSave() {
+                        //debugger
+                        var mustHaveItem = this.items
+                            .filter(el => el['ENCODE_FORMAT_ITEM_SID'] != -1)
+                            .length > 0;
+                        var isNotEditing = this.currentRow == null;
+                        return mustHaveItem && isNotEditing;
+                    },
+                },
+                watch: {
+                    <%- include('./VueWatch_ENABLE_FLAG.js') %>
+                },
+                methods: {
+                    <%- include('./VueMethods_e_enable.js') %>
+                    <%- include('./VueMethods_SaveDel.js') %>
+                    //#region [ToolBar 相關程序]
+                    <% for (var item in toolbar){ _%><%= item %>(){},
+                    <% } _%>//#endregion [ToolBar 相關程序]
+                    _test() {
+                        var _self = this;
+                        _self.MessageMustInputOne();
+                    },
+                    MessageMustInputOne() {
+                        var _msg = "@RES.BLL.Message.MustInputOne".replace("{0}","@RES.BLL.Face.SequenceDetail")
+                        this.$Alert.Err(_msg);
+                    },
+                }
+            })
+        });
+</script>
+<style>
+
+</style>
