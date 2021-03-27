@@ -136,6 +136,7 @@ const fs = require('fs');
             gt_form_col:'',
         },
         form:{
+            Form:'cshtml',
             SequenceNum_Item:'cshtml',
             VueComputedToolbar:'',
             toolbar_mode_1:'',
@@ -247,7 +248,7 @@ const fs = require('fs');
             var zz1 = await ejs.renderFile(_file.el_table._main,zz );
             ops.save(zz1,"el_table/~tmp.cshtml");    
         },
-        async '*SequenceNum_Item_Cfg'(){
+        async 'SequenceNum_Item_Cfg'(){
             let {_fn} = ops;
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
@@ -284,6 +285,45 @@ const fs = require('fs');
             
             arg.VueComputedToolbar = await ejs.renderFile(_file.form.VueComputedToolbar,arg);
             var s = await ejs.renderFile(_file.form.SequenceNum_Item, arg );
+            ops.save(s,"form/~tmp.cshtml"); 
+        },
+        async '*Form'(){
+            let {_fn} = ops;
+            let {row} = _data;
+            var SID_Filed = 'ROUTE_SID'; 
+            var arg = {
+                Prefix:'',
+                SID_Filed,
+                row,
+                Fileds:ops.parseFileds(row),
+                ext_rule:{
+                    ROUTE_NO:{
+                        Action_Item:'ROUTE_SID'
+                    }
+                },
+                ut,
+                toolbar:{
+                    e_query:"1",
+                    e_add:"",
+                    e_del:"",
+                    e_save:"",
+                    e_clear:"",
+                    //e_import:""
+                }
+            }
+            await ops.parse_toolbar(arg);
+            // for(var filed in arg.row){
+            //     let ext_rule = arg['ext_rule'][filed];
+            //     var arr =  (ext_rule==null)
+            //         ? _tpl_gti_table.gti_el_table_col(filed).split('\n')
+            //         : ops.parse_ext_rule(filed,ext_rule);
+            //         ;
+            //     arg.TableColumn = arg.TableColumn.concat(arr);
+            // }
+            var arg_json = ops.testJson(arg,"form/SequenceNum_Item.json"); 
+            
+            arg.VueComputedToolbar = await ejs.renderFile(_file.form.VueComputedToolbar,arg);
+            var s = await ejs.renderFile(_file.form.Form, arg );
             ops.save(s,"form/~tmp.cshtml"); 
         },
         async 'gt_toolbar'(){
