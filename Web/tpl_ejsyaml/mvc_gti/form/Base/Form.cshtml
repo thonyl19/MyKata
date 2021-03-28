@@ -1,34 +1,28 @@
-﻿@{
-    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("編碼原則維護表單").RESOURCE_NAME;
+﻿<%
+    arg.ut.fn_inc = include;
+%>
+@{
+    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("<%= arg.RESOURCE_NAME%>").RESOURCE_NAME;
     bool isSingleModel = (bool)ViewData["SingleModel"];
     if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml";
 }
-
 @eBundle.QRender_CSS()
 @eBundle.QRender_JS()
 @Html.AntiForgeryToken()
 <div id="app" v-cloak class="m-sm">
-    <gt-toolbar<%- html.toolbar %> :enable.sync="ENABLE_FLAG" fixed='top'>
-    </gt-toolbar>
+    <%_ arg.ut.echo_file('./~Htm_Toolbar.cshtml',(el)=>{ _%>
+    <%- el %><% }) %>
     <div Area-Main class=" panel b ">
         <div Area-Form class="panel-body form-horizontal gt-form">
             <div class="row ">
-                <%- include('./HtmForm_Col.cshtml') %>
+                <%_ arg.ut.echo_file('./~Htm_FormCol.cshtml',(el)=>{ _%>
+			    <%- el %><% }) %>
             </div>
-            <el-tabs v-model="tabName">
-                <el-tab-pane label="@RES.BLL.Face.BaseInfo" name="first">
-                    <%- include('./HtmTab_BaseInfo.cshtml') %>
-                </el-tab-pane>
-                <el-tab-pane label="@RES.BLL.Face.Other" name="second">
-                    <%- include('./HtmTab_Other.cshtml') %>
-                </el-tab-pane>
-            </el-tabs>
+            <%_ arg.ut.echo_file('./~Htm_Tabs.cshtml',(el)=>{ _%>
+            <%- el %><% }) %>
         </div>
-
     </div>
 </div>
-
-
 <script>
         var _data = @Html.Raw(ViewData["result"] ?? "{}");
         console.log(_data);
@@ -47,8 +41,8 @@
                 el: '#app',
                 data() {
                     return {
-                        <%- include('./VueDataI18n.js') %>
-                        <%- include('./VueDataGrid.js') %>
+                        <%_ arg.ut.echo_file('./~Vue_Data.js',(el)=>{ _%>
+                        <%- el %><% }) %>
                         form,
                         tabName:'first',
                         enable:true,
@@ -65,10 +59,8 @@
                     }
                 },
                 computed: {
-                    <%_ ut.echo(VueComputedToolbar,(el)=>{ _%>
+                    <%_ arg.ut.echo_file('./~Vue_Computed.js',(el)=>{ _%>
                     <%- el %><% }) %>
-                    <%- include('./VueComputed_isAddMode.js') %>
-                    <%- include('./VueComputed_ENABLE_FLAG.js') %>
                     isCanSave() {
                         //debugger
                         var mustHaveItem = this.items
@@ -79,14 +71,16 @@
                     },
                 },
                 watch: {
-                    <%- include('./VueWatch_ENABLE_FLAG.js') %>
+                    <%_ arg.ut.echo_file('./~Vue_Watch.js',(el)=>{ _%>
+                    <%- el %><% }) %>
                 },
                 methods: {
-                    <%- include('./VueMethods_e_enable.js') %>
-                    <%- include('./VueMethods_SaveDel.js') %>
-                    //#region [ToolBar 相關程序]
-                    <% for (var item in toolbar){ _%><%= item %>(){},
-                    <% } _%>//#endregion [ToolBar 相關程序]
+                    <%_ arg.ut.echo_file('./~Vue_Methods.js',(el)=>{ _%>
+                    <%- el %><% }) %>
+                    getSID(){
+                        let {<%= arg.SID_Filed%>:SID} = this.form;
+                        return SID;
+                    },
                     _test() {
                         var _self = this;
                         _self.MessageMustInputOne();

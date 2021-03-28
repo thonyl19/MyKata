@@ -1,7 +1,7 @@
 ﻿e_enable(Enable) {
 	var _self = this;
 	let param = {
-		SID : this.form.ENCODE_FORMAT_SID,
+		SID : this.getSID(),
 		Enable
 	}
 	var url = '@Url.Action("Enable")';

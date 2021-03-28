@@ -1,0 +1,101 @@
+{
+    "RESOURCE_NAME": "RESOURCE_NAME",
+    "Prefix": "",
+    "SID_Filed": "ROUTE_SID",
+    "row": {
+        "ROUTE_NO": "C030-19",
+        "ROUTE": "?面?极板（子流程）",
+        "ROUTE_CATEGORY": "R",
+        "DESCRIPTION": "",
+        "ENABLE_FLAG": true
+    },
+    "Fileds": [
+        {
+            "label": "ROUTE_NO",
+            "val": "C030-19",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "ROUTE",
+            "val": "?面?极板（子流程）",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "ROUTE_CATEGORY",
+            "val": "R",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "DESCRIPTION",
+            "val": "",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "ENABLE_FLAG",
+            "val": true,
+            "map_type": {
+                "JS": "boolean",
+                "csharp": "bool"
+            }
+        }
+    ],
+    "ext_rule": {
+        "ROUTE_NO": {
+            "Action_Item": "ROUTE_SID"
+        }
+    },
+    "toolbar": {
+        "e_query": "1",
+        "e_add": "",
+        "e_del": "",
+        "e_save": "",
+        "e_clear": ""
+    },
+    "ut": {
+        "_": {
+            "VERSION": "4.17.15",
+            "templateSettings": {
+                "escape": {},
+                "evaluate": {},
+                "interpolate": {},
+                "variable": "",
+                "imports": {}
+            }
+        }
+    },
+    "cols": [
+        {
+            "label": "label=\"test\"",
+            "prop": "test"
+        }
+    ],
+    "tabs": {
+        "A": {},
+        "B": ""
+    },
+    "html": {
+        "toolbar": [
+            ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" ",
+            ":enable.sync=\"ENABLE_FLAG\" "
+        ]
+    },
+    "vue": {
+        "computed": {
+            "toolbar": {
+                "v_query": "e_query"
+            }
+        }
+    }
+}
