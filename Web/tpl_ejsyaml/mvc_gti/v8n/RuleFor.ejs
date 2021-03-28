@@ -1,0 +1,3 @@
+﻿<% for(var item of arg.Fileds) { _%>
+RuleFor(x => x.<%= item.label%>).NotEmpty().WithName(<%= arg.Prefix%><%= item.label%>);
+<%_ } _%>

@@ -1,0 +1,89 @@
+
+@{
+    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("RESOURCE_NAME").RESOURCE_NAME;
+    bool isSingleModel = (bool)ViewData["SingleModel"];
+    if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml";
+}
+@eBundle.QRender_CSS()
+@eBundle.QRender_JS()
+@Html.AntiForgeryToken()
+<div id="app" v-cloak class="m-sm">
+    <gt-toolbar fixed='top'    	:e_query="v_query" :e_add="e_add" :e_del="e_del" :e_save="e_save" :e_clear="e_clear"     	:enable.sync="ENABLE_FLAG" >    </gt-toolbar>
+    <div Area-Main class=" panel b ">
+        <div Area-Form class="panel-body form-horizontal gt-form">
+            <div class="row ">
+			    <gt-form-col label="@RES.BLL.Face.lblSetSequenceNo" v-model="form.ENCODE_FORMAT_NO">			    </gt-form-col>			    <gt-form-col label="@RES.BLL.Face.lblSetSequenceName" v-model="form.ENCODE_FORMAT_NAME">			    </gt-form-col>			    <gt-form-col label="@RES.BLL.Face.lblEncodeFormatType">			        <vue-selectize v-model="form.ENCODE_FORMAT_TYPE"			                        :options="options.EncodeFormatType" />			    </gt-form-col>			    <gt-form-col label="@RES.BLL.Face.lblMultiSerialDirection">			        <vue-selectize v-model="form.MULTI_SERIAL_DIRECTION"			                        :options="options.MultiSerialDirection" />			    </gt-form-col>			    <gt-form-col label="@RES.BLL.Face.Description">			        <el-input type="textarea"			                    :autosize="{ minRows: 4}"			                    v-model="form.DESCRIPTION">			        </el-input>			    </gt-form-col>
+            </div>
+            <el-tabs v-model="tabName">                <el-tab-pane label="@RES.BLL.Face.BaseInfo" name="first">                    <!-- #region [input_grid] -->                    <el-table empty-text=" " style="width: 100%" ref="input_grid" :height="grid_height"                                :row-class-name="RowStyle"                                :data="items">                        <el-table-column label="操作" min-width="120">                            <template slot="header" slot-scope="scope">                                <el-button size="small" class="s-VIEW"                                            type="primary"                                            icon="el-icon-plus"                                            @@click="AddItem"></el-button>                                {{i18n.操作}}                            </template>                            <template slot-scope="scope">                                <el-button size="small" circle class="s-VIEW"                                            type="success"                                            icon="el-icon-edit"                                            :disabled="ENABLE_FLAG"                                            @@click="Edit(scope.$index, scope.row)"></el-button>                                <el-button size="small" circle class="s-VIEW"                                            type="danger"                                            icon="el-icon-delete"                                            :disabled="ENABLE_FLAG"                                            @@click="DelRow(scope.$index, scope.row)"></el-button>                                <el-button size="small" circle class="s-NORMAL"                                            type="success"                                            icon="el-icon-check"                                            @@click="Confirm(scope.$index, scope.row)"></el-button>                                <el-button size="small" circle class="s-NORMAL"                                            type="danger"                                            icon="el-icon-refresh-right"                                            @@click="Cancel(scope.$index, scope.row)"></el-button>                            </template>                        </el-table-column>                    </el-table>                    <!-- #endregion -->                </el-tab-pane>                <el-tab-pane label="@RES.BLL.Face.Other" name="second">                    <el-table empty-text=" " style="width: 100%" :height="grid_height"                                            :data="ctrl_items">                        <el-table-column prop="RESET_FORMAT_MASK" label="@Face.RESET_FORMAT_MASK">                        </el-table-column>                        <el-table-column prop="SERIAL_LAST_VALUE" label="@Face.SERIAL_LAST_VALUE">                        </el-table-column>                        <el-table-column prop="UPDATE_DATE" label="@Face.UPDATE_DATE">                        </el-table-column>                        <el-table-column prop="UPDATE_USER" label="@Face.UPDATE_USER">                        </el-table-column>                    </el-table>                </el-tab-pane>            </el-tabs>
+        </div>
+    </div>
+</div>
+<script>
+        var _data = @Html.Raw(ViewData["result"] ?? "{}");
+        console.log(_data);
+        let {form = {}} = _data;
+        /*
+        if (main == null) {
+            main = {
+                ENCODE_FORMAT_NO: '',
+                ENCODE_FORMAT_NAME:'',
+                MULTI_SERIAL_DIRECTION: '1',
+            };
+        }
+        */
+        $(() => {
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        //TODO-i18n:                        i18n: {                            順序號: "@RES.BLL.Face.ITEM_SEQ",                            類別: "@RES.BLL.Face.ITEM_TYPE",                            操作: "@RES.BLL.Face.Operate",                            長度: "@RES.BLL.Face.ITEM_VALUE_LENGTH",                            值: "@RES.BLL.Face.ITEM_VALUE",                            可用字元列表: "@RES.BLL.Face.SERIAL_CHARS",                            表名: "@RES.BLL.Face.TABLE_NAME",                            列名: "@RES.BLL.Face.COLUMN_NAME",                            列起始值: "@RES.BLL.Face.COLUMN_VALUE_START",                            序號起始值: "@RES.BLL.Face.SERIAL_START_VALUE",                            入口函數: "@RES.BLL.Face.CUSTOM_ENTRY_FUNCTION",                            是否重置: "@RES.BLL.Face.RESET_ON_CHANGED",                            ConfirmCancel: '請確認是否放棄當前的修改?',                            ConfirmDel: '請確認是否刪除這筆資料?',                            ConfirmAdd: '執行新增將跳離當前頁面，請確認.',                            ConfirmSave: '請確認,是否執行儲存?',                        },                        grid: {                            data: items,                            pageSize: 10,                            pageIdx: 1,                            row_count: 0,                            Sort: {                                Name: "CREATE_DATE",                                isAsc: true                            },                            Conditions: {},                            Page: {                                Index: 1,                                Size: 10,                            },                            get query_rule() {                                {                                    let { Conditions, Sort, Page } = this;                                    return {                                        Conditions, Sort, Page                                    }                                }                            }                        },
+                        form,
+                        tabName:'first',
+                        enable:true,
+                        isLock:false,
+                        ,confirm_arg:{
+                            showClose:false,
+                            closeOnClickModal: false,
+                            closeOnPressEscape:false,
+                            dangerouslyUseHTMLString:true,
+                            confirmButtonText: `@RES.BLL.Face.FunctionBarConfirmButton`,
+                            cancelButtonText: `@RES.BLL.Face.FunctionBarCancelButton`,
+                            type: 'info'
+                        },
+                    }
+                },
+                computed: {
+                    /// #region [VueComupteToolbar]                     v_query() {                    	return {                    		//TODO:                    		visable: true,                    		enable: true,                    		fn: this.e_query                    	}                    },                    /// #endregion [VueComupteToolbar]                     ENABLE_FLAG:{                    	get() {                    		let { ENABLE_FLAG = 'F' } = this.form;                    		return ENABLE_FLAG == 'T';                    	},                    	set(val) {                    		//debugger                    		this.form.ENABLE_FLAG = val? 'T':'F';                    	}                    },                    isAddMode() {                    	var url = new URL(location);                    	var SID = url.searchParams.get('SID') ?? "";                    	var isAddMode = (SID == "");                    	return isAddMode;                    },
+                    isCanSave() {
+                        //debugger
+                        var mustHaveItem = this.items
+                            .filter(el => el['ENCODE_FORMAT_ITEM_SID'] != -1)
+                            .length > 0;
+                        var isNotEditing = this.currentRow == null;
+                        return mustHaveItem && isNotEditing;
+                    },
+                },
+                watch: {
+                    ENABLE_FLAG(val) {                    	if (!this.isLock) {                    		this.isLock = true;                    		this.e_enable(val);                    	}                    },
+                },
+                methods: {
+                    e_enable(Enable) {                    	var _self = this;                    	let param = {                    		SID : this.getSID(),                    		Enable                    	}                    	var url = '@Url.Action("Enable")';                    	var _ajax = {                    		url,                    		param,                    		type: 'post',                    		async success(res) {                    			//debugger                    			let { Success, Data, Message = ""} = res;                    			if (Success) {                    			} else {                    				_self.form.ENABLE_FLAG = !Enable;                    				await _self.$nextTick();                    			}                    			_self.isLock = false;                    			_self.$UT.parent_reload();                    		}                    	};                    	return $.submitForm(_ajax);                    },                    e_del() {                    	//debugger                    	var _self = this;                    	let { ENCODE_FORMAT_SID } = _self.form;                    	if (ENCODE_FORMAT_SID == null) {                    		var msg = "@RES.BLL.Message.ErrorMessage".replace("{0}", "SID 不正確!");                    		_self.$Alert.Err(msg);                    		return;                    	}                    	this.leyer_idx = parent.layer.getFrameIndex(window.name);                    	this.$confirm(_self.i18n.ConfirmDel, '提示', _self.confirm_arg).then(() => {                    		var url = '@Url.Action("Delete")';                    		var _ajax = {                    			url,                    			param: { SID: ENCODE_FORMAT_SID },                    			type: 'post',                    			success :_self.Ajax_success                    		};                    		$.submitForm(_ajax);                    	});                    },                    e_save() {                    	var _self = this;                    	let param = {                    		main: _self.form,                    		items: _self.grid.data                    	};                    	if (param.items.length == 0) {                    		_self.MessageMustInputOne();                    		return;                    	}                    	this.$confirm(_self.i18n.ConfirmSave, '提示',_self.confirm_arg).then(() => {                    		var url = _self.isAddMode                    			? '@Url.Action("Create")'                    			: '@Url.Action("Update")'                    			;                    		var _ajax = {                    			url,                    			param,                    			type: 'post',                    			success :_self.Ajax_success                    		};                    		//console.log(JSON.stringify(param,null));                    		$.submitForm(_ajax);                    	});                    },                    Ajax_success(res) {                    	let { Success, Data, Message = ""} = res;                    	if (Success) {                    		var _self = this;                    		var isDelMark = this.leyer_idx != null;                    		var _msg = isDelMark                    			? '@RES.BLL.Message.DeleteSuccessfulmsg'                    			: '@RES.BLL.Message.SaveSuccessful'                    			;                    		this.$UT.parent_reload();                    		this.$Alert.Success(_msg).then(() => {                    			if (isDelMark) {                    				parent.layer.close(_self.leyer_idx);                    			} else {                    				_self.reload(Data);                    			}                    		});                    	} else {                    		this.$Alert.Warning(Message);                    	}                    },                                        reload(Data) {                    	if (this.isAddMode) {                    		let { SID } = Data;                    		this.$URL.chgSearchParam({ SID }, true);                    	} else {                    		location.replace(location.href);                    	}                    },                    //#region [ToolBar 相關程序]                    v_query(){                    	//TODO:v_query                    },                    //#endregion [ToolBar 相關程序]
+                    getSID(){
+                        let {ROUTE_SID:SID} = this.form;
+                        return SID;
+                    },
+                    _test() {
+                        var _self = this;
+                        _self.MessageMustInputOne();
+                    },
+                    MessageMustInputOne() {
+                        var _msg = "@RES.BLL.Message.MustInputOne".replace("{0}","@RES.BLL.Face.SequenceDetail")
+                        this.$Alert.Err(_msg);
+                    },
+                }
+            })
+        });
+</script>
+<style>
+
+</style>

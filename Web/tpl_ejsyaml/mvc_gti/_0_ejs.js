@@ -28,6 +28,26 @@ const fs = require('fs');
         save(data,filename="test.txt"){
             fs.writeFileSync(`./tpl_ejsyaml/mvc_gti/${filename}`,data,'utf-8');
         },
+        save_part(basePath,args){
+            for(var item in args){
+                var _s = args[item].join('\n');
+                var _n = `${basePath}${item}`;
+                _n
+                ops.save(_s,`${basePath}${item}`);
+            }
+        },
+        async save_grp(basePath,grps,arg){
+            for(var grp in grps){
+                var items = grps[grp];
+                for(var idx in items){
+                    var _ejs = items[idx];
+                    items[idx] = await ejs.renderFile(_ejs, arg);
+                }
+                var _FileName = `${basePath}${grp}`;
+                var _Code = items.join('\n');
+                ops.save(_Code,_FileName);
+            }
+        },
         ejs(fileName,ext="ejs"){
             return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`
         },
@@ -36,6 +56,13 @@ const fs = require('fs');
             ops.save(s,filename); 
             return s;
         },
+//         SaveJson(data,filename="~test.json"){
+//             var z = path.extname(filename);
+// z
+//             var s = JSON.stringify(data,null,4);  
+//             ops.save(s,filename); 
+//             return s;
+//         },
         parseFileds(row){
             var fileds = [];
             for(var label in row){
@@ -93,8 +120,9 @@ const fs = require('fs');
             return [];
         },
         async parse_toolbar(arg){
-            let {toolbar = {}} = arg; 
-            var html_toolbar = "";
+            let {toolbar = {},row={}} = arg; 
+            var html_toolbar = [];
+            var html_fun = "";
             var vue_computed = {};
             await _.each(toolbar,async(val,key)=>{
                 switch(key){
@@ -105,10 +133,16 @@ const fs = require('fs');
                             vue_computed[fun]=key;
                             //vue_computed.push({key,fun});
                         } 
-                        html_toolbar += ` :${key}="${fun}"`;
+                        html_fun += `:${key}="${fun}" `;
                         break;
                 }
             })
+
+            html_toolbar.push(html_fun);
+            let {ENABLE_FLAG} = row ;
+            if (ENABLE_FLAG!=null){
+                html_toolbar.push(`:enable.sync="ENABLE_FLAG" `);
+            }
             _.set(arg, 'html.toolbar', html_toolbar);
             _.set(arg, 'vue.computed.toolbar', vue_computed);
         }
@@ -122,12 +156,37 @@ const fs = require('fs');
                 ;
             return _arr.map(cb);
         },
+        async echo_file(fileName,cb){
+            fileName
+            var data = this.fn_inc(fileName);
+            var _arr = Array.isArray(data)
+                ?data
+                :data.split('\n')
+                ;
+            return _arr.map(cb);
+        },
+        async echo_rander(fileName,arg,cb){
+            fileName
+            arg
+            var data = this.fn_inc(fileName,arg);
+            data
+            var _arr = Array.isArray(data)
+                ?data
+                :data.split('\n')
+                ;
+            return _arr.map(cb);
+        },
         parse_label(item,Prefix){
             var _Prefix =  _.isEmpty(Prefix)?"i18n.":Prefix;
             return `${_Prefix=="i18n."?':':''}label="${_Prefix}${item.label}"`;
         }
     }
     var _file = {
+        v8n:{
+            Base:'cs',
+            RuleFor:'',
+            Check:'',
+        },
         el_table:{
             _main:'cshtml',
             VueTpl:'',
@@ -136,14 +195,18 @@ const fs = require('fs');
             gt_form_col:'',
         },
         form:{
-            Form:'cshtml',
+            Base:{
+                Form:'cshtml',
+                VueComputedToolbar:'',
+            },
             SequenceNum_Item:'cshtml',
-            VueComputedToolbar:'',
             toolbar_mode_1:'',
         },
         piece:{
             json_i18n:'',
-            gt_toolbar:'',
+            gt_toolbar:'cshtml',
+            gt_form_col:'cshtml',
+            el_table_column:'cshtml',
             vue_data_form:'',
             vue_data_i18n:'',
         }
@@ -178,7 +241,7 @@ const fs = require('fs');
             "ROUTE": "?面?极板（子流程）",
             "ROUTE_CATEGORY": "R",
             "DESCRIPTION": "",
-
+            "ENABLE_FLAG":true
           }, 
         filed_1 : {
             "ROUTE_SID": "GTI20101517555209104",
@@ -292,6 +355,7 @@ const fs = require('fs');
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
+                RESOURCE_NAME:'RESOURCE_NAME',
                 Prefix:'',
                 SID_Filed,
                 row,
@@ -301,7 +365,6 @@ const fs = require('fs');
                         Action_Item:'ROUTE_SID'
                     }
                 },
-                ut,
                 toolbar:{
                     e_query:"1",
                     e_add:"",
@@ -309,22 +372,80 @@ const fs = require('fs');
                     e_save:"",
                     e_clear:"",
                     //e_import:""
+                },
+                ut,
+                cols:[{
+                    label:`label="test"`,
+                    prop:"test"
+                }],
+                tabs:{
+                    A:{
+                        label:'',
+                        form
+                    },
+                    B:{
+                        grid:{
+                            cols:[{
+                                label:`label="test"`,
+                                prop:"test"
+                            }]
+                        }
+                    },
                 }
             }
             await ops.parse_toolbar(arg);
-            // for(var filed in arg.row){
-            //     let ext_rule = arg['ext_rule'][filed];
-            //     var arr =  (ext_rule==null)
-            //         ? _tpl_gti_table.gti_el_table_col(filed).split('\n')
-            //         : ops.parse_ext_rule(filed,ext_rule);
-            //         ;
-            //     arg.TableColumn = arg.TableColumn.concat(arr);
-            // }
-            var arg_json = ops.testJson(arg,"form/SequenceNum_Item.json"); 
-            
-            arg.VueComputedToolbar = await ejs.renderFile(_file.form.VueComputedToolbar,arg);
-            var s = await ejs.renderFile(_file.form.Form, arg );
-            ops.save(s,"form/~tmp.cshtml"); 
+            var arg_json = ops.testJson(arg,"form/Base/Form.json"); 
+            var _part = {
+                "~Htm_Toolbar.cshtml": [
+                    _file.piece.gt_toolbar
+                ],
+                "~Htm_FormCol.cshtml":[
+                    _file.piece.gt_form_col
+                ],
+                "_Htm_FormCol.cshtml":[
+                    _file.piece.el_table_column
+                ]
+                // "~Check.cs": [
+                //     _file.v8n.Check
+                // ],
+                // "_tmp.cshtml":[
+                //     _file.form.Base.Form
+                // ]
+            }
+            await ops.save_grp(`form/Base/`,_part,{arg} );
+
+
+            // arg.VueComputedToolbar = await ejs.renderFile(_file.form.Base.VueComputedToolbar,arg);
+            // var s = await ejs.renderFile(_file.form.Base.Form, arg );
+            // ops.save(s,"form/Base/~tmp.cshtml"); 
+        },
+        async 'v8n'(){
+            let {_fn} = ops;
+            let {row} = _data;
+            var SID_Filed = 'ROUTE_SID'; 
+            var arg = {
+                TableName:'ROUTE',
+                RESOURCE_NAME:'RESOURCE_NAME',
+                Prefix:'',
+                SID_Filed,
+                row,
+                Fileds:ops.parseFileds(row),
+                ut,
+            }
+            var arg_json = ops.testJson(arg,"v8n/Base.json"); 
+             
+            var _part = {
+                "~RuleFor.cs": [
+                    _file.v8n.RuleFor
+                ],
+                "~Check.cs": [
+                    _file.v8n.Check
+                ],
+                "~tmp.cs":[
+                    _file.v8n.Base
+                ]
+            }
+            await ops.save_grp(`v8n/`,_part,{arg} );
         },
         async 'gt_toolbar'(){
             var arg = {

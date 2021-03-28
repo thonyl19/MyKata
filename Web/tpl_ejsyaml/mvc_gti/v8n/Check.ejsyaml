@@ -1,0 +1,10 @@
+# input data
+jsonCodes: !readtext Base.json
+--- |
+<% 
+ 	var s = JSON.parse(jsonCodes);
+    this.render('Check.ejs', '~tmp.txt', {arg:s});
+    //this.render('../../toJson.ejs', '~RuleFor.cs', {arg:s});
+%>
+<%#
+%>

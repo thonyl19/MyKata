@@ -1,0 +1,14 @@
+﻿<%#
+/*
+<el-table-column label="@Face.RESET_FORMAT_MASK"
+    prop="RESET_FORMAT_MASK" 
+    ></el-table-column> 
+*/
+%>
+<!-- #region [el-table-column] -->
+<%_ for(var col of arg.cols){ _%>
+<gt-form-col <%- col.label%>
+    prop="<%=col.prop%>" 
+    ></el-table-column>
+<%_} _%>
+<!-- #endregion [el-table-column] -->

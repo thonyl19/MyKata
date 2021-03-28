@@ -1,0 +1,10 @@
+# input data
+jsonCodes: !readtext Base.json
+--- |
+<%- $.outfile('~tmp.js') _%>
+<%_ 
+ 	var s = JSON.stringify(JSON.parse(jsonCodes), null, 2);
+_%>
+<%- s%>
+<%#
+%>
