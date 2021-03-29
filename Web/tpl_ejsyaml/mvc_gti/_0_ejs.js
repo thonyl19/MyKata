@@ -71,11 +71,9 @@ const fs = require('fs');
                 }
             })
             let _grp = PIECE[point]; 
-            //console.log(_grp);
             if (_grp!=null){
                 _grp.map(async(el)=>{
                     var _s = await ejs.renderFile( el ,{arg:BaseArg});
-                    _s
                     _code.push(_s);
                 })
             }
@@ -90,9 +88,7 @@ const fs = require('fs');
                     //case "Vue_Methods":
                     default:
                         var arr = await ops.parse_point(arg,el);
-                        arr
                         var _file = `${basePath}~${el}.txt`;
-                        _file
                         ops.save(arr.join('\r\n'),_file,false); 
                         break;
                 }
@@ -110,13 +106,6 @@ const fs = require('fs');
             ops.save(s,filename); 
             return s;
         },
-//         SaveJson(data,filename="~test.json"){
-//             var z = path.extname(filename);
-// z
-//             var s = JSON.stringify(data,null,4);  
-//             ops.save(s,filename); 
-//             return s;
-//         },
         parseFileds(row){
             var fileds = [];
             for(var label in row){
@@ -337,15 +326,15 @@ const fs = require('fs');
             }
         },
         ENABLE_FLAG:{
-            Controller:'cs',
-            Vue_Data:'js',
-            Vue_Methods:'js',
-            Vue_Watch:'js',
+            Controller:'',
+            Vue_Data:'',
+            Vue_Methods:'',
+            Vue_Watch:'',
         },
         gt_toolbar:{
-            Html:'cshtml',
-            Vue_Computed:'js',
-            Vue_Methods:'js'
+            Html:'',
+            Vue_Computed:'',
+            Vue_Methods:''
         },
         v8n:{
             Base:'cs',
@@ -734,6 +723,9 @@ const fs = require('fs');
             }
             await ops.save_grp(basePath,_part,{arg} );
         },
+
+
+
         async 'gt_toolbar'(){
             var arg = {
                 bts:[

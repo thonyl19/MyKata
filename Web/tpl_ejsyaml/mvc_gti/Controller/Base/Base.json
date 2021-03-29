@@ -10,7 +10,8 @@
         "ROUTE_NO": "C030-19",
         "ROUTE": "?面?极板（子流程）",
         "ROUTE_CATEGORY": "R",
-        "DESCRIPTION": ""
+        "DESCRIPTION": "",
+        "ENABLE_FLAG": true
     },
     "ut": {
         "_": {
@@ -60,7 +61,18 @@
                 "csharp": "string"
             },
             "label": "label=\"RES.BLL.Face.undefined\""
+        },
+        {
+            "Name": "ENABLE_FLAG",
+            "val": true,
+            "map_type": {
+                "JS": "boolean",
+                "csharp": "bool"
+            },
+            "label": "label=\"RES.BLL.Face.undefined\""
         }
     ],
-    "ext_mode": {}
+    "ext_mode": {
+        "ENABLE_FLAG": true
+    }
 }
