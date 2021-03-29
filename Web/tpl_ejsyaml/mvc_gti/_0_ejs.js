@@ -102,9 +102,59 @@ const fs = require('fs');
             }
             return fileds;
         },
-        parseFile(args,path=""){
-            for (var _name in args){
-                var _val = args[_name];
+        parseRow(arg){
+            let {row} = arg;
+            if (row==null) return ;
+            var fileds = [];
+            var ext_mode = {}; 
+            for(var label in row){
+                var val = row[label];
+                var JS = typeof(val);
+                switch(JS){
+                    case "object":
+                        if (val === null){
+                            JS = 'string';
+                        } else  if (Array.isArray(val)){
+                            JS = 'array';
+                        }
+                        break;
+                    case "string":
+                        if (moment(val).isValid()){
+                            JS = "date";
+                        }
+                        break;
+                    case "number":
+                        JS =_.isInteger(val)
+                            ?"int"
+                            :"float" 
+                        break;
+                    default:
+                        break;
+                }
+                var _arg = {
+                    label
+                    ,val
+                    ,"map_type":{
+                        JS,
+                        csharp:map_csharpType[JS]
+                    }
+                }
+                fileds.push(_arg);
+
+                switch(label){
+                    case "ENABLE_FLAG":
+                        ext_mode[label] = true;
+                        break;
+                    }
+                }
+                _.set(arg, 'fileds', fileds);
+                _.set(arg, 'ext_mode', ext_mode);
+                console.log(arg);
+                return arg;
+            },
+            parseFile(args,path=""){
+                for (var _name in args){
+                    var _val = args[_name];
                 var _pathName = `${path}${_name}`;
                 if (_val == "" ){
                     args[_name] =  ops.ejs(_pathName);
@@ -120,7 +170,7 @@ const fs = require('fs');
             return [];
         },
         async parse_toolbar(arg){
-            let {toolbar = {},row={}} = arg; 
+            let {toolbar = {}} = arg; 
             var html_toolbar = [];
             var html_fun = "";
             var vue_computed = {};
@@ -139,8 +189,9 @@ const fs = require('fs');
             })
 
             html_toolbar.push(html_fun);
-            let {ENABLE_FLAG} = row ;
-            if (ENABLE_FLAG!=null){
+            var  ENABLE_FLAG = _.get(arg,"ext_mode.ENABLE_FLAG");
+            ENABLE_FLAG
+            if (ENABLE_FLAG){
                 html_toolbar.push(`:enable.sync="ENABLE_FLAG" `);
             }
             _.set(arg, 'html.toolbar', html_toolbar);
@@ -182,6 +233,11 @@ const fs = require('fs');
         }
     }
     var _file = {
+        Controller:{
+            Base:{
+                _main:'cs'
+            }
+        },
         v8n:{
             Base:'cs',
             RuleFor:'',
@@ -350,7 +406,7 @@ const fs = require('fs');
             var s = await ejs.renderFile(_file.form.SequenceNum_Item, arg );
             ops.save(s,"form/~tmp.cshtml"); 
         },
-        async '*Form'(){
+        async 'Form'(){
             let {_fn} = ops;
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
@@ -359,7 +415,6 @@ const fs = require('fs');
                 Prefix:'',
                 SID_Filed,
                 row,
-                Fileds:ops.parseFileds(row),
                 ext_rule:{
                     ROUTE_NO:{
                         Action_Item:'ROUTE_SID'
@@ -381,7 +436,7 @@ const fs = require('fs');
                 tabs:{
                     A:{
                         label:'',
-                        form
+                        //form
                     },
                     B:{
                         grid:{
@@ -393,6 +448,7 @@ const fs = require('fs');
                     },
                 }
             }
+            ops.parseRow(arg);
             await ops.parse_toolbar(arg);
             var arg_json = ops.testJson(arg,"form/Base/Form.json"); 
             var _part = {
@@ -412,7 +468,7 @@ const fs = require('fs');
                 //     _file.form.Base.Form
                 // ]
             }
-            await ops.save_grp(`form/Base/`,_part,{arg} );
+           // await ops.save_grp(`form/Base/`,_part,{arg} );
 
 
             // arg.VueComputedToolbar = await ejs.renderFile(_file.form.Base.VueComputedToolbar,arg);
@@ -424,9 +480,9 @@ const fs = require('fs');
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
-                TableName:'ROUTE',
+                TableName:'PF_ROUTE',
                 RESOURCE_NAME:'RESOURCE_NAME',
-                Prefix:'',
+                Prefix:'RES.BLL.Face.',
                 SID_Filed,
                 row,
                 Fileds:ops.parseFileds(row),
@@ -446,6 +502,38 @@ const fs = require('fs');
                 ]
             }
             await ops.save_grp(`v8n/`,_part,{arg} );
+        },
+
+        async '*Controller_Base'(){
+            let basePath = `Controller/Base/`;
+            let {_fn} = ops;
+            let {row} = _data;
+            var SID_Filed = 'ROUTE_SID'; 
+            var arg = {
+                Areas:'ADM',
+                FunctionName:"QcLevel",
+                TableName:'PF_ROUTE',
+                RESOURCE_NAME:'RESOURCE_NAME',
+                Prefix:'RES.BLL.Face.',
+                SID_Filed,
+                row,
+                ut,
+            }
+            arg = ops.parseRow(arg);
+            var arg_json = ops.testJson(arg,`${basePath}Base.json`); 
+             
+            var _part = {
+                // "~RuleFor.cs": [
+                //     _file.v8n.RuleFor
+                // ],
+                // "~Check.cs": [
+                //     _file.v8n.Check
+                // ],
+                "~tmp.cs":[
+                    _file.Controller.Base._main
+                ]
+            }
+            await ops.save_grp(basePath,_part,{arg} );
         },
         async 'gt_toolbar'(){
             var arg = {

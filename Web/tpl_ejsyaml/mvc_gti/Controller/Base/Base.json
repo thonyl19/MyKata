@@ -1,4 +1,6 @@
 {
+    "Areas": "ADM",
+    "FunctionName": "QcLevel",
     "TableName": "PF_ROUTE",
     "RESOURCE_NAME": "RESOURCE_NAME",
     "Prefix": "RES.BLL.Face.",
@@ -10,7 +12,19 @@
         "DESCRIPTION": "",
         "ENABLE_FLAG": true
     },
-    "Fileds": [
+    "ut": {
+        "_": {
+            "VERSION": "4.17.15",
+            "templateSettings": {
+                "escape": {},
+                "evaluate": {},
+                "interpolate": {},
+                "variable": "",
+                "imports": {}
+            }
+        }
+    },
+    "fileds": [
         {
             "label": "ROUTE_NO",
             "val": "C030-19",
@@ -52,16 +66,7 @@
             }
         }
     ],
-    "ut": {
-        "_": {
-            "VERSION": "4.17.15",
-            "templateSettings": {
-                "escape": {},
-                "evaluate": {},
-                "interpolate": {},
-                "variable": "",
-                "imports": {}
-            }
-        }
+    "ext_mode": {
+        "ENABLE_FLAG": true
     }
 }
