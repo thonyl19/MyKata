@@ -1,7 +1,7 @@
 ﻿<!-- #region [gt_form_col] -->
 <%_ for(var item of arg.Fileds){ _%>
-<gt-form-col <%- arg.ut.parse_label(item,arg.Prefix)%>
-			v-model="form.<%=item.label%>"
+<gt-form-col <%- item.label %>
+			v-model="form.<%=item.Name%>"
 			></gt-form-col>
 <%_} _%>
 <!-- #endregion [gt_form_col] -->

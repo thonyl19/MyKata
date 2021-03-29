@@ -1,16 +1,16 @@
 {
     "Areas": "ADM",
     "FunctionName": "QcLevel",
-    "TableName": "PF_ROUTE",
     "RESOURCE_NAME": "RESOURCE_NAME",
+    "TableName": "PF_ROUTE",
     "Prefix": "RES.BLL.Face.",
+    "CheckDataRule": "//serv.svcRoute.CheckDataRule = serv.CheckDataRule_PF_ROUTE;",
     "SID_Filed": "ROUTE_SID",
     "row": {
         "ROUTE_NO": "C030-19",
         "ROUTE": "?面?极板（子流程）",
         "ROUTE_CATEGORY": "R",
-        "DESCRIPTION": "",
-        "ENABLE_FLAG": true
+        "DESCRIPTION": ""
     },
     "ut": {
         "_": {
@@ -24,49 +24,43 @@
             }
         }
     },
-    "fileds": [
+    "Fileds": [
         {
-            "label": "ROUTE_NO",
+            "Name": "ROUTE_NO",
             "val": "C030-19",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
+            },
+            "label": "label=\"RES.BLL.Face.undefined\""
         },
         {
-            "label": "ROUTE",
+            "Name": "ROUTE",
             "val": "?面?极板（子流程）",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
+            },
+            "label": "label=\"RES.BLL.Face.undefined\""
         },
         {
-            "label": "ROUTE_CATEGORY",
+            "Name": "ROUTE_CATEGORY",
             "val": "R",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
+            },
+            "label": "label=\"RES.BLL.Face.undefined\""
         },
         {
-            "label": "DESCRIPTION",
+            "Name": "DESCRIPTION",
             "val": "",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
-        },
-        {
-            "label": "ENABLE_FLAG",
-            "val": true,
-            "map_type": {
-                "JS": "boolean",
-                "csharp": "bool"
-            }
+            },
+            "label": "label=\"RES.BLL.Face.undefined\""
         }
     ],
-    "ext_mode": {
-        "ENABLE_FLAG": true
-    }
+    "ext_mode": {}
 }

@@ -6,7 +6,8 @@
         "ROUTE_NO": "C030-19",
         "ROUTE": "?面?极板（子流程）",
         "ROUTE_CATEGORY": "R",
-        "DESCRIPTION": ""
+        "DESCRIPTION": "",
+        "ENABLE_FLAG": true
     },
     "ext_rule": {
         "ROUTE_NO": {
@@ -53,51 +54,81 @@
             }
         }
     },
-    "fileds": [
+    "el_table": {
+        "Html": [],
+        "Vue_Methods": {}
+    },
+    "Fileds": [
         {
-            "label": "ROUTE_NO",
+            "Name": "ROUTE_NO",
             "val": "C030-19",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
+            },
+            "label": ":label=\"i18n.undefined\""
         },
         {
-            "label": "ROUTE",
+            "Name": "ROUTE",
             "val": "?面?极板（子流程）",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
+            },
+            "label": ":label=\"i18n.undefined\""
         },
         {
-            "label": "ROUTE_CATEGORY",
+            "Name": "ROUTE_CATEGORY",
             "val": "R",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
+            },
+            "label": ":label=\"i18n.undefined\""
         },
         {
-            "label": "DESCRIPTION",
+            "Name": "DESCRIPTION",
             "val": "",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
-            }
+            },
+            "label": ":label=\"i18n.undefined\""
+        },
+        {
+            "Name": "ENABLE_FLAG",
+            "val": true,
+            "map_type": {
+                "JS": "boolean",
+                "csharp": "bool"
+            },
+            "label": ":label=\"i18n.undefined\""
         }
     ],
-    "ext_mode": {},
-    "html": {
-        "toolbar": [
-            ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" "
-        ]
+    "ext_mode": {
+        "ENABLE_FLAG": true
     },
-    "vue": {
-        "computed": {
-            "toolbar": {
-                "v_query": "e_query"
-            }
+    "PART": {
+        "ENABLE_FLAG": {
+            "Vue_Data": [],
+            "Vue_Watch": [],
+            "Vue_Methods": []
+        },
+        "gt_toolbar": {
+            "Html": [
+                ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" ",
+                ":enable.sync=\"ctr_ENABLE.val\" "
+            ],
+            "Vue_Computed": [
+                "e_query"
+            ],
+            "Vue_Methods": [
+                "e_query",
+                "e_add",
+                "e_del",
+                "e_save",
+                "e_clear"
+            ]
         }
     }
 }

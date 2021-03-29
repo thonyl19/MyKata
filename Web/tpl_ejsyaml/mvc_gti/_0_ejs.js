@@ -41,14 +41,38 @@ const fs = require('fs');
                 var items = grps[grp];
                 for(var idx in items){
                     var _ejs = items[idx];
-                    items[idx] = await ejs.renderFile(_ejs, arg);
+                    items[idx] = await ejs.renderFile(_ejs, arg);``
                 }
                 var _FileName = `${basePath}${grp}`;
-                var _Code = items.join('\n');
+                var _Code = items.join('\r\n');
                 ops.save(_Code,_FileName);
             }
         },
-        ejs(fileName,ext="ejs"){
+        async save_point(basePath,point,arg){
+            point.map(el=>{
+                switch(el){
+                    case "Main":
+                        break;
+                    default:
+                        break;
+                }
+            })
+            var _Code = await ejs.renderFile(`./tpl_ejsyaml/mvc_gti/${basePath}Main.ejs`, arg);
+            ops.save(_Code,_FileName);
+
+            for(var e in point){
+                e
+                var items = point[e];
+                for(var idx in items){
+                    var _ejs = items[idx];
+                    items[idx] = await ejs.renderFile(_ejs, arg);``
+                }
+                var _FileName = `${basePath}${grp}`;
+                var _Code = items.join('\r\n');
+                //ops.save(_Code,_FileName);
+            }
+        },
+        ejs(fileName,ext="ejs"){``
             return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`
         },
         testJson(data,filename="~test.json"){
@@ -103,12 +127,12 @@ const fs = require('fs');
             return fileds;
         },
         parseRow(arg){
-            let {row} = arg;
+            let {row,Prefix} = arg;
             if (row==null) return ;
             var fileds = [];
             var ext_mode = {}; 
-            for(var label in row){
-                var val = row[label];
+            for(var Name in row){
+                var val = row[Name];
                 var JS = typeof(val);
                 switch(JS){
                     case "object":
@@ -132,24 +156,25 @@ const fs = require('fs');
                         break;
                 }
                 var _arg = {
-                    label
+                    Name
                     ,val
                     ,"map_type":{
                         JS,
                         csharp:map_csharpType[JS]
                     }
+                    ,label :ut.parse_label(Name,Prefix)
                 }
                 fileds.push(_arg);
 
-                switch(label){
+                switch(Name){
                     case "ENABLE_FLAG":
-                        ext_mode[label] = true;
+                        ext_mode[Name] = true;
                         break;
                     }
                 }
-                _.set(arg, 'fileds', fileds);
+                _.set(arg, 'Fileds', fileds);
                 _.set(arg, 'ext_mode', ext_mode);
-                console.log(arg);
+                //console.log(arg);
                 return arg;
             },
             parseFile(args,path=""){
@@ -159,7 +184,6 @@ const fs = require('fs');
                 if (_val == "" ){
                     args[_name] =  ops.ejs(_pathName);
                 }else if (typeof(_val) === "string"){
-                    _val
                     args[_name] =  ops.ejs(_pathName,_val);
                 }else{
                     ops.parseFile(args[_name] ,`${_pathName}/`);
@@ -196,7 +220,50 @@ const fs = require('fs');
             }
             _.set(arg, 'html.toolbar', html_toolbar);
             _.set(arg, 'vue.computed.toolbar', vue_computed);
-        }
+        },
+        parse_gt_toolbar(arg){
+            let {toolbar = {}} = arg; 
+            var html_fun ="",
+                Html=[],
+                Vue_Computed=[],
+                Vue_Methods=[];
+            _.each(toolbar,(val,key)=>{
+                val
+                switch(key){
+                    default:
+                        Vue_Methods.push(key);
+                        var fun = `${key}`;
+                        fun
+                        if (val=="1"){
+                            fun = `v_${key.substr(2)}`;
+                            Vue_Computed.push(key);
+                        } 
+                        html_fun += `:${key}="${fun}" `;
+                        break;
+                }
+            })
+            Html.push(html_fun);
+            var  ENABLE_FLAG = _.get(arg,"ext_mode.ENABLE_FLAG");
+            ENABLE_FLAG
+            if (ENABLE_FLAG){
+                Html.push(`:enable.sync="ctr_ENABLE.val" `);
+                ops.parse_ENABLE_FLAG(arg);
+            }
+            var gt_toolbar = {
+                Html,
+                Vue_Computed,
+                Vue_Methods
+            };
+            _.set(arg, 'PART.gt_toolbar', gt_toolbar);
+        },
+        parse_ENABLE_FLAG(arg){
+            var cfg = {
+                Vue_Data:[],
+                Vue_Watch:[],
+                Vue_Methods:[]
+            };
+           _.set(arg,"PART.ENABLE_FLAG",cfg);
+        },
     }
     var ut = {
         _,
@@ -238,6 +305,17 @@ const fs = require('fs');
                 _main:'cs'
             }
         },
+        ENABLE_FLAG:{
+            Controller:'cs',
+            Vue_Data:'js',
+            Vue_Methods:'js',
+            Vue_Watch:'js',
+        },
+        gt_toolbar:{
+            Html:'cshtml',
+            Vue_Computed:'js',
+            Vue_Methods:'js'
+        },
         v8n:{
             Base:'cs',
             RuleFor:'',
@@ -249,6 +327,9 @@ const fs = require('fs');
             VueGridData:'',
             VueGridMethos:'',
             gt_form_col:'',
+            PagerQuery:{
+                Vue_Data:''
+            },
         },
         form:{
             Base:{
@@ -446,29 +527,110 @@ const fs = require('fs');
                             }]
                         }
                     },
+                },
+                el_table:{
+                    Html:[],
+                    Vue_Methods:{}
                 }
             }
             ops.parseRow(arg);
-            await ops.parse_toolbar(arg);
+            ops.parse_gt_toolbar(arg);
             var arg_json = ops.testJson(arg,"form/Base/Form.json"); 
             var _part = {
                 "~Htm_Toolbar.cshtml": [
-                    _file.piece.gt_toolbar
+                    _file.gt_toolbar.Html
                 ],
                 "~Htm_FormCol.cshtml":[
                     _file.piece.gt_form_col
                 ],
-                "_Htm_FormCol.cshtml":[
-                    _file.piece.el_table_column
-                ]
+                "~Vue_Data.js":[
+                    _file.piece.vue_data_form,
+                    _file.piece.vue_data_i18n,
+                    _file.el_table.PagerQuery.Vue_Data,
+                    _file.ENABLE_FLAG.Vue_Data,
+                ],
+                "~Vue_Computed.js":[
+                    _file.gt_toolbar.Vue_Computed,
+                ],
+                "~Vue_Watch.js":[
+                    _file.ENABLE_FLAG.Vue_Watch,
+                ],
+                "~Vue_Methods.js":[
+                    _file.ENABLE_FLAG.Vue_Methods,
+                    _file.gt_toolbar.Vue_Methods,
+                ],
                 // "~Check.cs": [
                 //     _file.v8n.Check
                 // ],
-                // "_tmp.cshtml":[
-                //     _file.form.Base.Form
-                // ]
+                "_tmp.cshtml":[
+                    _file.form.Base.Form
+                ]
             }
-           // await ops.save_grp(`form/Base/`,_part,{arg} );
+            await ops.save_grp(`form/Base/`,_part,{arg} );
+
+
+            // arg.VueComputedToolbar = await ejs.renderFile(_file.form.Base.VueComputedToolbar,arg);
+            // var s = await ejs.renderFile(_file.form.Base.Form, arg );
+            // ops.save(s,"form/Base/~tmp.cshtml"); 
+        },
+        async '*Form'(){
+            let {_fn} = ops;
+            let {row} = _data;
+            var SID_Filed = 'ROUTE_SID'; 
+            var arg = {
+                RESOURCE_NAME:'RESOURCE_NAME',
+                Prefix:'',
+                SID_Filed,
+                row,
+                ext_rule:{
+                    ROUTE_NO:{
+                        Action_Item:'ROUTE_SID'
+                    }
+                },
+                toolbar:{
+                    e_query:"1",
+                    e_add:"",
+                    e_del:"",
+                    e_save:"",
+                    e_clear:"",
+                    //e_import:""
+                },
+                ut,
+                cols:[{
+                    label:`label="test"`,
+                    prop:"test"
+                }],
+                tabs:{
+                    A:{
+                        label:'',
+                        //form
+                    },
+                    B:{
+                        grid:{
+                            cols:[{
+                                label:`label="test"`,
+                                prop:"test"
+                            }]
+                        }
+                    },
+                },
+                el_table:{
+                    Html:[],
+                    Vue_Methods:{}
+                }
+            }
+            ops.parseRow(arg);
+            ops.parse_gt_toolbar(arg);
+            var arg_json = ops.testJson(arg,"form/Base/Form.json"); 
+            var point = [
+                "Main", 
+                "Htm_Toolbar",
+                "Vue_Data",
+                "Vue_Computed",
+                "Vue_Watch",
+                "Vue_Methods",
+            ]
+            await ops.save_point(`form/Base/`,point,{arg} );
 
 
             // arg.VueComputedToolbar = await ejs.renderFile(_file.form.Base.VueComputedToolbar,arg);
@@ -504,17 +666,20 @@ const fs = require('fs');
             await ops.save_grp(`v8n/`,_part,{arg} );
         },
 
-        async '*Controller_Base'(){
+        async 'Controller_Base'(){
             let basePath = `Controller/Base/`;
             let {_fn} = ops;
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
+            var TableName = 'PF_ROUTE';
+
             var arg = {
                 Areas:'ADM',
                 FunctionName:"QcLevel",
-                TableName:'PF_ROUTE',
                 RESOURCE_NAME:'RESOURCE_NAME',
+                TableName,
                 Prefix:'RES.BLL.Face.',
+                CheckDataRule:`//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${TableName};`,
                 SID_Filed,
                 row,
                 ut,
@@ -523,12 +688,9 @@ const fs = require('fs');
             var arg_json = ops.testJson(arg,`${basePath}Base.json`); 
              
             var _part = {
-                // "~RuleFor.cs": [
-                //     _file.v8n.RuleFor
-                // ],
-                // "~Check.cs": [
-                //     _file.v8n.Check
-                // ],
+                "~Enable.cs": [
+                    _file.ENABLE_FLAG.Controller
+                ],
                 "~tmp.cs":[
                     _file.Controller.Base._main
                 ]

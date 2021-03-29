@@ -3,7 +3,7 @@ TODO:
 	處理 filed 轉譯模式
 _%>
 form: {
-	<%_ Fileds.map(el=>{ _%>
-	<%- el.label %> :'',
-	<%_ })_%>
+	<%_ for(var el of arg.Fileds){ _%>
+	<%- el.Name %> :'',
+	<%_ }_%>
 },

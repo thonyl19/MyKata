@@ -1,10 +1,11 @@
 //#region [ENABLE_FLEG]
-UpdateEnableFlag(val) {
+_enable(val) {
     var _self = this;
+    _self.form.ENABLE_FLAG = val ? 'T' : 'F';
     let param = {
         entity = _self.form
     }
-    var url = '@Url.Action("UpdateEnableFlag")';
+    var url = '@Url.Action("Enable")';
     var _ajax = {
         url,
         param,
@@ -15,21 +16,20 @@ UpdateEnableFlag(val) {
             if (Success) {
                 _self.$UT.parent_reload();
                 _self.$Alert.Success(Message, true);
+
             } else {
-                _self.ctr_ENABLE.enableTrigger = false; 
-                _self.ctr_ENABLE.val = !val;
-                _self.$Alert.Warning(Message);
+                _self.form.ENABLE_FLAG = !Enable;
+                await _self.$nextTick();
+                /* jessie 用法,先保留
+                self.isTriggerUpdEnable = false;
+                self.enable = !this.enable;
+                self.$Alert.Warning(Message);
                 console.log(Exception);
+                */
             }
+            _self.isLock = false;
         }
     };
     return $.submitForm(_ajax);
 },
 //#endregion [ENABLE_FLEG]
-/// #region [gt_toolbar.Vue_Computed] 
-e_query(){},
-e_add(){},
-e_del(){},
-e_save(){},
-e_clear(){},
-/// #endregion [gt_toolbar.Vue_Computed] ~Vue_Watch

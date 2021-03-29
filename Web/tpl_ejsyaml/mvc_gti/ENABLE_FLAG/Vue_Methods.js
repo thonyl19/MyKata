@@ -26,10 +26,3 @@ UpdateEnableFlag(val) {
     return $.submitForm(_ajax);
 },
 //#endregion [ENABLE_FLEG]
-/// #region [gt_toolbar.Vue_Computed] 
-e_query(){},
-e_add(){},
-e_del(){},
-e_save(){},
-e_clear(){},
-/// #endregion [gt_toolbar.Vue_Computed] ~Vue_Watch

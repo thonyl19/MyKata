@@ -2,8 +2,10 @@
 /*
 [Ref]
 H:\SSMES_Dev\Genesis_MVC\Areas\ADM\Controllers\DefectCategoryController.cs
+H:\SSMES_Dev\Genesis_MVC\Areas\ADM\Controllers\OperationController.cs
+H:\SSMES_Dev\Genesis_MVC\Areas\ADM\ControlleCheckDataRulers\OperationTypeController.cs
 */
-var CheckDataRule = `//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${arg.FunctionName}Update;`;
+    arg.ut.fn_inc = include;
 _%>
 using MDL.MES;
 using BLL.MES;
@@ -86,7 +88,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 			IResult result;
             try
             {
-				<%=CheckDataRule%>
+				<%=arg.CheckDataRule%>
 				result //= serv.<%= arg.FunctionName%>_Save(post,true);
 					= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
@@ -107,7 +109,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 			IResult result;
             try
             {
-				<%=CheckDataRule%>
+				<%=arg.CheckDataRule%>
 				result //= serv.InsertData(entity);
 						= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
@@ -128,7 +130,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 			IResult result;
             try
             {
-				<%=CheckDataRule%>
+				<%=arg.CheckDataRule%>
 				result //= serv.Update(entity);
 						= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
@@ -150,7 +152,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
             {
 				/*
 				有疑問,先 mark
-				<%=CheckDataRule%>
+				<%=arg.CheckDataRule%>
 				result //= serv.InsertData(entity);
 						= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
@@ -161,30 +163,11 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
                 result = new Result(ex.Message);
             }
 
-			return Content((result).ToJson(true));
+			return Content(result.ToJson(true));
 		}
 
- 
-
-		[HttpPost]
-        [HandlerAjaxOnly]
-        [ValidateAntiForgeryToken]
-        public ActionResult Enable(<%= arg.TableName%> entity)
-        {
-            IResult result;
-            try
-            {
-				<%=CheckDataRule%>
-				result //= serv.Update_Enable(entity);
-						= new Result(true) { Data = entity };
-				//_serv.UOW.Save();
-            }
-            catch (Exception ex)
-            {
-                result = new Result(ex.Message);
-            }
-            return Content(result.ToJson(true));
-        }
-		#endregion
+		<%_ arg.ut.echo_file('./~Enable.cs',(el)=>{ _%>
+		<%- el %><% }) %>
+ 		#endregion
 	}
 }
