@@ -58,6 +58,12 @@
         "Html": [],
         "Vue_Methods": {}
     },
+    "PIECE": {
+        "Vue_Data": [
+            "./tpl_ejsyaml/mvc_gti/piece/vue_data_form.ejs",
+            "./tpl_ejsyaml/mvc_gti/piece/vue_data_i18n.ejs"
+        ]
+    },
     "Fileds": [
         {
             "Name": "ROUTE_NO",
@@ -115,7 +121,7 @@
             "Vue_Methods": []
         },
         "gt_toolbar": {
-            "Html": [
+            "Htm_Toolbar": [
                 ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" ",
                 ":enable.sync=\"ctr_ENABLE.val\" "
             ],

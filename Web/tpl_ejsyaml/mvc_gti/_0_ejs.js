@@ -18,6 +18,9 @@ const fs = require('fs');
 	}
     var ops = {
         echo:{outputFunctionName:'echo' },
+        ts_BasePath(relPath){
+            return `./tpl_ejsyaml/mvc_gti/${relPath}`
+        },
         _fn(data,cb){
             var _arr = Array.isArray(data)
                 ?data
@@ -25,8 +28,11 @@ const fs = require('fs');
                 ;
             return _arr.map(cb);
         },
-        save(data,filename="test.txt"){
-            fs.writeFileSync(`./tpl_ejsyaml/mvc_gti/${filename}`,data,'utf-8');
+        save(data,filename="test.txt",isRelPath=true){
+            var _fullPath = isRelPath
+                ? ops.ts_BasePath(filename)
+                : filename;
+            fs.writeFileSync(`${_fullPath}`,data,'utf-8');
         },
         save_part(basePath,args){
             for(var item in args){
@@ -48,30 +54,53 @@ const fs = require('fs');
                 ops.save(_Code,_FileName);
             }
         },
-        async save_point(basePath,point,arg){
-            point.map(el=>{
-                switch(el){
-                    case "Main":
-                        break;
-                    default:
-                        break;
+        async parse_point(BaseArg,point){
+            point
+            var _code = [];
+            let {PART,PIECE,ut} = BaseArg;
+            _.forEach(PART,async (el,part)=>{
+                part
+                let arg = el[point];
+                console.log(arg)
+                if (arg!=null){
+                    var _ejs = ops.ts_BasePath(`${part}/${point}.ejs`);
+                    _ejs
+                    var _s = await ejs.renderFile( _ejs , {arg:{PART ,ut}});
+                    _s
+                    _code.push(_s);
                 }
             })
-            var _Code = await ejs.renderFile(`./tpl_ejsyaml/mvc_gti/${basePath}Main.ejs`, arg);
-            var _FileName = `${basePath}${grp}`;
-            //ops.save(_Code,"_FileName");
-
-            for(var e in point){
-                e
-                var items = point[e];
-                for(var idx in items){
-                    var _ejs = items[idx];
-                    items[idx] = await ejs.renderFile(_ejs, arg);``
-                }
-                var _FileName = `${basePath}${grp}`;
-                var _Code = items.join('\r\n');
-                //ops.save(_Code,_FileName);
+            let _grp = PIECE[point]; 
+            //console.log(_grp);
+            if (_grp!=null){
+                _grp.map(async(el)=>{
+                    var _s = await ejs.renderFile( el ,{arg:BaseArg});
+                    _s
+                    _code.push(_s);
+                })
             }
+            return await _code;
+        },
+        async save_point(basePath,point,arg){
+            for(var el in point){
+                switch(el){
+                    case "Main": 
+                        break;
+                    //case "Htm_Toolbar":
+                    //case "Vue_Methods":
+                    default:
+                        var arr = await ops.parse_point(arg,el);
+                        arr
+                        var _file = `${basePath}~${el}.txt`;
+                        _file
+                        ops.save(arr.join('\r\n'),_file,false); 
+                        break;
+                }
+            }
+            var _Code = await ejs.renderFile( `${basePath}Main.ejs`, {arg});
+            var _FileName = `${basePath}_Main.${point.Main}`;
+            _FileName
+            ops.save(_Code,_FileName,false);
         },
         ejs(fileName,ext="ejs"){``
             return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`
@@ -127,7 +156,7 @@ const fs = require('fs');
             }
             return fileds;
         },
-        parseRow(arg){
+        parseRow(arg,setPath = 'Fileds'){
             let {row,Prefix} = arg;
             if (row==null) return ;
             var fileds = [];
@@ -171,14 +200,15 @@ const fs = require('fs');
                     case "ENABLE_FLAG":
                         ext_mode[Name] = true;
                         break;
-                    }
                 }
-                _.set(arg, 'Fileds', fileds);
-                _.set(arg, 'ext_mode', ext_mode);
-                //console.log(arg);
-                return arg;
-            },
-            parseFile(args,path=""){
+            }
+            _.set(arg, setPath, fileds);
+            _.set(arg, 'ext_mode', ext_mode);
+            //console.log(arg);
+            return arg;
+        },
+        
+        parseFile(args,path=""){
                 for (var _name in args){
                     var _val = args[_name];
                 var _pathName = `${path}${_name}`;
@@ -225,7 +255,7 @@ const fs = require('fs');
         parse_gt_toolbar(arg){
             let {toolbar = {}} = arg; 
             var html_fun ="",
-                Html=[],
+                Htm_Toolbar=[],
                 Vue_Computed=[],
                 Vue_Methods=[];
             _.each(toolbar,(val,key)=>{
@@ -243,16 +273,16 @@ const fs = require('fs');
                         break;
                 }
             })
-            Html.push(html_fun);
+            Htm_Toolbar.push(html_fun); 
             var  ENABLE_FLAG = _.get(arg,"ext_mode.ENABLE_FLAG");
             ENABLE_FLAG
             if (ENABLE_FLAG){
-                Html.push(`:enable.sync="ctr_ENABLE.val" `);
+                Htm_Toolbar.push(`:enable.sync="ctr_ENABLE.val" `);
                 ops.parse_ENABLE_FLAG(arg);
             }
-            var gt_toolbar = {
-                Html,
-                Vue_Computed,
+            var gt_toolbar = { 
+                Htm_Toolbar,
+                Vue_Computed, 
                 Vue_Methods
             };
             _.set(arg, 'PART.gt_toolbar', gt_toolbar);
@@ -618,20 +648,26 @@ const fs = require('fs');
                 el_table:{
                     Html:[],
                     Vue_Methods:{}
-                }
+                },
+                PIECE:{
+                    Vue_Data:[
+                        _file.piece.vue_data_form,
+                        _file.piece.vue_data_i18n,
+                    ]
+                },
             }
             ops.parseRow(arg);
             ops.parse_gt_toolbar(arg);
             var arg_json = ops.testJson(arg,"form/Base/Form.json"); 
-            var point = [
-                "Main", 
-                "Htm_Toolbar",
-                "Vue_Data",
-                "Vue_Computed",
-                "Vue_Watch",
-                "Vue_Methods",
-            ]
-            await ops.save_point(`form/Base/`,point,{arg} );
+            var point = {
+                Main:'cshtml', 
+                Htm_Toolbar:1,
+                Vue_Data:1,
+                Vue_Computed:1,
+                Vue_Watch:1,
+                Vue_Methods:1,
+            }
+            await ops.save_point(ops.ts_BasePath(`form/Base/`),point,arg);
 
 
             // arg.VueComputedToolbar = await ejs.renderFile(_file.form.Base.VueComputedToolbar,arg);

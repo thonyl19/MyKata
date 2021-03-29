@@ -1,0 +1,95 @@
+
+@{
+    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("RESOURCE_NAME").RESOURCE_NAME;
+    bool isSingleModel = (bool)ViewData["SingleModel"];
+    if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml";
+}
+@eBundle.QRender_CSS()
+@eBundle.QRender_JS()
+@Html.AntiForgeryToken()
+<div id="app" v-cloak class="m-sm">
+    <gt-toolbar fixed='top'        :e_query="v_query" :e_add="e_add" :e_del="e_del" :e_save="e_save" :e_clear="e_clear"         :enable.sync="ctr_ENABLE.val"     	></gt-toolbar>    
+    <div Area-Main class=" panel b ">
+        <div Area-Form class="panel-body form-horizontal gt-form">
+            <div class="row ">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+        var _data = @Html.Raw(ViewData["result"] ?? "{}");
+        console.log(_data);
+        let {form = {}} = _data;
+        /*
+        if (main == null) {
+            main = {
+                ENCODE_FORMAT_NO: '',
+                ENCODE_FORMAT_NAME:'',
+                MULTI_SERIAL_DIRECTION: '1',
+            };
+        }
+        */
+        $(() => {
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        ctr_ENABLE:{                            val:true,                            enableTrigger:true                        },                        form: {                        	ROUTE_NO :'',                        	ROUTE :'',                        	ROUTE_CATEGORY :'',                        	DESCRIPTION :'',                        	ENABLE_FLAG :'',                        },                        //TODO-i18n:                        i18n: {                        	ROUTE_NO :'ROUTE_NO',                        	ROUTE :'ROUTE',                        	ROUTE_CATEGORY :'ROUTE_CATEGORY',                        	DESCRIPTION :'DESCRIPTION',                        	ENABLE_FLAG :'ENABLE_FLAG',                        },
+                        form,
+                        tabName:'first',
+                        enable:true,
+                        isLock:false,
+                        ,confirm_arg:{
+                            showClose:false,
+                            closeOnClickModal: false,
+                            closeOnPressEscape:false,
+                            dangerouslyUseHTMLString:true,
+                            confirmButtonText: `@RES.BLL.Face.FunctionBarConfirmButton`,
+                            cancelButtonText: `@RES.BLL.Face.FunctionBarCancelButton`,
+                            type: 'info'
+                        },
+                    }
+                },
+                computed: {
+                    /// #region [gt_toolbar.Vue_Computed]                     v_query() {                    	return {                    		//TODO:                    		visable: true,                    		enable: true,                    		fn: this.e_query                    	}                    },                    /// #endregion [gt_toolbar.Vue_Computed]
+                    isAddMode() {
+                        var url = new URL(location);
+                        var SID = url.searchParams.get('SID') ?? "";
+                        var isAddMode = (SID == "");
+                        return isAddMode;
+                    },
+                    isCanSave() {
+                        //debugger
+                        var mustHaveItem = this.items
+                            .filter(el => el['ENCODE_FORMAT_ITEM_SID'] != -1)
+                            .length > 0;
+                        var isNotEditing = this.currentRow == null;
+                        return mustHaveItem && isNotEditing;
+                    },
+                },
+                watch: {
+                    'ctr_ENABLE.val'(val) {                        if (this.ctr_ENABLE.enableTrigger) {                            this.UpdateEnableFlag(val);                        }                        this.form.ENABLE_FLAG = val ? 'T' : 'F';                        this.ctr_ENABLE.enableTrigger = true;                    },                    
+                },
+                methods: {
+                    //#region [ENABLE_FLEG]                    UpdateEnableFlag(val) {                        var _self = this;                        let param = {                            entity = _self.form                        }                        var url = '@Url.Action("UpdateEnableFlag")';                        var _ajax = {                            url,                            param,                            type: 'post',                            automessage: false,                            async success(res) {                                let { Success, Data, Message = "", Exception} = res;                                if (Success) {                                    _self.$UT.parent_reload();                                    _self.$Alert.Success(Message, true);                                } else {                                    _self.ctr_ENABLE.enableTrigger = false;                                     _self.ctr_ENABLE.val = !val;                                    _self.$Alert.Warning(Message);                                    console.log(Exception);                                }                            }                        };                        return $.submitForm(_ajax);                    },                    //#endregion [ENABLE_FLEG]                    /// #region [gt_toolbar.Vue_Computed]                     e_query(){},                    e_add(){},                    e_del(){},                    e_save(){},                    e_clear(){},                    /// #endregion [gt_toolbar.Vue_Computed]
+                    getSID(){
+                        let {ROUTE_SID:SID} = this.form;
+                        return SID;
+                    },
+                    _test() {
+                        var _self = this;
+                        _self.MessageMustInputOne();
+                    },
+                    MessageMustInputOne() {
+                        var _msg = "@RES.BLL.Message.MustInputOne".replace("{0}","@RES.BLL.Face.SequenceDetail")
+                        this.$Alert.Err(_msg);
+                    },
+                }
+            })
+        });
+</script>
+<style>
+
+</style>

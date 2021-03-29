@@ -1,95 +1,0 @@
-
-@{
-    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("RESOURCE_NAME").RESOURCE_NAME;
-    bool isSingleModel = (bool)ViewData["SingleModel"];
-    if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml";
-}
-@eBundle.QRender_CSS()
-@eBundle.QRender_JS()
-@Html.AntiForgeryToken()
-<div id="app" v-cloak class="m-sm">
-    <gt-toolbar fixed='top'        :e_query="v_query" :e_add="e_add" :e_del="e_del" :e_save="e_save" :e_clear="e_clear"         :enable.sync="ctr_ENABLE.val"     	></gt-toolbar>    
-    <div Area-Main class=" panel b ">
-        <div Area-Form class="panel-body form-horizontal gt-form">
-            <div class="row ">
-			    <!-- #region [gt_form_col] -->			    <gt-form-col :label="i18n.undefined"			    			v-model="form.ROUTE_NO"			    			></gt-form-col>			    <gt-form-col :label="i18n.undefined"			    			v-model="form.ROUTE"			    			></gt-form-col>			    <gt-form-col :label="i18n.undefined"			    			v-model="form.ROUTE_CATEGORY"			    			></gt-form-col>			    <gt-form-col :label="i18n.undefined"			    			v-model="form.DESCRIPTION"			    			></gt-form-col>			    <gt-form-col :label="i18n.undefined"			    			v-model="form.ENABLE_FLAG"			    			></gt-form-col>			    <!-- #endregion [gt_form_col] -->
-            </div>
-            <el-tabs v-model="tabName">                <el-tab-pane label="@RES.BLL.Face.BaseInfo" name="first">                    <!-- #region [input_grid] -->                    <el-table empty-text=" " style="width: 100%" ref="input_grid" :height="grid_height"                                :row-class-name="RowStyle"                                :data="items">                        <el-table-column label="操作" min-width="120">                            <template slot="header" slot-scope="scope">                                <el-button size="small" class="s-VIEW"                                            type="primary"                                            icon="el-icon-plus"                                            @@click="AddItem"></el-button>                                {{i18n.操作}}                            </template>                            <template slot-scope="scope">                                <el-button size="small" circle class="s-VIEW"                                            type="success"                                            icon="el-icon-edit"                                            :disabled="ENABLE_FLAG"                                            @@click="Edit(scope.$index, scope.row)"></el-button>                                <el-button size="small" circle class="s-VIEW"                                            type="danger"                                            icon="el-icon-delete"                                            :disabled="ENABLE_FLAG"                                            @@click="DelRow(scope.$index, scope.row)"></el-button>                                <el-button size="small" circle class="s-NORMAL"                                            type="success"                                            icon="el-icon-check"                                            @@click="Confirm(scope.$index, scope.row)"></el-button>                                <el-button size="small" circle class="s-NORMAL"                                            type="danger"                                            icon="el-icon-refresh-right"                                            @@click="Cancel(scope.$index, scope.row)"></el-button>                            </template>                        </el-table-column>                    </el-table>                    <!-- #endregion -->                </el-tab-pane>                <el-tab-pane label="@RES.BLL.Face.Other" name="second">                    <el-table empty-text=" " style="width: 100%" :height="grid_height"                                            :data="ctrl_items">                        <el-table-column prop="RESET_FORMAT_MASK" label="@Face.RESET_FORMAT_MASK">                        </el-table-column>                        <el-table-column prop="SERIAL_LAST_VALUE" label="@Face.SERIAL_LAST_VALUE">                        </el-table-column>                        <el-table-column prop="UPDATE_DATE" label="@Face.UPDATE_DATE">                        </el-table-column>                        <el-table-column prop="UPDATE_USER" label="@Face.UPDATE_USER">                        </el-table-column>                    </el-table>                </el-tab-pane>            </el-tabs>
-        </div>
-    </div>
-</div>
-<script>
-        var _data = @Html.Raw(ViewData["result"] ?? "{}");
-        console.log(_data);
-        let {form = {}} = _data;
-        /*
-        if (main == null) {
-            main = {
-                ENCODE_FORMAT_NO: '',
-                ENCODE_FORMAT_NAME:'',
-                MULTI_SERIAL_DIRECTION: '1',
-            };
-        }
-        */
-        $(() => {
-            new Vue({
-                el: '#app',
-                data() {
-                    return {
-                        form: {                        	ROUTE_NO :'',                        	ROUTE :'',                        	ROUTE_CATEGORY :'',                        	DESCRIPTION :'',                        	ENABLE_FLAG :'',                        },                        //TODO-i18n:                        i18n: {                        	ROUTE_NO :'ROUTE_NO',                        	ROUTE :'ROUTE',                        	ROUTE_CATEGORY :'ROUTE_CATEGORY',                        	DESCRIPTION :'DESCRIPTION',                        	ENABLE_FLAG :'ENABLE_FLAG',                        },                        grid: {                            data: [],                            pageSize: 10,                            pageIdx: 1,                            row_count: 0,                            Sort: {                                Name: "CREATE_DATE",                                isAsc: true                            },                            Conditions: {},                            Page: {                                Index: 1,                                Size: 10,                            },                            get query_rule() {                                {                                    let { Conditions, Sort, Page } = this;                                    return {                                        Conditions, Sort, Page                                    }                                }                            }                        },                        ctr_ENABLE:{                            val:true,                            enableTrigger:true                        },                        
-                        form,
-                        tabName:'first',
-                        enable:true,
-                        isLock:false,
-                        ,confirm_arg:{
-                            showClose:false,
-                            closeOnClickModal: false,
-                            closeOnPressEscape:false,
-                            dangerouslyUseHTMLString:true,
-                            confirmButtonText: `@RES.BLL.Face.FunctionBarConfirmButton`,
-                            cancelButtonText: `@RES.BLL.Face.FunctionBarCancelButton`,
-                            type: 'info'
-                        },
-                    }
-                },
-                computed: {
-                    /// #region [gt_toolbar.Vue_Computed]                     v_e_query() {                    	return {                    		//TODO:                    		visable: true,                    		enable: true,                    		fn: this.e_e_query                    	}                    },                    /// #endregion [gt_toolbar.Vue_Computed] 
-                    isAddMode() {
-                        var url = new URL(location);
-                        var SID = url.searchParams.get('SID') ?? "";
-                        var isAddMode = (SID == "");
-                        return isAddMode;
-                    },
-                    isCanSave() {
-                        //debugger
-                        var mustHaveItem = this.items
-                            .filter(el => el['ENCODE_FORMAT_ITEM_SID'] != -1)
-                            .length > 0;
-                        var isNotEditing = this.currentRow == null;
-                        return mustHaveItem && isNotEditing;
-                    },
-                },
-                watch: {
-                    'ctr_ENABLE.val'(val) {                        if (this.ctr_ENABLE.enableTrigger) {                            this.UpdateEnableFlag(val);                        }                        this.form.ENABLE_FLAG = val ? 'T' : 'F';                        this.ctr_ENABLE.enableTrigger = true;                    },                    
-                },
-                methods: {
-                    //#region [ENABLE_FLEG]                    UpdateEnableFlag(val) {                        var _self = this;                        let param = {                            entity = _self.form                        }                        var url = '@Url.Action("UpdateEnableFlag")';                        var _ajax = {                            url,                            param,                            type: 'post',                            automessage: false,                            async success(res) {                                let { Success, Data, Message = "", Exception} = res;                                if (Success) {                                    _self.$UT.parent_reload();                                    _self.$Alert.Success(Message, true);                                } else {                                    _self.ctr_ENABLE.enableTrigger = false;                                     _self.ctr_ENABLE.val = !val;                                    _self.$Alert.Warning(Message);                                    console.log(Exception);                                }                            }                        };                        return $.submitForm(_ajax);                    },                    //#endregion [ENABLE_FLEG]                    /// #region [gt_toolbar.Vue_Computed]                     e_query(){},                    e_add(){},                    e_del(){},                    e_save(){},                    e_clear(){},                    /// #endregion [gt_toolbar.Vue_Computed] ~Vue_Watch
-                    getSID(){
-                        let {ROUTE_SID:SID} = this.form;
-                        return SID;
-                    },
-                    _test() {
-                        var _self = this;
-                        _self.MessageMustInputOne();
-                    },
-                    MessageMustInputOne() {
-                        var _msg = "@RES.BLL.Message.MustInputOne".replace("{0}","@RES.BLL.Face.SequenceDetail")
-                        this.$Alert.Err(_msg);
-                    },
-                }
-            })
-        });
-</script>
-<style>
-
-</style>
