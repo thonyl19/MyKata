@@ -58,7 +58,8 @@ const fs = require('fs');
                 }
             })
             var _Code = await ejs.renderFile(`./tpl_ejsyaml/mvc_gti/${basePath}Main.ejs`, arg);
-            ops.save(_Code,_FileName);
+            var _FileName = `${basePath}${grp}`;
+            //ops.save(_Code,"_FileName");
 
             for(var e in point){
                 e
