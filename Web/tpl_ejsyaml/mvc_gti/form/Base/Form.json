@@ -54,15 +54,18 @@
             }
         }
     },
-    "el_table": {
-        "Html": [],
-        "Vue_Methods": {}
-    },
-    "PIECE": {
-        "Vue_Data": [
-            "./tpl_ejsyaml/mvc_gti/piece/vue_data_form.ejs",
-            "./tpl_ejsyaml/mvc_gti/piece/vue_data_i18n.ejs"
-        ]
+    "POINT": {
+        "Htm_Toolbar": {
+            "gt_toolbar": [
+                ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" ",
+                ":enable.sync=\"ctr_ENABLE.val\" "
+            ],
+            "piece.vue_data_form": []
+        },
+        "Vue_Data": 1,
+        "Vue_Computed": 1,
+        "Vue_Watch": 1,
+        "Vue_Methods": 1
     },
     "Fileds": [
         {
