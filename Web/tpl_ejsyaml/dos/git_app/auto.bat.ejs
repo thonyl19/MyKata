@@ -21,27 +21,11 @@ set SlnFile=<%= arg.SlnFile%>
 set PublishFolder=PublishFolder
 rem if not exist %PublishFolder%\ mkdir %PublishFolder%\
 rem set PublishProperty=/p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishProvider=FileSystem /p:DeleteExistingFiles=True /p:publishUrl="%PublishFolder%"
-set mima=1
 
-:S0 
-echo -- Menu --
-echo   S(1)-簽入 Dev
-echo   S(2)-更新最新的程式(fetch , pull , merge)
-echo   S(3)-執行建置動作 
-echo   S(4)-簽入 Origin
-echo   S(8)-GitHistory
-echo   S(9)-cls
-set /p mima=請決定執行步驟(Def=%mima%)?
-if "%mima%"=="1" goto S1
-if "%mima%"=="2" goto S2
-if "%mima%"=="3" goto S3
-if "%mima%"=="4" goto S4
-if "%mima%"=="8" goto S8
-if "%mima%"=="9" goto S9
-
+<%- include('Menu', {Menu}); %>
 
 :S1
-echo == S1-簽入Dev ==
+echo !arrayline[1]!
 cd <%=arg.Dir.Dev%> 
 TortoiseGitProc.exe /command:commit
 cd <%=arg.Dir.Main%> 
@@ -49,7 +33,7 @@ set mima=2
 goto S0
 
 :S2
-echo == S2-更新最新的程式(fetch , pull , merge)==
+echo !arrayline[2]!
 git.exe fetch -v --progress "origin"
 git.exe pull --progress -v --no-rebase "origin"
 git.exe merge <%=arg.MergeFrom%>
@@ -58,26 +42,17 @@ goto S0
 
 
 :S3
-echo == S3-執行建置動作==
+echo !arrayline[3]!
 echo %Builders% %SlnFile%
 msbuild %SlnFile% 
 set mima=4
 goto S0
 
 :S4
-echo == S4-簽入 Origin==
+echo !arrayline[4]!
 git.exe push --progress "origin" <%=arg.PushTo%>
 goto S8
 
-
-:S8
-set mima=1
-TortoiseGitProc.exe /command:log
-goto S0
- 
-:S9
-cls
-set mima=1
-goto S0
+<%- include('S89',{}); %>
 
 

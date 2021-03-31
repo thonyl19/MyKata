@@ -1,0 +1,25 @@
+﻿<%_ 
+var idx=1;
+var _menu=[],_act=[]
+for(var key in Menu){
+	_menu.push(`set arrayline[${idx}]= ${Menu[key]}`);
+	_act.push(`if "%mima%"=="${key}" goto S${key}`);
+	idx++;
+}
+%> 
+@echo off
+setlocal enabledelayedexpansion
+set arrayline[0]=-- Menu -- 
+<%_ _menu.map(e=>{_%>
+<%=e%>
+<%_})_%>
+set mima=1
+
+:S0 
+for /l %%n in (0,1,<%=idx-1%>) do (
+echo !arrayline[%%n]!
+)
+set /p mima=請決定執行步驟(Def=%mima%)?
+<%_ _act.map(e=>{_%>
+<%-e%>
+<%_})_%>

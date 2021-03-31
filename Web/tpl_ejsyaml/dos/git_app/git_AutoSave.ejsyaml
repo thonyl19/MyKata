@@ -1,11 +1,18 @@
 # input data
+Menu: {
+	"1": 'S(1)-git add',
+	"2": 'S(2)-commit , push',
+	"3": 'S(3)-更新最新的程式(fetch , pull , merge)',
+	"8": 'S(8)-GitHistory',
+	"9": 'S(9)-cls',
+}
 Web: {
     PushTo: '',
     SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\'
 }
 --- |
 <%_ 
-	var cfg = {arg:Web};
+	var cfg = {arg:Web,Menu};
 	this.render('git_AutoSave.ejs', `${cfg.arg.SavePath}git_AutoSave.bat`, cfg);
     //this.render('../toJson.ejs', '~tmp.json', {arg:this.data.SSMES});
 	this.skip();

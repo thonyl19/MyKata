@@ -1,0 +1,21 @@
+﻿<%- include('Menu', {Menu}); %>
+
+:S1
+echo !arrayline[1]!
+git add .
+goto S0
+
+:S2
+echo !arrayline[2]!
+git commit -m "add"
+git push --progress "origin"  
+TortoiseGitProc.exe /command:log
+set mima=1
+goto S0
+
+:S3
+echo !arrayline[3]!
+set mima=1
+goto S0
+
+<%- include('S89'); %>
