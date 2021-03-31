@@ -22,7 +22,7 @@ set PublishFolder=PublishFolder
 rem if not exist %PublishFolder%\ mkdir %PublishFolder%\
 rem set PublishProperty=/p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishProvider=FileSystem /p:DeleteExistingFiles=True /p:publishUrl="%PublishFolder%"
 
-<%- include('Menu', {Menu}); %>
+<%- include('Menu', {arg,Menu}); %>
 
 :S1
 echo !arrayline[1]!

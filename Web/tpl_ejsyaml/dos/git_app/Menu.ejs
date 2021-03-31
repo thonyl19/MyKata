@@ -2,14 +2,14 @@
 var idx=1;
 var _menu=[],_act=[]
 for(var key in Menu){
-	_menu.push(`set arrayline[${idx}]= ${Menu[key]}`);
+	_menu.push(`set arrayline[${idx}]= S(${key}) ${Menu[key]}`);
 	_act.push(`if "%mima%"=="${key}" goto S${key}`);
 	idx++;
 }
 %> 
 @echo off
 setlocal enabledelayedexpansion
-set arrayline[0]=-- Menu -- 
+set arrayline[0]=-- Menu [<%=arg.Title%>] -- 
 <%_ _menu.map(e=>{_%>
 <%=e%>
 <%_})_%>

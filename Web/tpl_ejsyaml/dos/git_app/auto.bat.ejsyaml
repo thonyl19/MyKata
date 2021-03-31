@@ -1,11 +1,11 @@
 ﻿# input data
 Menu: {
-	"1": 'S(1)-簽入 Dev',
-	"2": 'S(2)-更新最新的程式(fetch , pull , merge)',
-	"3": 'S(3)-執行建置動作',
-	"4": 'S(4)-簽入 Origin',
-	"8": 'S(8)-GitHistory',
-	"9": 'S(9)-cls',
+	"1": '簽入 Dev',
+	"2": '更新最新的程式(fetch , pull , merge)',
+	"3": '執行建置動作',
+	"4": '簽入 Origin',
+	"8": 'GitHistory',
+	"9": 'cls',
 }
 MES5: {
     Dir:{

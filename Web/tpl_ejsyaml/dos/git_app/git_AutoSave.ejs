@@ -1,4 +1,4 @@
-﻿<%- include('Menu', {Menu}); %>
+﻿<%- include('Menu', {arg,Menu}); %>
 
 :S1
 echo !arrayline[1]!
@@ -13,9 +13,6 @@ TortoiseGitProc.exe /command:log
 set mima=1
 goto S0
 
-:S3
-echo !arrayline[3]!
-set mima=1
-goto S0
 
+<%- include('S7'); %>
 <%- include('S89'); %>

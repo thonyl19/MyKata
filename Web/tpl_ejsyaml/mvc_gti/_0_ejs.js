@@ -304,16 +304,20 @@ const fs = require('fs');
             return _arr.map(cb);
         },
         async echo_ejs(arg,cb){
-            let {ejs:cfg} = arg;
-            var _ejs = ops.ts_BasePath(Object.keys(cfg)[0]);
-            _ejs
-            var data = await ejs.renderFile(_ejs,{arg:cfg,ut},{async: true});
-            data
-            //return data;
-            //data
-            //cb(data);
+            arg
+            //ejs 是 key word , 其內容為 'ejs filename':{綁定內容}
+            let {ejs:ejs_cfg} = arg; 
+            ejs_cfg
+            var _ejsFileName = Object.keys(ejs_cfg)[0];
+            _ejsFileName
+            var _ejsFilePath = ops.ts_BasePath(`${_ejsFileName}.ejs`);
+            var _ejsArg = ejs_cfg[_ejsFileName];
+            _ejsFilePath
+            _ejsArg.ut = ut;
+            var data = await ejs.renderFile(_ejsFilePath,{arg:_ejsArg},{async: true});
+            //ops.save(data,)
+            console.log(data);
             var _arr = data.split('\n');
-            // //console.log({_arr})
             return _arr.map(cb);
         },
         async echo_rander(fileName,arg,cb){
@@ -436,9 +440,9 @@ const fs = require('fs');
             A:{
                 label:'label',
                 ejs:{
-                    'piece/gt_form.ejs':{
+                    'piece/gt_form':{
                         ejs:{
-                            'form_col': [
+                            'piece/gt_form_col': [
                                 {
                                     "Name": "ROUTE_NO",
                                     "val": "C030-19",

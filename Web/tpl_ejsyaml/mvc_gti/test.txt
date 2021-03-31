@@ -1,8 +1,1 @@
-<!-- #region [gt_form_col] -->
-<el-tabs v-model="tabIdx">
-<el-tab-pane label name="A">
-		</el-tab-pane>
-<el-tab-pane label name="B">
-		</el-tab-pane>
-</el-tabs>
-<!-- #endregion [gt_form_col] -->
+undefined

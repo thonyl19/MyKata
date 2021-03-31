@@ -7,7 +7,7 @@ _%>
 		var tab = arg.Tabs[key]; _%>	
 	<el-tab-pane <%=tab.label%> name="<%=key%>">
 		<%_ await arg.ut.echo_ejs(tab,(el)=>{ _%>
-		<%-  el %><% }) %>
+		<%-  el _%><%_ }) _%>
 	</el-tab-pane>
 	<%_} _%>
 </el-tabs>
