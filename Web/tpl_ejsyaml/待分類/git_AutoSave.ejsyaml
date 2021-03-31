@@ -1,22 +1,13 @@
 ﻿# input data
-set1: {
-  CREATE_DATE: "2021-01-13 13:50:00"
-  ,CREATE_USER: "EIS"
-  ,ENCODE_FORMAT_CONTROL_SID: "GTI21011313500003072"
-  ,ENCODE_FORMAT_NAME: "LotNoRework"
-  ,ENCODE_FORMAT_NO: "LotNoRework"
-  ,ENCODE_FORMAT_SID: "GTI20111910362484429"
-  ,ENCODE_FORMAT_TYPE: "Lot"
-  ,RESET_FORMAT_MASK: "14-03-2224P...."
-  ,SERIAL_LAST_VALUE: "01"
-  ,UPDATE_DATE: "2021-01-13 13:50:00"
-  ,UPDATE_USER: "EIS"
+Web: {
+    PushTo: '',
+    SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\'
 }
 --- |
 <%_ 
-	var data = set1;
-	this.render('git_AutoSave.ejs', 'git_AutoSave.bat', data);
-	//this.render('../toJson.ejs', '~test.json', data);
+	var cfg = {arg:Web};
+	this.render('git_AutoSave.ejs', `${cfg.arg.SavePath}git_AutoSave.bat`, cfg);
+    //this.render('../toJson.ejs', '~tmp.json', {arg:this.data.SSMES});
 	this.skip();
 _%>
  

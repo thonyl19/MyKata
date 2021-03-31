@@ -17,7 +17,7 @@ echo Log=%Log%
 REM ==指定建置資訊結果資訊輸出的目錄==
 
 REM ==指定要編譯的方案檔==
-set SlnFile=MES5_Build.sln
+set SlnFile=<%= arg.SlnFile%> 
 set PublishFolder=PublishFolder
 rem if not exist %PublishFolder%\ mkdir %PublishFolder%\
 rem set PublishProperty=/p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishProvider=FileSystem /p:DeleteExistingFiles=True /p:publishUrl="%PublishFolder%"
@@ -42,9 +42,9 @@ if "%mima%"=="9" goto S9
 
 :S1
 echo == S1-簽入Dev ==
-cd H:\SSMES_Dev
+cd <%=arg.Dir.Dev%> 
 TortoiseGitProc.exe /command:commit
-cd H:\SSMES_Main
+cd <%=arg.Dir.Main%> 
 set mima=2
 goto S0
 
@@ -52,7 +52,7 @@ goto S0
 echo == S2-更新最新的程式(fetch , pull , merge)==
 git.exe fetch -v --progress "origin"
 git.exe pull --progress -v --no-rebase "origin"
-git.exe merge remotes/origin/Anthony_2021012_SSMES
+git.exe merge <%=arg.MergeFrom%>
 set mima=3
 goto S0
 
@@ -66,7 +66,7 @@ goto S0
 
 :S4
 echo == S4-簽入 Origin==
-git.exe push --progress "origin" 智慧版
+git.exe push --progress "origin" <%=arg.PushTo%>
 goto S8
 
 
@@ -79,3 +79,5 @@ goto S0
 cls
 set mima=1
 goto S0
+
+
