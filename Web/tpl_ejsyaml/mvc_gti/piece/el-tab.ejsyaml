@@ -1,0 +1,15 @@
+﻿# input data
+arg: {
+	"Tabs":{
+		"A":{
+			"label":"test"
+		}
+	}
+}
+--- |
+<%- JSON.stringify(JSON.parse(this.data.arg), null, 2) %>
+<%- $.outfile('~tmp.js') _%>
+<% 
+	//this.render('el-tab.cshtml', '~tmp.html', this.data);
+	//this.skip();
+%>

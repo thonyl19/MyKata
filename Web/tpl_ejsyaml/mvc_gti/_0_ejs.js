@@ -303,6 +303,19 @@ const fs = require('fs');
                 ;
             return _arr.map(cb);
         },
+        async echo_ejs(arg,cb){
+            let {ejs:cfg} = arg;
+            var _ejs = ops.ts_BasePath(Object.keys(cfg)[0]);
+            _ejs
+            var data = await ejs.renderFile(_ejs,{arg:cfg,ut},{async: true});
+            data
+            //return data;
+            //data
+            //cb(data);
+            var _arr = data.split('\n');
+            // //console.log({_arr})
+            return _arr.map(cb);
+        },
         async echo_rander(fileName,arg,cb){
             fileName
             arg
@@ -360,6 +373,7 @@ const fs = require('fs');
             toolbar_mode_1:'',
         },
         piece:{
+            el_tab:'',
             json_i18n:'',
             gt_toolbar:'cshtml',
             gt_form_col:'cshtml',
@@ -417,10 +431,101 @@ const fs = require('fs');
             { name: 'Tobi', age: 2, species: 'ferret' },
             { name: 'Loki', age: 2, species: 'ferret' },
             { name: 'Jane', age: 6, species: 'ferret' }
-          ]
+          ],
+        tabs:{
+            A:{
+                label:'label',
+                ejs:{
+                    'piece/gt_form.ejs':{
+                        ejs:{
+                            'form_col': [
+                                {
+                                    "Name": "ROUTE_NO",
+                                    "val": "C030-19",
+                                    "map_type": {
+                                        "JS": "string",
+                                        "csharp": "string"
+                                    },
+                                    "label": ":label=\"i18n.undefined\""
+                                },
+                                {
+                                    "Name": "ROUTE",
+                                    "val": "?面?极板（子流程）",
+                                    "map_type": {
+                                        "JS": "string",
+                                        "csharp": "string"
+                                    },
+                                    "label": ":label=\"i18n.undefined\""
+                                },
+                                {
+                                    "Name": "ROUTE_CATEGORY",
+                                    "val": "R",
+                                    "map_type": {
+                                        "JS": "string",
+                                        "csharp": "string"
+                                    },
+                                    "label": ":label=\"i18n.undefined\""
+                                },
+                                {
+                                    "Name": "DESCRIPTION",
+                                    "val": "",
+                                    "map_type": {
+                                        "JS": "string",
+                                        "csharp": "string"
+                                    },
+                                    "label": ":label=\"i18n.undefined\""
+                                },
+                                {
+                                    "Name": "ENABLE_FLAG",
+                                    "val": true,
+                                    "map_type": {
+                                        "JS": "boolean",
+                                        "csharp": "bool"
+                                    },
+                                    "label": ":label=\"i18n.undefined\""
+                                }
+                            ]
+                        }
+
+                    }
+                }
+            },
+            // B:{
+            //     label:'label',
+            //     ejs:{
+            //         el_tabel:{
+    
+            //         }
+            //     }
+            // },
+        },
     }
  
- 
+    var _mvc_gti = {
+        form:{
+            Base:{
+                Main(arg){
+                    var _r = {
+                        "Htm_Toolbar": [
+                            ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" ",
+                            ":enable.sync=\"ctr_ENABLE.val\" "
+                        ],
+                        "Vue_Computed": [
+                            "e_query"
+                        ],
+                        "Vue_Methods": [
+                            "e_query",
+                            "e_add",
+                            "e_del",
+                            "e_save",
+                            "e_clear"
+                        ]
+                    }
+                    _.set(arg);
+                }
+            }
+        }
+    }
  
  
     var _gti = {
@@ -548,10 +653,30 @@ const fs = require('fs');
                         }
                     },
                 },
-                el_table:{
-                    Html:[],
-                    Vue_Methods:{}
-                }
+                POINT:{
+                    Htm_Toolbar:{
+                        gt_toolbar: [
+                            ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" ",
+                            ":enable.sync=\"ctr_ENABLE.val\" "
+                        ],
+                        'piece.vue_data_form':[
+
+                        ]
+                    },
+                    Vue_Data:1,
+                    Vue_Computed:1,
+                    Vue_Watch:1,
+                    Vue_Methods:1,
+                } 
+
+            }
+            var point = {
+                Main:'cshtml', 
+                Htm_Toolbar:1,
+                Vue_Data:1,
+                Vue_Computed:1,
+                Vue_Watch:1,
+                Vue_Methods:1,
             }
             ops.parseRow(arg);
             ops.parse_gt_toolbar(arg);
@@ -586,14 +711,17 @@ const fs = require('fs');
                     _file.form.Base.Form
                 ]
             }
-            await ops.save_grp(`form/Base/`,_part,{arg} );
+            
+            await ops.save_point(ops.ts_BasePath(`form/Base/`),point,arg);
+
 
 
             // arg.VueComputedToolbar = await ejs.renderFile(_file.form.Base.VueComputedToolbar,arg);
             // var s = await ejs.renderFile(_file.form.Base.Form, arg );
             // ops.save(s,"form/Base/~tmp.cshtml"); 
         },
-        async '*Form'(){
+        // 20210330
+        async 'Form'(){
             let {_fn} = ops;
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
@@ -724,7 +852,10 @@ const fs = require('fs');
             await ops.save_grp(basePath,_part,{arg} );
         },
 
-
+        async '*el-tab'(){
+            var s = await ejs.renderFile(_file.piece.el_tab,{arg:{Tabs:_data.tabs,ut}},{async: true});
+            ops.save(s,"~test.cshtml");  
+        },
 
         async 'gt_toolbar'(){
             var arg = {
