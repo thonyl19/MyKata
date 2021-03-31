@@ -1,0 +1,30 @@
+<%#
+/*
+[Ref]
+    H:\SSMES_Dev\Genesis_MVC\Areas\MES\Views\Route\RouteData.cshtml
+*/
+_%>
+Ajax_success(res) {
+    debugger
+    let { Success, Data, Message = "", Exception } = res;
+    if (Success) {
+        var isDelMark = this.leyer_idx != null;
+        var _msg = isDelMark
+            ? '@RES.BLL.Message.DeleteSuccessfulmsg'
+            : '@RES.BLL.Message.SaveSuccessful'
+            ;
+
+        _self.$UT.parent_reload();
+        _self.$Alert.Success(_msg).then(() => {
+            if (isDelMark) {
+                parent.layer.close(_self.leyer_idx);
+            } else {
+                let { form } = Data;
+                _self.form = form;
+            }
+        });
+    } else {
+        _self.$Alert.Warning(Message);
+        console.log(Exception);
+    }
+},
