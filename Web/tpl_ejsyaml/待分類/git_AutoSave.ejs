@@ -3,7 +3,7 @@
 setlocal enabledelayedexpansion
 set arrayline[0]=-- Menu --
 set arrayline[1]= S(1)-git add
-set arrayline[2]= S(2)-commit 
+set arrayline[2]= S(2)-commit , push
 set arrayline[3]= S(3)-更新最新的程式(fetch , pull , merge)
 set arrayline[4]= S(8)-GitHistory
 set arrayline[5]= S(9)-cls
@@ -27,17 +27,15 @@ git add .
 goto S0
 
 :S2
-echo !arrayline[1]!
-TortoiseGitProc.exe /command:commit
+echo !arrayline[2]!
+git commit -m "add"
+git push --progress "origin"  
+TortoiseGitProc.exe /command:log
 set mima=1
 goto S0
 
 :S3
-@echo on 
-git commit -m "add"
-git push --progress "origin"  
-@echo off
-TortoiseGitProc.exe /command:log
+echo !arrayline[3]!
 set mima=1
 goto S0
 
