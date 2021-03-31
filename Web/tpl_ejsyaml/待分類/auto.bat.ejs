@@ -8,7 +8,7 @@ set BuildInfoDir=bin
 set SdkToolsPath=C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin
 set NETFX="-p:Configuration=Debug;VisualStudioVersion=9.0;TargetFrameworkSDKToolsDirectory=C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools;GenerateSerializationAssemblies=Off"
 set NETFX_="-p:Configuration=Debug;VisualStudioVersion=16;VisualStudioVersion=16;TargetFrameworkSDKToolsDirectory=C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools;GenerateSerializationAssemblies=Off"
-set Builders?="C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"
+set Builders—="C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"
 set Builders=%windir%\Microsoft.NET\Framework64\%NetVer%\MSBuild.exe
 echo Builders=%Builders%
 set Log=/flp:Summary;Verbosity=minimal;LogFile=%BuildInfoDir%\Note.txt /flp1:warningsonly;logfile=%BuildInfoDir%\Alter.txt  /flp2:errorsonly;logfile=%BuildInfoDir%\Error.txt
@@ -17,34 +17,65 @@ echo Log=%Log%
 REM ==指定建置資訊結果資訊輸出的目錄==
 
 REM ==指定要編譯的方案檔==
-set SlnFile=<%=SlnFile%>
+set SlnFile=MES5_Build.sln
+set PublishFolder=PublishFolder
+rem if not exist %PublishFolder%\ mkdir %PublishFolder%\
+rem set PublishProperty=/p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishProvider=FileSystem /p:DeleteExistingFiles=True /p:publishUrl="%PublishFolder%"
+set mima=1
 
-:S1
-echo 步驟 ==.更新最新的程式.==
-git.exe fetch -v --progress "origin"
-git.exe pull --progress -v --no-rebase "origin"
-git.exe merge <%=MergeFrom%>
-set mima=
-set /p mima=S1)pull ,merge 完成 ,請決定執行步驟 S(1) / S2(def):
-echo %mima%
-if "%mima%"=="1" goto S1
-goto S2
-
-
-:S2
-REM 步驟 ==.開始執行建置動作.==
-REM 建立 摘要、警告、錯誤 log 文件
-echo %Builders% %SlnFile%
-msbuild %SlnFile% 
-echo "===[??? ? Push  ? Dev]==="
-set mima=
-set /p mima=S2)建置完成,請決定執行步驟 S(1) / S(2) / S3(def):
+:S0 
+echo -- Menu --
+echo   S(1)-簽入 Dev
+echo   S(2)-更新最新的程式(fetch , pull , merge)
+echo   S(3)-執行建置動作 
+echo   S(4)-簽入 Origin
+echo   S(8)-GitHistory
+echo   S(9)-cls
+set /p mima=請決定執行步驟(Def=%mima%)?
 if "%mima%"=="1" goto S1
 if "%mima%"=="2" goto S2
-goto S3
+if "%mima%"=="3" goto S3
+if "%mima%"=="4" goto S4
+if "%mima%"=="8" goto S8
+if "%mima%"=="9" goto S9
+
+
+:S1
+echo == S1-簽入Dev ==
+cd H:\SSMES_Dev
+TortoiseGitProc.exe /command:commit
+cd H:\SSMES_Main
+set mima=2
+goto S0
+
+:S2
+echo == S2-更新最新的程式(fetch , pull , merge)==
+git.exe fetch -v --progress "origin"
+git.exe pull --progress -v --no-rebase "origin"
+git.exe merge remotes/origin/Anthony_2021012_SSMES
+set mima=3
+goto S0
+
 
 :S3
-git.exe push --progress "origin" <%=PushTo%>
+echo == S3-執行建置動作==
+echo %Builders% %SlnFile%
+msbuild %SlnFile% 
+set mima=4
+goto S0
+
+:S4
+echo == S4-簽入 Origin==
+git.exe push --progress "origin" 智慧版
+goto S8
+
+
+:S8
+set mima=1
 TortoiseGitProc.exe /command:log
-pause
-goto S1
+goto S0
+ 
+:S9
+cls
+set mima=1
+goto S0

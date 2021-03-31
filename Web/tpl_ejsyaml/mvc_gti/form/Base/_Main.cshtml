@@ -21,16 +21,9 @@
 <script>
         var _data = @Html.Raw(ViewData["result"] ?? "{}");
         console.log(_data);
-        let {form = {}} = _data;
-        /*
-        if (main == null) {
-            main = {
-                ENCODE_FORMAT_NO: '',
-                ENCODE_FORMAT_NAME:'',
-                MULTI_SERIAL_DIRECTION: '1',
-            };
-        }
-        */
+        let { Data, Message = "", Success } = _data;
+        let {form = {}} = Data;
+ 
         $(() => {
             new Vue({
                 el: '#app',
@@ -52,9 +45,19 @@
                         },
                     }
                 },
+                mounted() {
+					if (!Success && Message != "") {
+						this.$Alert.Err(Message);
+						return;
+					}
+				},
                 computed: {
-                    /// #region [gt_toolbar.Vue_Computed]                     v_query() {                    	return {                    		//TODO:                    		visable: true,                    		enable: true,                    		fn: this.e_query                    	}                    },                    /// #endregion [gt_toolbar.Vue_Computed]
+                    /// #region [gt_toolbar.Vue_Computed]                     v_query() {                    	return {                    		//TODO:                    		visable: true,                    		enable: !_.isEmpty(this.getSID()),                    		fn: this.e_query                    	}                    },                    /// #endregion [gt_toolbar.Vue_Computed]
                     isAddMode() {
+                        // //Mode1
+                        // var SID = this.getSID(); 
+    					// return _.isEmpty(SID);
+
                         var url = new URL(location);
                         var SID = url.searchParams.get('SID') ?? "";
                         var isAddMode = (SID == "");

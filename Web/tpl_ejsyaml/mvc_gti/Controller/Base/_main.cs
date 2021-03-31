@@ -33,7 +33,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 		{
 			return View();
 		}
-		public ActionResult <%= arg.FunctionName%>_Item(string SID, bool SingleMode = false)
+		public ActionResult <%= arg.FunctionName%>_Item(string SID, bool SingleMode = true)
 		{
 			/*
 			dynamic data = new ExpandoObject();
@@ -68,8 +68,22 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 				}
 			} 
 			ViewData["result"] = ((object)data).ToJson(true);
-			ViewData["SingleModel"] = SingleMode;
 			*/
+
+			/*
+			QC_DEFECTCODE model = null;
+            if (keyVal != null)
+                model = _service.GetEntityByKey(keyVal);
+
+            var result = new Result(true) { Data = new ExpandoObject() };
+            result.Data.form = model ?? new QC_DEFECTCODE();
+            result.Data.DefectTypes = _service.GetDefectTypes();
+            result.Data.DefectCategories = _service.GetDefectCategories();
+
+            ViewData["result"] = result.ToJson(true);
+			*/
+
+			ViewData["SingleModel"] = SingleMode;
 			return View();
 		}
 		#endregion

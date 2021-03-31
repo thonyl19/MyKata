@@ -26,16 +26,9 @@
 <script>
         var _data = @Html.Raw(ViewData["result"] ?? "{}");
         console.log(_data);
-        let {form = {}} = _data;
-        /*
-        if (main == null) {
-            main = {
-                ENCODE_FORMAT_NO: '',
-                ENCODE_FORMAT_NAME:'',
-                MULTI_SERIAL_DIRECTION: '1',
-            };
-        }
-        */
+        let { Data, Message = "", Success } = _data;
+        let {form = {}} = Data;
+ 
         $(() => {
             new Vue({
                 el: '#app',
@@ -58,10 +51,20 @@
                         },
                     }
                 },
+                mounted() {
+					if (!Success && Message != "") {
+						this.$Alert.Err(Message);
+						return;
+					}
+				},
                 computed: {
                     <%_ arg.ut.echo_file('./~Vue_Computed.txt',(el)=>{ _%>
                     <%- el %><% }) %>
                     isAddMode() {
+                        // //Mode1
+                        // var SID = this.getSID(); 
+    					// return _.isEmpty(SID);
+
                         var url = new URL(location);
                         var SID = url.searchParams.get('SID') ?? "";
                         var isAddMode = (SID == "");

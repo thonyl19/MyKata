@@ -4,7 +4,7 @@ v_<%=el.substring(2)%>() {
 	return {
 		//TODO:
 		visable: true,
-		enable: true,
+		enable: !_.isEmpty(this.getSID()),
 		fn: this.<%=el%>
 	}
 },
