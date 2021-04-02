@@ -2766,6 +2766,125 @@ var __fn = (
 			}
 			return _obj;
 		},
+		/* eslint-disable */
+		
+		'*el-switch'() {
+			var _note = `
+			這個是在專案碰到的實際案例,在 mode1 中,很明確的顯示,
+				當 v-model 直接綁定 value 時,再利用 watch 處理變更事件時,
+				就會造成死循環.
+			在 mode2 的模式中,省卻了 watch 程序,但必須多動用一個 trigger 變數,
+				來解決事件死循環的問題.
+			在 mode3 的模式中,則以 對 value 的直接賦值的方式, 整個事件做了分流,
+				簡單來說,就是 觸發的 event 跟 mvvm 顯示值的機制做了切分 ,
+				從而解決死循環的問題.
+			   `;
+			var _obj = {
+				_note,
+				_css:``,
+				_vue: {
+					template: `
+						<div>
+						<h3>Model-死循環</h3>
+						<el-checkbox v-model="isStart">Model-死循環</el-checkbox>
+						<el-switch
+							v-model="value"
+							active-color="#13ce66"
+							inactive-color="#ff4949"
+							active-value="true"
+							inactive-value="false">
+						</el-switch>
+						{{value}}
+						<h3>Mode2-computed 模式</h3>
+						<el-switch
+							v-model="enable3"
+							active-color="#13ce66"
+							inactive-color="#ff4949"
+							active-value="true"
+							inactive-value="false">
+						</el-switch>
+						<h3>Mode3-computed 代理模式</h3>
+						<el-switch
+							v-model="enable3"
+							active-color="#13ce66"
+							inactive-color="#ff4949"
+							active-value="true"
+							inactive-value="false">
+						</el-switch>
+						{{value}}
+						</div>
+					`,
+					data(){
+						return {
+							trigger:true,
+							isStart:false,
+							value:false
+						}
+					},
+					computed:{
+						enable:{
+							get(){
+								return this.value;
+							},
+							set(val){
+								this.value = val;
+								if (this.trigger){
+									this.mode2()
+								}
+								this.trigger =true;
+							}
+						},
+						enable3:{
+							get(){
+								return this.value;
+							},
+							set(val){
+								this.value = val;
+								this.mode3()
+							}
+						}
+					},
+					watch:{
+						value:{
+							immediate:false,
+							handler(val){
+								if (this.isStart){
+									this.mode1();
+								}
+							}
+						},
+						 
+					},
+					methods:{
+						//會造成死循環
+						mode1(){
+							var _self = this;
+							window.setTimeout(()=>{
+								this.$message('觸發回復');
+								_self.value = !_self.value;
+							},3000)
+						},
+						mode2(){
+							var _self = this;
+							window.setTimeout(()=>{
+								this.$message('mode2 - 觸發回復');
+								_self.trigger = false;
+								_self.enable = !_self.enable;
+							},3000)
+						},
+						mode3(){
+							var _self = this;
+							window.setTimeout(()=>{
+								this.$message('mode3 - 觸發回復');
+								_self.value = !_self.value;
+							},3000)
+						}
+					}
+
+				}
+			};
+			return _obj;
+		},
 	}
 	var Dialog = {
 		'拖曳寛高'() {
