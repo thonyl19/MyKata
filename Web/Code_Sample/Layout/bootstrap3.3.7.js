@@ -452,7 +452,7 @@
 			};
 			return _obj;
 		},
-		Case1() {
+		'*Case1'() {
 			var _note = `
 		<pre>公司UI 的需求 , 主要是將 做版本控制
 		
@@ -544,21 +544,41 @@
 				<div >
 					${_note}
 					<div class="input-group" style="width:30em;">
-					<span class="input-group-addon">@</span>
-					<input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
-					<span class="input-group-btn">
-						<button class="btn btn-default" type="button">Go!</button>
-						<span class="btn btn-default">
-							<i class="fa fa-flag"></i>
-						</span>
-						<span class="btn btn-default">
-							<span class="switch" title="啟用/停用">
-							<input type="checkbox" checked="checked" />
-							<span></span>
+						<span class="input-group-addon">@</span>
+						<input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">Go!</button>
+							<span class="btn btn-default">
+								<i class="fa fa-flag"></i>
 							</span>
+							<span class="btn btn-default">
+								<span class="switch" title="啟用/停用">
+								<input type="checkbox" checked="checked" />
+								<span></span>
+								</span>
+							</span>
+							<el-switch 
+								active-color="#13ce66"
+								inactive-color="#ff4949"
+								></el-switch>
 						</span>
-					</span>
-				</div>
+					</div>
+					<div class="input-group" style="width:30em;">
+						<span class="input-group-addon">@</span>
+						<input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
+						<div class="input-group-addon" >
+							<el-switch 
+								active-color="#13ce66"
+								inactive-color="#ff4949"
+								></el-switch>
+						</div>
+						<el-tooltip class="item" effect="dark" content="SETDEFAULT" placement="bottom">
+							<i class="input-group-addon btn fa fa-flag fa-2x"     ></i>
+						</el-tooltip>
+						<el-tooltip class="item" effect="dark" content="SETDEFAULT" placement="bottom">
+							<input type="button" class="input-group-addon btn " value="test" /> 
+						</el-tooltip>
+					</div>
 				</div>
 				`,
 				},
@@ -1016,7 +1036,7 @@
 			};
 			return _obj;
 		},
-		'*向右浮動'() {
+		'向右浮動'() {
 			var _note = `
 			   <pre> 在 v3.3.7 中,似乎沒有向右浮的樣式(~如果有,在 Glyphicons 樣式表中就會用上了).
 			   所以,只能自己刻了.
@@ -1120,7 +1140,7 @@
 		},
 	}
 	var Style = {
-		'*text'(){
+		'text'(){
 			var _note = `
 			   <pre>
 			   </pre>

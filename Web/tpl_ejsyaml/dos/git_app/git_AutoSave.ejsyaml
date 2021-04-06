@@ -9,7 +9,8 @@ Menu: {
 Kata_Web: {
 	Title: 'Kata_Web',
     PushTo: '',
-    SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\'
+    //SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\',
+	SavePath: 'P:\MyKata\MyKata_Web\'
 }
 --- |
 <%_ 
