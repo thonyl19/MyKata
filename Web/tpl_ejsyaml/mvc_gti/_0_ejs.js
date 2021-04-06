@@ -318,24 +318,7 @@ const fs = require('fs');
             arg.arr = data.split('\n');
             return arg;
         },
-        async echo_ejs(arg,cb){
-            arg
-            //ejs 是 key word , 其內容為 'ejs filename':{綁定內容}
-            let {ejs:ejs_cfg} = arg; 
-            ejs_cfg
-            var _ejsFileName = Object.keys(ejs_cfg)[0];
-            _ejsFileName
-            var _ejsFilePath = ops.ts_BasePath(`${_ejsFileName}.ejs`);
-            var _ejsArg = ejs_cfg[_ejsFileName];
-            _ejsFilePath
-            _ejsArg.ut = ut;
-            var data = await ejs.renderFile(_ejsFilePath,{arg:_ejsArg},{async: true});
-            //cb(data);
-            //ops.save(data,)
-            // console.log(data);
-            var _arr = data.split('\n');
-            return _arr.map(cb);
-        },
+        
         async echo_rander(fileName,arg,cb){
             fileName
             arg
@@ -354,6 +337,7 @@ const fs = require('fs');
         echo_arr(arr,cb,tab=""){
             //arr
             _.each(arr,(x)=>{
+                x
                 if (_.isArray(x)){
                     //x
                     ut.echo_arr(x,cb,tab+"\t")
@@ -408,7 +392,7 @@ const fs = require('fs');
             json_i18n:'',
             gt_toolbar:'cshtml',
             gt_form_col:'cshtml',
-            gt_form:'',
+            gt_form_20210406:'',
             xx:'',
             el_table_column:'cshtml',
             vue_data_form:'',
@@ -465,28 +449,7 @@ const fs = require('fs');
             { name: 'Loki', age: 2, species: 'ferret' },
             { name: 'Jane', age: 6, species: 'ferret' }
           ],
-        xxx:[
-            "A",
-            "B",
-            "C",
-            [
-                "A",
-                "B",
-                [
-                    "A",
-                    "B",
-                    "C",
-                    [
-                        "A",
-                        "B",
-                        "C",
-                    ],
-                    "D"
-                ],
-                "C",
-                
-            ],
-        ],
+         
         formx:{
             ejs:{
                 'piece/gt_form':{
@@ -885,18 +848,83 @@ const fs = require('fs');
             await ops.save_grp(basePath,_part,{arg} );
         },
 
-        async 'el-tab'(){
-            let {formx:arg} = _data;
-            arg.ut = ut;
-            //var s = await ejs.renderFile(_file.piece.gt_form,{arg:_data.tabsx,ut},{async: true});
-            // var s = await ejs.renderFile(_file.piece.gt_form,{arg},{async: true});
-            // ops.save(s,"~test.cshtml");  
-            var z = await ut.parse_z(arg);
-            ops.testJson(z);  
 
+        /*
+        試作失敗, 原本是希望能利用這種階層格式,來動態生成需要的排版 ,
+            但實際碰上的問題是,因為非同步機制的關係,
+            子層應該有的縮排效果無法正確的處理,
+            最後只能放棄這個方法 
+        */
+        async '~gt_form_20210406'(){
+            ut.echo_ejs= async function (arg,cb){
+                arg
+                //ejs 是 key word , 其內容為 'ejs filename':{綁定內容}
+                let {ejs:ejs_cfg} = arg; 
+                if (ejs_cfg !=null){
+                    var _ejsFileName = Object.keys(ejs_cfg)[0];
+                    _ejsFileName
+                    var _ejsFilePath = ops.ts_BasePath(`${_ejsFileName}.ejs`);
+                    var _ejsArg = ejs_cfg[_ejsFileName];
+                    _ejsFilePath
+                    _ejsArg.ut = ut;
+                    var data = await ejs.renderFile(_ejsFilePath,{arg:_ejsArg},{async: true});
+                    var _arr = data.split('\n');
+                    return _arr.map(cb);
+                }
+                
+            }
+            var arg  = {
+                arg:{
+                    ut,
+                    ejs:{
+                        'piece/gt_form_20210406':{
+                            ejs:{
+                                'piece/gt_form_20210406':{
+                                    ejs:{
+                                        'piece/gt_form_20210406':{
+                                            ejs:{
+                                                'piece/gt_form_20210406':{
+                                                    ejs:{
+                                                        'piece/gt_form_20210406':{
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+            }
+            //var s = await ejs.renderFile(_file.piece.gt_form,{arg:_data.tabsx,ut},{async: true});
+            var s = await ejs.renderFile(_file.piece.gt_form_20210406,arg,{async: true});
+            ops.save(s,"~test.cshtml");  
         },
-        async '*zz'(){
-            let arg = {arr:_data.xxx};
+        async '以陣列形式產生縮排-OK'(){
+            let arg = {arr:[
+                "A",
+                "B",
+                "C",
+                [
+                    "A",
+                    "B",
+                    [
+                        "A",
+                        "B",
+                        "C",
+                        [
+                            "A",
+                            "B",
+                            "C",
+                        ],
+                        "D"
+                    ],
+                    "C",
+                    
+                ],
+            ]};   
             arg.ut = ut;
             var s = await ejs.renderFile(_file.piece.xx,{arg});
             s

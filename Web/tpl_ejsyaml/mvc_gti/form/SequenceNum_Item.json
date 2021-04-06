@@ -5,7 +5,8 @@
         "ROUTE_NO": "C030-19",
         "ROUTE": "?面?极板（子流程）",
         "ROUTE_CATEGORY": "R",
-        "DESCRIPTION": ""
+        "DESCRIPTION": "",
+        "ENABLE_FLAG": true
     },
     "Fileds": [
         {
@@ -39,6 +40,14 @@
                 "JS": "string",
                 "csharp": "string"
             }
+        },
+        {
+            "label": "ENABLE_FLAG",
+            "val": true,
+            "map_type": {
+                "JS": "boolean",
+                "csharp": "bool"
+            }
         }
     ],
     "ext_rule": {
@@ -66,7 +75,9 @@
         "e_clear": ""
     },
     "html": {
-        "toolbar": " :e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\""
+        "toolbar": [
+            ":e_query=\"v_query\" :e_add=\"e_add\" :e_del=\"e_del\" :e_save=\"e_save\" :e_clear=\"e_clear\" "
+        ]
     },
     "vue": {
         "computed": {
