@@ -303,6 +303,21 @@ const fs = require('fs');
                 ;
             return _arr.map(cb);
         },
+        async parse_z(arg){
+            arg
+            //ejs 是 key word , 其內容為 'ejs filename':{綁定內容}
+            let {ejs:ejs_cfg} = arg; 
+            ejs_cfg
+            var _ejsFileName = Object.keys(ejs_cfg)[0];
+            _ejsFileName
+            var _ejsFilePath = ops.ts_BasePath(`${_ejsFileName}.ejs`);
+            var _ejsArg = ejs_cfg[_ejsFileName];
+            _ejsFilePath
+            _ejsArg.ut = ut;
+            var data = await ejs.renderFile(_ejsFilePath,{arg:_ejsArg});
+            arg.arr = data.split('\n');
+            return arg;
+        },
         async echo_ejs(arg,cb){
             arg
             //ejs 是 key word , 其內容為 'ejs filename':{綁定內容}
@@ -315,8 +330,9 @@ const fs = require('fs');
             _ejsFilePath
             _ejsArg.ut = ut;
             var data = await ejs.renderFile(_ejsFilePath,{arg:_ejsArg},{async: true});
+            //cb(data);
             //ops.save(data,)
-            console.log(data);
+            // console.log(data);
             var _arr = data.split('\n');
             return _arr.map(cb);
         },
@@ -334,6 +350,17 @@ const fs = require('fs');
         parse_label(item,Prefix){
             var _Prefix =  _.isEmpty(Prefix)?"i18n.":Prefix;
             return `${_Prefix=="i18n."?':':''}label="${_Prefix}${item.label}"`;
+        },
+        echo_arr(arr,cb,tab=""){
+            //arr
+            _.each(arr,(x)=>{
+                if (_.isArray(x)){
+                    //x
+                    ut.echo_arr(x,cb,tab+"\t")
+                }else{
+                    cb(`${tab}${x}`);
+                }
+            })
         }
     }
     var _file = {
@@ -381,6 +408,8 @@ const fs = require('fs');
             json_i18n:'',
             gt_toolbar:'cshtml',
             gt_form_col:'cshtml',
+            gt_form:'',
+            xx:'',
             el_table_column:'cshtml',
             vue_data_form:'',
             vue_data_i18n:'',
@@ -436,61 +465,61 @@ const fs = require('fs');
             { name: 'Loki', age: 2, species: 'ferret' },
             { name: 'Jane', age: 6, species: 'ferret' }
           ],
+        xxx:[
+            "A",
+            "B",
+            "C",
+            [
+                "A",
+                "B",
+                [
+                    "A",
+                    "B",
+                    "C",
+                    [
+                        "A",
+                        "B",
+                        "C",
+                    ],
+                    "D"
+                ],
+                "C",
+                
+            ],
+        ],
+        formx:{
+            ejs:{
+                'piece/gt_form':{
+                    ejs:{
+                        'piece/gt_form':{
+                            ejs:{
+                                'piece/gt_form':{
+                                    ejs:{
+                                        'piece/gt_form':{
+                                            ejs:{
+                                                'piece/gt_form':{
+                                                    ejs:{
+                                                        'piece/gt_form_col':{}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         tabs:{
             A:{
                 label:'label',
                 ejs:{
                     'piece/gt_form':{
                         ejs:{
-                            'piece/gt_form_col': [
-                                {
-                                    "Name": "ROUTE_NO",
-                                    "val": "C030-19",
-                                    "map_type": {
-                                        "JS": "string",
-                                        "csharp": "string"
-                                    },
-                                    "label": ":label=\"i18n.undefined\""
-                                },
-                                {
-                                    "Name": "ROUTE",
-                                    "val": "?面?极板（子流程）",
-                                    "map_type": {
-                                        "JS": "string",
-                                        "csharp": "string"
-                                    },
-                                    "label": ":label=\"i18n.undefined\""
-                                },
-                                {
-                                    "Name": "ROUTE_CATEGORY",
-                                    "val": "R",
-                                    "map_type": {
-                                        "JS": "string",
-                                        "csharp": "string"
-                                    },
-                                    "label": ":label=\"i18n.undefined\""
-                                },
-                                {
-                                    "Name": "DESCRIPTION",
-                                    "val": "",
-                                    "map_type": {
-                                        "JS": "string",
-                                        "csharp": "string"
-                                    },
-                                    "label": ":label=\"i18n.undefined\""
-                                },
-                                {
-                                    "Name": "ENABLE_FLAG",
-                                    "val": true,
-                                    "map_type": {
-                                        "JS": "boolean",
-                                        "csharp": "bool"
-                                    },
-                                    "label": ":label=\"i18n.undefined\""
-                                }
-                            ]
+                            'piece/gt_form_col':{}
                         }
-
                     }
                 }
             },
@@ -856,8 +885,21 @@ const fs = require('fs');
             await ops.save_grp(basePath,_part,{arg} );
         },
 
-        async '*el-tab'(){
-            var s = await ejs.renderFile(_file.piece.el_tab,{arg:{Tabs:_data.tabs,ut}},{async: true});
+        async 'el-tab'(){
+            let {formx:arg} = _data;
+            arg.ut = ut;
+            //var s = await ejs.renderFile(_file.piece.gt_form,{arg:_data.tabsx,ut},{async: true});
+            // var s = await ejs.renderFile(_file.piece.gt_form,{arg},{async: true});
+            // ops.save(s,"~test.cshtml");  
+            var z = await ut.parse_z(arg);
+            ops.testJson(z);  
+
+        },
+        async '*zz'(){
+            let arg = {arr:_data.xxx};
+            arg.ut = ut;
+            var s = await ejs.renderFile(_file.piece.xx,{arg});
+            s
             ops.save(s,"~test.cshtml");  
         },
 

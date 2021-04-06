@@ -1,0 +1,9 @@
+ctr_ENABLE:{
+    get(){
+        return this.form.ENABLE_FLAG == 'T';
+    },
+    set(val){
+        this.form.ENABLE_FLAG = val ? 'T' : 'F';
+        this.e_enable();
+    }
+}

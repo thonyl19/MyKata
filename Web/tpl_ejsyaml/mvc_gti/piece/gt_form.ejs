@@ -1,5 +1,5 @@
 ﻿<div class="row form-horizontal gt-form">
-	<%_ await arg.ut.echo_ejs(arg,(el)=>{ _%>
-	<%- el %><% }) _%>
+	<%_ arg.ut.echo_ejs(arg,async(el)=>{ _%>
+	<%- await el %><% }) %>
 </div>
                 
