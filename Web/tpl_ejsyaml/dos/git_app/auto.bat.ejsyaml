@@ -1,11 +1,12 @@
-ï»¿# input data
+# input data
 Menu: {
-	"1": 'ç°½å…¥ Dev',
-	"2": 'æ›´æ–°æœ€æ–°çš„ç¨‹å¼(fetch , pull , merge)',
-	"3": 'åŸ·è¡Œå»ºç½®å‹•ä½œ',
-	"4": 'ç°½å…¥ Origin',
+	"1": 'Ã±¤J Dev',
+	"2": '§ó·s³Ì·sªºµ{¦¡(fetch , pull , merge)',
+	"3": '°õ¦æ«Ø¸m°Ê§@',
+	"4": 'Ã±¤J Origin',
 	"8": 'GitHistory',
 	"9": 'cls',
+	"11": 'Dev Sync Main',
 }
 MES5: {
     Dir:{
@@ -15,18 +16,23 @@ MES5: {
     SlnFile: 'MES5_Build.sln',
     MergeFrom: 'remotes/origin/Branch_Anthony',
     PushTo: '',
-    SavePath: ''
 }
 SSMES: {
+    Title: 'SSMES',
+    Dir:{
+        Dev: 'H:\SSMES_Dev',
+        Main: 'H:\SSMES_Main'
+    },
     SlnFile: 'MES5_Build.sln',
     MergeFrom: "remotes/origin/Anthony_2021012_SSMES",
-    PushTo: 'æ™ºæ…§ç‰ˆ'
+    SyncMain: "remotes/origin/´¼¼zª©",
+    PushTo: '´¼¼zª©'
 }
 
 --- |
 <%_ 
-    var cfg = {arg:MES5,Menu};
- 	this.render('auto.bat.ejs', `${cfg.arg.SavePath}auto.bat` , cfg);
+    var cfg = {arg:SSMES,Menu};
+ 	this.render('auto.bat.ejs', `${cfg.arg.Dir.Main}/auto.bat` , cfg);
     //this.render('../toJson.ejs', '~tmp.json', {arg:this.data.SSMES});
 	this.skip();
 %>

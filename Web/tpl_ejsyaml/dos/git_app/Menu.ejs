@@ -3,7 +3,7 @@ var idx=1;
 var _menu=[],_act=[]
 for(var key in Menu){
 	_menu.push(`set arrayline[${idx}]= S(${key}) ${Menu[key]}`);
-	_act.push(`if "%mima%"=="${key}" goto S${key}`);
+	_act.push(`if "%ans%"=="${key}" goto S${key}`);
 	idx++;
 }
 %> 
@@ -19,7 +19,10 @@ set mima=1
 for /l %%n in (0,1,<%=idx-1%>) do (
 echo !arrayline[%%n]!
 )
-set /p mima=請決定執行步驟(Def=%mima%)?
+set ans=""
+set /p ans=請決定執行步驟(Def=%mima%)?
+if "%ans%"=="" (ans=mima)
+if "%ans%"=="0" goto end
 <%_ _act.map(e=>{_%>
 <%-e%>
 <%_})_%>
