@@ -519,7 +519,54 @@ const fs = require('fs');
                     }
                     _.set(arg);
                 }
+            },
+            gt_form_col(arg){
+                var _arr = [
+                    "A",
+                    "B",
+                    "C",
+                ];
+                return _arr;
             }
+        },
+        elUI:{
+            el_tabs(arg){
+                var _base = {
+                    Html_Tabs:{
+                        './tpl_ejsyaml/mvc_gti/piece/el_tab':{
+                            A:{
+                                label:'label',
+                                arr:[]
+                            },
+                            B:{
+                                label:'label',
+                                arr:[]
+                            }
+                        }
+                    },
+                    Vue_Data:["tabIdx:'',"]
+                };
+                return _base;
+            },
+            el_tab_pane(arr){
+                var _base = {};
+                return _base;
+            }
+        },
+        
+        ENABLE_FLAG(arg){
+            var _base = {
+                Controller:{
+                    './tpl_ejsyaml/mvc_gti/ENABLE_FLAG/Controller':{}
+                },
+                Vue_Methods:{
+                    './tpl_ejsyaml/mvc_gti/ENABLE_FLAG/Vue_Methods':{}
+                },
+                Vue_Computed:{
+                    './tpl_ejsyaml/mvc_gti/ENABLE_FLAG/Vue_Computed':{}
+                }
+            }
+            return _base;
         }
     }
  

@@ -1,4 +1,8 @@
-﻿<%
+﻿
+<%
+/*
+因改版為使用 echo_arr 
+*/
     arg.ut.fn_inc = include;
 _%>
 <!-- #region [el-tabs] -->
@@ -6,8 +10,8 @@ _%>
 	<%_ for(var key in arg.Tabs){ 
 		var tab = arg.Tabs[key]; _%>	
 	<el-tab-pane <%=tab.label%> name="<%=key%>">
-		<% arg.ut.echo_arr(arg.arr,(el)=>{ %><%- el %>
-		<% }) %>
+		<%_ await arg.ut.echo_ejs(tab,(el)=>{ _%>
+		<%-  el %><% }) %>
 	</el-tab-pane>
 	<%_} _%>
 </el-tabs>
