@@ -99,6 +99,24 @@ const fs = require('fs');
                 }
             }
         },
+        save_point1(basePath,point){
+            let {list,part} = point;
+            list
+            for(var el of list){
+                var _code = [];
+                for (var item in part){
+                    item
+                    var _subCode = part[item][el];
+                    if (_subCode!=null){
+                        _code.push(_subCode);
+                    } 
+                }
+                _code
+                var _file = `${basePath}~${el}.txt`;
+                _file
+                ops.save(_code.join('\r\n'),_file,false); 
+            }
+        },
         ejs(fileName,ext="ejs"){``
             return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`
         },
@@ -357,6 +375,10 @@ const fs = require('fs');
         }
     }
     var _file = {
+        Page:{
+            Basic:'cshtml',
+            GridView_Query:'cshtml',
+        },
         Controller:{
             Basic:{
                 _main:'cs'
@@ -370,7 +392,7 @@ const fs = require('fs');
             Vue_Watch:1,
         },
         gt_toolbar:{
-            Htm_Toolbar:1,
+            Html_Code:1,
             Vue_Computed:1,
             Vue_Methods:1
         },
@@ -383,16 +405,19 @@ const fs = require('fs');
             Basic:{
                 el_table:1,
                 el_table_col:1,
+                Vue_Data:1,
                 Vue_Methods:1,
+            },
+            PagerQuery:{
+                Vue_Data:1,
+
             },
             _main:'cshtml',
             VueTpl:1,
             VueGridData:1,
             VueGridMethos:1,
             gt_form_col:1,
-            PagerQuery:{
-                Vue_Data:1
-            },
+            
         },
         form:{
             Base:{
@@ -545,7 +570,7 @@ const fs = require('fs');
         },
         async gt_toolbar(Src){
             let {toolbar} = Src;
-            var Html_Table = [],
+            var Html_Code = [],
                 Vue_Computed = [],
                 Vue_Methods=[]
                 ;
@@ -557,7 +582,7 @@ const fs = require('fs');
                     Vue_Computed.push(key);
                     fun = `v_${key.substr(2)}`;
                 }
-                Html_Table.push(`:${key}="${fun}"`);
+                Html_Code.push(`:${key}="${fun}"`);
                 Vue_Methods.push(key);
             })
 
@@ -567,7 +592,7 @@ const fs = require('fs');
             // if (ENABLE_FLAG){
             //     html_toolbar.push(`:enable.sync="ENABLE_FLAG" `);
             // }
-            _.set(Src, 'toolbar.Html_Table', Html_Table);
+            _.set(Src, 'toolbar.Html_Code', Html_Code);
             _.set(Src, 'toolbar.Vue_Computed', Vue_Computed);
             _.set(Src, 'toolbar.Vue_Methods', Vue_Methods);
             
@@ -575,8 +600,9 @@ const fs = require('fs');
 
             toolbar
             var _arg = {Src};
+            _arg
             var point = {
-                Html_Table:await _file.gt_toolbar.Htm_Toolbar(_arg),
+                Html_Code:await _file.gt_toolbar.Html_Code(_arg), 
                 Vue_Computed:await _file.gt_toolbar.Vue_Computed(_arg),
                 Vue_Methods:await _file.gt_toolbar.Vue_Methods(_arg),
             }
@@ -592,14 +618,32 @@ const fs = require('fs');
                 var _arg = {
                     Src,
                     SubCode,
-                    grid_Src:'grid_Src'
+                    grid_Src:'grid.data'
                 }
                 var point = {
-                    Html_Table:await _file.el_table.Basic.el_table(_arg),
-                    Vue_Methos:await _file.el_table.Basic.Vue_Methods(_arg),
+                    Html_Code:await _file.el_table.Basic.el_table(_arg),
+                    Vue_Data:await _file.el_table.Basic.Vue_Data(_arg),
+                    Vue_Methods:await _file.el_table.Basic.Vue_Methods(_arg),
                 }
                 return point;
             },
+            async PagerQuery(arg,SubCode){
+                if (SubCode == null){
+                    SubCode = (await _file.el_table.Basic.el_table_col(arg)).split('\n');
+                }
+                let {Src} = arg;
+                var _arg = {
+                    Src,
+                    SubCode,
+                    grid_Src:'grid.data'
+                }
+                var point = {
+                    Html_Code:await _file.el_table.Basic.el_table(_arg),
+                    Vue_Data:await _file.el_table.PagerQuery.Vue_Data(_arg),
+                    Vue_Methods:await _file.el_table.PagerQuery.Vue_Methods(_arg),
+                }
+                return point;
+            }
         },
         elUI:{
             async el_tab(Tabs){
@@ -1222,7 +1266,6 @@ const fs = require('fs');
 
         },
         async "el_table.Basic - OK"(){
-            var Tabs = _data.tabs;
             var Src ={
                 ut,
                 row:_data.row
@@ -1233,6 +1276,47 @@ const fs = require('fs');
             ops.testJson(Src,`${_basePath}~Cfg.json`);
             ops.save_point(ops.ts_BasePath(_basePath),point);
 
+        },
+        async "el_table.PagerQuery"(){
+            var Src ={
+                ut,
+                row:_data.row
+            }
+            ops.parseRow(Src);
+            var point = await _mvc_gti.el_table.PagerQuery({Src});
+            var _basePath = "el_table/PagerQuery/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point(ops.ts_BasePath(_basePath),point);
+        },
+        async "*Page.Basic"(){
+            var Src ={
+                ut,
+                row:_data.row,
+                toolbar:{
+                    e_Add:0,
+                    e_add:1,
+                    e_del:0,
+                    e_save:0,
+                    e_clear:0,
+                }  
+            }
+            ops.parseRow(Src);
+            var point = {
+                list:[
+                    'Html_Code',
+                    'Vue_Data',
+                    'Vue_Methods',
+                ],
+                part:{
+                    ToolBar : await _mvc_gti.gt_toolbar(Src),
+                    GridView : await _mvc_gti.el_table.Basic({Src}),
+                }
+            }
+            var _basePath = "Page/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point1(ops.ts_BasePath(_basePath),point);
+            var page = await _file.Page.Basic({Src});
+            ops.save(page,`${_basePath}~page.cshtml`);
         },
         async 'gt_toolbar-OK'(){
             var Src = {

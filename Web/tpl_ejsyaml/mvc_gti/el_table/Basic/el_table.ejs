@@ -1,6 +1,6 @@
 ﻿<el-table empty-text=" " style="width: 100%"
 		@@sort-change="sort_change"
-		:data="<%grid_Src%>"
+		:data="<%=grid_Src%>"
 		:default-sort="{prop: 'CREATE_DATE', order: 'ascending'}">
 	<%- SubCode.join('\n\t') %>
 </el-table>
