@@ -5,7 +5,7 @@ H:\SSMES_Dev\Genesis_MVC\Areas\ADM\Controllers\DefectCategoryController.cs
 H:\SSMES_Dev\Genesis_MVC\Areas\ADM\Controllers\OperationController.cs
 H:\SSMES_Dev\Genesis_MVC\Areas\ADM\ControlleCheckDataRulers\OperationTypeController.cs
 */
-    arg.ut.fn_inc = include;
+    Src.ut.fn_inc = include;
 _%>
 using MDL.MES;
 using BLL.MES;
@@ -21,19 +21,19 @@ using System.Web.Mvc;
 using BLL.InterFace;
 using System;
 
-namespace Genesis.Areas.<%= arg.Areas%>.Controllers
+namespace Genesis.Areas.<%= Src.Areas%>.Controllers
 {
-	public class <%= arg.FunctionName%>Controller : BaseController
+	public class <%= Src.FunctionName%>Controller : BaseController
 	{
-		public <%= arg.FunctionName%>Services serv  { get; set; }
-		//<%= arg.Areas%>Services _serv = new <%= arg.Areas%>Services()
+		public <%= Src.FunctionName%>Services serv  { get; set; }
+		//<%= Src.Areas%>Services _serv = new <%= Src.Areas%>Services()
 		
 		#region == Page ==
-		public ActionResult <%= arg.FunctionName%>()
+		public ActionResult <%= Src.FunctionName%>()
 		{
 			return View();
 		}
-		public ActionResult <%= arg.FunctionName%>_Item(string SID, bool SingleMode = true)
+		public ActionResult <%= Src.FunctionName%>_Item(string SID, bool SingleMode = true)
 		{
 			/*
 			dynamic data = new ExpandoObject();
@@ -56,7 +56,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 			//依據 SID 判別新增 OR 讀取 ,再各別處理
 			if (string.IsNullOrWhiteSpace(SID) == false)
 			{
-				var _data = _svc.<%= arg.FunctionName%>_Read(SID);
+				var _data = _svc.<%= Src.FunctionName%>_Read(SID);
 				if (_data == null)
 				{
 					data.Msg = RES.BLL.Message.NoDataFound;
@@ -97,13 +97,13 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Save(<%=arg.TableName%> entity)
+		public ActionResult Save(<%=Src.TableName%> entity)
 		{
 			IResult result;
             try
             {
-				<%=arg.CheckDataRule%>
-				result //= serv.<%= arg.FunctionName%>_Save(post,true);
+				<%=Src.CheckDataRule%>
+				result //= serv.<%= Src.FunctionName%>_Save(post,true);
 					= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
             }
@@ -118,12 +118,12 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 		[HttpPost]
         [Common.HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-        public ActionResult Insert(<%=arg.TableName%> entity)
+        public ActionResult Insert(<%=Src.TableName%> entity)
         {
 			IResult result;
             try
             {
-				<%=arg.CheckDataRule%>
+				<%=Src.CheckDataRule%>
 				result //= serv.InsertData(entity);
 						= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
@@ -139,12 +139,12 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
         [HttpPost]
         [Common.HandlerAjaxOnly]
         [ValidateAntiForgeryToken]
-		public ActionResult Update(<%= arg.TableName%> entity)
+		public ActionResult Update(<%= Src.TableName%> entity)
 		{
 			IResult result;
             try
             {
-				<%=arg.CheckDataRule%>
+				<%=Src.CheckDataRule%>
 				result //= serv.Update(entity);
 						= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
@@ -166,7 +166,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
             {
 				/*
 				有疑問,先 mark
-				<%=arg.CheckDataRule%>
+				<%=Src.CheckDataRule%>
 				result //= serv.InsertData(entity);
 						= new Result(true) { Data = entity };
 				//_serv.UOW.Save();
@@ -180,7 +180,7 @@ namespace Genesis.Areas.<%= arg.Areas%>.Controllers
 			return Content(result.ToJson(true));
 		}
 
-		<%_ arg.ut.echo_file('./~Enable.cs',(el)=>{ _%>
+		<%_ Src.ut.echo_file('./~Enable.cs',(el)=>{ _%>
 		<%- el %><% }) %>
  		#endregion
 	}

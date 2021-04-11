@@ -1,5 +1,5 @@
 ﻿<%
-    arg.ut.fn_inc = include;
+    Src.ut.fn_inc = include;
 _%>
 using BLL.DataViews.Res;
 using BLL.InterFace;
@@ -12,17 +12,17 @@ using mdl = MDL.MES;
 
 namespace BLL.MES.FluentValidation
 {
-	public class <%= arg.TableName%> : AbstractValidator<mdl.<%= arg.TableName%>>
+	public class <%= Src.TableName%> : AbstractValidator<mdl.<%= Src.TableName%>>
 	{
-		public <%= arg.TableName%>()
+		public <%= Src.TableName%>()
 		{	
-			<%_ arg.ut.echo_file('./~RuleFor.cs',(el)=>{ _%>
+			<%_ Src.ut.echo_file('./~RuleFor.cs',(el)=>{ _%>
 			<%- el %><% }) %>
 		}
 
-		public static Result Check(mdl.<%= arg.TableName%> mainObj)
+		public static Result Check(mdl.<%= Src.TableName%> mainObj)
 		{
-			var _v8n = new FluentValidation.<%=arg.TableName%>().Validate(mainObj);
+			var _v8n = new FluentValidation.<%=Src.TableName%>().Validate(mainObj);
 			var _result = Result.CheckFluentValidation(_v8n);
 			return _result;
 		}

@@ -1,0 +1,10 @@
+﻿//排序事件
+sort_change(column) {
+	this.grid.Sort = {
+		Name: column.prop,
+		isAsc: column.order == "ascending"
+	}
+	if (this.grid.data.length == 0) return;
+	this.query(1);
+},
+

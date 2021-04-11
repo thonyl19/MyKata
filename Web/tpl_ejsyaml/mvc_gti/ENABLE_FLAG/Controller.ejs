@@ -1,12 +1,12 @@
 [HttpPost]
 [HandlerAjaxOnly]
 [ValidateAntiForgeryToken]
-public ActionResult UpdateEnableFlag(<%= arg.TableName%> entity)
+public ActionResult UpdateEnableFlag(<%= Src.TableName%> entity)
 {
     IResult result;
     try
     {
-        <%=arg.CheckDataRule%>
+        <%=Src.CheckDataRule%>
         result //= serv.Update_Enable(entity);
                 = new Result(true) { Data = entity };
         //_serv.UOW.Save();

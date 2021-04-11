@@ -1,13 +1,9 @@
-﻿<%
-    arg.ut.fn_inc = include;
-_%>
-<!-- #region [el-tabs] -->
+﻿<!-- #region [el-tabs] -->
 <el-tabs v-model="tabIdx">
-	<%_ for(var key in arg.Tabs){ 
-		var tab = arg.Tabs[key]; _%>	
+	<%_ for(var key in Tabs){ 
+		var tab = Tabs[key]; _%>	
 	<el-tab-pane <%=tab.label%> name="<%=key%>">
-		<% arg.ut.echo_arr(arg.arr,(el)=>{ %><%- el %>
-		<% }) %>
+		<%- tab.SubCode.join('\n\t\t') %>
 	</el-tab-pane>
 	<%_} _%>
 </el-tabs>
