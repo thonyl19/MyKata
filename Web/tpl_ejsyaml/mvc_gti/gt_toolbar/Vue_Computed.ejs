@@ -1,5 +1,9 @@
-﻿/// #region [gt_toolbar.Vue_Computed] 
-<%_ for(var el of Src.toolbar.Vue_Computed){ _%>
+﻿<%
+	let {Vue_Computed} = Src.toolbar;
+	if (Vue_Computed.length !=0){
+%>
+/// #region [gt_toolbar.Vue_Computed] 
+<%_ for(var el of Vue_Computed){ _%>
 v_<%=el.substring(2)%>() {
 	return {
 		//TODO:
@@ -10,3 +14,4 @@ v_<%=el.substring(2)%>() {
 },
 <%_ }_%>
 /// #endregion [gt_toolbar.Vue_Computed]
+<%_}_%>

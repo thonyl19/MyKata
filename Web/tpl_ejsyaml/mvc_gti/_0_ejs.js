@@ -16,6 +16,13 @@ const fs = require('fs');
 		"date":"date",
 		"boolean":"bool",
 	}
+    var map_UI = {
+		int(filed){},
+		date(filed){return `<el-date-picker type="date" class="eui-fix" v-model="form.${filed.Name}">\r\n\t</el-date-picker>`},
+		float(filed){},
+		array(filed){return `<el-input type="textarea" v-model="form.${filed.Name}" rows="3">\r\n\t</el-input>`},
+		boolean(filed){return ``},
+	}
     var ops = {
         echo:{outputFunctionName:'echo' },
         ts_BasePath(relPath){
@@ -102,8 +109,13 @@ const fs = require('fs');
         save_point1(basePath,point){
             let {list,part} = point;
             list
-            for(var el of list){
-                var _code = [];
+            for(var el in list){
+                el
+                var isArray = list[el];
+                var _code 
+                    = isArray
+                    ? list[el]
+                    : [];
                 for (var item in part){
                     item
                     var _subCode = part[item][el];
@@ -177,7 +189,7 @@ const fs = require('fs');
             let {row,Prefix} = arg;
             if (row==null) return ;
             var fileds = [];
-            var ext_mode = {}; 
+            var part = {}; 
             for(var Name in row){
                 var val = row[Name];
                 var JS = typeof(val);
@@ -202,7 +214,7 @@ const fs = require('fs');
                     default:
                         break;
                 }
-                var _arg = {
+                var _filed = {
                     Name
                     ,val
                     ,"map_type":{
@@ -210,18 +222,18 @@ const fs = require('fs');
                         csharp:map_csharpType[JS]
                     }
                     ,label :ut.parse_label(Name,Prefix)
-                }
-                fileds.push(_arg);
+                };
+                ut.parse_UI(_filed)
+                fileds.push(_filed);
 
                 switch(Name){
                     case "ENABLE_FLAG":
-                        ext_mode[Name] = true;
+                        part[Name] = true;
                         break;
                 }
             }
             _.set(arg, setPath, fileds);
-            _.set(arg, 'ext_mode', ext_mode);
-            //console.log(arg);
+            _.set(arg, 'part', part);
             return arg;
         },
         
@@ -330,6 +342,25 @@ const fs = require('fs');
                 ;
             return _arr.map(cb);
         },
+        parse_UI(filed){
+            /*
+            {
+                    Name
+                    ,val
+                    ,"map_type":{
+                        JS,
+                        csharp:map_csharpType[JS]
+                    }
+                    ,label :ut.parse_label(Name,Prefix)
+                }
+            */
+            var UI = "";
+            let _fn = map_UI[filed.map_type.JS];
+            if (_fn!=null){
+                UI = `${_fn(filed)}`;
+            }
+            filed.UI = UI;
+        },
         async parse_z(arg){
             arg
             //ejs 是 key word , 其內容為 'ejs filename':{綁定內容}
@@ -409,8 +440,9 @@ const fs = require('fs');
                 Vue_Methods:1,
             },
             PagerQuery:{
+                el_table:1,
                 Vue_Data:1,
-
+                Vue_Methods:1,
             },
             _main:'cshtml',
             VueTpl:1,
@@ -420,6 +452,13 @@ const fs = require('fs');
             
         },
         form:{
+            Basic:{
+                gt_form:1,
+                gt_form_col:1,
+                Html_Code:1,
+                Vue_Data:1,
+                Vue_Methods:1,
+            },
             Base:{
                 Form:'cshtml',
                 VueComputedToolbar:1,
@@ -439,6 +478,13 @@ const fs = require('fs');
             el_table_column:'cshtml',
             vue_data_form:1,
             vue_data_i18n:1,
+            Vue_Data:{
+                i18n:1,
+                form:1,
+            },
+            Vue_Methods:{
+                getSID:1
+            },
         }
     }
     ops.parseFile(_file);
@@ -470,8 +516,10 @@ const fs = require('fs');
             "ROUTE_NO": "C030-19",
             "ROUTE": "?面?极板（子流程）",
             "ROUTE_CATEGORY": "R",
-            "DESCRIPTION": "",
-            "ENABLE_FLAG":true
+            "DESCRIPTION": [],
+            "ENABLE_FLAG":true,
+            "CREATE_DATE": "2020-10-15 17:56:21",
+            "ZZZ": {},
           }, 
         filed_1 : {
             "ROUTE_SID": "GTI20101517555209104",
@@ -538,6 +586,7 @@ const fs = require('fs');
             }
         },
         form:{
+            
             Base:{
                 Main(arg){
                     var _r = {
@@ -566,7 +615,23 @@ const fs = require('fs');
                     "C",
                 ];
                 return _arr;
-            }
+            },
+            async Basic(Src,SubCode){
+                if (SubCode == null){
+                    SubCode = (await _file.form.Basic.gt_form_col({Src})).split('\n');
+                }
+                var _arg = {
+                    Src,
+                    SubCode,
+                    grid_Src:'grid.data'
+                }
+                var point = {
+                    Html_Form:await _file.form.Basic.gt_form(_arg),
+                    Vue_Data:await _file.piece.Vue_Data.form(Src),
+                    Vue_Methods:await _file.form.Basic.Vue_Methods(_arg),
+                }
+                return point;
+            },
         },
         async gt_toolbar(Src){
             let {toolbar} = Src;
@@ -577,13 +642,26 @@ const fs = require('fs');
             _.each(toolbar,(val,key)=>{
                 val
                 key
-                var fun = `${key}`;
-                if (val==1){
-                    Vue_Computed.push(key);
-                    fun = `v_${key.substr(2)}`;
+                switch(key){
+                    case "Cfg":
+                        Html_Code.push(val);
+                        break;
+                    default:
+                        var fun = `${key}`;
+                        if (val==1){
+                            Vue_Computed.push(key);
+                            fun = `v_${key.substr(2)}`;
+                        }
+                        var _method 
+                            = _.isString(val)
+                            ? `${key}${val}`
+                            : `${key}(){}`
+                            ;
+                        _method
+                        Html_Code.push(`:${key}="${fun}"`);
+                        Vue_Methods.push(_method); 
+                        break;
                 }
-                Html_Code.push(`:${key}="${fun}"`);
-                Vue_Methods.push(key);
             })
 
             // html_toolbar.push(html_fun);
@@ -602,7 +680,7 @@ const fs = require('fs');
             var _arg = {Src};
             _arg
             var point = {
-                Html_Code:await _file.gt_toolbar.Html_Code(_arg), 
+                Html_ToolBar:await _file.gt_toolbar.Html_Code(_arg), 
                 Vue_Computed:await _file.gt_toolbar.Vue_Computed(_arg),
                 Vue_Methods:await _file.gt_toolbar.Vue_Methods(_arg),
             }
@@ -610,11 +688,10 @@ const fs = require('fs');
             return point;
         },
         el_table:{
-            async Basic(arg,SubCode){
+            async Basic(Src,SubCode){
                 if (SubCode == null){
-                    SubCode = (await _file.el_table.Basic.el_table_col(arg)).split('\n');
+                    SubCode = (await _file.el_table.Basic.el_table_col({Src})).split('\n');
                 }
-                let {Src} = arg;
                 var _arg = {
                     Src,
                     SubCode,
@@ -627,18 +704,17 @@ const fs = require('fs');
                 }
                 return point;
             },
-            async PagerQuery(arg,SubCode){
+            async PagerQuery(Src,SubCode){
                 if (SubCode == null){
-                    SubCode = (await _file.el_table.Basic.el_table_col(arg)).split('\n');
+                    SubCode = (await _file.el_table.Basic.el_table_col({Src})).split('\n');
                 }
-                let {Src} = arg;
                 var _arg = {
                     Src,
                     SubCode,
                     grid_Src:'grid.data'
                 }
                 var point = {
-                    Html_Code:await _file.el_table.Basic.el_table(_arg),
+                    Html_Code:await _file.el_table.PagerQuery.el_table(_arg),
                     Vue_Data:await _file.el_table.PagerQuery.Vue_Data(_arg),
                     Vue_Methods:await _file.el_table.PagerQuery.Vue_Methods(_arg),
                 }
@@ -1280,7 +1356,9 @@ const fs = require('fs');
         async "el_table.PagerQuery"(){
             var Src ={
                 ut,
-                row:_data.row
+                Prefix:'',
+                SID:'ROUTE_NO',
+                row:_data.row,
             }
             ops.parseRow(Src);
             var point = await _mvc_gti.el_table.PagerQuery({Src});
@@ -1288,28 +1366,43 @@ const fs = require('fs');
             ops.testJson(Src,`${_basePath}~Cfg.json`);
             ops.save_point(ops.ts_BasePath(_basePath),point);
         },
-        async "*Page.Basic"(){
+        async "*Page.Basic.Grid"(){
             var Src ={
                 ut,
+                Prefix:'',
+                SID:'ROUTE_NO',
                 row:_data.row,
                 toolbar:{
-                    e_Add:0,
-                    e_add:1,
-                    e_del:0,
-                    e_save:0,
+                    e_add:0,
+                    //e_del:0,
+                    //e_save:0,
+                    e_query:'(){this.query(1);}',
                     e_clear:0,
-                }  
+                    //Cfg:`fixed='top'`,
+                },
+                Form:{
+                    //有設參數,Form 才會產生自己的查詢程序,預設應是不產生
+                    //QueryUrl:'@Url.Action("ListData_","Route",new { area="MES"})'
+                } 
             }
             ops.parseRow(Src);
             var point = {
-                list:[
-                    'Html_Code',
-                    'Vue_Data',
-                    'Vue_Methods',
-                ],
+                list:{
+                    Html_ToolBar:0,
+                    Html_Form:0,
+                    Html_Code:0,
+                    Vue_Data:[
+                        await _file.piece.Vue_Data.i18n(Src),
+                    ],
+                    Vue_Computed:0,
+                    Vue_Methods:[
+                        await _file.piece.Vue_Methods.getSID(Src), 
+                    ],
+                },
                 part:{
                     ToolBar : await _mvc_gti.gt_toolbar(Src),
-                    GridView : await _mvc_gti.el_table.Basic({Src}),
+                    Form : await _mvc_gti.form.Basic(Src),
+                    GridView : await _mvc_gti.el_table.PagerQuery(Src),
                 }
             }
             var _basePath = "Page/";
@@ -1317,6 +1410,47 @@ const fs = require('fs');
             ops.save_point1(ops.ts_BasePath(_basePath),point);
             var page = await _file.Page.Basic({Src});
             ops.save(page,`${_basePath}~page.cshtml`);
+            var p = "H:/SSMES_Dev/Genesis_MVC/Areas/Example/Views/Act/"
+            ops.save(page,`${p}page~.cshtml`,false); 
+        },
+        async "Page.Basic"(){
+            var Src ={
+                ut,
+                Prefix:'',
+                SID:'ROUTE_NO',
+                row:_data.row,
+                toolbar:{
+                    e_add:0,
+                    e_del:0,
+                    e_save:0,
+                    //e_clear:0,
+                    //Cfg:`fixed='top'`,
+                }  
+            }
+            ops.parseRow(Src);
+            var point = {
+                list:{
+                    Html_Code:0,
+                    Vue_Data:[
+                        await _file.piece.Vue_Data.i18n(Src),
+                    ],
+                    Vue_Computed:0,
+                    Vue_Methods:[
+                        await _file.piece.Vue_Methods.getSID(Src), 
+                    ],
+                },
+                part:{
+                    ToolBar : await _mvc_gti.gt_toolbar(Src),
+                    GridView : await _mvc_gti.el_table.Basic(Src),
+                }
+            }
+            var _basePath = "Page/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point1(ops.ts_BasePath(_basePath),point);
+            var page = await _file.Page.Basic({Src});
+            ops.save(page,`${_basePath}~page.cshtml`);
+            var p = "H:/SSMES_Dev/Genesis_MVC/Areas/Example/Views/Act/"
+            ops.save(page,`${p}page~.cshtml`,false); 
         },
         async 'gt_toolbar-OK'(){
             var Src = {
@@ -1327,6 +1461,7 @@ const fs = require('fs');
                     e_del:0,
                     e_save:0,
                     e_clear:0,
+                    Cfg:`fixed='top'`
                 }  
             } 
             

@@ -10,11 +10,9 @@ grid: {
         Size: 10,
     },
     get query_rule() {
-        {
-            let { Conditions, Sort, Page } = this;
-            return {
-                Conditions, Sort, Page
-            }
+        let { Conditions, Sort, Page } = this;
+        return {
+            Conditions, Sort, Page
         }
     }
 },

@@ -1,9 +1,26 @@
 <%
     Src.ut.fn_inc = include;
 _%>
+@{
+    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("baseTpl").RESOURCE_NAME;
+    bool isSingleModel = (bool)ViewData["SingleModel"];
+    if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml";
+}
+<h3>
+    @ViewBag.Title
+</h3>
+@Html.AntiForgeryToken()
+@eBundle.QRender_CSS()
+@eBundle.QRender_JS()
 <div id="app" v-cloak>
-    <%_ Src.ut.echo_file('~Html_Code.txt',(el)=>{ _%>
+    <%_ Src.ut.echo_file('~Html_ToolBar.txt',(el)=>{ _%>
     <%- el %><% }) %>
+    <div Area-Main class="panel b">
+        <%_ Src.ut.echo_file('~Html_Form.txt',(el)=>{ _%>
+        <%- el %><% }) %>
+        <%_ Src.ut.echo_file('~Html_Code.txt',(el)=>{ _%>
+        <%- el %><% }) %>
+    </div>
 </div>
 <script>
     $(() => {

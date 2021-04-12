@@ -60,6 +60,7 @@ git.exe fetch -v --progress "origin"
 git.exe pull --progress -v --no-rebase "origin" <%=arg.Branch.Dev%>
 git.exe merge remotes/origin/<%=arg.Branch.Main%>
 TortoiseGitProc.exe /command:commit
+TortoiseGitProc.exe /command:log
 cd <%=arg.Dir.Main%> 
 set mima=1
 goto S0

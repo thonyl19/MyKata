@@ -1,0 +1,30 @@
+<%
+    let {QueryUrl} =Src.Form;
+    if (QueryUrl!= null){
+_%>
+// 查詢處理程序
+query(pageIdx) {
+    var _self = this;
+    _self.grid.Page.Index = pageIdx;
+    var param = _self.grid.query_rule;
+    var url=  '<%=Src.Form.QueryUrl%>';
+    var _ajax = {
+        url,
+        param,
+        type: 'post',
+        success: this.query_success
+    };
+    $.submitForm(_ajax);
+},
+Ajax_success(res) {
+    let { Success=true, Data, Message = ""} = res;
+    if (Success) {
+        var _self = this;
+        this.MessageDelSuccess().then(() => {
+            _self.reload();
+        });
+    } else {
+        this.$Alert.Warning(Message);
+    }
+},
+<%_ }_%>

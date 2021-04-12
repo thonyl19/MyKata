@@ -50,8 +50,9 @@ query(pageIdx) {
 	_self.grid.Page.Index = pageIdx;
 	var param = _self.grid.query_rule;
 	//console.log({ query: param });
+	var url=  '@Url.Action("ListData_","Route",new { area="MES"})';
 	var _ajax = {
-		url: '@Url.Action("ListData")',
+		url,
 		type: 'post',
 		param,
 		success: this.query_success

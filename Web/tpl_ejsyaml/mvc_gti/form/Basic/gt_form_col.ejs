@@ -1,0 +1,7 @@
+<!-- #region [gt_form_col] -->
+<%_ for(var item of Src.Fileds){ _%>
+<gt-form-col <%- item.label %>
+	v-model="form.<%=item.Name%>">
+	<%-item.UI _%></gt-form-col>
+<%_} _%>
+<!-- #endregion [gt_form_col] -->
