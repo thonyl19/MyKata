@@ -1,0 +1,30 @@
+<%
+    Src.ut.fn_inc = include;
+_%>
+<div id="app" v-cloak>
+    <%_ Src.ut.echo_file('~Html_Code.txt',(el)=>{ _%>
+    <%- el %><% }) %>
+</div>
+<script>
+    $(() => {
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    <%_ Src.ut.echo_file('~Vue_Data.txt',(el)=>{ _%>
+                    <%- el %><% }) %>
+                }
+            },
+            computed:{
+                <%_ Src.ut.echo_file('~Vue_Computed.txt',(el)=>{ _%>
+                <%- el %><% }) %>
+            },
+            methods: {
+                <%_ Src.ut.echo_file('~Vue_Methods.txt',(el)=>{ _%>
+                <%- el %><% }) %>
+                _test() {
+                },
+            }
+        })
+    });
+</script>

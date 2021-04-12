@@ -1,5 +1,5 @@
-﻿<% for(var item of arg.Fileds) { _%>
+﻿<% for(var item of Src.Fileds) { _%>
 RuleFor(x => x.<%= item.label%>)
     .NotEmpty()
-    .WithName(<%= arg.Prefix%><%= item.label%>);
+    .WithName(<%= Src.Prefix%><%= item.label%>);
 <%_ } _%>

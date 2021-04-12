@@ -33,7 +33,7 @@
                 "JS": "string",
                 "csharp": "string"
             },
-            "label": "label=\"RES.BLL.Face.undefined\""
+            "label": "label=\"RES.BLL.Face.ROUTE_NO\""
         },
         {
             "Name": "ROUTE",
@@ -42,7 +42,7 @@
                 "JS": "string",
                 "csharp": "string"
             },
-            "label": "label=\"RES.BLL.Face.undefined\""
+            "label": "label=\"RES.BLL.Face.ROUTE\""
         },
         {
             "Name": "ROUTE_CATEGORY",
@@ -51,7 +51,7 @@
                 "JS": "string",
                 "csharp": "string"
             },
-            "label": "label=\"RES.BLL.Face.undefined\""
+            "label": "label=\"RES.BLL.Face.ROUTE_CATEGORY\""
         },
         {
             "Name": "DESCRIPTION",
@@ -60,7 +60,7 @@
                 "JS": "string",
                 "csharp": "string"
             },
-            "label": "label=\"RES.BLL.Face.undefined\""
+            "label": "label=\"RES.BLL.Face.DESCRIPTION\""
         },
         {
             "Name": "ENABLE_FLAG",
@@ -69,7 +69,7 @@
                 "JS": "boolean",
                 "csharp": "bool"
             },
-            "label": "label=\"RES.BLL.Face.undefined\""
+            "label": "label=\"RES.BLL.Face.ENABLE_FLAG\""
         }
     ],
     "ext_mode": {

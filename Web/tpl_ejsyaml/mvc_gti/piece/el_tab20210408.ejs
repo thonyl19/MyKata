@@ -1,0 +1,18 @@
+﻿
+<%
+/*
+因改版為使用 echo_arr 
+*/
+    arg.ut.fn_inc = include;
+_%>
+<!-- #region [el-tabs] -->
+<el-tabs v-model="tabIdx">
+	<%_ for(var key in arg.Tabs){ 
+		var tab = arg.Tabs[key]; _%>	
+	<el-tab-pane <%=tab.label%> name="<%=key%>">
+		<%_ await arg.ut.echo_ejs(tab,(el)=>{ _%>
+		<%-  el %><% }) %>
+	</el-tab-pane>
+	<%_} _%>
+</el-tabs>
+<!-- #endregion [el-tabs] -->

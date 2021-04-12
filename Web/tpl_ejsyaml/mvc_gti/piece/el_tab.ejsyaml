@@ -1,0 +1,18 @@
+﻿# input data
+jsonCodes: !readtext case_tab.json
+--- |
+<%
+	console.log(jsonCodes);
+	var Tabs = {
+		"A": {
+			"label": "label",
+			"SubCode": "<el-table empty-text=\" \" style=\"width: 100%\"\r\n\t\t@@sort-change=\"sort_change\"\r\n\t\t:data=\"grid.data\"\r\n\t\t:default-sort=\"{prop: 'CREATE_DATE', order: 'ascending'}\">\r\n\t<el-table-column :label=\"i18n.ROUTE_NO\"\r\t\t\t\tprop=\"ROUTE_NO\" sortable=\"custom\"\r\t\t:sort-orders=\"$UT.sort_order\">\r\t\t</el-table-column>\r\t<el-table-column :label=\"i18n.ROUTE\"\r\t\tprop=\"ROUTE\" sortable=\"custom\"\r\t\t:sort-orders=\"$UT.sort_order\">\r\t\t</el-table-column>\r\t<el-table-column :label=\"i18n.ROUTE_CATEGORY\"\r\t\tprop=\"ROUTE_CATEGORY\" sortable=\"custom\"\r\t\t:sort-orders=\"$UT.sort_order\">\r\t\t</el-table-column>\r\t<el-table-column :label=\"i18n.DESCRIPTION\"\r\t\tprop=\"DESCRIPTION\" sortable=\"custom\"\r\t\t:sort-orders=\"$UT.sort_order\">\r\t\t</el-table-column>\r\t<el-table-column :label=\"i18n.ENABLE_FLAG\"\r\t\tprop=\"ENABLE_FLAG\" sortable=\"custom\"\r\t\t:sort-orders=\"$UT.sort_order\">\r\t\t</el-table-column>\r\t\r\n</el-table>"
+		},
+		"B": {
+			"label": "label",
+			"SubCode": "SubCode"
+		}
+	};
+	this.render('el_tab.ejs', '~tmp.txt', {Tabs});
+	this.skip();
+%>

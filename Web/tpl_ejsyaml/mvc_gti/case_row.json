@@ -1,0 +1,60 @@
+{
+    "Prefix": "@Face.",
+    "row": {
+        "ROUTE_NO": "C030-19",
+        "ROUTE": "?面?极板（子流程）",
+        "ROUTE_CATEGORY": "R",
+        "DESCRIPTION": "",
+        "ENABLE_FLAG": true
+    },
+    "Fileds": [
+        {
+            "Name": "ROUTE_NO",
+            "val": "C030-19",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            },
+            "label": "label=\"@Face.ROUTE_NO\""
+        },
+        {
+            "Name": "ROUTE",
+            "val": "?面?极板（子流程）",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            },
+            "label": "label=\"@Face.ROUTE\""
+        },
+        {
+            "Name": "ROUTE_CATEGORY",
+            "val": "R",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            },
+            "label": "label=\"@Face.ROUTE_CATEGORY\""
+        },
+        {
+            "Name": "DESCRIPTION",
+            "val": "",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            },
+            "label": "label=\"@Face.DESCRIPTION\""
+        },
+        {
+            "Name": "ENABLE_FLAG",
+            "val": true,
+            "map_type": {
+                "JS": "boolean",
+                "csharp": "bool"
+            },
+            "label": "label=\"@Face.ENABLE_FLAG\""
+        }
+    ],
+    "ext_mode": {
+        "ENABLE_FLAG": true
+    }
+}

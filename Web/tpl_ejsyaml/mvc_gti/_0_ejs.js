@@ -47,7 +47,8 @@ const fs = require('fs');
                 var items = grps[grp];
                 for(var idx in items){
                     var _ejs = items[idx];
-                    items[idx] = await ejs.renderFile(_ejs, arg);``
+                    //items[idx] = await ejs.renderFile(_ejs, arg);``
+                    items[idx] = await _ejs(arg);
                 }
                 var _FileName = `${basePath}${grp}`;
                 var _Code = items.join('\r\n');
@@ -87,19 +88,46 @@ const fs = require('fs');
                     //case "Htm_Toolbar":
                     //case "Vue_Methods":
                     default:
-                        var arr = await ops.parse_point(arg,el);
+                        var _code = point[el];
+                        if (Array.isArray(_code)){
+                            _code = _code.join('\r\n');
+                        }
                         var _file = `${basePath}~${el}.txt`;
-                        ops.save(arr.join('\r\n'),_file,false); 
+                        _file
+                        ops.save(_code,_file,false); 
                         break;
                 }
             }
-            var _Code = await ejs.renderFile( `${basePath}Main.ejs`, {arg});
-            var _FileName = `${basePath}_Main.${point.Main}`;
-            _FileName
-            ops.save(_Code,_FileName,false);
+        },
+        save_point1(basePath,point){
+            let {list,part} = point;
+            list
+            for(var el of list){
+                var _code = [];
+                for (var item in part){
+                    item
+                    var _subCode = part[item][el];
+                    if (_subCode!=null){
+                        _code.push(_subCode);
+                    } 
+                }
+                _code
+                var _file = `${basePath}~${el}.txt`;
+                _file
+                ops.save(_code.join('\r\n'),_file,false); 
+            }
         },
         ejs(fileName,ext="ejs"){``
             return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`
+        },
+        ejs_fn(fileName,ext){``
+            ext = _.isNumber(ext)
+                ?'ejs'
+                :ext;
+            return async(arg)=>{
+                var _ejs =  `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`;
+                return await ejs.renderFile(_ejs,arg);
+            } 
         },
         testJson(data,filename="~test.json"){
             var s = JSON.stringify(data,null,4);  
@@ -201,12 +229,11 @@ const fs = require('fs');
                 for (var _name in args){
                     var _val = args[_name];
                 var _pathName = `${path}${_name}`;
-                if (_val == "" ){
-                    args[_name] =  ops.ejs(_pathName);
-                }else if (typeof(_val) === "string"){
-                    args[_name] =  ops.ejs(_pathName,_val);
-                }else{
+                var _fnName = `${path}${_name}`;
+                if (_.isPlainObject(_val)){
                     ops.parseFile(args[_name] ,`${_pathName}/`);
+                }else{
+                    args[_name] = ops.ejs_fn(_pathName,_val);
                 }
             }
         },
@@ -241,8 +268,8 @@ const fs = require('fs');
             _.set(arg, 'html.toolbar', html_toolbar);
             _.set(arg, 'vue.computed.toolbar', vue_computed);
         },
-        parse_gt_toolbar(arg){
-            let {toolbar = {}} = arg; 
+        parse_gt_toolbar(Src){
+            let {toolbar = {}} = Src; 
             var html_fun ="",
                 Htm_Toolbar=[],
                 Vue_Computed=[],
@@ -263,18 +290,18 @@ const fs = require('fs');
                 }
             })
             Htm_Toolbar.push(html_fun); 
-            var  ENABLE_FLAG = _.get(arg,"ext_mode.ENABLE_FLAG");
+            var  ENABLE_FLAG = _.get(Src,"ext_mode.ENABLE_FLAG");
             ENABLE_FLAG
             if (ENABLE_FLAG){
                 Htm_Toolbar.push(`:enable.sync="ctr_ENABLE.val" `);
-                ops.parse_ENABLE_FLAG(arg);
+                ops.parse_ENABLE_FLAG(Src);
             }
             var gt_toolbar = { 
                 Htm_Toolbar,
                 Vue_Computed, 
                 Vue_Methods
             };
-            _.set(arg, 'PART.gt_toolbar', gt_toolbar);
+            _.set(Src, 'gt_toolbar', gt_toolbar);
         },
         parse_ENABLE_FLAG(arg){
             var cfg = {
@@ -330,9 +357,9 @@ const fs = require('fs');
                 ;
             return _arr.map(cb);
         },
-        parse_label(item,Prefix){
+        parse_label(Name,Prefix){
             var _Prefix =  _.isEmpty(Prefix)?"i18n.":Prefix;
-            return `${_Prefix=="i18n."?':':''}label="${_Prefix}${item.label}"`;
+            return `${_Prefix=="i18n."?':':''}label="${_Prefix}${Name}"`;
         },
         echo_arr(arr,cb,tab=""){
             //arr
@@ -348,55 +375,70 @@ const fs = require('fs');
         }
     }
     var _file = {
+        Page:{
+            Basic:'cshtml',
+            GridView_Query:'cshtml',
+        },
         Controller:{
-            Base:{
+            Basic:{
                 _main:'cs'
             }
         },
         ENABLE_FLAG:{
-            Controller:'',
-            Vue_Data:'',
-            Vue_Methods:'',
-            Vue_Watch:'',
+            Controller:1,
+            Vue_Data:1,
+            Vue_Computed:1,
+            Vue_Methods:1,
+            Vue_Watch:1,
         },
         gt_toolbar:{
-            Html:'',
-            Vue_Computed:'',
-            Vue_Methods:''
+            Html_Code:1,
+            Vue_Computed:1,
+            Vue_Methods:1
         },
         v8n:{
             Base:'cs',
-            RuleFor:'',
-            Check:'',
+            RuleFor:1,
+            Check:1,
         },
         el_table:{
-            _main:'cshtml',
-            VueTpl:'',
-            VueGridData:'',
-            VueGridMethos:'',
-            gt_form_col:'',
-            PagerQuery:{
-                Vue_Data:''
+            Basic:{
+                el_table:1,
+                el_table_col:1,
+                Vue_Data:1,
+                Vue_Methods:1,
             },
+            PagerQuery:{
+                Vue_Data:1,
+
+            },
+            _main:'cshtml',
+            VueTpl:1,
+            VueGridData:1,
+            VueGridMethos:1,
+            gt_form_col:1,
+            
         },
         form:{
             Base:{
                 Form:'cshtml',
-                VueComputedToolbar:'',
+                VueComputedToolbar:1,
             },
             SequenceNum_Item:'cshtml',
-            toolbar_mode_1:'',
+            toolbar_mode_1:1,
         },
         piece:{
-            el_tab:'',
-            json_i18n:'',
-            gt_toolbar:'cshtml',
+            el_tab:1,
+            json_i18n:1,
+            gt_toolbar:1,
             gt_form_col:'cshtml',
-            gt_form_20210406:'',
+            gt_form_20210406:1,
             xx:'',
+            el_table:1,
+            el_table_col:1,
             el_table_column:'cshtml',
-            vue_data_form:'',
-            vue_data_i18n:'',
+            vue_data_form:1,
+            vue_data_i18n:1,
         }
     }
     ops.parseFile(_file);
@@ -476,28 +518,25 @@ const fs = require('fs');
             }
         },
         tabs:{
-            A:{
-                label:'label',
-                ejs:{
-                    'piece/gt_form':{
-                        ejs:{
-                            'piece/gt_form_col':{}
-                        }
-                    }
-                }
+            "A":{
+                "label":"label",
+                "SubCode":["SubCode"]
             },
-            // B:{
-            //     label:'label',
-            //     ejs:{
-            //         el_tabel:{
-    
-            //         }
-            //     }
-            // },
+            "B":{
+                "label":"label",
+                "SubCode":["SubCode"]
+            }
         },
     }
  
     var _mvc_gti = {
+        Controller:{
+            Basic:{
+                Main(arg){
+
+                }
+            }
+        },
         form:{
             Base:{
                 Main(arg){
@@ -519,8 +558,141 @@ const fs = require('fs');
                     }
                     _.set(arg);
                 }
+            },
+            gt_form_col(arg){
+                var _arr = [
+                    "A",
+                    "B",
+                    "C",
+                ];
+                return _arr;
             }
-        }
+        },
+        async gt_toolbar(Src){
+            let {toolbar} = Src;
+            var Html_Code = [],
+                Vue_Computed = [],
+                Vue_Methods=[]
+                ;
+            _.each(toolbar,(val,key)=>{
+                val
+                key
+                var fun = `${key}`;
+                if (val==1){
+                    Vue_Computed.push(key);
+                    fun = `v_${key.substr(2)}`;
+                }
+                Html_Code.push(`:${key}="${fun}"`);
+                Vue_Methods.push(key);
+            })
+
+            // html_toolbar.push(html_fun);
+            // var  ENABLE_FLAG = _.get(arg,"ext_mode.ENABLE_FLAG");
+            // ENABLE_FLAG
+            // if (ENABLE_FLAG){
+            //     html_toolbar.push(`:enable.sync="ENABLE_FLAG" `);
+            // }
+            _.set(Src, 'toolbar.Html_Code', Html_Code);
+            _.set(Src, 'toolbar.Vue_Computed', Vue_Computed);
+            _.set(Src, 'toolbar.Vue_Methods', Vue_Methods);
+            
+            // _.set(arg, 'vue.computed.toolbar', vue_computed);
+
+            toolbar
+            var _arg = {Src};
+            _arg
+            var point = {
+                Html_Code:await _file.gt_toolbar.Html_Code(_arg), 
+                Vue_Computed:await _file.gt_toolbar.Vue_Computed(_arg),
+                Vue_Methods:await _file.gt_toolbar.Vue_Methods(_arg),
+            }
+            point
+            return point;
+        },
+        el_table:{
+            async Basic(arg,SubCode){
+                if (SubCode == null){
+                    SubCode = (await _file.el_table.Basic.el_table_col(arg)).split('\n');
+                }
+                let {Src} = arg;
+                var _arg = {
+                    Src,
+                    SubCode,
+                    grid_Src:'grid.data'
+                }
+                var point = {
+                    Html_Code:await _file.el_table.Basic.el_table(_arg),
+                    Vue_Data:await _file.el_table.Basic.Vue_Data(_arg),
+                    Vue_Methods:await _file.el_table.Basic.Vue_Methods(_arg),
+                }
+                return point;
+            },
+            async PagerQuery(arg,SubCode){
+                if (SubCode == null){
+                    SubCode = (await _file.el_table.Basic.el_table_col(arg)).split('\n');
+                }
+                let {Src} = arg;
+                var _arg = {
+                    Src,
+                    SubCode,
+                    grid_Src:'grid.data'
+                }
+                var point = {
+                    Html_Code:await _file.el_table.Basic.el_table(_arg),
+                    Vue_Data:await _file.el_table.PagerQuery.Vue_Data(_arg),
+                    Vue_Methods:await _file.el_table.PagerQuery.Vue_Methods(_arg),
+                }
+                return point;
+            }
+        },
+        elUI:{
+            async el_tab(Tabs){
+                var keys = Object.keys(Tabs);
+                var point = {
+                    Html_Tabs:await _file.piece.el_tab({Tabs}),
+                    Vue_Data:`tabIdx:'${keys[0]}'`
+                }
+                
+                return point;
+            },
+            el_tab_pane(arr){
+                var _base = {};
+                return _base;
+            },
+            
+            async el_table_col(arg){
+                var _ejs = _file.piece.el_table_col;
+                _ejs
+                var s = await ejs.renderFile(_ejs, arg,{async:true});
+                return s;
+            }
+        },
+        ///
+        async ENABLE_FLAG(Src){
+            var _arg = {Src};
+            var point = {
+                Ctr_Code:await _file.ENABLE_FLAG.Controller(_arg),
+                Vue_Computed:await _file.ENABLE_FLAG.Vue_Computed(_arg),
+                Vue_Methods:await _file.ENABLE_FLAG.Vue_Methods(_arg),
+            }
+            point
+            return point;
+        },
+        ENABLE_FLAG_20210411(arg){
+            var _base = {
+                Controller:{
+                    './tpl_ejsyaml/mvc_gti/ENABLE_FLAG/Controller':{}
+                },
+                Vue_Methods:{
+                    './tpl_ejsyaml/mvc_gti/ENABLE_FLAG/Vue_Methods':{}
+                },
+                Vue_Computed:{
+                    './tpl_ejsyaml/mvc_gti/ENABLE_FLAG/Vue_Computed':{}
+                }
+            }
+            return _base;
+        },
+        
     }
  
  
@@ -787,11 +959,11 @@ const fs = require('fs');
             // var s = await ejs.renderFile(_file.form.Base.Form, arg );
             // ops.save(s,"form/Base/~tmp.cshtml"); 
         },
-        async 'v8n'(){
+        async 'v8n-OK'(){
             let {_fn} = ops;
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
-            var arg = {
+            var Src = {
                 TableName:'PF_ROUTE',
                 RESOURCE_NAME:'RESOURCE_NAME',
                 Prefix:'RES.BLL.Face.',
@@ -800,9 +972,9 @@ const fs = require('fs');
                 Fileds:ops.parseFileds(row),
                 ut,
             }
-            var arg_json = ops.testJson(arg,"v8n/Base.json"); 
+            var arg_json = ops.testJson(Src,"v8n/Base.json"); 
              
-            var _part = {
+            var _point = {
                 "~RuleFor.cs": [
                     _file.v8n.RuleFor
                 ],
@@ -813,17 +985,17 @@ const fs = require('fs');
                     _file.v8n.Base
                 ]
             }
-            await ops.save_grp(`v8n/`,_part,{arg} );
+            await ops.save_grp(`v8n/`,_point,{Src} );
         },
 
-        async 'Controller_Base'(){
-            let basePath = `Controller/Base/`;
+        async 'Controller_Base-OK'(){
+            let basePath = `Controller/Basic/`;
             let {_fn} = ops;
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
             var TableName = 'PF_ROUTE';
 
-            var arg = {
+            var Src = {
                 Areas:'ADM',
                 FunctionName:"QcLevel",
                 RESOURCE_NAME:'RESOURCE_NAME',
@@ -834,18 +1006,18 @@ const fs = require('fs');
                 row,
                 ut,
             }
-            arg = ops.parseRow(arg);
-            var arg_json = ops.testJson(arg,`${basePath}Base.json`); 
+            Src = ops.parseRow(Src);
+            var arg_json = ops.testJson(Src,`${basePath}Base.json`); 
              
             var _part = {
                 "~Enable.cs": [
                     _file.ENABLE_FLAG.Controller
                 ],
                 "~tmp.cs":[
-                    _file.Controller.Base._main
+                    _file.Controller.Basic._main
                 ]
             }
-            await ops.save_grp(basePath,_part,{arg} );
+            await ops.save_grp(basePath,_part,{Src} );
         },
 
 
@@ -902,6 +1074,21 @@ const fs = require('fs');
             var s = await ejs.renderFile(_file.piece.gt_form_20210406,arg,{async: true});
             ops.save(s,"~test.cshtml");  
         },
+
+
+
+        async 'json_i18n'(){
+            var arg = {
+                Prefix:'@Face.',
+                row : _data.row
+            } 
+            var s = await ejs.renderFile(_file.json_i18n,arg );
+            ops.save(s,"~tmp.json");  
+        },
+ 
+    }
+
+    var _test = {
         async '以陣列形式產生縮排-OK'(){
             let arg = {arr:[
                 "A",
@@ -930,31 +1117,239 @@ const fs = require('fs');
             s
             ops.save(s,"~test.cshtml");  
         },
-
-        async 'gt_toolbar'(){
-            var arg = {
-                bts:[
-                    'e_Add',
-                    'e_query',
-                    'e_clear',
-                ]  
-            } 
-            var s = await ejs.renderFile(_file.piece.gt_toolbar,arg ); 
-            ops.save(s,"~tmp.html");  
-        },
-        async 'json_i18n'(){
-            var arg = {
+        "parseRow"(){
+            var _arg = {
                 Prefix:'@Face.',
-                row : _data.row
+                row:_data.row
             } 
-            var s = await ejs.renderFile(_file.json_i18n,arg );
-            ops.save(s,"~tmp.json");  
+            ops.parseRow (_arg);
+            ops.testJson(_arg);
+            return _arg;
         },
- 
+        async "el_table_col"(){
+            var arg = _test.parseRow();
+            var s = await _mvc_gti.elUI.el_table_col({arg});
+            ops.save(s,"~test.cshtml"); 
+        },
+        async "x"(){
+            var _ejs = {
+                "Prefix": "@Face.",
+                "row": {
+                    "ROUTE_NO": "C030-19",
+                    "ROUTE": "?面?极板（子流程）",
+                    "ROUTE_CATEGORY": "R",
+                    "DESCRIPTION": "",
+                    "ENABLE_FLAG": true
+                },
+                "Fileds": [
+                    {
+                        "Name": "ROUTE_NO",
+                        "val": "C030-19",
+                        "map_type": {
+                            "JS": "string",
+                            "csharp": "string"
+                        },
+                        "label": "label=\"@Face.ROUTE_NO\""
+                    },
+                    {
+                        "Name": "ROUTE",
+                        "val": "?面?极板（子流程）",
+                        "map_type": {
+                            "JS": "string",
+                            "csharp": "string"
+                        },
+                        "label": "label=\"@Face.ROUTE\""
+                    },
+                    {
+                        "Name": "ROUTE_CATEGORY",
+                        "val": "R",
+                        "map_type": {
+                            "JS": "string",
+                            "csharp": "string"
+                        },
+                        "label": "label=\"@Face.ROUTE_CATEGORY\""
+                    },
+                    {
+                        "Name": "DESCRIPTION",
+                        "val": "",
+                        "map_type": {
+                            "JS": "string",
+                            "csharp": "string"
+                        },
+                        "label": "label=\"@Face.DESCRIPTION\""
+                    },
+                    {
+                        "Name": "ENABLE_FLAG",
+                        "val": true,
+                        "map_type": {
+                            "JS": "boolean",
+                            "csharp": "bool"
+                        },
+                        "label": "label=\"@Face.ENABLE_FLAG\""
+                    }
+                ],
+                "ext_mode": {
+                    "ENABLE_FLAG": true
+                },
+                ejs:{
+                    'piece/el_table':{
+                        ejs:{
+                            'piece/el_table_col':{}
+                        }
+                    }
+                    // 'piece/el_tableA':{
+                    //     ejs:{
+                    //         'piece/el_table_colB':{}
+                    //     }
+                    // }
+                }
+            }  ;
+            var fn = async (ejsCfg,arg)=>{
+                if (arg == null) arg = ejsCfg;
+                let {ejs:_ejsCfg=null} = ejsCfg; 
+                if (_ejsCfg == null) return [];
+                var _ejsKeys = Object.keys(_ejsCfg);
+                _ejsKeys
+                var _SubCode = [];
+                await _.each(_ejsKeys,async (key)=>{
+                    var _subEjs = _ejsCfg[key];
+                    _subEjs
+                    var SubCode = await fn(_subEjs,arg);
+                    SubCode
+                     var _ejsFilePath = ops.ts_BasePath(`${key}.ejs`);
+                    _ejsFilePath
+                    var data = await ejs.renderFile(_ejsFilePath,{arg,SubCode});
+                    data
+                    _SubCode.push(data);
+                });
+                
+                ejsCfg.SubCode = _SubCode;
+                return ejsCfg;
+            }
+            var zz = await fn(_ejs);
+            _ejs
+            ops.testJson(zz);
+        },
+        async "陣列排版原型"(){
+            var Src ={
+                ut,
+                row:_data.row
+            }
+            ops.parseRow(Src);
+            Src;
+            // Src.SubCode = await _mvc_gti.elUI.el_table_col({Src})
+            // ops.testJson(Src);
+            // var data = await ejs.renderFile(_file.piece.el_table,{Src});
+            // ops.save(data,"~test.txt");
+            var data = await _mvc_gti.elUI.el_table({Src});
+            data 
+            ops.save(data,"~test.txt");
+        },
+        async "Tabs-OK"(){
+            var Tabs = _data.tabs;
+            var Src ={
+                ut,
+                row:_data.row
+            }
+            ops.parseRow(Src);
+            // var _point = await _mvc_gti.el_table.Basic({Src});
+            // _point
+            // Tabs.A.SubCode =  (await _mvc_gti.el_table.Basic({Src})).split('\n');
+            // ops.testJson(Tabs);
+            //ops.save(Tabs.A.SubCode,"~test.txt"); 
+            
+            var point = await _mvc_gti.elUI.el_tab(Tabs);
+
+            var _basePath = "piece/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point(ops.ts_BasePath(_basePath),point);
+
+        },
+        async "el_table.Basic - OK"(){
+            var Src ={
+                ut,
+                row:_data.row
+            }
+            ops.parseRow(Src);
+            var point = await _mvc_gti.el_table.Basic({Src});
+            var _basePath = "el_table/Basic/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point(ops.ts_BasePath(_basePath),point);
+
+        },
+        async "el_table.PagerQuery"(){
+            var Src ={
+                ut,
+                row:_data.row
+            }
+            ops.parseRow(Src);
+            var point = await _mvc_gti.el_table.PagerQuery({Src});
+            var _basePath = "el_table/PagerQuery/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point(ops.ts_BasePath(_basePath),point);
+        },
+        async "*Page.Basic"(){
+            var Src ={
+                ut,
+                row:_data.row,
+                toolbar:{
+                    e_Add:0,
+                    e_add:1,
+                    e_del:0,
+                    e_save:0,
+                    e_clear:0,
+                }  
+            }
+            ops.parseRow(Src);
+            var point = {
+                list:[
+                    'Html_Code',
+                    'Vue_Data',
+                    'Vue_Methods',
+                ],
+                part:{
+                    ToolBar : await _mvc_gti.gt_toolbar(Src),
+                    GridView : await _mvc_gti.el_table.Basic({Src}),
+                }
+            }
+            var _basePath = "Page/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point1(ops.ts_BasePath(_basePath),point);
+            var page = await _file.Page.Basic({Src});
+            ops.save(page,`${_basePath}~page.cshtml`);
+        },
+        async 'gt_toolbar-OK'(){
+            var Src = {
+                ut,
+                toolbar:{
+                    e_Add:0,
+                    e_add:1,
+                    e_del:0,
+                    e_save:0,
+                    e_clear:0,
+                }  
+            } 
+            
+            var point = await _mvc_gti.gt_toolbar(Src); 
+            var _basePath = ops.ts_BasePath("gt_toolbar/");
+            ops.testJson(Src,`gt_toolbar/~Cfg.json`);
+            ops.save_point(_basePath,point);
+        },
+        async 'ENABLE_FLAG - OK'(){
+            var Src = {
+                ut,
+                row:_data.row
+            } 
+            ops.parseRow(Src);
+
+            var point = await _mvc_gti.ENABLE_FLAG(Src); 
+            var _basePath = "ENABLE_FLAG/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point(ops.ts_BasePath(_basePath),point);
+        }
     }
 
-
-    _.each([_gti],(_fn)=>{
+    _.each([_gti,_test],(_fn)=>{
         _.each(_fn,(e,k)=>{
             if (k.substr(0,1)=="*"){
                 e();

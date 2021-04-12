@@ -1,0 +1,13 @@
+﻿<%#
+/*
+<el-table-column label="@RES.BLL.Face.lblSetSequenceName"
+	prop="ENCODE_FORMAT_NAME" sortable="custom"
+	:sort-orders="$UT.sort_order">
+	</el-table-column>
+*/
+%><%_ for(var item of Src.Fileds){ _%>
+<el-table-column <%- item.label %>
+	prop="<%- item.Name %>" sortable="custom"
+	:sort-orders="$UT.sort_order">
+	</el-table-column>
+<%_}_%>

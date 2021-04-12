@@ -2,9 +2,10 @@
 jsonCodes: !readtext Base.json
 --- |
 <% 
- 	var s = JSON.parse(jsonCodes);
-    this.render('RuleFor.ejs', '~RuleFor.cs', {arg:s});
-    //this.render('../../toJson.ejs', '~RuleFor.cs', {arg:s});
+ 	var Src = JSON.parse(jsonCodes);
+    this.render('RuleFor.ejs', '~RuleFor.cs', {Src});
+    this.skip();
+
 %>
 <%#
 %>

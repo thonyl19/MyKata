@@ -1,12 +1,12 @@
 ﻿# input data
-bts:
+toolbar:
 	- e_Add
     - e_query
     - e_clear
 --- |
 <%_ 
-  	//this.render('toJson.ejs', '~tmp.json', {arg:this.data});
- 	this.render('gt_toolbar.ejs', '~tmp.html', this.data);
+  	//this.render('toJson.ejs', '~tmp.json', {Src:this.data});
+ 	this.render('gt_toolbar.ejs', '~tmp.html', {Src:this.data});
 	this.skip();
 _%>
  

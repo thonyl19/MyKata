@@ -1,0 +1,13 @@
+﻿# input data
+jsonCodes: !readtext ../../case_row.json
+--- |
+<%
+	var Src = JSON.parse(jsonCodes);
+	var SubCode =[
+            "\t<el-table-column :label=\"i18n.ROUTE_NO\"\r",
+            "\t\tprop=\"ROUTE_NO\" sortable=\"custom\"\r",
+            "\t\t:sort-orders=\"$UT.sort_order\">\r",
+            "\t\t</el-table-column>\r"];
+	this.render('el_table.ejs', '~tmp.txt', {Src,SubCode});
+	this.skip();
+%>
