@@ -35,8 +35,8 @@ goto S0
 :S2
 echo !arrayline[2]!
 git.exe fetch -v --progress "origin"
-git.exe pull --progress -v --no-rebase "origin"
-git.exe merge <%=arg.MergeFrom%>
+git.exe pull --progress -v --no-rebase "origin" <%=arg.Branch.Main%>
+git.exe merge remotes/origin/<%=arg.Branch.Dev%>
 set mima=3
 goto S0
 
@@ -50,15 +50,15 @@ goto S0
 
 :S4
 echo !arrayline[4]!
-git.exe push --progress "origin" <%=arg.PushTo%>
+git.exe push --progress "origin" <%=arg.Branch.Main%>
 goto S8
 
 :S11
 echo !arrayline[7]!
 cd <%=arg.Dir.Dev%> 
 git.exe fetch -v --progress "origin"
-git.exe pull --progress -v --no-rebase "origin"
-git.exe merge <%=arg.SyncMain%>
+git.exe pull --progress -v --no-rebase "origin" <%=arg.Branch.Dev%>
+git.exe merge remotes/origin/<%=arg.Branch.Main%>
 TortoiseGitProc.exe /command:commit
 cd <%=arg.Dir.Main%> 
 set mima=1

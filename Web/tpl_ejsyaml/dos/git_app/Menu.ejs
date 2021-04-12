@@ -23,6 +23,7 @@ set ans=""
 set /p ans=請決定執行步驟(Def=%mima%)?
 if "%ans%"=="" (ans=mima)
 if "%ans%"=="0" goto end
+echo "%ans%"
 <%_ _act.map(e=>{_%>
 <%-e%>
 <%_})_%>

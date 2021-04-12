@@ -10,12 +10,14 @@ Menu: {
 }
 MES5: {
     Dir:{
-        Dev: 'H:\SSMES_Dev',
-        Main: 'H:\SSMES_Main'
+        Dev: 'I:\MESv5_local',
+        Main: 'I:\MESv5'
+    },
+    Branch:{
+        Dev: 'Branch_Anthony',
+        Main: 'develop'
     },
     SlnFile: 'MES5_Build.sln',
-    MergeFrom: 'remotes/origin/Branch_Anthony',
-    PushTo: '',
 }
 SSMES: {
     Title: 'SSMES',
@@ -23,10 +25,11 @@ SSMES: {
         Dev: 'H:\SSMES_Dev',
         Main: 'H:\SSMES_Main'
     },
+    Branch:{
+        Dev: 'Anthony_2021012_SSMES',
+        Main: '´¼¼zª©'
+    },
     SlnFile: 'MES5_Build.sln',
-    MergeFrom: "remotes/origin/Anthony_2021012_SSMES",
-    SyncMain: "remotes/origin/´¼¼zª©",
-    PushTo: '´¼¼zª©'
 }
 
 --- |
