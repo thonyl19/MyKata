@@ -1,0 +1,15 @@
+﻿src: {
+    path: './',
+    name: '~test.json'
+}
+exp: {
+    path: './',
+    name: '~tt.json'
+} 
+--- |
+<%_
+	var _src = `${src.path}${src.name}`;
+	var _exp = `${exp.path}${exp.name}`;
+    this.render(_src, _exp, this.data);
+    this.skip();
+_%>
