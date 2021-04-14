@@ -1,0 +1,141 @@
+//#region [Grid 相關程序]
+OnEscapeKeyUp(event) {
+    if (event.which === 27) {
+        this.Cancel();
+    }
+},
+RowStyle(item) {
+    let { row } = item;
+    var isEditRow = row === this.currentRow;
+    if (isEditRow) {
+        let { ITEM_TYPE = "INPUT" } = this.edit_row;
+        switch (ITEM_TYPE) {
+            case "FIX":
+                this.SetNull(this.edit_row, 5, 6, 7, 8, 9);
+                break;
+            case "INPUT":
+                this.SetNull(this.edit_row, 4, 5, 6, 7, 8, 9);
+                break;
+            case "COLUMN":
+                this.SetNull(this.edit_row, 3, 8, 9);
+                break;
+            case "SERIAL":
+                this.SetNull(this.edit_row, 3, 5, 6, 7, 9);
+                break;
+            case "CUSTOM":
+                this.SetNull(this.edit_row, 3, 5, 6, 7, 8);
+                break;
+            default:
+                ITEM_TYPE = "TIME";
+                this.SetNull(this.edit_row, 3, 5, 6, 7, 8, 9);
+                break;
+        }
+        return `gt-sty s${ITEM_TYPE}`;
+    }
+    return "";
+},
+SetNull(target, ...Idx) {
+    var _self = this;
+    _.each(Idx, (i) => {
+        var key = _self.fileds[i];
+        target[key] = null;
+    })
+},
+
+AddItem() {
+    var _self = this;
+    var _fn = () => {
+        var _obj = _.maxBy(this.items, (el) => { return el.ITEM_SEQ })
+            || { ITEM_SEQ: 0 };
+        var ITEM_SEQ = _obj.ITEM_SEQ + 1;
+        var _new = { ITEM_SEQ, ITEM_TYPE: 'INPUT', RESET_ON_CHANGED: 'T', ENCODE_FORMAT_ITEM_SID: -1 };
+        _self.SetNull(_new, 2, 3, 4, 5, 6, 7, 8, 9);
+        _self.items.push(_new);
+        _self.currentRow = _new;
+        _self.edit_row = Object.assign({}, _new);
+    }
+    _self.CancelEdit(_fn);
+
+},
+Edit(idx, row) {
+    var _self = this;
+    var _fn = () => {
+        _self.currentRow = row;
+        _self.edit_row = Object.assign({}, row);
+    }
+    _self.CancelEdit(_fn);
+},
+CancelEdit(_fn) {
+    var _self = this;
+    if (_self.currentRow != null) {
+        _self.$confirm(_self.i18n.ConfirmCancel, '提示', _self.confirm_arg).then(() => {
+            _fn();
+        });
+    } else {
+        _fn();
+    }
+},
+Confirm(idx, row) {
+    var _tar = this.items[idx];
+    var isNew = false;
+    _.each(this.edit_row, (el, key) => {
+        _tar[key] = el;
+        if (key == 'ENCODE_FORMAT_ITEM_SID' && el == -1) {
+            _tar[key] = null;
+        }
+    })
+    this.edit_row = {};
+    this.currentRow = null;
+},
+Cancel(idx) {
+    var _self = this;
+    _self.$confirm(_self.i18n.ConfirmCancel, '提示', _self.confirm_arg).then(() => {
+        debugger
+        var isNew = _self.currentRow['ENCODE_FORMAT_ITEM_SID'] == -1;
+        if (isNew) _self.items.splice(idx, 1);
+        _self.edit_row = {};
+        _self.currentRow = null;
+    });
+},
+DelRow(idx, row) {
+    var _self = this;
+    _self.$confirm(_self.i18n.ConfirmDel, '提示', _self.confirm_arg).then(() => {
+        _self.items.splice(idx, 1);
+    });
+},
+//#endregion [input_grid]
+ 
+ 
+MessageMustInputOne() {
+    var _msg = "@RES.BLL.Message.MustInputOne".replace("{0}","@RES.BLL.Face.SequenceDetail")
+    this.$Alert.Err(_msg);
+},
+Ajax_success(res) {
+    let { Success, Data, Message = ""} = res;
+    if (Success) {
+        var _self = this;
+        var isDelMark = this.leyer_idx != null;
+        var _msg = isDelMark
+            ? '@RES.BLL.Message.DeleteSuccessfulmsg'
+            : '@RES.BLL.Message.SaveSuccessful'
+            ;
+        this.$UT.parent_reload();
+        this.$Alert.Success(_msg).then(() => {
+            if (isDelMark) {
+                parent.layer.close(_self.leyer_idx);
+            } else {
+                _self.reload(Data);
+            }
+        });
+    } else {
+        this.$Alert.Warning(Message);
+    }
+},
+reload(Data) {
+    if (this.isAddMode) {
+        let { SID } = Data;
+        this.$URL.chgSearchParam({ SID }, true);
+    } else {
+        location.replace(location.href);
+    }
+},

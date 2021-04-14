@@ -35,10 +35,13 @@ const fs = require('fs');
                 ;
             return _arr.map(cb);
         },
-        save(data,filename="test.txt",isRelPath=true){
+        save(data,filename="test.txt",isRelPath=true,isbig5=false){
             var _fullPath = isRelPath
                 ? ops.ts_BasePath(filename)
                 : filename;
+            if (isbig5){
+                data = `\uFEFF${data}`;
+            }
             fs.writeFileSync(`${_fullPath}`,data,'utf-8');
         },
         save_part(basePath,args){
@@ -435,6 +438,11 @@ const fs = require('fs');
             Check:1,
         },
         el_table:{
+            EditRow:{
+                Html_Code:1,
+                Vue_Data:1,
+                Vue_Methods:1,
+            },
             Basic:{
                 el_table:1,
                 el_table_col:1,
@@ -719,6 +727,22 @@ const fs = require('fs');
                     Html_Code:await _file.el_table.PagerQuery.el_table(_arg),
                     Vue_Data:await _file.el_table.PagerQuery.Vue_Data(_arg),
                     Vue_Methods:await _file.el_table.PagerQuery.Vue_Methods(_arg),
+                }
+                return point;
+            },
+            async EditRow(Src,SubCode){
+                // if (SubCode == null){
+                //     SubCode = (await _file.el_table.Basic.el_table_col({Src})).split('\n');
+                // }
+                var _arg = {
+                    Src,
+                    SubCode:[],
+                    grid_Src:'grid.data'
+                }
+                var point = {
+                    Html_Code:await _file.el_table.EditRow.Html_Code(_arg),
+                    Vue_Data:await _file.el_table.EditRow.Vue_Data(_arg),
+                    Vue_Methods:await _file.el_table.EditRow.Vue_Methods(_arg),
                 }
                 return point;
             }
@@ -1368,7 +1392,26 @@ const fs = require('fs');
             ops.testJson(Src,`${_basePath}~Cfg.json`);
             ops.save_point(ops.ts_BasePath(_basePath),point);
         },
-        async "*Page.Basic.Grid"(){
+        async "*el_table.EditRow"(){
+            var Src ={
+                ut,
+                Prefix:'',
+                SID:'ROUTE_NO',
+                row:_data.row,
+            }
+            ops.parseRow(Src);
+            var point = await _mvc_gti.el_table.EditRow({Src});
+            var _basePath = "Page/";
+            ops.testJson(Src,`${_basePath}~Cfg.json`);
+            ops.save_point(ops.ts_BasePath(_basePath),point);
+            var page = await _file.Page.Basic({Src});
+            page
+            ops.save(page,`${_basePath}~page.cshtml`);
+            var p = "H:/SSMES_Dev/Genesis_MVC/Areas/Example/Views/Act/"
+            ops.save(page,`${p}page~.cshtml`,false,true); 
+
+        },
+        async "Page.Basic.Grid"(){
             var Src ={
                 ut,
                 Prefix:'',

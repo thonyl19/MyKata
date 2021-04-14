@@ -1,0 +1,128 @@
+<!-- #region [input_grid] -->
+<el-table empty-text=" " style="width: 100%" ref="input_grid" 
+    :height="grid_height"
+    :row-class-name="RowStyle"
+    :data="items"
+    >
+	<el-table-column label="操作" min-width="120">
+		<template slot="header" slot-scope="scope">
+			<el-button size="small" class="s-VIEW"
+						type="primary"
+						icon="el-icon-plus"
+						@@click="AddItem"></el-button>
+			{{i18n.操作}}
+		</template>
+		<template slot-scope="scope">
+		<el-button size="small" circle class="s-VIEW"
+					type="success"
+					icon="el-icon-edit"
+					@@click="Edit(scope.$index, scope.row)"></el-button>
+		<el-button size="small" circle class="s-VIEW"
+					type="danger"
+					icon="el-icon-delete"
+					@@click="DelRow(scope.$index, scope.row)"></el-button>
+		<el-button size="small" circle class="s-NORMAL"
+					type="success"
+					icon="el-icon-check"
+					@@click="Confirm(scope.$index, scope.row)"></el-button>
+		<el-button size="small" circle class="s-NORMAL"
+					type="danger"
+					icon="el-icon-refresh-right"
+					@@click="Cancel(scope.$index, scope.row)"></el-button>
+		</template>
+	</el-table-column>
+	<el-table-column min-width="115" prop="ITEM_SEQ" :label="i18n.順序號">
+
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.ITEM_SEQ}}</div>
+			<el-input class="s-NORMAL" type=text v-model="edit_row.ITEM_SEQ" size="small" />
+		</template>
+	</el-table-column>
+	<el-table-column min-width="115" prop="ITEM_TYPE"
+					 :label="i18n.類別">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.ITEM_TYPE}}</div>
+			<el-select class="s-NORMAL" v-model="edit_row.ITEM_TYPE" size="small">
+				<el-option v-for="item in list"
+						   :key="item"
+						   :label="item"
+						   :value="item">
+				</el-option>
+			</el-select>
+		</template>
+	</el-table-column>
+	<el-table-column min-width="115" prop="ITEM_VALUE_LENGTH"
+					 :label="i18n.長度">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.ITEM_VALUE_LENGTH}}</div>
+			<el-input class="s-NORMAL" type=text
+					  v-model="edit_row.ITEM_VALUE_LENGTH" size="small" />
+		</template>
+	</el-table-column>
+	<el-table-column min-width="115" prop="ITEM_VALUE"
+					 :label="i18n.值">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.ITEM_VALUE}}</div>
+			<el-input class="s-FIX s-INPUT" type=text
+					  v-model="edit_row.ITEM_VALUE" size="small" />
+		</template>
+
+	</el-table-column>
+	<el-table-column min-width="115" prop="SERIAL_CHARS"
+					 :label="i18n.可用字元列表">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.SERIAL_CHARS}}</div>
+			<el-input class="s-FIX s-TIME s-COLUMN s-SERIAL s-CUSTOM" type=text
+					  v-model="edit_row.SERIAL_CHARS" size="small" />
+		</template>
+	</el-table-column>
+	<el-table-column min-width="115" prop="TABLE_NAME"
+					 :label="i18n.表名">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.TABLE_NAME}}</div>
+			<el-input class="s-COLUMN" type=text v-model="edit_row.TABLE_NAME" size="small" />
+		</template>
+	</el-table-column>
+	<el-table-column min-width="115" prop="COLUMN_NAME"
+					 :label="i18n.列名">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.COLUMN_NAME}}</div>
+			<el-input class="s-COLUMN" type=text v-model="edit_row.COLUMN_NAME" size="small" />
+		</template>
+	</el-table-column>
+
+	<el-table-column min-width="115" prop="COLUMN_VALUE_START"
+					 :label="i18n.列起始值">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.COLUMN_VALUE_START}}</div>
+			<el-input class="s-COLUMN" type=text v-model="edit_row.COLUMN_VALUE_START" size="small" />
+		</template>
+	</el-table-column>
+
+	<el-table-column min-width="115" prop="SERIAL_START_VALUE"
+					 :label="i18n.序號起始值">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.SERIAL_START_VALUE}}</div>
+			<el-input class="s-SERIAL" type=text v-model="edit_row.SERIAL_START_VALUE" size="small" />
+		</template>
+	</el-table-column>
+
+	<el-table-column min-width="115" prop="CUSTOM_ENTRY_FUNCTION"
+					 :label="i18n.入口函數">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{scope.row.CUSTOM_ENTRY_FUNCTION}}</div>
+			<el-input class="s-CUSTOM" type=text v-model="edit_row.CUSTOM_ENTRY_FUNCTION" size="small" />
+		</template>
+	</el-table-column>
+	<el-table-column min-width="115" prop="RESET_ON_CHANGED"
+					 :label="i18n.是否重置">
+		<template slot-scope="scope">
+			<div class="s-VIEW">{{$UT.parse_Boolean(scope.row.RESET_ON_CHANGED)}}</div>
+			<el-select class="s-NORMAL" v-model="edit_row.RESET_ON_CHANGED" size="small">
+				<el-option label="是" value="T"> </el-option>
+				<el-option label="否" value="F"> </el-option>
+			</el-select>
+		</template>
+	</el-table-column>
+</el-table>
+<!-- #endregion -->
