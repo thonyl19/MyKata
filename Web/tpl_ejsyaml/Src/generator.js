@@ -8,7 +8,7 @@ const block_1 = require("./block");
 const _ = require("lodash");
 class CancelError extends Error {
 }
-exports.CancelError = CancelError;
+exports.CancelError = CancelError; 
 const saveFileSplitter = `<SAVE-FILE-a43c7503-5de4-40a3-901a-a2d4c221efb2>`;
 console.log('initialized ejs-yaml');
 class Generator {
