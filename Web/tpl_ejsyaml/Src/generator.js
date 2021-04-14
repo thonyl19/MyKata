@@ -6,6 +6,8 @@ const ejs = require("ejs");
 const yaml_1 = require("./yaml");
 const block_1 = require("./block");
 const _ = require("lodash");
+var iconv = require('iconv-lite');
+const fs_1 = require("fs");
 class CancelError extends Error {
 }
 exports.CancelError = CancelError; 
@@ -39,6 +41,16 @@ class Generator {
             block_1.createMarker({ begin: '// {{{ @name', end: '// }}}' }),
             block_1.createMarker({ begin: '/* {{{ @name', end: '   }}} */' }),
         ];
+        this.isBig5 = options.isBig5;
+        this.writeFile=(path,data)=>{
+            if (options.isBig5){
+                data = iconv.encode(data, 'big5');
+            }
+            fs_1.writeFile(path, data, "UTF-8", function(err) {
+                if (err) throw err;
+                console.log("檔案寫入操作完成!");
+            })
+        }
         this.$init();
     }
     // block APIs
@@ -86,7 +98,7 @@ class Generator {
         const endMarker = (_b = this.markers[markerIndex || 0].end) === null || _b === void 0 ? void 0 : _b.replace('@name', name);
         return `${beginMarker}\n${defaultContent || ''}\n${endMarker}`;
     }
-    render(inputPath, outputPath, data) {
+    render(inputPath, outputPath, data , isBig5=false) {
         const input = this.resolvePath(inputPath);
         const output = this.resolvePath(outputPath);
         const template = this.fileop.readFile(input);
@@ -101,6 +113,7 @@ class Generator {
             cwd: Path.dirname(output),
             data,
             created: false,
+            isBig5
         });
         ctx.execute(template);
     }
@@ -134,15 +147,16 @@ class Generator {
             sections.shift();
             while (sections.length > 1) {
                 const outpath = sections.shift();
-                const text = sections.shift();
-                console.log({text})
-                this.fileop.writeFile(outpath, text);
+                var text = sections.shift();
+                this.writeFile(outpath, text);
             }
         }
         else {
-            this.fileop.writeFile(this.output, sections[0]);
+            var text = sections[0];
+            this.writeFile(this.output,text);
         }
     }
+    
     async generate() {
         if (this.template === undefined) {
             const yaml = this.fileop.readFile(this.input);

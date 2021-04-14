@@ -1,12 +1,11 @@
-# input data
-names:
+﻿names:
     - john
+    - bob
+    - marry
 --- |
-<%_ 
-	/*
-	很奇怪,資料無法部署過去 
-	*/
-    var _path = 'C:/Users/thony/.vscode/extensions/dirty49374.ejs-gen-0.0.23/out/ejsgen/_generator.js';
- 	this.render('generator.js', _path, this.data);
-	this.skip();
+<%_
+	var _path = "C:/Users/thony/.vscode/extensions/dirty49374.ejs-gen-0.0.23/out/ejsgen/";
+	var _name = 'generator.js';
+    this.render(_name, `${_path}${_name}`, this.data);
+    this.skip();
 _%>

@@ -1,21 +1,21 @@
-# input data
+ï»¿# input data
 Menu: {
 	"1": 'git add',
 	"2": 'commit , push',
-	"7": '§ó·s³Ì·sªºµ{¦¡(fetch , pull )',
+	"7": 'æ›´æ–°æœ€æ–°çš„ç¨‹å¼(fetch , pull )',
 	"8": 'GitHistory',
 	"9": 'cls',
 }
 Kata_Web: {
 	Title: 'Kata_Web',
     PushTo: '',
-    //SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\',
-	SavePath: 'P:\MyKata\MyKata_Web\'
+    SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\',
+	//SavePath: 'P:\MyKata\MyKata_Web\'
 }
 --- |
 <%_ 
 	var cfg = {arg:Kata_Web,Menu};
-	this.render('git_AutoSave.ejs', `${cfg.arg.SavePath}git_AutoSave.bat`, cfg);
+	this.render('git_AutoSave.ejs', `${cfg.arg.SavePath}git_AutoSave.bat`, cfg , true);
     //this.render('../toJson.ejs', '~tmp.json', {arg:this.data.SSMES});
 	this.skip();
 _%>
