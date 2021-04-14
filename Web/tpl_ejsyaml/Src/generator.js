@@ -124,7 +124,7 @@ class Generator {
     }
     // entry point
     execute(template) {
-        const result = ejs.render(template, { ...this.data, $: this }, { filename: this.input, context: this }) + '///';
+        const result = ejs.render(template, { ...this.data, $: this }, { filename: this.input, context: this });
         if (this.skipped) {
             return;
         }

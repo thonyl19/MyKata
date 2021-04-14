@@ -199,6 +199,8 @@ const fs = require('fs');
                             JS = 'string';
                         } else  if (Array.isArray(val)){
                             JS = 'array';
+                        } else if (_.isPlainObject(val)){
+                            JS = 'json';
                         }
                         break;
                     case "string":
