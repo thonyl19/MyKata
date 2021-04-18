@@ -1,0 +1,97 @@
+﻿# input data
+Src: {
+    "Prefix": "",
+    "SID": "ROUTE_NO",
+    "row": {
+        "ROUTE_NO": "C030-19",
+        "ROUTE": "?面?极板（子流程）",
+        "ROUTE_CATEGORY": "R",
+        "DESCRIPTION": [],
+        "ENABLE_FLAG": true,
+        "CREATE_DATE": "2020-10-15 17:56:21",
+        "ZZZ": {}
+    },
+    "Fileds": [
+        {
+            "Name": "ROUTE_NO",
+            "val": "C030-19",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            },
+            "label": ":label=\"i18n.ROUTE_NO\"",
+            "UI": ""
+        },
+        {
+            "Name": "ROUTE",
+            "val": "?面?极板（子流程）",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            },
+            "label": ":label=\"i18n.ROUTE\"",
+            "UI": ""
+        },
+        {
+            "Name": "ROUTE_CATEGORY",
+            "val": "R",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            },
+            "label": ":label=\"i18n.ROUTE_CATEGORY\"",
+            "UI": ""
+        },
+        {
+            "Name": "DESCRIPTION",
+            "val": [],
+            "map_type": {
+                "JS": "array",
+                "csharp": "object[]"
+            },
+            "label": ":label=\"i18n.DESCRIPTION\"",
+            "UI": "<el-input type=\"textarea\" v-model=\"form.DESCRIPTION\" rows=\"3\">\r\n\t</el-input>"
+        },
+        {
+            "Name": "ENABLE_FLAG",
+            "val": true,
+            "map_type": {
+                "JS": "boolean",
+                "csharp": "bool"
+            },
+            "label": ":label=\"i18n.ENABLE_FLAG\"",
+            "UI": ""
+        },
+        {
+            "Name": "CREATE_DATE",
+            "val": "2020-10-15 17:56:21",
+            "map_type": {
+                "JS": "date",
+                "csharp": "date"
+            },
+            "label": ":label=\"i18n.CREATE_DATE\"",
+            "UI": "<el-date-picker type=\"date\" class=\"eui-fix\" v-model=\"form.CREATE_DATE\">\r\n\t</el-date-picker>"
+        },
+        {
+            "Name": "ZZZ",
+            "val": {},
+            "map_type": {
+                "JS": "json"
+            },
+            "label": ":label=\"i18n.ZZZ\"",
+            "UI": ""
+        }
+    ],
+    "part": {
+        "ENABLE_FLAG": true
+    }
+}
+--- |
+<% 
+ 	Src._ = $._;
+    //this.render('Check.ejs', '~tmp.txt', {Src});
+    this.render('../../toJson.ejs', '~t.json', {Src});
+    this.skip();
+%>
+<%#
+%>

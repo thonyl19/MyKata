@@ -1,8 +1,14 @@
 ﻿# input data
 countryCodes: !fetchjson https://gist.githubusercontent.com/Goles/3196253/raw/9ca4e7e62ea5ad935bb3580dc0a07d9df033b451/CountryCodes.json
-jsonCodes: !readtext T04_fetch.json
+jsonTxt: !readtext T04_fetch.json
 input_yaml: !readyaml T04_fetch.yaml
+# 原本無法讀取,後來發現原因出在 T04_fetch.json 的檔案
+#	是用 utf-8 with BOM 的格式存檔 ,只要把格式改存為 純 utf-8 即可 work
+jsonCodes: !readjson T04_fetch.json
 --- |
+<%- $.outfile('~tmp.json') _%>
+<%- JSON.stringify(jsonCodes, null, 2) %>
+
 <%- $.outfile('~tmp.txt') _%>
 <%_ for (let color of input_yaml.colors) { _%>
 - <%- color %>

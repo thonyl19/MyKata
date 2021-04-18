@@ -1392,7 +1392,7 @@ const fs = require('fs');
             ops.testJson(Src,`${_basePath}~Cfg.json`);
             ops.save_point(ops.ts_BasePath(_basePath),point);
         },
-        async "*el_table.EditRow"(){
+        async "el_table.EditRow"(){
             var Src ={
                 ut,
                 Prefix:'',
@@ -1526,6 +1526,38 @@ const fs = require('fs');
             var _basePath = "ENABLE_FLAG/";
             ops.testJson(Src,`${_basePath}~Cfg.json`);
             ops.save_point(ops.ts_BasePath(_basePath),point);
+        },
+        async 'ssplit'(){
+            var _tpl = (key)=>{ return `<%_ Src.ut.echo_file('~${key}.txt',(el)=>{ _%>
+                <%- el %><% }) %>`};
+            var Cfg = {
+                Src:`./MVC/gti/SequenceNum.cshtml`,
+                ExpPath:ops.ts_BasePath('Page/Test/')
+            }
+            let chk_Path = fs.existsSync(Cfg.ExpPath);
+                if (!chk_Path){ 
+                    fs.mkdirSync(Cfg.ExpPath);
+                }
+            var _base = await fs.readFileSync(Cfg.Src);
+            _base = _base.toString();
+
+            var _list = _base.match(/##(\s\S|[^##])+@#/g);
+            var _cfg = {}
+            _.each(_list,(el,idx)=>{
+                let [key] = el.match(/##.+/);
+                key = key.replace("##","");
+                _base = _base.replace(el,_tpl(key));
+                var _fileName = `${Cfg.ExpPath}${key}.ejs`;
+                var _arr = el.split('\n');
+                _arr.shift();
+                _arr.pop()
+                el = _arr.join('\n');
+                ops.save(el,`${_fileName}`,false);
+                _cfg[key]=el;
+            })
+            ops.save(_base,`${Cfg.ExpPath}Main.ejs`,false)
+            ops.testJson(_cfg)
+
         }
     }
 
