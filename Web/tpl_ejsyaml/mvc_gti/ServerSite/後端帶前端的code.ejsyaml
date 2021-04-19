@@ -1,0 +1,44 @@
+﻿# input data
+args: PF_OPERATION form, List<BLL.DataViews.Edc.EdcModel> Edc_List
+funName: SaveEDC
+jsName: e_Save
+isPost: true 
+--- |
+<%- $.outfile('~Code.txt') _%>
+//SVC
+public IResult <%=funName%>(<%-args%>)
+{
+	var _r = new Result(true)
+	{
+		//Data = dt
+	};
+	return _r;
+}
+
+//Ctr
+<%_ if(isPost){ %>[HttpPost] <%_}_%>
+[Common.HandlerAjaxOnly]
+[ValidateAntiForgeryToken]
+public ActionResult <%=funName%>(<%-args%>)
+{
+	var result
+		//=  serv.SaveEDC(form);
+		= new { form, Edc_List };
+	return Content(result.ToJson(true));
+}
+ 
+//js
+<%=jsName%>() {
+	var url
+		= '@Url.Action("<%=funName%>", "DynFuncModule", new {area = "MES" })';
+		//= this.$URL.chg_Path(`api/ddl/${this.action}`,param);
+	var param = this.form;
+	var _ajax = {
+		url,
+		<% if(isPost){ %>type: 'post',
+		<%}_%>param,
+		//TODO:
+		success: this.ajax_success
+	};
+	$.submitForm(_ajax);
+},　
