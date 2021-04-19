@@ -10,7 +10,6 @@ _%>
     @ViewBag.Title
 </h3>
 @Html.AntiForgeryToken()
-@eBundle.QRender_CSS()
 @eBundle.QRender_JS()
 <div id="app" v-cloak>
     <%_ Src.ut.echo_file('~Html_ToolBar.txt',(el)=>{ _%>
@@ -45,3 +44,10 @@ _%>
         })
     });
 </script>
+@section Styles {
+    @eBundle.QRender_CSS()
+    <style>
+        <%_ Src.ut.echo_file('~Html_Style.txt',(el)=>{ _%>
+        <%- el %><% }) %>
+    </style>
+}

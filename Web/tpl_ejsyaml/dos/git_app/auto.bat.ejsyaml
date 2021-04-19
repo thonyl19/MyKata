@@ -9,6 +9,7 @@ Menu: {
 	"11": 'Dev Sync Main',
 }
 MES5: {
+    Ver: 1.2,
     Title: 'MES5',
     Dir:{
         Dev: 'I:\MESv5_local',
@@ -21,6 +22,7 @@ MES5: {
     SlnFile: 'MES5_Build.sln',
 }
 SSMES: {
+    Ver: 1.2,
     Title: 'SSMES',
     Dir:{
         Dev: 'H:\SSMES_Dev',
@@ -36,7 +38,7 @@ SSMES: {
 --- |
 <%_ 
     var cfg = {arg:MES5,Menu};
- 	this.render('auto.bat.ejs', `${cfg.arg.Dir.Main}/auto.bat` , cfg);
+ 	this.render('auto.bat.ejs', `${cfg.arg.Dir.Main}/auto.bat` , cfg ,true);
     //this.render('../toJson.ejs', '~tmp.json', {arg:this.data.SSMES});
 	this.skip();
 %>

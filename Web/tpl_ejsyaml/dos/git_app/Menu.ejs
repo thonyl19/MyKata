@@ -9,7 +9,7 @@ for(var key in Menu){
 %> 
 @echo off
 setlocal enabledelayedexpansion
-set arrayline[0]=-- Menu [<%=arg.Title%>] -- 
+set arrayline[0]=-- Menu [<%=arg.Title%>] v<%=arg.Ver%> -- 
 <%_ _menu.map(e=>{_%>
 <%=e%>
 <%_})_%>

@@ -700,7 +700,7 @@ var __fn = (
 	}
 	var Group = {
 	  
-	  '*Bts .btn-group'() {
+	  'Bts .btn-group'() {
 		var _note = `
 		  <pre>
 		1.原本希望利用 bts.input-group 來實作 group btn 的效果,
@@ -1548,7 +1548,7 @@ var __fn = (
 		},
 		/* eslint-disable */
 		
-		'*def'() {
+		'def'() {
 			var _note = `
 			   `;
 			var _obj = {
@@ -2644,6 +2644,31 @@ var __fn = (
 			};
 			return _obj;
 		},
+		'*vue_x'(){
+			var _note = ``
+			var _obj = {
+				_note
+				,_css:``
+				,_vue:{
+					template: `
+						<div>
+							<el-badge :value="v1" class="item">
+								<el-button size="small" @click="v1++" >Test</el-button>
+							</el-badge>
+						</div>
+					`,
+					data() {
+						return {
+							v1:0
+						};
+					},
+					mounted() { },
+					methods: { }
+				}
+
+			}
+			return _obj;
+		},
 		'?infinite-loading'() {
 			var _note = `
 			   <pre>
@@ -2768,7 +2793,7 @@ var __fn = (
 		},
 		/* eslint-disable */
 		
-		'*el-switch'() {
+		'el-switch'() {
 			var _note = `
 			這個是在專案碰到的實際案例,在 mode1 中,很明確的顯示,
 				當 v-model 直接綁定 value 時,再利用 watch 處理變更事件時,
@@ -3426,7 +3451,7 @@ var __fn = (
 				_vue: {
 					template: `
 						<div class="rec-list">
-							<h4><span class="label label-default">總數時</span> {{total}}</h4>
+							<h4 class="text-right" style="padding-right:2rem"><span class="label label-default">總數時</span> {{total}}</h4>
 							<div v-for="(item,key) in group" >
 									<h3><span class="label label-success">{{key}}</span></h3>
 									<ul class="list-group" >
@@ -3540,6 +3565,7 @@ var __fn = (
 											v-model="sData"
 											type="date" >
 										</el-date-picker>
+										{{v_weekday}}
 										<el-button icon="el-icon-arrow-left" circle @click="chg_date(-1)"></el-button>
 										<el-button icon="el-icon-arrow-right" circle @click="chg_date(1)"></el-button>
 									</el-col>
@@ -3578,7 +3604,12 @@ var __fn = (
 						},
 						v_act(){
 							return this.isAdd ?'新增':'儲存';
-						}
+						},
+						v_weekday(){
+							var list = `日,一,二,三,四,五,六`.split(',');
+							var i = moment(this.sData).weekday();
+							return list[i];
+						},
 					},
 					watch:{
 						sData(){

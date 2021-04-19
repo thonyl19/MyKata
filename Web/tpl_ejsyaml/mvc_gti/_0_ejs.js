@@ -440,6 +440,7 @@ const fs = require('fs');
         el_table:{
             EditRow:{
                 Html_Code:1,
+                Html_Style:1,
                 Vue_Data:1,
                 Vue_Methods:1,
             },
@@ -741,6 +742,7 @@ const fs = require('fs');
                 }
                 var point = {
                     Html_Code:await _file.el_table.EditRow.Html_Code(_arg),
+                    Html_Style:await _file.el_table.EditRow.Html_Style(_arg),
                     Vue_Data:await _file.el_table.EditRow.Vue_Data(_arg),
                     Vue_Methods:await _file.el_table.EditRow.Vue_Methods(_arg),
                 }
