@@ -9,6 +9,7 @@ var fs=require("fs");
 var encoding = require("encoding");
 var jschardet = require("jschardet");
 const chardet = require('chardet');
+var iconv = require('iconv-lite');
 (()=>{
     var _filePath = path.join(__dirname,'./_demo.xlsx');
     
@@ -76,6 +77,17 @@ const chardet = require('chardet');
 
 
     var fn = {
+        async 'readFile'(){
+            var s = await fs.readFileSync(`./package.json`);
+            s
+        },
+        '檢查目錄,沒有自動建立'(){
+            var _dir = './~tmp';
+            let chk_Path = fs.existsSync(_dir);
+                if (!chk_Path){
+                    fs.mkdirSync(_dir);
+                }
+        },
         'save_utf8'(){ 
             var data="echo Hello 中文字\r\npause";     //在 Windows 中跳行須用 \r\n
             fs.writeFile("./test~.bat", data, "UTF8", function(err) {
@@ -83,7 +95,7 @@ const chardet = require('chardet');
                 console.log("檔案寫入操作完成!");
             })
         },
-        '*save_ASCII'(){ 
+        'save_ASCII'(){ 
             var s="echo Hello 中文字\r\npause\r\ntest~.bat";  
             var info = jschardet.detect(s);
             info
@@ -91,7 +103,15 @@ const chardet = require('chardet');
             var resultBuffer = encoding.convert(s, "ascii", "UTF-8");
             var x = chardet.analyse(Buffer.from(s));
             x
-            fs.writeFile("./test~.bat", resultBuffer, "UTF-8", function(err) {
+            x1
+                //= iconv("UTF-8", "windows-1252",s)
+            var buf = iconv.encode(s, 'win1251');
+            buf
+
+            //搞了上面一堆,最終搞定了
+            var x1 
+                = iconv.encode(s, 'big5');
+            fs.writeFile("./test~.bat", x1, "UTF-8", function(err) {
                 if (err) throw err;
                 console.log("檔案寫入操作完成!");
             })

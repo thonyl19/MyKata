@@ -15,13 +15,7 @@ var fn = {
         var s = moment().format('_YYYY-MM-DD HH:mm:ss');
         s;
     },
-    'existsSync'(){
-        var dir = 'Auto/20010101';
-        var x = fs.existsSync(dir);
-        if (x == false){
-            fs.mkdirSync(dir);
-        }
-    },
+
     '將文字轉成日期物件'(){
         var start_time = "2020-05-28T16:00:00Z";
         var z = moment(start_time).toDate();
