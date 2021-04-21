@@ -5,6 +5,7 @@ const Path = require("path");
 const ejs = require("ejs");
 const yaml_1 = require("./yaml");
 const block_1 = require("./block");
+const {ext_ut} = require("./ext_ut");
 const _ = require("lodash");
 var iconv = require('iconv-lite');
 const fs_1 = require("fs");
@@ -13,9 +14,11 @@ class CancelError extends Error {
 exports.CancelError = CancelError; 
 const saveFileSplitter = `<SAVE-FILE-a43c7503-5de4-40a3-901a-a2d4c221efb2>`;
 console.log('initialized ejs-yaml');
+console.log(ext_ut);
 class Generator {
     constructor(options) {
         this._ = _;
+        this.ext_ut = ext_ut;
         this.blocks = {};
         this.canceled = false;
         this.skipped = false;
@@ -42,15 +45,7 @@ class Generator {
             block_1.createMarker({ begin: '/* {{{ @name', end: '   }}} */' }),
         ];
         this.isBig5 = options.isBig5;
-        this.writeFile=(path,data)=>{
-            if (options.isBig5){
-                data = iconv.encode(data, 'big5');
-            }
-            fs_1.writeFile(path, data, "UTF-8", function(err) {
-                if (err) throw err;
-                console.log("檔案寫入操作完成!");
-            })
-        }
+        this.writeFile=ext_ut.writeFile;
         this.$init();
     }
     // block APIs
