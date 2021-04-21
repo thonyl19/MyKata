@@ -51,8 +51,8 @@ goto S0
 :S4
 echo !arrayline[4]!
 @echo on
+git.exe push --progress "origin" <%=arg.Branch.Main%>
 TortoiseGitProc.exe /command:commit
-rem git.exe push --progress "origin" <%=arg.Branch.Main%>
 @echo off
 goto S8
 

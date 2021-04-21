@@ -9,7 +9,7 @@ Menu: {
 	"11": 'Dev Sync Main',
 }
 MES5: {
-    Ver: 1.2,
+    Ver: 1.3,
     Title: 'MES5',
     Dir:{
         Dev: 'I:\MESv5_local',
@@ -22,7 +22,7 @@ MES5: {
     SlnFile: 'MES5_Build.sln',
 }
 SSMES: {
-    Ver: 1.2,
+    Ver: 1.3,
     Title: 'SSMES',
     Dir:{
         Dev: 'H:\SSMES_Dev',

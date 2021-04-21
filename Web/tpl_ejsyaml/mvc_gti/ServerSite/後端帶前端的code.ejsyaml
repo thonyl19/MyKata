@@ -1,8 +1,8 @@
 ﻿# input data
-args: PF_OPERATION form, List<BLL.DataViews.Edc.EdcModel> Edc_List
-funName: SaveEDC
-jsName: e_Save
-isPost: true 
+args: string EDC_VER_SID
+funName: GetEDC_Info
+jsName: GetEDC_Info
+isPost: false 
 --- |
 <%- $.outfile('~Code.txt') _%>
 //SVC
