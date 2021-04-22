@@ -17,7 +17,7 @@ var ext_ut = {
 		"date":"date",
 		"boolean":"bool",
 	},
-    map_UI : {
+	map_UI : {
 		int(filed){},
 		date(filed){return `<el-date-picker type="date" class="eui-fix" v-model="form.${filed.Name}">\r\n\t</el-date-picker>`},
 		float(filed){},
@@ -101,38 +101,35 @@ var ext_ut = {
 		_.set(arg, 'part', part);
 		return arg;
 	},
-	async ssplit(){
-		// var _tpl = (key)=>{ return `<%_ Src.ut.echo_file('~${key}.txt',(el)=>{ _%>
-		// 	<%- el %><% }) %>`};
-		// var Cfg = {
-		// 	Src:`./MVC/gti/SequenceNum.cshtml`,
-		// 	ExpPath:ext_ut.ts_BasePath('Page/Test/')
-		// }
-		// let chk_Path = fs.existsSync(Cfg.ExpPath);
-		// 	if (!chk_Path){ 
-		// 		fs.mkdirSync(Cfg.ExpPath);
-		// 	}
-		// var _base = await fs.readFileSync(Cfg.Src);
-		// _base = _base.toString();
+	async ssplit(Cfg){
+		var _tpl = (key)=>{ return `<%_ Src.ut.echo_file('~${key}.txt',(el)=>{ _%>
+			<%- el %><% }) %>`};
+		let chk_Path = fs.existsSync(Cfg.ExpPath);
+			if (!chk_Path){ 
+				fs.mkdirSync(Cfg.ExpPath);
+			}
+		var _base = await fs.readFileSync(Cfg.Src);
+		_base = _base.toString();
 
-		// var _list = _base.match(/##(\s\S|[^##])+@#/g);
-		// var _cfg = {}
-		// _.each(_list,(el,idx)=>{
-		// 	let [key] = el.match(/##.+/);
-		// 	key = key.replace("##","");
-		// 	_base = _base.replace(el,_tpl(key));
-		// 	var _fileName = `${Cfg.ExpPath}${key}.ejs`;
-		// 	var _arr = el.split('\n');
-		// 	_arr.shift();
-		// 	_arr.pop();
-		// 	el = _arr.join('\n');
-		// 	ext_ut.writeFile(el,`${_fileName}`);
-		// 	_cfg[key]=el;
-		// })
-		// ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
-
-		//ops.save(_base,`${Cfg.ExpPath}Main.ejs`,false)
-		//ops.testJson(_cfg)
+		var _list = _base.match(/##(\s\S|[^##])+@#/g);
+		var _cfg = {}
+		_.each(_list,(el,idx)=>{
+			let [key] = el.match(/##.+/);
+			key = key.replace("##","");
+			_base = _base.replace(el,_tpl(key));
+			var _fileName = `${Cfg.ExpPath}${key}.ejs`;
+			var _arr = el.split('\n');
+			_arr.shift();
+			_arr.pop();
+			el = _arr.join('\n');
+			ext_ut.writeFile(el,`${_fileName}`);
+			_cfg[key]=el;
+		})
+		ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
+		ext_ut.testJson(_cfg,`${Cfg.ExpPath}~Cfg.json`);
+	},
+	testJson(json){
+		
 	}
 
 }
