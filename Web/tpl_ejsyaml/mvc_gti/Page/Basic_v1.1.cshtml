@@ -1,0 +1,46 @@
+<%
+    let {Html_ToolBar=[]
+        ,Html_Code=[]
+        ,Vue_Data=[]
+        ,Vue_Computed=[]
+        ,Vue_Methods=[]} 
+        = Src.point;
+%>
+<%# JSON.stringify(Src,null,2) %>
+@{
+    ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("baseTpl").RESOURCE_NAME;
+    bool isSingleModel = (bool)ViewData["SingleModel"];
+    if (isSingleModel) Layout = "~/Views/Shared/_LayoutSingle.cshtml";
+}
+<h3>
+    @ViewBag.Title
+</h3>
+@Html.AntiForgeryToken()
+@eBundle.QRender_CSS()
+@eBundle.QRender_JS()
+<div id="app" v-cloak>
+    <%- Html_ToolBar.join('\n\t') %>
+    <div Area-Main class="panel b">
+        <%- Html_Code.join('\n\t\t')%>
+    </div>
+</div>
+<script>
+    $(() => {
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    <%- Vue_Data.join('\n\t\t\t\t\t')%>
+                }
+            },
+            computed:{
+                <%- Vue_Computed.join('\n\t\t\t\t')%>
+            },
+            methods: {
+                <%- Vue_Methods.join('\n\t\t\t\t')%>
+                _test() {
+                },
+            }
+        })
+    });
+</script>

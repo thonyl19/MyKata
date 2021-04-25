@@ -1,0 +1,10 @@
+<%_
+    eval(include('_part.js'));
+    part.parse(Src,$._);
+_%>
+{
+    "Html_ToolBar":<%- JSON.stringify(include('Html_Code', {Src})); %>,
+    "Vue_Computed":<%- JSON.stringify(include('Vue_Computed', {Src})); %>,
+    "Vue_Methods":<%- JSON.stringify(include('Vue_Methods', {Src})); %>,
+    "Vue_Watch":<%- JSON.stringify(include('Vue_Watch', {Src})); %>
+}<%#JSON.stringify(Src)%>

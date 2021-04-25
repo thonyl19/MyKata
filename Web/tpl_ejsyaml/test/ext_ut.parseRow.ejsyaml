@@ -13,9 +13,8 @@ row: {
             "UPDATE_DATE": "2020-10-30 14:13:41"
         }
 --- |
-<% 
-	var Src = this.ext_ut.parseRow({row});
-    this.render('Controller.ejs', '~Ctr_Code.txt', {Src});
-    this.skip();
-%>
- 
+<%- $.outfile('~tmp1.js') _%>
+<%  $.isBig5 = true;
+	var arg = this.ext_ut.parseRow({row});
+_%>
+<%-	JSON.stringify(jsonCodes, null, 4)%>

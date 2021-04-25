@@ -1,8 +1,0 @@
-﻿# input data
-jsonCodes: !readtext ../../case_row.json
---- |
-<%
-	var Src = JSON.parse(jsonCodes);
-	this.render('el_table_col.ejs', '~tmp.txt', {Src});
-	this.skip();
-%>

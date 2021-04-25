@@ -1,5 +1,5 @@
 <%
-    let {QueryUrl} =Src.Form;
+    var QueryUrl = $._.get(Src,"Form.QueryUrl");
     if (QueryUrl!= null){
 _%>
 // 查詢處理程序
@@ -7,7 +7,7 @@ query(pageIdx) {
     var _self = this;
     _self.grid.Page.Index = pageIdx;
     var param = _self.grid.query_rule;
-    var url=  '<%=Src.Form.QueryUrl%>';
+    var url=  '<%=QueryUrl%>';
     var _ajax = {
         url,
         param,

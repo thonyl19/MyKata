@@ -1,15 +1,11 @@
 ﻿base: {
     Src:`./MVC/gti/SequenceNum.cshtml`,
-    ExpPath:'./tpl_ejsyaml/mvc_gti/Page/Test/'
-}
-Kata_Web: {
-	Title: 'Kata_Web',
-    PushTo: '',
-    SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\',
-	//SavePath: 'P:\MyKata\MyKata_Web\'
+    ExpPath:'./tpl_ejsyaml/mvc_gti/Page/Test/',
+    TestPath:''
 }
 --- |
 <%_
 	var cfg = {arg:base};
     $.ext_ut.ssplit(cfg);
+    this.skip();
 _%>

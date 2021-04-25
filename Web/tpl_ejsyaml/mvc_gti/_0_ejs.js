@@ -7,132 +7,8 @@ import path from "path";
 let ejs = require('ejs');
 let moment = require('moment');
 const fs = require('fs');
-(()=>{
-    var ext_ut = {
-        map_csharpType: {
-            "string":"string",
-            "int":"int",
-            "float":"decimal",
-            "array":"object[]",
-            "date":"date",
-            "boolean":"bool",
-        },
-        map_UI : {
-            int(filed){},
-            date(filed){return `<el-date-picker type="date" class="eui-fix" v-model="form.${filed.Name}">\r\n\t</el-date-picker>`},
-            float(filed){},
-            array(filed){return `<el-input type="textarea" v-model="form.${filed.Name}" rows="3">\r\n\t</el-input>`},
-            boolean(filed){return ``},
-        },
-        writeFile(path,data,isBig5=false){
-            if (isBig5){
-                data = iconv.encode(data, 'big5');
-            }
-            fs.writeFile(path, data, "UTF-8", function(err) {
-                if (err) throw err;
-                console.log("檔案寫入操作完成!");
-            })
-        },
-        ts_BasePath(relPath){
-            return `./tpl_ejsyaml/mvc_gti/${relPath}`
-        },
-        parse_label(Name,Prefix){
-            var _Prefix =  _.isEmpty(Prefix)?"i18n.":Prefix;
-            return `${_Prefix=="i18n."?':':''}label="${_Prefix}${Name}"`;
-        },
-        parse_UI(filed){
-            var UI = "";
-            let _fn = ext_ut.map_UI[filed.map_type.JS];
-            if (_fn!=null){
-                UI = `${_fn(filed)}`;
-            }
-            filed.UI = UI;
-        },
-        parseRow(arg,setPath = 'Fileds'){
-            let {row,Prefix} = arg;
-            if (row==null) return ;
-            var fileds = [];
-            var part = {}; 
-            for(var Name in row){
-                var val = row[Name];
-                var JS = typeof(val);
-                switch(JS){
-                    case "object":
-                        if (val === null){
-                            JS = 'string';
-                        } else  if (Array.isArray(val)){
-                            JS = 'array';
-                        } else if (_.isPlainObject(val)){
-                            JS = 'json';
-                        }
-                        break;
-                    case "string":
-                        if (moment(val).isValid()){
-                            JS = "date";
-                        }
-                        break;
-                    case "number":
-                        JS =_.isInteger(val)
-                            ?"int"
-                            :"float" 
-                        break;
-                    default:
-                        break;
-                }
-                var _filed = {
-                    Name
-                    ,val
-                    ,"map_type":{
-                        JS,
-                        csharp:ext_ut.map_csharpType[JS]
-                    }
-                    ,label :ext_ut.parse_label(Name,Prefix)
-                };
-                ext_ut.parse_UI(_filed)
-                fileds.push(_filed);
-    
-                switch(Name){
-                    case "ENABLE_FLAG":
-                        part[Name] = true;
-                        break;
-                }
-            }
-            _.set(arg, setPath, fileds);
-            _.set(arg, 'part', part);
-            return arg;
-        },
-        async ssplit(Cfg){
-            var _tpl = (key)=>{ return `<%_ Src.ut.echo_file('~${key}.txt',(el)=>{ _%>
-            	<%- el %><% }) %>`};
-            let chk_Path = fs.existsSync(Cfg.ExpPath);
-            	if (!chk_Path){ 
-            		fs.mkdirSync(Cfg.ExpPath);
-            	}
-            var _base = await fs.readFileSync(Cfg.Src);
-            _base = _base.toString();
-    
-            var _list = _base.match(/##(\s\S|[^##])+@#/g);
-            var _cfg = {}
-            _.each(_list,(el,idx)=>{
-            	let [key] = el.match(/##.+/);
-            	key = key.replace("##","");
-            	_base = _base.replace(el,_tpl(key));
-            	var _fileName = `${Cfg.ExpPath}${key}.ejs`;
-            	var _arr = el.split('\n');
-            	_arr.shift();
-            	_arr.pop();
-            	el = _arr.join('\n');
-            	ext_ut.writeFile(el,`${_fileName}`);
-            	_cfg[key]=el;
-            })
-            ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
-            ext_ut.testJson(_cfg,`${Cfg.ExpPath}~Cfg.json`);
-        },
-        testJson(json){
-            
-        }
-    
-    }
+const {ext_ut} = require('_test/ext_ut');
+(async()=>{
     var ops = {
         echo:{outputFunctionName:'echo' },
         ts_BasePath:ext_ut.ts_BasePath,
@@ -557,15 +433,19 @@ const fs = require('fs');
     }
 
     var _data = {
-        row: {
+        row:{
+            "ROUTE_SID": "GTI20101517555209104",
             "ROUTE_NO": "C030-19",
-            "ROUTE": "?面?极板（子流程）",
+            "ROUTE": "单面阳极板（子流程）",
             "ROUTE_CATEGORY": "R",
-            "DESCRIPTION": [],
-            "ENABLE_FLAG":true,
+            "DEFAULT_VERSION": 1,
+            "VERSION_DESCRIPTION": null,
+            "MAX_VERSION": 2,
+            "CREATE_USER": "mes",
             "CREATE_DATE": "2020-10-15 17:56:21",
-            "ZZZ": {},
-          }, 
+            "UPDATE_USER": "mes",
+            "UPDATE_DATE": "2020-10-30 14:13:41"
+        }, 
         filed_1 : {
             "ROUTE_SID": "GTI20101517555209104",
             "ROUTE_NO": "C030-19",
@@ -734,8 +614,9 @@ const fs = require('fs');
         },
         el_table:{
             async Basic(Src,SubCode){
+                Src
                 if (SubCode == null){
-                    SubCode = (await _file.el_table.Basic.el_table_col({Src})).split('\n');
+                    //SubCode = (await _file.el_table.Basic.el_table_col(Src)).split('\n');
                 }
                 var _arg = {
                     Src,
@@ -751,7 +632,7 @@ const fs = require('fs');
             },
             async PagerQuery(Src,SubCode){
                 if (SubCode == null){
-                    SubCode = (await _file.el_table.Basic.el_table_col({Src})).split('\n');
+                    SubCode = (await _file.el_table.Basic.el_table_col(Src)).split('\n');
                 }
                 var _arg = {
                     Src,
@@ -1408,7 +1289,7 @@ const fs = require('fs');
                 row:_data.row
             }
             ops.parseRow(Src);
-            var point = await _mvc_gti.el_table.Basic({Src});
+            var point = await _mvc_gti.el_table.Basic(Src);
             var _basePath = "el_table/Basic/";
             ops.testJson(Src,`${_basePath}~Cfg.json`);
             ops.save_point(ops.ts_BasePath(_basePath),point);
@@ -1568,6 +1449,54 @@ const fs = require('fs');
             	ExpPath:ext_ut.ts_BasePath('Page/Test/')
             }
             ext_ut.ssplit(Cfg);
+        },
+        async 't_get_part'(){
+            var Src ={
+                Prefix:'',
+                SID:'ROUTE_NO',
+                row:_data.row,
+                toolbar:{
+                    e_add:0,
+                    e_del:0,
+                    e_save:0,
+                    //e_clear:0,
+                    //Cfg:`fixed='top'`,
+                },
+                part:[
+                    'gt_toolbar',
+                    'el_table/Basic']  
+            }
+            ops.parseRow(Src);
+ 
+            
+            ext_ut.parsePart(Src);
+            ops.testJson(Src);
+            Src
+        },
+        async '*t_parsePoint'(){
+            var Src ={
+                Prefix:'',
+                SID:'ROUTE_NO',
+                row:_data.row,
+                toolbar:{
+                    e_add:0,
+                    e_del:0,
+                    e_save:0,
+                    //e_clear:0,
+                    //Cfg:`fixed='top'`,
+                },
+                "part": [
+                    {
+                      "Html_Code": "<el-table empty-text=\" \" style=\"width: 100%\"\r\n\t\t@@sort-change=\"sort_change\"\r\n\t\t:data=\"\"\r\n\t\t:default-sort=\"{prop: 'CREATE_DATE', order: 'ascending'}\">\r\n\t<el-table-column :label=\"i18n.ROUTE_SID\"\r\n\t\tprop=\"ROUTE_SID\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.ROUTE_NO\"\r\n\t\tprop=\"ROUTE_NO\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.ROUTE\"\r\n\t\tprop=\"ROUTE\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.ROUTE_CATEGORY\"\r\n\t\tprop=\"ROUTE_CATEGORY\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.DEFAULT_VERSION\"\r\n\t\tprop=\"DEFAULT_VERSION\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.VERSION_DESCRIPTION\"\r\n\t\tprop=\"VERSION_DESCRIPTION\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.MAX_VERSION\"\r\n\t\tprop=\"MAX_VERSION\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.CREATE_USER\"\r\n\t\tprop=\"CREATE_USER\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.CREATE_DATE\"\r\n\t\tprop=\"CREATE_DATE\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.UPDATE_USER\"\r\n\t\tprop=\"UPDATE_USER\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t<el-table-column :label=\"i18n.UPDATE_DATE\"\r\n\t\tprop=\"UPDATE_DATE\" sortable=\"custom\"\r\n\t\t:sort-orders=\"$UT.sort_order\">\r\n\t\t</el-table-column>\r\n\t\r\n</el-table>",
+                      "Vue_Data": "grid: {\r\n    data: [],\r\n    Sort: {\r\n        Name: \"CREATE_DATE\",\r\n        isAsc: true\r\n    },\r\n    Conditions: {},\r\n    Page: {\r\n        Index: 1,\r\n        Size: 10,\r\n    },\r\n    get query_rule() {\r\n        let { Conditions, Sort, Page } = this;\r\n        return {\r\n            Conditions, Sort, Page\r\n        }\r\n    }\r\n},",
+                      "Vue_Methods": "//#region [VueGridMethos]\r\n//排序事件\r\nsort_change(column) {\r\n\tthis.grid.Sort = {\r\n\t\tName: column.prop,\r\n\t\tisAsc: column.order == \"ascending\"\r\n\t}\r\n\tif (this.grid.data.length == 0) return;\r\n\tthis.query(1);\r\n},\r\n// 查詢處理程序\r\nquery(pageIdx) {\r\n\tvar _self = this;\r\n\t_self.grid.Page.Index = pageIdx;\r\n\tvar param = _self.grid.query_rule;\r\n\t//console.log({ query: param });\r\n\tvar _ajax = {\r\n\t\turl: '@Url.Action(\"ListData\")',\r\n\t\ttype: 'post',\r\n\t\tparam,\r\n\t\tsuccess: this.query_success\r\n\t};\r\n\t$.submitForm(_ajax);\r\n},\r\n// 查詢成功處理程序\r\nquery_success(res) {\r\n\tdebugger\r\n\tlet { Data, Code = null, Message, Success = false } = res;\r\n\tif (Success) {\r\n\t\tlet { PageInfo, gridData } = Data || {};\r\n\t\tthis.grid.data = gridData;\r\n\t\tthis.grid.row_count = PageInfo.RowCount;\r\n\t} else {\r\n\t\tvar msg = Message != null\r\n\t\t\t? Message\r\n\t\t\t: '@BLL.InterFace.ErrCode.GenericErrorMessage'\r\n\t\t\t;\r\n\t\tthis.$Alert.Err(msg);\r\n\t}\r\n},\r\n//#regionend [VueGridMethos]"
+                    }
+                  ]
+            }
+            ops.parseRow(Src);
+            _mvc_gti.gt_toolbar(Src);
+            ext_ut.parsePoint(Src);
+            ops.testJson(Src);
         }
     }
 
