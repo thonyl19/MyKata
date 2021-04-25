@@ -8,13 +8,8 @@ Kata_Web: {
     SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\',
 	//SavePath: 'P:\MyKata\MyKata_Web\'
 }
-zz: !readtext ../MVC/gti/SequenceNum.cshtml
 --- |
 <%_
-    var _tpl = (key)=>{ return `<%_ Src.ut.echo_file('~${key}.txt',(el)=>{ _%>
-                <%- el %><% }) %>`};
 	var cfg = {arg:base};
-
-    <%- $.outfile('~tmp.txt') _%>
-    <%- zz %>
+    $.ext_ut.ssplit(cfg);
 _%>
