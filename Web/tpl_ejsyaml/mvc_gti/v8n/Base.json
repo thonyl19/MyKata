@@ -1,54 +1,180 @@
 {
-    "TableName": "PF_ROUTE",
+    "TableName": "PF_OPERATION_EDC",
     "RESOURCE_NAME": "RESOURCE_NAME",
     "Prefix": "RES.BLL.Face.",
     "SID_Filed": "ROUTE_SID",
     "row": {
-        "ROUTE_NO": "C030-19",
-        "ROUTE": "?面?极板（子流程）",
-        "ROUTE_CATEGORY": "R",
-        "DESCRIPTION": "",
-        "ENABLE_FLAG": true
+        "OPER_SID": "GTI20101309421108410",
+        "OPERATION_NO": "C04-0060",
+        "OPERATION": "回流",
+        "EDC_SID": "GTI20120909412091085",
+        "EDC_VER_SID": "GTI20120909412091086",
+        "EDC_PARA_SID": "GTI20120909404091044",
+        "PARA_NO": "E.C04-A01-026",
+        "PARAMETER": "第二区",
+        "TEST_POINT": 1,
+        "DISPLAY_POINT_NAME": null,
+        "CREATE_USER": "j4789",
+        "CREATE_DATE": "2020-12-09 10:09:04",
+        "MUST_INPUT": "T",
+        "THROW_SPC": "F",
+        "TL": "150",
+        "UCL": 160,
+        "LCL": 140,
+        "USL": null,
+        "LSL": null
     },
     "Fileds": [
         {
-            "label": "ROUTE_NO",
-            "val": "C030-19",
+            "label": "OPER_SID",
+            "val": "GTI20101309421108410",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
             }
         },
         {
-            "label": "ROUTE",
-            "val": "?面?极板（子流程）",
+            "label": "OPERATION_NO",
+            "val": "C04-0060",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
             }
         },
         {
-            "label": "ROUTE_CATEGORY",
-            "val": "R",
+            "label": "OPERATION",
+            "val": "回流",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
             }
         },
         {
-            "label": "DESCRIPTION",
-            "val": "",
+            "label": "EDC_SID",
+            "val": "GTI20120909412091085",
             "map_type": {
                 "JS": "string",
                 "csharp": "string"
             }
         },
         {
-            "label": "ENABLE_FLAG",
-            "val": true,
+            "label": "EDC_VER_SID",
+            "val": "GTI20120909412091086",
             "map_type": {
-                "JS": "boolean",
-                "csharp": "bool"
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "EDC_PARA_SID",
+            "val": "GTI20120909404091044",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "PARA_NO",
+            "val": "E.C04-A01-026",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "PARAMETER",
+            "val": "第二区",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "TEST_POINT",
+            "val": 1,
+            "map_type": {
+                "JS": "int",
+                "csharp": "int"
+            }
+        },
+        {
+            "label": "DISPLAY_POINT_NAME",
+            "val": null,
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "CREATE_USER",
+            "val": "j4789",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "CREATE_DATE",
+            "val": "2020-12-09 10:09:04",
+            "map_type": {
+                "JS": "date",
+                "csharp": "date"
+            }
+        },
+        {
+            "label": "MUST_INPUT",
+            "val": "T",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "THROW_SPC",
+            "val": "F",
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "TL",
+            "val": "150",
+            "map_type": {
+                "JS": "date",
+                "csharp": "date"
+            }
+        },
+        {
+            "label": "UCL",
+            "val": 160,
+            "map_type": {
+                "JS": "int",
+                "csharp": "int"
+            }
+        },
+        {
+            "label": "LCL",
+            "val": 140,
+            "map_type": {
+                "JS": "int",
+                "csharp": "int"
+            }
+        },
+        {
+            "label": "USL",
+            "val": null,
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
+            }
+        },
+        {
+            "label": "LSL",
+            "val": null,
+            "map_type": {
+                "JS": "string",
+                "csharp": "string"
             }
         }
     ],

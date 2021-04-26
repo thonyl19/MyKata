@@ -1,0 +1,8 @@
+<vue-selectize-dynquery v-model="<%=Src.Grp.name%>.val" ref="<%=Src.Grp.name%>"
+    :options="<%=Src.Grp.name%>.src"
+    :selectize_ops="<%=Src.Grp.name%>.ops"
+    :icon_search_click="()=>{query_EdcGrp('%')}"
+    :fn_query="query_EdcGrp"
+    :auto_drowdown="true" 
+    render_sty="GTIMES"
+    />

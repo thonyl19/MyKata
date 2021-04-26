@@ -1,0 +1,22 @@
+query_PartNo(keyword, fn_cb = null) {
+    var _self = this;
+    var url = '@Url.Action("SearchEDC")';
+    var param = {keyword};
+    var _ajax = {
+        url,
+        param,
+        success(data) {
+            if (data == null) return;
+            let { Data = [] } = data;
+            if (Data == null || Data.length == 0) {
+                _self.$Alert.msg_NoData();
+            } else {
+                _self.ddl_EdcGrp.src = Data;
+                if (fn_cb != null) {
+                    fn_cb(Data);
+                }
+            }
+        }
+    };
+    $.submitForm(_ajax);
+},　

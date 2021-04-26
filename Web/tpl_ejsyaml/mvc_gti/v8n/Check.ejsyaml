@@ -1,9 +1,9 @@
 # input data
-jsonCodes: !readtext Base.json
+jsonCodes: !read Base.json
 --- |
 <% 
- 	var Src = JSON.parse(jsonCodes);
-    this.render('Check.ejs', '~tmp.txt', {Src});
+ 	//var Src = JSON.parse(jsonCodes);
+    this.render('Check.ejs', '~tmp.txt', {Src:jsonCodes});
     //this.render('../../toJson.ejs', '~RuleFor.cs', {arg:s});
     this.skip();
 %>

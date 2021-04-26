@@ -1,17 +1,29 @@
 ﻿# input data
-args: string EDC_VER_SID
-funName: GetEDC_Info
-jsName: GetEDC_Info
+args: string PARTNO_SID
+key: PARTNO_SID
+UI: ddl_Route
+funName: GetPartRouteData
+jsName: GetPartRouteData
 isPost: false 
 --- |
 <%- $.outfile('~Code.txt') _%>
 //SVC
 public IResult <%=funName%>(<%-args%>)
 {
-	var _r = new Result(true)
-	{
-		//Data = dt
-	};
+	var _r = new Result(true);
+	/*
+	var _list = (from t in svc_PF_PARTNO_ROUTEVER.GetAllListIQueryable()
+				where (t.PARTNO_SID == PARTNO_SID)
+				select new SelectModel
+				{
+					SID = t.ROUTE_SID,
+					No = t.ROUTE_NO,
+					Display = t.ROUTE_NAME,
+					Value = t.ROUTE_SID,
+				}
+			).ToList();
+	_r.Data = _list;
+	*/
 	return _r;
 }
 
@@ -22,23 +34,36 @@ public IResult <%=funName%>(<%-args%>)
 public ActionResult <%=funName%>(<%-args%>)
 {
 	var result
-		//=  serv.SaveEDC(form);
+		//=  serv.<%=funName%>(form);
 		= new { form, Edc_List };
 	return Content(result.ToJson(true));
 }
  
 //js
-<%=jsName%>() {
+<%=jsName%>(<%=key%>) {
+	var _self = this;
 	var url
 		= '@Url.Action("<%=funName%>", "DynFuncModule", new {area = "MES" })';
 		//= this.$URL.chg_Path(`api/ddl/${this.action}`,param);
-	var param = this.form;
+	var param 
+		= this.form;
+		//= {<%=key%>};
 	var _ajax = {
 		url,
 		<% if(isPost){ %>type: 'post',
 		<%}_%>param,
-		//TODO:
-		success: this.ajax_success
+		success(data) {
+			if (data == null) return;
+			let { Data = [] } = data;
+			if (Data == null || Data.length == 0) {
+				_self.$Alert.msg_NoData();
+			} else {
+				_self.<%=UI%>.src = Data;
+				if (fn_cb != null) {
+					fn_cb(Data);
+				}
+			}
+		}
 	};
 	$.submitForm(_ajax);
 },　
