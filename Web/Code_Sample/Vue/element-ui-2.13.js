@@ -3451,7 +3451,9 @@ var __fn = (
 				_vue: {
 					template: `
 						<div class="rec-list">
-							<h4 class="text-right" style="padding-right:2rem"><span class="label label-default">總數時</span> {{total}}</h4>
+							<h4 class="text-right" style="padding-right:2rem">
+								<span class="label label-default">總數時</span> {{total}}
+							</h4>
 							<div v-for="(item,key) in group" >
 									<h3><span class="label label-success">{{key}}</span></h3>
 									<ul class="list-group" >
@@ -3471,7 +3473,9 @@ var __fn = (
 					},
 					computed:{
 						total(){
-							return _.sumBy(this.list, 'work_times');;
+							return _.sumBy(this.list,(o)=>{
+								return eval(o.work_times);
+							});;
 						},
 						group(){
 							var grp = _.groupBy(this.list, 'v1.Root');
@@ -3541,7 +3545,9 @@ var __fn = (
 					},
 					template: `
 					<div> 
-						<el-dialog  title="TaskEdit" :visible.sync="dialogTaskEdit">
+						<el-dialog  title="TaskEdit" :visible.sync="dialogTaskEdit"
+							:close-on-click-modal="false"
+							>
 							<job-rec :form="cur_row"></job-rec>
 							<span slot="footer" class="dialog-footer">
 								<el-row >

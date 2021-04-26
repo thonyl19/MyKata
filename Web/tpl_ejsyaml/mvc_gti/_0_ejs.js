@@ -290,7 +290,7 @@ const fs = require('fs');
                     ,val
                     ,"map_type":{
                         JS,
-                        csharp:map_csharpType[JS]
+                        csharp:ext_ut.map_csharpType[JS]
                     }
                 }
                 fileds.push(arg);
@@ -1098,12 +1098,33 @@ const fs = require('fs');
             // var s = await ejs.renderFile(_file.form.Base.Form, arg );
             // ops.save(s,"form/Base/~tmp.cshtml"); 
         },
-        async 'v8n-OK'(){
+        async '*v8n-OK'(){
             let {_fn} = ops;
-            let {row} = _data;
+            //let {row} = _data;
+            var row = {
+                "OPER_SID": "GTI20101309421108410",
+                "OPERATION_NO": "C04-0060",
+                "OPERATION": "回流",
+                "EDC_SID": "GTI20120909412091085",
+                "EDC_VER_SID": "GTI20120909412091086",
+                "EDC_PARA_SID": "GTI20120909404091044",
+                "PARA_NO": "E.C04-A01-026",
+                "PARAMETER": "第二区",
+                "TEST_POINT": 1,
+                "DISPLAY_POINT_NAME": null,
+                "CREATE_USER": "j4789",
+                "CREATE_DATE": "2020-12-09 10:09:04",
+                "MUST_INPUT": "T",
+                "THROW_SPC": "F",
+                "TL": "150",
+                "UCL": 160,
+                "LCL": 140,
+                "USL": null,
+                "LSL": null
+            }
             var SID_Filed = 'ROUTE_SID'; 
             var Src = {
-                TableName:'PF_ROUTE',
+                TableName:'PF_OPERATION_EDC',
                 RESOURCE_NAME:'RESOURCE_NAME',
                 Prefix:'RES.BLL.Face.',
                 SID_Filed,
