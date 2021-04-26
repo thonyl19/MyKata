@@ -1,13 +1,8 @@
-﻿"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-//exports.generateTemplate = exports.CancelError = void 0;
-
-const Path = require("path");
-const ejs = require("ejs");
-const _ = require("lodash");
-var iconv = require('iconv-lite');
-const fs = require("fs");
+﻿import * as _ from 'lodash';
+import path from "path";
+let ejs = require('ejs');
 let moment = require('moment');
+const fs = require('fs');
 var ext_ut = {
 	map_csharpType: {
 		"string":"string",
@@ -151,8 +146,7 @@ var ext_ut = {
 	},
 
 	async ssplit(Cfg){
-		var _tpl = (key)=>{ return `<%_ Src.ut.echo_file('~${key}.txt',(el)=>{ _%>
-			<%- el %><% }) %>`};
+		var _tpl = (key)=>{ return `{{tpl}}`};
 		let chk_Path = fs.existsSync(Cfg.ExpPath);
 			if (!chk_Path){ 
 				fs.mkdirSync(Cfg.ExpPath);
@@ -180,6 +174,6 @@ var ext_ut = {
 	testJson(json){
 		
 	}
-
 }
-module.exports = {ext_ut};
+
+module.exports = {ext_ut}

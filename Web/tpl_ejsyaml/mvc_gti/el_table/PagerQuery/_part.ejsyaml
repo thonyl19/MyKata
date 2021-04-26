@@ -30,7 +30,7 @@ Src: {
     $.render('_part.ejs', '~part.txt', {Src});
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- include('../el_table.ejs',{Src}) %>
-<%- include('Vue_Data',{Src}) %>
+<%- include('el_table',{Src}) %>
+<%- include('Vue_Data') %>
 <%- include('Vue_Methods',{Src}) %>
  

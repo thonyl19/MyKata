@@ -33,12 +33,11 @@ Src: {
 <%  $.isBig5 = true;
     //$.ext_ut.parseRow(Src);
     //$.render('_part.ejs', '~part.txt', {Src});
-    
-    $.render('vue-selectize-dynquery.ejs', '~Html_Code.txt', {Src});
-    $.render('Vue_Data.ejs', '~Vue_Data.txt');
-    $.render('Vue_Methods.ejs', '~Vue_Methods.txt');
-    $.render('Vue_Computed.ejs', '~Vue_Computed.txt');
-    $.render('Vue_Watch.ejs', '~Vue_Watch.txt');
-    $.skip()
-_%>
  
+_%>
+<%- $.outfile('~Code.txt') _%>
+<%- include('vue-selectize-dynquery',{Src}) +"\n"%>
+<%- include('Vue_Data',{Src}) +"\n"%> 
+<%- include('Vue_Computed',{Src}) +"\n"%> 
+<%- include('Vue_Watch',{Src}) +"\n"%> 
+<%- include('Vue_Methods',{Src}) +"\n"%> 

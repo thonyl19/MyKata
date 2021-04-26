@@ -1,7 +1,16 @@
 ﻿# input data
+Export: {
+    path: D:/A/Code/github/MyKata/MyKata_Web/Web/tpl_ejsyaml/mvc_gti/Controller/Basic/ ,
+    # name: ~test.cs 
+}
 Src: {
-    Prefix: '',
-    SID: 'ROUTE_NO',
+    Areas: 'ADM',
+    FunctionName: "QcLevel",
+    RESOURCE_NAME: 'RESOURCE_NAME',
+    TableName: 'PF_ROUTE',
+    Prefix: 'RES.BLL.Face.',
+    CheckDataRule: "//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${TableName};",
+    SID_Filed: 'ROUTE_NO',
     row: {
         "ROUTE_SID": "GTI20101517555209104",
         "ROUTE_NO": "C030-19",
@@ -16,16 +25,16 @@ Src: {
         "UPDATE_DATE": "2020-10-30 14:13:41"
     },
 }
-ExpPath :'' 
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
     $.render('_part.ejs', '~part.txt', {Src});
     
-    $.render('Html_Code.ejs', '~Html_Code.txt', {Src});
-    //$.render('Html_Code.ejs', '~Html_Code.txt', {Src});
-    //$.render('Vue_Data.ejs', '~Vue_Data.txt');
-    //$.render('Vue_Methods.ejs', '~Vue_Methods.txt');
-    $.skip()
+    Src.point = JSON.parse(include('_part.ejs',{Src}));
+
+    if (Export.name !=""){
+        $.render('Page.ejs', `${Export.path}${Export.name}` , {Src});
+    }
 _%>
- 
+<%- $.outfile('~Code.cs') _%>
+<%- include('Page',{Src}) %>

@@ -23,9 +23,7 @@ Src: {
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
     $.render('_part.ejs', '~part.txt', {Src});
-
-    $.render('../gt_form.ejs', '~Html_Code.txt', {Src});
-    //$.render('Vue_Data.ejs', '~Vue_Data.txt');
-    //$.render('Vue_Methods.ejs', '~Vue_Methods.txt');
-    $.skip();
 _%>
+<%- $.outfile('~Code.txt') _%>
+<%- include('../gt_form.ejs',{Src}) %>
+<%- include('Vue_Methods',{Src}) %>

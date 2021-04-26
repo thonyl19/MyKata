@@ -1,8 +1,8 @@
 ﻿<el-table empty-text=" " style="width: 100%"
 		@@sort-change="sort_change"
-		:data="<%=grid_Src%>"
+		:data="<%=Src.grid_Src%>"
 		:default-sort="{prop: 'CREATE_DATE', order: 'ascending'}">
-	<%- SubCode.join('\n\t') %>
+		<%- include('../el_table_col.ejs', {Src}).split('\n').join('\n\t\t'); %>
 </el-table>
 <el-pagination background
 	@@size-change="e_SizeChange"

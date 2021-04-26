@@ -1,0 +1,4 @@
+﻿{
+	<%_ for (let el of names) { _%>
+	"<%= el %>":<%%- JSON.stringify(include('<%=el%>', {Src})); %%>,
+<%_ } _%>}

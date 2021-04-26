@@ -1,0 +1,7 @@
+﻿names:
+    - john
+    - bob
+    - marry
+--- |
+<%- $.outfile('~tmp.txt') _%>
+<%- include('T07') %>

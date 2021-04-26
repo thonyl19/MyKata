@@ -1,5 +1,0 @@
-<el-table empty-text=" " style="width: 100%"
-		@@sort-change="sort_change"
-		:data="grid.data"
-		:default-sort="{prop: 'CREATE_DATE', order: 'ascending'}">
-</el-table>

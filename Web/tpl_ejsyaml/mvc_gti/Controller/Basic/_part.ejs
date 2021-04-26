@@ -1,3 +1,5 @@
 {
-	"Html_Code":<%- JSON.stringify(include('../el_table.ejs', {Src})); %>,
+	"API":<%- JSON.stringify(
+		[include('Enable', {Src})
+		,include('Enable', {Src})]); %>
 }<%#JSON.stringify(Src)%>
