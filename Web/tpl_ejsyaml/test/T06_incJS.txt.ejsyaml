@@ -1,0 +1,9 @@
+﻿names:
+    - john
+    - bob
+    - marry
+--- |
+<%_
+    eval(include('T06.js'))
+_%>
+<%-t.test()%>

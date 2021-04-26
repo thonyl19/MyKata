@@ -116,6 +116,20 @@ var iconv = require('iconv-lite');
                 console.log("檔案寫入操作完成!");
             })
         },
+        '*取得資料夾內的清單'(){
+            var _dir = './QuokkaApp'
+            fs.readdir(_dir, (err, files) => {
+                files.forEach(file => {
+                    //file
+                  //console.log(file);
+                });
+              });
+            fs.readdirSync(_dir, {withFileTypes: true})
+              .filter(item => !item.isDirectory())
+              .map(item => {
+                  console.log(item.name);
+            })
+        }
     }
     _.each(fn,(e,k)=>{
         if (k.substr(0,1)=="*"){

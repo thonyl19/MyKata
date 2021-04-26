@@ -1,0 +1,31 @@
+﻿# input data
+Src: {
+    Prefix: '',
+    SID: 'ROUTE_NO',
+    row: {
+        "ROUTE_SID": "GTI20101517555209104",
+        "ROUTE_NO": "C030-19",
+        "ROUTE": "单面阳极板（子流程）",
+        "ROUTE_CATEGORY": "R",
+        "DEFAULT_VERSION": 1,
+        "VERSION_DESCRIPTION": null,
+        "MAX_VERSION": 2,
+        "CREATE_USER": "mes",
+        "CREATE_DATE": "2020-10-15 17:56:21",
+        "UPDATE_USER": "mes",
+        "UPDATE_DATE": "2020-10-30 14:13:41"
+    },
+}
+ExpPath :'' 
+--- |
+<%  $.isBig5 = true;
+    $.ext_ut.parseRow(Src);
+    $.render('_part.ejs', '~part.txt', {Src});
+    
+    $.render('Html_Code.ejs', '~Html_Code.txt', {Src});
+    //$.render('Html_Code.ejs', '~Html_Code.txt', {Src});
+    //$.render('Vue_Data.ejs', '~Vue_Data.txt');
+    //$.render('Vue_Methods.ejs', '~Vue_Methods.txt');
+    $.skip()
+_%>
+ 

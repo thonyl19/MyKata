@@ -1,11 +1,10 @@
-﻿<%
+﻿<%#
 /*
 [Ref]
 H:\SSMES_Dev\Genesis_MVC\Areas\ADM\Controllers\DefectCategoryController.cs
 H:\SSMES_Dev\Genesis_MVC\Areas\ADM\Controllers\OperationController.cs
 H:\SSMES_Dev\Genesis_MVC\Areas\ADM\ControlleCheckDataRulers\OperationTypeController.cs
 */
-    Src.ut.fn_inc = include;
 _%>
 using MDL.MES;
 using BLL.MES;
@@ -180,8 +179,7 @@ namespace Genesis.Areas.<%= Src.Areas%>.Controllers
 			return Content(result.ToJson(true));
 		}
 
-		<%_ Src.ut.echo_file('./~Enable.cs',(el)=>{ _%>
-		<%- el %><% }) %>
+		<%- API.join('\n\t\t')%>
  		#endregion
 	}
 }

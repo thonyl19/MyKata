@@ -9,3 +9,7 @@ arr: ['A','B']
 <%- $.outfile('~tmp.txt') _%>
 
 <%- include('./T03_include.ejs') %>
+
+<%- $.outfile('~tmp1.txt') _%>
+
+<%- include('./T03_include_1.ejs',{arg:this}) %>
