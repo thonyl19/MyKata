@@ -15,18 +15,12 @@ Src: {
         "UPDATE_USER": "mes",
         "UPDATE_DATE": "2020-10-30 14:13:41"
     },
-    toolbar: {
-        e_add:0,
-        e_del:0,
-        e_save:0,
-        //e_clear:0,
-        //Cfg:`fixed='top'`,
-    },  
-    grid_Src: 'grid.data',
-    Grp: {
-        name: "ddl_Route" ,
-        TriggerEvent: "TriggerEvent",
-        SyncFiled: "this.form.SID" ,
+    selectize: {
+        name: ddl_Route ,
+        v_model: this.form.SID ,
+        fn_query: query_EdcGrp ,
+        triggerEvent: triggerEvent ,
+        valChgMode: 1
     }
 } 
 --- |
@@ -34,10 +28,13 @@ Src: {
     //$.ext_ut.parseRow(Src);
     //$.render('_part.ejs', '~part.txt', {Src});
  
+    eval(include('_part.js'));
+    Src = part.parse(Src,$._);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- include('vue-selectize-dynquery',{Src}) +"\n"%>
-<%- include('Vue_Data',{Src}) +"\n"%> 
-<%- include('Vue_Computed',{Src}) +"\n"%> 
-<%- include('Vue_Watch',{Src}) +"\n"%> 
-<%- include('Vue_Methods',{Src}) +"\n"%> 
+<%# JSON.stringify(Src,null,4)%>
+<%# include('vue-selectize-dynquery',Src) +"\n"%>
+<%# include('Vue_Data',_Src) +"\n"%> 
+<%- include('Vue_Computed',Src) +"\n"%> 
+<%# include('Vue_Watch',_Src) +"\n"%> 
+<%# include('Vue_Methods',Src) +"\n"%> 

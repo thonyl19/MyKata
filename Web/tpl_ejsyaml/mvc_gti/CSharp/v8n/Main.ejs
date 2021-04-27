@@ -1,6 +1,5 @@
-﻿<%
-    Src.ut.fn_inc = include;
-_%>
+﻿<%-JSON.stringify(Src)%>
+
 using BLL.DataViews.Res;
 using BLL.InterFace;
 using FluentValidation;
@@ -16,15 +15,18 @@ namespace BLL.MES.FluentValidation
 	{
 		public <%= Src.TableName%>()
 		{	
-			<%_ Src.ut.echo_file('./~RuleFor.cs',(el)=>{ _%>
-			<%- el %><% }) %>
+			<%- include('RuleFor', {Src}).split('\n').join('\n\t\t\t'); %>
 		}
 
 		public static Result Check(mdl.<%= Src.TableName%> mainObj)
 		{
+			<%- include('isAdd', {Src}).split('\n').join('\n\t\t\t'); _%>
+			
 			var _v8n = new FluentValidation.<%=Src.TableName%>().Validate(mainObj);
 			var _result = Result.CheckFluentValidation(_v8n);
+		
 			return _result;
 		}
+
 	}
 }

@@ -26,4 +26,6 @@ Src: {
 _%>
 <%- $.outfile('~Code.txt') _%>
 <%- include('../gt_form.ejs',{Src}) %>
+<%- include('../form.ejs',{Src}) %>
+<%- include('../../piece/Vue_Data/i18n.ejs',{Src}) %>
 <%- include('Vue_Methods',{Src}) %>

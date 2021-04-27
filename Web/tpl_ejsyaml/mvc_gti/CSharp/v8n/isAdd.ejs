@@ -1,0 +1,11 @@
+﻿var SID = <%= Src.SID_Filed%>;
+var isAdd = string.IsNullOrEmpty(SID);
+if (!isAdd) {
+	//TOTO:
+	var OldRec = TableQueryService
+		.AD_ENCODE_FORMAT(SID, MDL.SearchKey.SID)
+		.FirstOrDefault()
+	var chk = Result.CheckOldRecord(SID);
+	if (!chk.Success) return chk;
+	ReturnData = chk.Data;
+}

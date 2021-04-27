@@ -1,0 +1,11 @@
+﻿/// <summary>
+/// 檢核 舊資料是否存在 
+/// </summary>
+/// <param name="SID"></param>
+/// <returns></returns>
+public static Result CheckOldRecord(string SID)
+{
+	return Result.CheckOldRecord(TableQueryService
+			.AD_ENCODE_FORMAT(SID, MDL.SearchKey.SID)
+			.FirstOrDefault());
+}

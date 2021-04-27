@@ -1,0 +1,8 @@
+<vue-selectize-dynquery v-model="<%=Src.dynSet.v_model%>" ref="<%=Src.name%>"
+    :options="<%=Src.name%>.src"
+    :selectize_ops="<%=Src.name%>.ops"
+    :icon_search_click="()=>{<%=Src.fn_query%>('%')}"
+    :fn_query="<%=Src.fn_query%>"
+    :auto_drowdown="true" 
+    render_sty="GTIMES"
+    />

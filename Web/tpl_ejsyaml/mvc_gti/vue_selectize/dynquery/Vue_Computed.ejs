@@ -1,0 +1,27 @@
+<%_ switch (Src.valChgMode) {
+    case 0:
+_%>c_<%=Src.name%>: {
+    get() {
+        return this.<%=Src.name%>.val;
+    },
+    set(val) {
+        this.<%=Src.name%>.val = val;
+        //this.<%=Src.triggerEvent%>(val);
+    }
+},<%_
+        break;
+    case 1:
+
+_%>c_<%=Src.name%>: {
+    get() {
+        return <%=Src.SyncFiled%>;
+    },
+    set(val) {
+        this.<%=Src.SyncFiled%> = val;
+        //this.<%=Src.triggerEvent%>(val);
+    }
+},<%_
+        break;
+    default:
+        break;
+}_%>

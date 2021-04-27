@@ -1,0 +1,40 @@
+﻿# input data
+Export: {
+    path: D:/A/Code/github/MyKata/MyKata_Web/Web/tpl_ejsyaml/mvc_gti/Controller/Basic/ ,
+    # name: ~test.cs 
+}
+Src: {
+    Areas: 'ADM',
+    FunctionName: "QcLevel",
+    RESOURCE_NAME: 'RESOURCE_NAME',
+    TableName: 'PF_ROUTE',
+    Prefix: 'RES.BLL.Face.',
+    CheckDataRule: "//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${TableName};",
+    SID_Filed: 'ROUTE_NO',
+    row: {
+        "ROUTE_SID": "GTI20101517555209104",
+        "ROUTE_NO": "C030-19",
+        "ROUTE": "单面阳极板（子流程）",
+        "ROUTE_CATEGORY": "R",
+        "DEFAULT_VERSION": 1,
+        "VERSION_DESCRIPTION": null,
+        "MAX_VERSION": 2,
+        "CREATE_USER": "mes",
+        "CREATE_DATE": "2020-10-15 17:56:21",
+        "UPDATE_USER": "mes",
+        "UPDATE_DATE": "2020-10-30 14:13:41"
+    },
+}
+--- |
+<%  $.isBig5 = true;
+    $.ext_ut.parseRow(Src);
+    $.render('_part.ejs', '~part.txt', {Src});
+    
+    Src.point = JSON.parse(include('_part.ejs',{Src}));
+
+    if (Export.name !=""){
+        $.render('Main.ejs', `${Export.path}${Export.name}` , {Src});
+    }
+_%>
+<%- $.outfile('~Code.cs') _%>
+<%- include('Main',{Src}) %>

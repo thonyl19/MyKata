@@ -1,0 +1,5 @@
+<% for(var item of Src.Fileds) { _%>
+RuleFor(x => x.<%= item.Name%>)
+    .NotEmpty()
+    .WithName(<%= Src.Prefix%><%= item.Name%>);
+<%_ } _%>
