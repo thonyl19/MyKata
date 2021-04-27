@@ -1,9 +1,9 @@
 ﻿# input data
-args: string PARTNO_SID
-key: PARTNO_SID
+args: string ROUTE_VER_SID
+key: ROUTE_VER_SID
 UI: ddl_Route
-funName: GetPartRouteData
-jsName: GetPartRouteData
+funName: GetRouteOperData
+jsName: GetRouteOperData
 isPost: false 
 --- |
 <%- $.outfile('~Code.txt') _%>

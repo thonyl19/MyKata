@@ -7,10 +7,10 @@
 	var _path = "C:/Users/thony/.vscode/extensions/dirty49374.ejs-gen-0.0.23/out/ejsgen/";
 	var _name = 'generator.js';
     this.render(_name, `${_path}${_name}`, this.data);
-    this.render(_name, `${_path}ext_ut.ejs`);
+    this.render("ext_ut.ejs", `${_path}ext_ut.js`);
 
 	var _path1 = "D:/A/Code/github/MyKata/MyKata_Web/Web/node_modules/_test/";
-    this.render("ext_ut.js", `${_path1}ext_ut.js`);
+    this.render("ext_ut.js", `_ext_ut.js`);
 
     this.skip();
 _%>
