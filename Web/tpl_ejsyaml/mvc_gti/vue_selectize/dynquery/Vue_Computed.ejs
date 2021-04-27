@@ -1,11 +1,11 @@
-<%_ switch (Src.valChgMode) {
+<%_ switch (Src.mode.Computed) {
     case 0:
 _%>c_<%=Src.name%>: {
     get() {
-        return this.<%=Src.name%>.val;
+        return this.<%=Src.dynSet.v_model%>;
     },
     set(val) {
-        this.<%=Src.name%>.val = val;
+        this.<%=Src.dynSet.v_model%> = val;
         //this.<%=Src.triggerEvent%>(val);
     }
 },<%_
@@ -14,10 +14,10 @@ _%>c_<%=Src.name%>: {
 
 _%>c_<%=Src.name%>: {
     get() {
-        return <%=Src.SyncFiled%>;
+        return this.<%=Src.syncFiled%>;
     },
     set(val) {
-        this.<%=Src.SyncFiled%> = val;
+        this.<%=Src.syncFiled%> = val;
         //this.<%=Src.triggerEvent%>(val);
     }
 },<%_

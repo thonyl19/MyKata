@@ -17,10 +17,21 @@ Src: {
     },
     selectize: {
         name: ddl_Route ,
-        v_model: this.form.SID ,
+        syncFiled: form.SID ,
         fn_query: query_EdcGrp ,
-        triggerEvent: triggerEvent ,
-        valChgMode: 1
+        mode: {
+            # 0)basic 1)computed 2)syncFiled
+            v_model: 2 ,
+            # 0)dyn.model 1)syncFiled
+            Computed: 0 ,
+            # 0)dyn.model 1)syncFiled
+            Watch: 1 ,
+        },
+        triggerEvent: {
+            name: query_PartNo1 ,
+            #不能直接帶 @
+            url: Url.Action("SearchEDC")
+        }
     }
 } 
 --- |
@@ -32,9 +43,9 @@ Src: {
     Src = part.parse(Src,$._);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%# JSON.stringify(Src,null,4)%>
-<%# include('vue-selectize-dynquery',Src) +"\n"%>
-<%# include('Vue_Data',_Src) +"\n"%> 
+<%- JSON.stringify(Src,null,4)%>
+<%- include('vue-selectize-dynquery',Src) +"\n"%>
+<%- include('Vue_Data',Src) +"\n"%> 
 <%- include('Vue_Computed',Src) +"\n"%> 
-<%# include('Vue_Watch',_Src) +"\n"%> 
-<%# include('Vue_Methods',Src) +"\n"%> 
+<%- include('Vue_Watch',Src) +"\n"%> 
+<%- include('Vue_Methods',Src) +"\n"%> 

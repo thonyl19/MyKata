@@ -1,6 +1,6 @@
-query_PartNo(keyword, fn_cb = null) {
+<%=Src.triggerEvent.name %>(keyword, fn_cb = null) {
     var _self = this;
-    var url = '@Url.Action("SearchEDC")';
+    var url = `@<%-Src.triggerEvent.url %>`;
     var param = {keyword};
     var _ajax = {
         url,

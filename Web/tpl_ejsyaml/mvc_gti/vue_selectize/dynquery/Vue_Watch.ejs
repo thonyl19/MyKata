@@ -1,4 +1,16 @@
-'<%=Src.name%>.val'(val) {
-    <%=Src.SyncFiled%>;
+
+
+<%_ switch (Src.mode.Watch) {
+    case 0:
+_%>'<%=Src.name%>.val'(val) {
+    <%=Src.syncFiled?`this.${Src.syncFiled} = val;`:""%>;
     this.<%=Src.triggerEvent%>(val);
-},
+},<%_
+        break;
+    case 1:
+
+_%>'<%=Src.syncFiled%>'(val) {
+    this.<%=Src.triggerEvent%>(val);
+},<%_
+        break;
+}_%>
