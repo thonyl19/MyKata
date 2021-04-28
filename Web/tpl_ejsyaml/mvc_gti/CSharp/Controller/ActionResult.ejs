@@ -1,0 +1,18 @@
+<%=Src.API.isPost==null?"":"[HttpPost]"%>
+[HandlerAjaxOnly]
+[ValidateAntiForgeryToken]
+public ActionResult <%=Src.API.name%>(<%=Src.API.arg%>)
+{
+    IResult result;
+    try
+    {
+        result //= serv.<%=Src.API.name%>(entity);
+                = new Result(true) { Data = entity };
+        //_serv.UOW.Save();
+    }
+    catch (Exception ex)
+    {
+        result = new Result(ex.Message);
+    }
+    return Content(result.ToJson(true));
+}

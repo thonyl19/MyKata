@@ -6,7 +6,7 @@ _%>c_<%=Src.name%>: {
     },
     set(val) {
         this.<%=Src.dynSet.v_model%> = val;
-        //this.<%=Src.triggerEvent%>(val);
+        //this.<%=Src.triggerEvent.name%>(val);
     }
 },<%_
         break;
@@ -18,7 +18,7 @@ _%>c_<%=Src.name%>: {
     },
     set(val) {
         this.<%=Src.syncFiled%> = val;
-        //this.<%=Src.triggerEvent%>(val);
+        //this.<%=Src.triggerEvent.name%>(val);
     }
 },<%_
         break;

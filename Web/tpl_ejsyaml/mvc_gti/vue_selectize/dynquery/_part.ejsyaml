@@ -1,4 +1,5 @@
 ﻿# input data
+
 Src: {
     Prefix: '',
     SID: 'ROUTE_NO',
@@ -19,6 +20,12 @@ Src: {
         name: ddl_Route ,
         syncFiled: form.SID ,
         fn_query: query_EdcGrp ,
+        attr: {
+            auto_drowdown: true,
+            #render_sty: GTIMES ,
+            icon_search_click ,
+            #selectize_ops ,
+        },
         mode: {
             # 0)basic 1)computed 2)syncFiled
             v_model: 2 ,
@@ -30,14 +37,27 @@ Src: {
         triggerEvent: {
             name: query_PartNo1 ,
             #不能直接帶 @
-            url: Url.Action("SearchEDC")
+            url: Url.Action("SearchEDC") ,
+            FnArgs: keyword
         }
+    },
+    API: {
+        isPost ,
     }
 } 
 --- |
 <%  $.isBig5 = true;
     //$.ext_ut.parseRow(Src);
     //$.render('_part.ejs', '~part.txt', {Src});
+
+    var ops = {
+        labelField: 'VERSION',
+        valueField: 'EDC_VER_SID',
+        searchField: ['VERSION', 'EDC_VER_SID'],
+    }
+    if (Src.selectize.selectize_ops!=null){
+        $._.set(Src.selectize,'attr.selectize_ops',ops);
+    }
  
     eval(include('_part.js'));
     Src = part.parse(Src,$._);
@@ -49,3 +69,4 @@ _%>
 <%- include('Vue_Computed',Src) +"\n"%> 
 <%- include('Vue_Watch',Src) +"\n"%> 
 <%- include('Vue_Methods',Src) +"\n"%> 
+<%- include('../../CSharp/Controller/ActionResult',Src) +"\n"%> 

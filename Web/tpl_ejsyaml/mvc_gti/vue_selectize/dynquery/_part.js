@@ -1,6 +1,6 @@
 ﻿var part = {
 	parse(Src,_){
-		let {selectize} = Src;
+		let {selectize,API} = Src;
 		let dynSet = {};
 		switch(selectize.mode.v_model){
 			case 0://基本型
@@ -19,7 +19,10 @@
 				};
 				break;
 		}
+		API.name = selectize.triggerEvent.name;
+		API.arg = `string ${selectize.triggerEvent.FnArgs}`;
 		$._.set(selectize,"dynSet",dynSet);
+		$._.set(selectize,"API",API);
 		Src = {Src:selectize};
 		return Src;
 	}

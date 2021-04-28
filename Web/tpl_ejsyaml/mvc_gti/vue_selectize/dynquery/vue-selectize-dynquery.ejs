@@ -1,8 +1,25 @@
-<vue-selectize-dynquery v-model="<%=Src.dynSet.v_model%>" ref="<%=Src.name%>"
+<%
+    var arr = [];
+    Object.keys(Src.attr).map(key=>{
+        switch (key) {
+            case "selectize_ops":
+                arr.push(`:selectize_ops="${Src.name}.ops"`);
+                break;
+            case "render_sty":
+                arr.push(`render_sty="${Src.attr[key]}`);
+                break;
+            case "icon_search_click":
+                arr.push(`:icon_search_click="()=>{${Src.fn_query}('%')}"`);
+                break;
+            default:
+                arr.push(`:${key}="${Src.attr[key]}"`);
+                break;
+        }
+    })
+%>
+<vue-selectize-dynquery v-model="<%=Src.dynSet.v_model%>" 
+    ref="<%=Src.name%>"
     :options="<%=Src.name%>.src"
-    :selectize_ops="<%=Src.name%>.ops"
-    :icon_search_click="()=>{<%=Src.fn_query%>('%')}"
     :fn_query="<%=Src.fn_query%>"
-    :auto_drowdown="true" 
-    render_sty="GTIMES"
+    <%- arr.join('\n\t') %>
     />

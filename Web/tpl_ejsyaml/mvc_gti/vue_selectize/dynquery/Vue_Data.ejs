@@ -1,10 +1,18 @@
+<%
+    var arr = [];
+    Object.keys(Src.attr).map(key=>{
+        switch (key) {
+            case "selectize_ops":
+                var _arr = `ops:${JSON.stringify(Src.attr.selectize_ops,null,4)},`.split('\n');
+                arr = $._.concat(arr, _arr);
+                //arr.push('test');
+                break;
+        }
+    })
+%>
 <%=Src.name%>: {
     src: [],
     <%_ Src.mode.v_model==2?"":`val: "",`_%>
-    ops: {
-        labelField: 'VERSION',
-        valueField: 'EDC_VER_SID',
-        searchField: ['VERSION', 'EDC_VER_SID'],
-    }
+    <%- arr.join('\n\t') %>
     old: "",
 },
