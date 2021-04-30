@@ -723,7 +723,7 @@ const {ext_ut} = require('_test/ext_ut');
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
                 mark:false, 
-                Prefix:'',
+                I18nPrefix:'',
                 SID_Filed,
                 row,
                 Fileds:ops.parseFileds(row),
@@ -766,7 +766,7 @@ const {ext_ut} = require('_test/ext_ut');
             let {row} = _data;
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
-                Prefix:'',
+                I18nPrefix:'',
                 SID_Filed,
                 row,
                 Fileds:ops.parseFileds(row),
@@ -806,7 +806,7 @@ const {ext_ut} = require('_test/ext_ut');
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
                 RESOURCE_NAME:'RESOURCE_NAME',
-                Prefix:'',
+                I18nPrefix:'',
                 SID_Filed,
                 row,
                 ext_rule:{
@@ -915,7 +915,7 @@ const {ext_ut} = require('_test/ext_ut');
             var SID_Filed = 'ROUTE_SID'; 
             var arg = {
                 RESOURCE_NAME:'RESOURCE_NAME',
-                Prefix:'',
+                I18nPrefix:'',
                 SID_Filed,
                 row,
                 ext_rule:{
@@ -1007,7 +1007,7 @@ const {ext_ut} = require('_test/ext_ut');
             var Src = {
                 TableName:'PF_OPERATION_EDC',
                 RESOURCE_NAME:'RESOURCE_NAME',
-                Prefix:'RES.BLL.Face.',
+                I18nPrefix:'RES.BLL.Face.',
                 SID_Filed,
                 row,
                 Fileds:ops.parseFileds(row),
@@ -1041,7 +1041,7 @@ const {ext_ut} = require('_test/ext_ut');
                 FunctionName:"QcLevel",
                 RESOURCE_NAME:'RESOURCE_NAME',
                 TableName,
-                Prefix:'RES.BLL.Face.',
+                I18nPrefix:'RES.BLL.Face.',
                 CheckDataRule:`//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${TableName};`,
                 SID_Filed,
                 row,
@@ -1120,7 +1120,7 @@ const {ext_ut} = require('_test/ext_ut');
 
         async 'json_i18n'(){
             var arg = {
-                Prefix:'@Face.',
+                I18nPrefix:'@Face.',
                 row : _data.row
             } 
             var s = await ejs.renderFile(_file.json_i18n,arg );
@@ -1160,7 +1160,7 @@ const {ext_ut} = require('_test/ext_ut');
         },
         "parseRow"(){
             var _arg = {
-                Prefix:'@Face.',
+                I18nPrefix:'@Face.',
                 row:_data.row
             } 
             ops.parseRow (_arg);
@@ -1321,7 +1321,7 @@ const {ext_ut} = require('_test/ext_ut');
         async "el_table.PagerQuery"(){
             var Src ={
                 ut,
-                Prefix:'',
+                I18nPrefix:'',
                 SID:'ROUTE_NO',
                 row:_data.row,
             }
@@ -1334,7 +1334,7 @@ const {ext_ut} = require('_test/ext_ut');
         async "el_table.EditRow"(){
             var Src ={
                 ut,
-                Prefix:'',
+                I18nPrefix:'',
                 SID:'ROUTE_NO',
                 row:_data.row,
             }
@@ -1353,7 +1353,7 @@ const {ext_ut} = require('_test/ext_ut');
         async "Page.Basic.Grid"(){
             var Src ={
                 ut,
-                Prefix:'',
+                I18nPrefix:'',
                 SID:'ROUTE_NO',
                 row:_data.row,
                 toolbar:{
@@ -1400,7 +1400,7 @@ const {ext_ut} = require('_test/ext_ut');
         async "Page.Basic"(){
             var Src ={
                 ut,
-                Prefix:'',
+                I18nPrefix:'',
                 SID:'ROUTE_NO',
                 row:_data.row,
                 toolbar:{
@@ -1475,7 +1475,7 @@ const {ext_ut} = require('_test/ext_ut');
         },
         async 't_get_part'(){
             var Src ={
-                Prefix:'',
+                I18nPrefix:'',
                 SID:'ROUTE_NO',
                 row:_data.row,
                 toolbar:{
@@ -1498,7 +1498,7 @@ const {ext_ut} = require('_test/ext_ut');
         },
         async '*t_parsePoint'(){
             var Src ={
-                Prefix:'',
+                I18nPrefix:'',
                 SID:'ROUTE_NO',
                 row:_data.row,
                 toolbar:{

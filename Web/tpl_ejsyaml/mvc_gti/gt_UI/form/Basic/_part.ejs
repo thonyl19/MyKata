@@ -2,6 +2,7 @@
 	"Html_Code":<%- JSON.stringify(include('../gt_form', {Src})); %>,
 	"Vue_Data":<%- JSON.stringify(
 		[include('../form', {Src})
-		,include('../../piece/Vue_Data/i18n', {Src})]); %>
+		,include('../../../piece/Vue_Data/i18n', {Src})
+		]); %>
     "Vue_Methods":<%- JSON.stringify(include('Vue_Methods', {Src})); %>
 }<%#JSON.stringify(Src)%>

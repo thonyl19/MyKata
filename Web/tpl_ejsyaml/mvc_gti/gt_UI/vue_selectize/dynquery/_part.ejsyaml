@@ -1,7 +1,7 @@
 ﻿# input data
 
 Src: {
-    Prefix: '',
+    I18nPrefix: '',
     SID: 'ROUTE_NO',
     row: {
         "ROUTE_SID": "GTI20101517555209104",
@@ -42,7 +42,7 @@ Src: {
         }
     },
     API: {
-        isPost ,
+        isPost: 0  ,
     }
 } 
 --- |
@@ -65,8 +65,8 @@ _%>
 <%- $.outfile('~Code.txt') _%>
 <%- JSON.stringify(Src,null,4)%>
 <%- include('vue-selectize-dynquery',Src) +"\n"%>
-<%- include('Vue_Data',Src) +"\n"%> 
+<%- include('../Vue_Data',Src) +"\n"%> 
 <%- include('Vue_Computed',Src) +"\n"%> 
 <%- include('Vue_Watch',Src) +"\n"%> 
-<%- include('Vue_Methods',Src) +"\n"%> 
+<%- include('../Vue_Methods',Src) +"\n"%> 
 <%- include('../../CSharp/Controller/ActionResult',Src) +"\n"%> 

@@ -1,6 +1,6 @@
 ﻿# input data
 Src: {
-    Prefix:'',
+    I18nPrefix:'',
     SID:'ROUTE_NO',
     row:{
         "ROUTE_SID": "GTI20101517555209104",
@@ -29,8 +29,8 @@ Src: {
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
     Src.part = [
-        JSON.parse(include('../gt_toolbar/_part.ejs',{Src})),
-        JSON.parse(include('../el_table/Basic/_part.ejs',{Src})),
+        JSON.parse(include('../gt_UI/gt_toolbar/_part',{Src})),
+        JSON.parse(include('../el_UI/el_table/Basic/_part',{Src})),
     ]
     $.ext_ut.parsePoint(Src);
     $.render('Basic_v1.1.cshtml', '~Basic.cshtml', {Src});

@@ -105,7 +105,7 @@ ejs._ = _;
         async 'i18n_json'(){
             var arg = {
                 filed:_data.filed_1
-                ,Prefix: "@RES."
+                ,I18nPrefix: "@RES."
             }
             var s = await ejs.renderFile
                 ('./tpl/ejs/mvc/i18n_json.ejs'

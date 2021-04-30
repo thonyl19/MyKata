@@ -1,0 +1,5 @@
+﻿<el-radio-group v-model="<%=Src.v_model%>">
+	<%_ for (var el of Src.list){ _%>
+	<el-radio <%-Src.item_attr%> label="<%=el.label%>"><%-el.display%></el-radio>
+	<%_} _%>
+</el-radio-group>
