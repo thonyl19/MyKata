@@ -1,6 +1,6 @@
 ﻿# input data
 Src: {
-    Prefix: '@Face.',
+    I18nPrefix: '@Face.',
     SID: 'ROUTE_NO',
     row: {
         "ROUTE_VER_OPER_SID": "GTI21042310453920098",
@@ -41,5 +41,6 @@ _%>
 <%- $.outfile('~Code.txt') _%>
 <%- include('../el_table.ejs',{Src}) %>
 <%- include('Vue_Data',{Src}) %>
+<%- include('../../../piece/Vue_Data/i18n',{Src}) %>
 <%- include('Vue_Methods',{Src}) %>
  

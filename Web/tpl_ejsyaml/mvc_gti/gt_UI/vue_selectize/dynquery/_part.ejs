@@ -1,0 +1,9 @@
+<%_
+    eval(include('_part.js'));
+    Src = part.parse(Src,$._);
+_%>
+{
+	"Html_Code":<%- JSON.stringify(include('vue-selectize-dynquery', {Src})); %>,
+    "Vue_Data":<%- JSON.stringify(include('Vue_Data.ejs', {Src})); %>,
+    "Vue_Methods":<%- JSON.stringify(include('Vue_Methods.ejs', {Src})); %>
+}

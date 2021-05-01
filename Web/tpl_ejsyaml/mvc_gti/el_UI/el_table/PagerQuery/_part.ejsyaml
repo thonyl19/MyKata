@@ -1,6 +1,6 @@
 ﻿# input data
 Src: {
-    Prefix: '',
+    I18nPrefix: '',
     SID: 'ROUTE_NO',
     row: {
         "ROUTE_SID": "GTI20101517555209104",

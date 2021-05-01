@@ -1,7 +1,10 @@
 ﻿# input data
 Src: {
-    Prefix: '',
+    I18nPrefix: '',
     SID: 'ROUTE_NO',
+    Form: {
+        QueryUrl: test
+    },
     row: {
         "ROUTE_SID": "GTI20101517555209104",
         "ROUTE_NO": "C030-19",
@@ -15,14 +18,6 @@ Src: {
         "UPDATE_USER": "mes",
         "UPDATE_DATE": "2020-10-30 14:13:41"
     },
-    toolbar: {
-        e_add:0,
-        e_del:0,
-        e_save:0,
-        //e_clear:0,
-        //Cfg:`fixed='top'`,
-    },  
-    grid_Src: 'grid.data'
 } 
 --- |
 <%  $.isBig5 = true;
@@ -30,7 +25,8 @@ Src: {
     $.render('_part.ejs', '~part.txt', {Src});
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- include('el_table',{Src}) %>
-<%- include('Vue_Data') %>
+<%- JSON.stringify(Src,null,4)%>
+<%- include('../gt_form',{Src}) %>
+<%- include('../form',{Src}) %>
+<%- include('../../../piece/Vue_Data/i18n.ejs',{Src}) %>
 <%- include('Vue_Methods',{Src}) %>
- 

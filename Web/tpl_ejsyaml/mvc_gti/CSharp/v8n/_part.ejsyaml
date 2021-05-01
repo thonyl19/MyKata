@@ -8,7 +8,7 @@ Src: {
     FunctionName: QcLevel,
     RESOURCE_NAME: RESOURCE_NAME,
     TableName: PF_PARTNO_ROUTEVER_OPER_EDC,
-    Prefix: RES.BLL.Face.,
+    I18nPrefix: RES.BLL.Face.,
     CheckDataRule: "//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${TableName};",
     SID_Filed: 'ROUTE_NO',
     row: {

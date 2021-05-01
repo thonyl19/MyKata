@@ -483,7 +483,7 @@ var requirejs, require, define;
                      '';
 
             return {
-                prefix: prefix,
+                I18nPrefix: prefix,
                 name: normalizedName,
                 parentMap: parentModuleMap,
                 unnormalized: !!suffix,

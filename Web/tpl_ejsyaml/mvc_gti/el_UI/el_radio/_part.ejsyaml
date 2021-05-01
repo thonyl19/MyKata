@@ -1,0 +1,25 @@
+﻿# input data
+Src: {
+    I18nPrefix: i18n.,
+    el_radio_group: {
+        item_attr: class="x" ,
+        v_model: form.ENABLE_FLAG ,
+        list :[
+            T: Enable ,
+            F: Disable ,
+            All: AllStatus ,
+        ]
+    }
+} 
+--- |
+<%  $.isBig5 = true;
+    //$.ext_ut.parseRow(Src);
+    $.render('_part.ejs', '~part.txt', {Src});
+
+    eval(include('_part.js'));
+    Src = part.parse(Src,$._);
+
+_%>
+<%- $.outfile('~Code.txt') _%>  
+<%- JSON.stringify(Src,null,4)%>
+<%- include('el-radio-group',Src) %>

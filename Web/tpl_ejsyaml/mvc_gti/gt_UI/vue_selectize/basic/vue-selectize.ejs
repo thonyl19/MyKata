@@ -1,0 +1,24 @@
+<%
+    var arr = [];
+    Object.keys(Src.attr).map(key=>{
+        switch (key) {
+            case "selectize_ops":
+                arr.push(`:selectize_ops="${Src.name}.ops"`);
+                break;
+            case "render_sty":
+                arr.push(`render_sty="${Src.attr[key]}`);
+                break;
+            case "icon_search_click":
+                arr.push(`:icon_search_click="()=>{${Src.fn_query}('%')}"`);
+                break;
+            default:
+                arr.push(`:${key}="${Src.attr[key]}"`);
+                break;
+        }
+    })
+%>
+<vue-selectize v-model="<%=Src.dynSet.v_model%>" 
+    ref="<%=Src.name%>"
+    :options="<%=Src.name%>.src"
+    <%- arr.join('\n\t') %>
+    />

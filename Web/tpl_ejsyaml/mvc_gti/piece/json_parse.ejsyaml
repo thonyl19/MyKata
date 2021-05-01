@@ -1,5 +1,5 @@
 ﻿# input data
-Prefix: '@Face.'
+I18nPrefix: '@Face.'
 row: {
     "ROUTE_SID": "GTI20101517555209104",
     "ROUTE_NO": "C030-19",

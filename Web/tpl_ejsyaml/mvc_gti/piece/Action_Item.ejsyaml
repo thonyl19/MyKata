@@ -1,7 +1,7 @@
 ﻿# input data
 label: ENCODE_FORMAT_NO
 SID: ENCODE_NO
-Prefix: '@Face.'
+I18nPrefix: '@Face.'
 --- |
 <%- $.outfile('~tmp.cshtml') _%>
 <el-table-column    min-width="115" 
