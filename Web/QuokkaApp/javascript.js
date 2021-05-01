@@ -255,10 +255,20 @@ var fn = {
 		r.B = "test";
 		console.log(r.B);
 	},
+
+	"*?"(){
+		var x ={
+			A:{
+				A1:"x"
+			}
+		}
+		console.log(x.A.A1);
+		console.log(x.A?.['A2']||'X');
+	}
 };
 
 _.each(fn, (e, k) => {
-  if (k.substr(0, 1) == "_") {
+  if (k.substr(0, 1) == "*") {
     e();
   }
 });
