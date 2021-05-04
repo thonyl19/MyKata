@@ -412,7 +412,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             }
             return _obj;
         },
-        '*V-validation'() {
+        'V-validation'() {
             var _note = `
             https://hackmd.io/@paiLearningNote/r1mZ3FHzI#%E4%BA%94%E3%80%81%E4%BD%BF%E7%94%A8-Directive-%E9%96%8B%E7%99%BC%E8%87%AA%E5%B7%B1%E7%9A%84%E4%BA%92%E5%8B%95-UI
             `;
@@ -2101,8 +2101,34 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             };
             return _obj;
         },
-    }  
-    return  { API, Views, Props, rxjs, Fail ,Slot ,PlugIn , event }
+    } 
+    
+    var Case = {
+                '*vue_x'(){
+                    var _note = ``
+                    var _obj = {
+                        _note
+                        ,_css:``
+                        ,_vue:{
+                            template: `
+                                <div>
+                                </div>
+                            `,
+                            data() {
+                                return {
+                                    
+                                  };
+                            },
+                            mounted() { },
+                            methods: { }
+                        }
+        
+                    }
+                    return _obj;
+                },
+    }
+    
+    return  { API, Views, Props, rxjs, Fail ,Slot ,PlugIn , event ,Case }
 }
 
 

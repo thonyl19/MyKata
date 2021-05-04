@@ -1,7 +1,11 @@
 ﻿# input data
+Export: {
+    path: H:/SSMES_Dev/Genesis_MVC/Areas/Example/Views/Act/,
+    name: page~.cshtml
+}
 Src: {
-    I18nPrefix:'',
-    SID:'ROUTE_NO',
+    I18nPrefix: ,
+    SID: ROUTE_NO,
     row:{
         "ROUTE_SID": "GTI20101517555209104",
         "ROUTE_NO": "C030-19",
@@ -22,7 +26,7 @@ Src: {
         # e_clear: 0,
         # Cfg: `fixed='top'`,
     },  
-    grid_Src:'grid.data',
+    grid_Src: grid.data,
     
 }
 --- |
@@ -34,7 +38,10 @@ Src: {
     ]
     $.ext_ut.parsePoint(Src);
     $.render('Basic_v1.1.cshtml', '~Basic.cshtml', {Src});
-    $.skip();
+    $.render('Basic_v1.1.cshtml', `${Export.path}{Export.name}`, {Src});
+    //$.skip();
 _%>
+<%- $.outfile('~Code.txt') _%>
+<%- JSON.stringify(Src,null,4)%>
  
  

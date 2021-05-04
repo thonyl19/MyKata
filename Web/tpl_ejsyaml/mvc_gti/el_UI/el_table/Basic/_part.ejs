@@ -3,6 +3,6 @@
     "Vue_Data":<%- JSON.stringify(
         [include('Vue_Data', {Src})
         ,include('../../../piece/Vue_Data/i18n', {Src})
-    ]); %>,
+    ].join('\n')); %>,
     "Vue_Methods":<%- JSON.stringify(include('Vue_Methods.ejs', {Src})); %>
 }
