@@ -2,3 +2,6 @@
 	<%_ for (let el of names) { _%>
 	"<%= el %>":<%%- JSON.stringify(include('<%=el%>', {Src})); %%>,
 <%_ } _%>}
+<%- JSON.stringify($.data,null,4)%>
+<%- $._.isArray([])%>
+<%- include %>

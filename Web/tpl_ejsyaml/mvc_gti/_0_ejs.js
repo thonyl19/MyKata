@@ -10,257 +10,247 @@ const fs = require('fs');
 const {ext_ut} = require('_test/ext_ut');
 (async()=>{
     var ops = {
-        echo:{outputFunctionName:'echo' },
-        ts_BasePath:ext_ut.ts_BasePath,
-        parseRow:ext_ut.parseRow ,
-        _fn(data,cb){
-            var _arr = Array.isArray(data)
-                ?data
-                :data.split('\n')
-                ;
-            return _arr.map(cb);
-        },
-        save(data,filename="test.txt",isRelPath=true,isbig5=false){
-            var _fullPath = isRelPath
-                ? ops.ts_BasePath(filename)
-                : filename;
-            if (isbig5){
-                data = `\uFEFF${data}`;
+      echo: { outputFunctionName: "echo" },
+      ts_BasePath: ext_ut.ts_BasePath,
+      parseRow: ext_ut.parseRow,
+      _fn(data, cb) {
+        var _arr = Array.isArray(data) ? data : data.split("\n");
+        return _arr.map(cb);
+      },
+      save(data, filename = "test.txt", isRelPath = true, isbig5 = false) {
+        var _fullPath = isRelPath ? ops.ts_BasePath(filename) : filename;
+        if (isbig5) {
+          data = `\uFEFF${data}`;
+        }
+        fs.writeFileSync(`${_fullPath}`, data, "utf-8");
+      },
+      save_part(basePath, args) {
+        for (var item in args) {
+          var _s = args[item].join("\n");
+          var _n = `${basePath}${item}`;
+          _n;
+          ops.save(_s, `${basePath}${item}`);
+        }
+      },
+      async save_grp(basePath, grps, arg) {
+        for (var grp in grps) {
+          var items = grps[grp];
+          for (var idx in items) {
+            var _ejs = items[idx];
+            //items[idx] = await ejs.renderFile(_ejs, arg);``
+            items[idx] = await _ejs(arg);
+          }
+          var _FileName = `${basePath}${grp}`;
+          var _Code = items.join("\r\n");
+          ops.save(_Code, _FileName);
+        }
+      },
+      async parse_point(BaseArg, point) {
+        point;
+        var _code = [];
+        let { PART, PIECE, ut } = BaseArg;
+        _.forEach(PART, async (el, part) => {
+          part;
+          let arg = el[point];
+          console.log(arg);
+          if (arg != null) {
+            var _ejs = ops.ts_BasePath(`${part}/${point}.ejs`);
+            _ejs;
+            var _s = await ejs.renderFile(_ejs, { arg: { PART, ut } });
+            _s;
+            _code.push(_s);
+          }
+        });
+        let _grp = PIECE[point];
+        if (_grp != null) {
+          _grp.map(async (el) => {
+            var _s = await ejs.renderFile(el, { arg: BaseArg });
+            _code.push(_s);
+          });
+        }
+        return await _code;
+      },
+      async save_point(basePath, point, arg) {
+        for (var el in point) {
+          switch (el) {
+            case "Main":
+              break;
+            //case "Htm_Toolbar":
+            //case "Vue_Methods":
+            default:
+              var _code = point[el];
+              if (Array.isArray(_code)) {
+                _code = _code.join("\r\n");
+              }
+              var _file = `${basePath}~${el}.txt`;
+              _file;
+              ops.save(_code, _file, false);
+              break;
+          }
+        }
+      },
+      save_point1(basePath, point) {
+        let { list, part } = point;
+        list;
+        for (var el in list) {
+          el;
+          var isArray = list[el];
+          var _code = isArray ? list[el] : [];
+          for (var item in part) {
+            item;
+            var _subCode = part[item][el];
+            if (_subCode != null) {
+              _code.push(_subCode);
             }
-            fs.writeFileSync(`${_fullPath}`,data,'utf-8');
-        },
-        save_part(basePath,args){
-            for(var item in args){
-                var _s = args[item].join('\n');
-                var _n = `${basePath}${item}`;
-                _n
-                ops.save(_s,`${basePath}${item}`);
-            }
-        },
-        async save_grp(basePath,grps,arg){
-            for(var grp in grps){
-                var items = grps[grp];
-                for(var idx in items){
-                    var _ejs = items[idx];
-                    //items[idx] = await ejs.renderFile(_ejs, arg);``
-                    items[idx] = await _ejs(arg);
-                }
-                var _FileName = `${basePath}${grp}`;
-                var _Code = items.join('\r\n');
-                ops.save(_Code,_FileName);
-            }
-        },
-        async parse_point(BaseArg,point){
-            point
-            var _code = [];
-            let {PART,PIECE,ut} = BaseArg;
-            _.forEach(PART,async (el,part)=>{
-                part
-                let arg = el[point];
-                console.log(arg)
-                if (arg!=null){
-                    var _ejs = ops.ts_BasePath(`${part}/${point}.ejs`);
-                    _ejs
-                    var _s = await ejs.renderFile( _ejs , {arg:{PART ,ut}});
-                    _s
-                    _code.push(_s);
-                }
-            })
-            let _grp = PIECE[point]; 
-            if (_grp!=null){
-                _grp.map(async(el)=>{
-                    var _s = await ejs.renderFile( el ,{arg:BaseArg});
-                    _code.push(_s);
-                })
-            }
-            return await _code;
-        },
-        async save_point(basePath,point,arg){
-            for(var el in point){
-                switch(el){
-                    case "Main": 
-                        break;
-                    //case "Htm_Toolbar":
-                    //case "Vue_Methods":
-                    default:
-                        var _code = point[el];
-                        if (Array.isArray(_code)){
-                            _code = _code.join('\r\n');
-                        }
-                        var _file = `${basePath}~${el}.txt`;
-                        _file
-                        ops.save(_code,_file,false); 
-                        break;
-                }
-            }
-        },
-        save_point1(basePath,point){
-            let {list,part} = point;
-            list
-            for(var el in list){
-                el
-                var isArray = list[el];
-                var _code 
-                    = isArray
-                    ? list[el]
-                    : [];
-                for (var item in part){
-                    item
-                    var _subCode = part[item][el];
-                    if (_subCode!=null){
-                        _code.push(_subCode);
-                    } 
-                }
-                _code
-                var _file = `${basePath}~${el}.txt`;
-                _file
-                ops.save(_code.join('\r\n'),_file,false); 
-            }
-        },
-        ejs(fileName,ext="ejs"){``
-            return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`
-        },
-        ejs_fn(fileName,ext){``
-            ext = _.isNumber(ext)
-                ?'ejs'
-                :ext;
-            return async(arg)=>{
-                var _ejs =  `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`;
-                return await ejs.renderFile(_ejs,arg);
-            } 
-        },
-        testJson(data,filename="~test.json"){
-            var s = JSON.stringify(data,null,4);  
-            ops.save(s,filename); 
-            return s;
-        },
-        parseFileds(row){
-            var fileds = [];
-            for(var label in row){
-                var val = row[label];
-                var JS = typeof(val);
-            
-                switch(JS){
-                    case "object":
-                        if (val === null){
-                            JS = 'string';
-                        } else  if (Array.isArray(val)){
-                            JS = 'array';
-                        }
-                        break;
-                    case "string":
-                        if (moment(val).isValid()){
-                            JS = "date";
-                        }
-                        break;
-                    case "number":
-                        JS =_.isInteger(val)
-                            ?"int"
-                            :"float" 
-                        break;
-                    default:
-                        break;
-                }
-                var arg = {
-                    label
-                    ,val
-                    ,"map_type":{
-                        JS,
-                        csharp:ext_ut.map_csharpType[JS]
-                    }
-                }
-                fileds.push(arg);
-            }
-            return fileds;
-        },
-        
-        parseFile(args,path=""){
-                for (var _name in args){
-                    var _val = args[_name];
-                var _pathName = `${path}${_name}`;
-                var _fnName = `${path}${_name}`;
-                if (_.isPlainObject(_val)){
-                    ops.parseFile(args[_name] ,`${_pathName}/`);
-                }else{
-                    args[_name] = ops.ejs_fn(_pathName,_val);
-                }
-            }
-        },
-        parse_ext_rule(filed ,rule){
-            return [];
-        },
-        async parse_toolbar(arg){
-            let {toolbar = {}} = arg; 
-            var html_toolbar = [];
-            var html_fun = "";
-            var vue_computed = {};
-            await _.each(toolbar,async(val,key)=>{
-                switch(key){
-                    default:
-                        var fun = `${key}`;
-                        if (val=="1"){
-                            fun = `v_${key.substr(2)}`;
-                            vue_computed[fun]=key;
-                            //vue_computed.push({key,fun});
-                        } 
-                        html_fun += `:${key}="${fun}" `;
-                        break;
-                }
-            })
+          }
+          _code;
+          var _file = `${basePath}~${el}.txt`;
+          _file;
+          ops.save(_code.join("\r\n"), _file, false);
+        }
+      },
+      ejs(fileName, ext = "ejs") {
+        ``;
+        return `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`;
+      },
+      ejs_fn(fileName, ext) {
+        ``;
+        ext = _.isNumber(ext) ? "ejs" : ext;
+        return async (arg) => {
+          var _ejs = `./tpl_ejsyaml/mvc_gti/${fileName}.${ext}`;
+          return await ejs.renderFile(_ejs, arg);
+        };
+      },
+      testJson(data, filename = "~test.json") {
+        var s = JSON.stringify(data, null, 4);
+        ops.save(s, filename);
+        return s;
+      },
+      parseFileds(row) {
+        var fileds = [];
+        for (var label in row) {
+          var val = row[label];
+          var JS = typeof val;
 
-            html_toolbar.push(html_fun);
-            var  ENABLE_FLAG = _.get(arg,"ext_mode.ENABLE_FLAG");
-            ENABLE_FLAG
-            if (ENABLE_FLAG){
-                html_toolbar.push(`:enable.sync="ENABLE_FLAG" `);
-            }
-            _.set(arg, 'html.toolbar', html_toolbar);
-            _.set(arg, 'vue.computed.toolbar', vue_computed);
-        },
-        parse_gt_toolbar(Src){
-            let {toolbar = {}} = Src; 
-            var html_fun ="",
-                Htm_Toolbar=[],
-                Vue_Computed=[],
-                Vue_Methods=[];
-            _.each(toolbar,(val,key)=>{
-                val
-                switch(key){
-                    default:
-                        Vue_Methods.push(key);
-                        var fun = `${key}`;
-                        fun
-                        if (val=="1"){
-                            fun = `v_${key.substr(2)}`;
-                            Vue_Computed.push(key);
-                        } 
-                        html_fun += `:${key}="${fun}" `;
-                        break;
-                }
-            })
-            Htm_Toolbar.push(html_fun); 
-            var  ENABLE_FLAG = _.get(Src,"ext_mode.ENABLE_FLAG");
-            ENABLE_FLAG
-            if (ENABLE_FLAG){
-                Htm_Toolbar.push(`:enable.sync="ctr_ENABLE.val" `);
-                ops.parse_ENABLE_FLAG(Src);
-            }
-            var gt_toolbar = { 
-                Htm_Toolbar,
-                Vue_Computed, 
-                Vue_Methods
-            };
-            _.set(Src, 'gt_toolbar', gt_toolbar);
-        },
-        parse_ENABLE_FLAG(arg){
-            var cfg = {
-                Vue_Data:[],
-                Vue_Watch:[],
-                Vue_Methods:[]
-            };
-           _.set(arg,"PART.ENABLE_FLAG",cfg);
-        },
-    }
+          switch (JS) {
+            case "object":
+              if (val === null) {
+                JS = "string";
+              } else if (Array.isArray(val)) {
+                JS = "array";
+              }
+              break;
+            case "string":
+              if (moment(val).isValid()) {
+                JS = "date";
+              }
+              break;
+            case "number":
+              JS = _.isInteger(val) ? "int" : "float";
+              break;
+            default:
+              break;
+          }
+          var arg = {
+            label,
+            val,
+            map_type: {
+              JS,
+              csharp: ext_ut.map_csharpType[JS],
+            },
+          };
+          fileds.push(arg);
+        }
+        return fileds;
+      },
+
+      parseFile(args, path = "") {
+        for (var _name in args) {
+          var _val = args[_name];
+          var _pathName = `${path}${_name}`;
+          var _fnName = `${path}${_name}`;
+          if (_.isPlainObject(_val)) {
+            ops.parseFile(args[_name], `${_pathName}/`);
+          } else {
+            args[_name] = ops.ejs_fn(_pathName, _val);
+          }
+        }
+      },
+      parse_ext_rule(filed, rule) {
+        return [];
+      },
+      async parse_toolbar(arg) {
+        let { toolbar = {} } = arg;
+        var html_toolbar = [];
+        var html_fun = "";
+        var vue_computed = {};
+        await _.each(toolbar, async (val, key) => {
+          switch (key) {
+            default:
+              var fun = `${key}`;
+              if (val == "1") {
+                fun = `v_${key.substr(2)}`;
+                vue_computed[fun] = key;
+                //vue_computed.push({key,fun});
+              }
+              html_fun += `:${key}="${fun}" `;
+              break;
+          }
+        });
+
+        html_toolbar.push(html_fun);
+        var ENABLE_FLAG = _.get(arg, "ext_mode.ENABLE_FLAG");
+        ENABLE_FLAG;
+        if (ENABLE_FLAG) {
+          html_toolbar.push(`:enable.sync="ENABLE_FLAG" `);
+        }
+        _.set(arg, "html.toolbar", html_toolbar);
+        _.set(arg, "vue.computed.toolbar", vue_computed);
+      },
+      parse_gt_toolbar(Src) {
+        let { toolbar = {} } = Src;
+        var html_fun = "",
+          Htm_Toolbar = [],
+          Vue_Computed = [],
+          Vue_Methods = [];
+        _.each(toolbar, (val, key) => {
+          val;
+          switch (key) {
+            default:
+              Vue_Methods.push(key);
+              var fun = `${key}`;
+              fun;
+              if (val == "1") {
+                fun = `v_${key.substr(2)}`;
+                Vue_Computed.push(key);
+              }
+              html_fun += `:${key}="${fun}" `;
+              break;
+          }
+        });
+        Htm_Toolbar.push(html_fun);
+        var ENABLE_FLAG = _.get(Src, "ext_mode.ENABLE_FLAG");
+        ENABLE_FLAG;
+        if (ENABLE_FLAG) {
+          Htm_Toolbar.push(`:enable.sync="ctr_ENABLE.val" `);
+          ops.parse_ENABLE_FLAG(Src);
+        }
+        var gt_toolbar = {
+          Htm_Toolbar,
+          Vue_Computed,
+          Vue_Methods,
+        };
+        _.set(Src, "gt_toolbar", gt_toolbar);
+      },
+      parse_ENABLE_FLAG(arg) {
+        var cfg = {
+          Vue_Data: [],
+          Vue_Watch: [],
+          Vue_Methods: [],
+        };
+        _.set(arg, "PART.ENABLE_FLAG", cfg);
+      },
+    };
     var ut = {
         _,
         echo(data,cb){
@@ -979,7 +969,7 @@ const {ext_ut} = require('_test/ext_ut');
             // var s = await ejs.renderFile(_file.form.Base.Form, arg );
             // ops.save(s,"form/Base/~tmp.cshtml"); 
         },
-        async '*v8n-OK'(){
+        async 'v8n-OK'(){
             let {_fn} = ops;
             //let {row} = _data;
             var row = {
@@ -1496,7 +1486,7 @@ const {ext_ut} = require('_test/ext_ut');
             ops.testJson(Src);
             Src
         },
-        async '*t_parsePoint'(){
+        async 't_parsePoint'(){
             var Src ={
                 I18nPrefix:'',
                 SID:'ROUTE_NO',
@@ -1520,6 +1510,16 @@ const {ext_ut} = require('_test/ext_ut');
             _mvc_gti.gt_toolbar(Src);
             ext_ut.parsePoint(Src);
             ops.testJson(Src);
+        },
+        async '*x'(){
+            var s = `	##Htm_Code
+            <div Area-Main class="panel b">`;
+            let x = s.match(/(|\t)##(.)+/g);
+            x.map(el=>{
+                var z = el.split('\t');
+                z
+            })
+
         }
     }
 

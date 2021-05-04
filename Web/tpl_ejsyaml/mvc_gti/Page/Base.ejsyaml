@@ -27,21 +27,27 @@ Src: {
         # Cfg: `fixed='top'`,
     },  
     grid_Src: grid.data,
-    
+    part:[ 
+        #gt_UI/gt_toolbar/_part,
+        el_UI/el_table/Basic/_part
+    ],
+    Inject: {
+        Target ,
+        # BackUp 有開啟,就自動支援 ReTry 模式
+        BackUp
+    }
 }
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
-    Src.part = [
-        JSON.parse(include('../gt_UI/gt_toolbar/_part',{Src})),
-        JSON.parse(include('../el_UI/el_table/Basic/_part',{Src})),
-    ]
-    $.ext_ut.parsePoint(Src);
+
+    eval(include('_part.js'));
+    Src = part.parsePoint(include,$,Src);
+
     $.render('Basic_v1.1.cshtml', '~Basic.cshtml', {Src});
     $.render('Basic_v1.1.cshtml', `${Export.path}{Export.name}`, {Src});
     //$.skip();
 _%>
 <%- $.outfile('~Code.txt') _%>
 <%- JSON.stringify(Src,null,4)%>
- 
  

@@ -144,7 +144,13 @@ var ext_ut = {
 		_.set(Src,'point',point);
 		return Src;
 	},
-
+	chkDirPath(DirPath,autoMK = true){
+		let chk_Path = fs.existsSync(DirPath);
+		if (!chk_Path && autoMK){ 
+			fs.mkdirSync(DirPath);
+		}
+		return chk_Path;		
+	},
 	async ssplit(Cfg){
 		var _tpl = (key)=>{ return `{{tpl}}`};
 		let chk_Path = fs.existsSync(Cfg.ExpPath);
@@ -171,9 +177,6 @@ var ext_ut = {
 		ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
 		ext_ut.writeFile(_cfg,`${Cfg.ExpPath}~Cfg.json`);
 	},
-	testJson(json){
-		
-	}
 }
 
 module.exports = {ext_ut}
