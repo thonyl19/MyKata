@@ -1,0 +1,200 @@
+                e_load() {
+                    var _self = this;
+                    _self.edcData = [];
+                    var param = this.form;
+                    var url
+                        = '@Url.Action("LoadEDC")';
+
+                    console.log(JSON.stringify(param));
+                    //= this.$URL.chg_Path(`api/ddl/${this.action}`,param);
+                    var _ajax = {
+                        url,
+                        type: 'post',
+                        param,
+                        //TODO:
+                        success(data) {
+                            if (data == null) return;
+                            let { Data} = data;
+                            if (Data != null ) {
+                                _self.Loading = true;
+                                let { EdcData=[], ddl_EdcGrp, ddl_EDC_Ver, EDC_SID = "", EDC_VER_SID} = Data;
+                                _self.edcData = EdcData;
+                                _self.$refs.ddl_EdcGrp.bind_options(ddl_EdcGrp, false);
+                                if (_self.edcData.lenght != 0) {
+                                    _self.$refs.ddl_EDC_Ver.bind_options(ddl_EDC_Ver, false);
+                                    _self.ddl_EdcGrp.val = EDC_SID;
+                                    _self.ddl_EDC_Ver.val = EDC_VER_SID;
+                                }
+                                Vue.nextTick(() => {
+                                    _self.Loading = false;
+                                })
+                            }
+                        }
+                    };
+                    $.submitForm(_ajax);
+                },　
+
+                e_save() {
+                    var _self = this;
+
+                    var param = {
+                        form:  this.form,
+                        Edc_List: this.edcData,
+                    };
+                    var url = `@Url.Action("SaveEDC")`;
+                    var _ajax = {
+                        url,
+                        type: 'post',
+                        param,
+                        success(res) {
+                            let { Success, Data, Message } = res;
+                            if (Success) {
+                                _self.$Alert.Success('@RES.BLL.Message.SaveSuccessful');
+                                _self.is_change = false;
+                            } else {
+                                _self.$Alert.Err(Message);
+                            }
+                        }
+                    };
+                    $.submitForm(_ajax);
+                },
+                e_del() {
+                    var _self = this;
+                    var param = {
+                        form:  this.form,
+                    };
+                    var url = `@Url.Action("DelEDC")`;
+                    var _ajax = {
+                        url,
+                        type: 'post',
+                        param,
+                        success(res) {
+                            let { Success, Data, Message } = res;
+                            if (Success) {
+                                _self.$Alert.Success('@RES.BLL.Message.DeleteSuccessfulmsg');
+                            } else {
+                                _self.$Alert.Err(Message);
+                            }
+                        }
+                    };
+                    $.submitForm(_ajax);
+                },
+
+
+                bind_ddl_EDC_Ver(Vers) {
+                    if (Vers != null) {
+                        var _def = _.find(Vers, { "DEFAULT_FLAG": "T" });
+                        this.ddl_EDC_Ver.src = Vers;
+                        if (_def != null) {
+                            this.ddl_EDC_Ver.val = _def.EDC_VER_SID;
+                        }
+                    }
+                },
+                confirm_ChgEdc(target = 0, old_val, cb_fn = () => { }) {
+                    var _self = this;
+                    var _arg = _self.$Alert.genConfirm();
+                    this.$confirm(_self.i18n.msg_ChgEDC, '提示', _arg).then((val) => {
+                        _self.isNewEdc = true;
+                        _self.is_change = true;
+                        _self.edcData = [];
+                        if (target == 0) {
+                            _self.ddl_EdcGrp.old
+                                = _self.ddl_EDC_Ver.old
+                                = null;
+                            _self.ddl_EDC_Ver.val = "";
+                            _self.ddl_EDC_Ver.src = [];
+                        }
+                        cb_fn();
+                    }).catch(() => {
+                        switch (target) {
+                            case 0:
+                                _self.ddl_EdcGrp.old
+                                    = _self.ddl_EdcGrp.val
+                                    = old_val;
+                                break;
+                            case 1:
+                                _self.ddl_EDC_Ver.old
+                                    = _self.ddl_EDC_Ver.val
+                                    = old_val;
+                                break;
+                        }
+                    })
+                },
+                chk_ResetEvent(ddl_obj, _new) {
+                    var isNoDataAndToSpace = this.isEdcDataEmpty && _new == "";
+                    var isResetToOld = ddl_obj.old == _new;
+                    return isNoDataAndToSpace || isResetToOld;
+                },
+                query_EdcGrp(keyword, fn_cb = null) {
+                    var _self = this;
+	                var url = '@Url.Action("SearchEDC")';
+                    var param = {keyword};
+                    var _ajax = {
+                        url,
+                        param,
+                        success(data) {
+                            if (data == null) return;
+                            let { Data = [] } = data;
+                            if (Data == null || Data.length == 0) {
+                                _self.$Alert.msg_NoData();
+                            } else {
+                                _self.ddl_EdcGrp.src = Data;
+                                if (fn_cb != null) {
+                                    fn_cb(Data);
+                                }
+                            }
+                        }
+                    };
+	                $.submitForm(_ajax);
+                },　
+                query_EdcVer(EDC_SID, fn_cb = null) {
+                    var _self = this;
+                    var url = '@Url.Action("GetEDCVerByEDC_SID")';
+                    var param = { EDC_SID };
+                    var _ajax = {
+                        url,
+                        param,
+                        success(data) {
+                            if (data == null) return;
+                            let { Data = [] } = data;
+                            if (Data == null || Data.length == 0) {
+                                _self.ddl_EDC_Ver.src = [];
+                                _self.$Alert.msg_NoData();
+                            } else {
+                                _self.bind_ddl_EDC_Ver(Data);
+                                if (fn_cb != null) {
+                                    fn_cb(Data);
+                                }
+                            }
+                        }
+	                };
+	                $.submitForm(_ajax);
+                },
+
+                GetEDC_Info(EDC_VER_SID, fn_cb = null) {
+                    var _self = this;
+                    var url = '@Url.Action("GetEDC_Info" )';
+                    var param = { EDC_VER_SID };
+                    var _ajax = {
+                        url,
+                        param,
+		                //TODO:
+                        success(data) {
+                            debugger
+                            if (data == null) return;
+                            let { Data = [] } = data;
+                            if (Data.length == 0) {
+                                _self.$Alert.msg_NoData();
+                            } else {
+                                if (_self.edcData.length == 0) {
+                                    _self.is_change = true;
+                                }
+                                _self.edcData = Data;
+                                if (fn_cb != null) {
+                                    fn_cb(Data);
+                                }
+                            }
+                        }
+                    };
+	                $.submitForm(_ajax);
+                },

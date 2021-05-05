@@ -1,7 +1,7 @@
 <%
     eval(include('_part.js'));
-    Src = part.parse(Src,$._);
-%>
+    _src = part.parse(Src);
+%><%# JSON.stringify(Src,null,4)%>
 {
-	"Html_Code":<%- JSON.stringify(include('el-radio-group', Src)); %>,
+	"Html_Code":<%- JSON.stringify(include('el-radio-group', _src)); %>,
 }

@@ -1,0 +1,47 @@
+                edcData: {
+                    get() {
+                        let { edcData } = this.value;
+                        if (edcData == null) {
+                            edcData = [];
+                            this.$set(this.value, 'edcData', edcData);
+                        }
+                        return this.value.edcData;
+                    },
+                    set(val) {
+                        this.value.edcData = val;
+                        //this.c_val = this.value;
+                    }
+                },
+                isEdcDataEmpty() {
+                    return this.edcData.length == 0;
+                },
+                v_save() {
+                    let { e_save } = this.$attrs;
+                    var visable = e_save == null;
+                    var fn = _.isFunction(e_save)
+                        ? e_save
+                        : this.e_save;
+                    if (_.isString(e_save)) {
+                        this.dyn_url.save = e_save;
+                    }
+                    return {
+                        visable,
+                        enable:true,
+                        fn,
+        	        }
+                },
+                v_del() {
+                    let { e_save } = this.$attrs;
+                    var visable = e_save == null;
+                    var fn = _.isFunction(e_save)
+                        ? e_save
+                        : this.e_save;
+                    if (_.isString(e_save)) {
+                        this.dyn_url.save = e_save;
+                    }
+                    return {
+                        visable,
+                        enable: true,
+                        fn,
+                    }
+                },

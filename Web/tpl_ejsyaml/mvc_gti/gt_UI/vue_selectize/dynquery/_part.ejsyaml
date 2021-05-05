@@ -3,41 +3,28 @@
 Src: {
     I18nPrefix: '',
     SID: 'ROUTE_NO',
-    row: {
-        "ROUTE_SID": "GTI20101517555209104",
-        "ROUTE_NO": "C030-19",
-        "ROUTE": "单面阳极板（子流程）",
-        "ROUTE_CATEGORY": "R",
-        "DEFAULT_VERSION": 1,
-        "VERSION_DESCRIPTION": null,
-        "MAX_VERSION": 2,
-        "CREATE_USER": "mes",
-        "CREATE_DATE": "2020-10-15 17:56:21",
-        "UPDATE_USER": "mes",
-        "UPDATE_DATE": "2020-10-30 14:13:41"
-    },
     selectize: {
-        name: ddl_Route ,
-        syncFiled: form.SID ,
-        fn_query: query_EdcGrp ,
+        name: ddl_PartNo ,
+        # syncFiled: form.SID ,
+        fn_query: query_PartNo ,
         attr: {
             auto_drowdown: true,
             #render_sty: GTIMES ,
-            icon_search_click ,
+            #icon_search_click ,
             #selectize_ops ,
         },
         mode: {
             # 0)basic 1)computed 2)syncFiled
-            v_model: 2 ,
+            v_model: 0 ,
             # 0)dyn.model 1)syncFiled
             Computed: 0 ,
             # 0)dyn.model 1)syncFiled
             Watch: 1 ,
         },
         triggerEvent: {
-            name: query_PartNo1 ,
+            name: query_PartNo ,
             #不能直接帶 @
-            url: Url.Action("SearchEDC") ,
+            url: Url.Action("SearchPartNo") ,
             FnArgs: keyword
         }
     },
@@ -63,10 +50,11 @@ Src: {
     Src = part.parse(Src,$._);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- JSON.stringify(Src,null,4)%>
 <%- include('vue-selectize-dynquery',Src) +"\n"%>
 <%- include('../Vue_Data',Src) +"\n"%> 
 <%- include('Vue_Computed',Src) +"\n"%> 
 <%- include('Vue_Watch',Src) +"\n"%> 
 <%- include('../Vue_Methods',Src) +"\n"%> 
-<%- include('../../CSharp/Controller/ActionResult',Src) +"\n"%> 
+<%- include('../../../CSharp/Controller/ActionResult',Src) +"\n"%> 
+<%- JSON.stringify(Src,null,4)%>
+

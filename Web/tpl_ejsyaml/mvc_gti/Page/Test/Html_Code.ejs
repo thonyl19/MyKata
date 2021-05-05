@@ -1,0 +1,21 @@
+    <div class="gt-func-operedcinfo">
+        <gt-toolbar :e_save="v_save" :e_del="v_del" :bg_color="false" :is_change.sync="is_change"
+                    ></gt-toolbar>
+        <div class="form-horizontal gt-form">
+            <gt-form-col label="@RES.BLL.Face.EDCNO_EDC">
+                <vue-selectize-dynquery v-model="ddl_EdcGrp.val" ref="ddl_EdcGrp"
+                                        :options="ddl_EdcGrp.src"
+                                        :selectize_ops="ddl_EdcGrp.ops"
+                                        :icon_search_click="()=>{query_EdcGrp('%')}"
+                                        :fn_query="query_EdcGrp"
+                                        :auto_drowdown="true" />
+            </gt-form-col>
+            <gt-form-col label="@RES.BLL.Face.Version">
+                <vue-selectize v-model="ddl_EDC_Ver.val" ref="ddl_EDC_Ver"
+                                :selectize_ops="ddl_EDC_Ver.ops"
+                                :options="ddl_EDC_Ver.src"
+                                render_sty="GTIMES_VER" />
+            </gt-form-col>
+        </div> 
+        <gt-edc-grid v-model="edcData"  :is_change.sync="is_change" />
+    </div>

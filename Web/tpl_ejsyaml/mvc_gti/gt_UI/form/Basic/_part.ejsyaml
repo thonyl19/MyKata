@@ -1,22 +1,14 @@
 ﻿# input data
 Src: {
-    I18nPrefix: '',
+    I18nPrefix: i18n.,
     SID: 'ROUTE_NO',
     Form: {
         QueryUrl: test
     },
     row: {
-        "ROUTE_SID": "GTI20101517555209104",
-        "ROUTE_NO": "C030-19",
-        "ROUTE": "单面阳极板（子流程）",
-        "ROUTE_CATEGORY": "R",
-        "DEFAULT_VERSION": 1,
-        "VERSION_DESCRIPTION": null,
-        "MAX_VERSION": 2,
-        "CREATE_USER": "mes",
-        "CREATE_DATE": "2020-10-15 17:56:21",
-        "UPDATE_USER": "mes",
-        "UPDATE_DATE": "2020-10-30 14:13:41"
+        "CONFIG_FLAG": "GTI20101517555209104",
+        "PARTNO": "C030-19",
+        "USE_RATE": "单面阳极板（子流程）",
     },
 } 
 --- |

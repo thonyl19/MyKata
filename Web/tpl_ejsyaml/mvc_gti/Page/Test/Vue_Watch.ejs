@@ -1,0 +1,27 @@
+                'ddl_EdcGrp.val'(_new, _old) {
+                    var _self = this;
+                    if (_self.Loading) return;
+                    var isResetEvent = _self.chk_ResetEvent(_self.ddl_EdcGrp, _new);
+                    if (isResetEvent) return;
+                    if (_self.isEdcDataEmpty) {
+                        _self.query_EdcVer(_new);
+                    } else {
+                        this.confirm_ChgEdc(0, _old, () => {
+                            _self.query_EdcVer(_new);
+                        })
+                    }
+                },
+                'ddl_EDC_Ver.val'(_new, _old) {
+                    var _self = this;
+                    if (_self.Loading) return;
+
+                    var isResetEvent = _self.chk_ResetEvent(_self.ddl_EDC_Ver, _new);
+                    if (isResetEvent) return;
+                    if (_self.isEdcDataEmpty) {
+                        _self.GetEDC_Info(_new);
+                    } else {
+                        this.confirm_ChgEdc(1, _old, () => {
+                            _self.GetEDC_Info(_new);
+                        })
+                    }
+                }

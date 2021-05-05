@@ -2,12 +2,12 @@
 Src: {
     I18nPrefix: i18n.,
     el_radio_group: {
-        item_attr: class="x" ,
+        # item_attr: class="x" ,
         v_model: form.ENABLE_FLAG ,
         list :[
-            T: Enable ,
-            F: Disable ,
-            All: AllStatus ,
+            P: 料號 ,
+            C: 分類 ,
+            T: 類別 ,
         ]
     }
 } 
@@ -16,10 +16,8 @@ Src: {
     //$.ext_ut.parseRow(Src);
     $.render('_part.ejs', '~part.txt', {Src});
 
-    eval(include('_part.js'));
-    Src = part.parse(Src,$._);
-
+    //_src 來自 _part.js 程序
 _%>
 <%- $.outfile('~Code.txt') _%>  
-<%- JSON.stringify(Src,null,4)%>
-<%- include('el-radio-group',Src) %>
+<%- include('el-radio-group',_src) %>
+<%- JSON.stringify(_src,null,4)%>

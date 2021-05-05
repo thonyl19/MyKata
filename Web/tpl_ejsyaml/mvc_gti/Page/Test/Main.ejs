@@ -1,0 +1,33 @@
+<script type="text/x-template" id="tpl_dynFunc_edcinfo">
+    ##Html_Code##
+</script>
+<script>
+    $(() => {
+        var _vue = {
+            mixins: [Vue.prototype.$UT.Base_DynFuncModule()],
+            data() {
+                return {
+                    ##Vue_Data##
+                }
+            },
+            props: {
+
+            },
+            mounted() {
+                this.e_load();
+            },
+            watch: {
+                ##Vue_Watch##
+            },
+            computed: {
+                ##Vue_Computed##
+            },
+            methods: {
+                ##Vue_Methods##
+            },
+            template: "#tpl_dynFunc_edcinfo"
+        }
+        Vue.component('gt-func-operedcinfo', _vue);
+    });
+</script>
+ 
