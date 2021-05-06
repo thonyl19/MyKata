@@ -563,6 +563,60 @@ var __fn = ($,_,Vue)=>{
 		},
 	};
 	let Case = {
+		'*实现未读消息小红点'(){
+			var _note = `https://blog.csdn.net/Wonder233/article/details/80613902`
+			var _obj = {
+				_note
+				,_css:`
+				.el-button red.is-change{
+					position: relative;
+				}
+		  
+				.el-button red.is-change::before{
+					content: " ";
+					border: 5px solid red;/*设置红色*/
+					border-radius:5px;/*设置圆角*/
+					position: absolute;
+					z-index: 1000;
+					right: 3px;
+					top: -3px;
+					margin-right: -7px;
+					animation-name: kf_dot;
+					animation-duration: 1s;
+					animation-iteration-count: infinite;
+				}
+				@keyframes kf_dot {
+					from {
+						border-color: #fb0000;
+					}
+			
+					to {
+						border-color: #ff9999;
+					}
+				}
+			
+				`
+				,_vue:{
+					template: `
+						<div>
+						<span class="red-point">设置</span>
+						<BR />
+						<el-button type="primary" size="mini" icon="fa fa-file-o"  class="red-point"
+                             >设置
+	                    </el-button>
+						</div>
+					`,
+					data() {
+						return {
+							};
+					},
+					mounted() { },
+					methods: { }
+				}
+
+			}
+			return _obj;
+		},
 		'Attrib'() {
 			var _note = `
 			<pre>
@@ -1367,7 +1421,7 @@ var __fn = ($,_,Vue)=>{
 		}
 	}
 	var Background = {
-		'*gradient'() {
+		'gradient'() {
 			var _note = `
 			我們是一個高雄的熱血創意團隊，成員有韌體工程師、網頁前後端工程師
 				以及視覺設計師，憑著一股對網頁技術無止盡的愛，
