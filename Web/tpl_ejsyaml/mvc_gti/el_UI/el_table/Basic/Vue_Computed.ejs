@@ -1,0 +1,13 @@
+c_isChange: {
+    get() {
+        var rows = _.filter(this.grid.data, { is_Change: true });
+        if (rows == null) return false;
+        return rows.length != 0;
+    },
+    set(val) {
+        debugger
+        this.grid.data.map(el => {
+            Vue.delete(el,'is_Change');
+        });
+    }
+}

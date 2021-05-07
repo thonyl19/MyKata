@@ -28,5 +28,6 @@ _%>
 <%- include('../el_table.ejs',{Src}) %>
 <%- include('Vue_Data',{Src}) %>
 <%- include('../../../piece/Vue_Data/i18n',{Src}) %>
+<%- include('Vue_Computed',{Src}) %>
 <%- include('Vue_Methods',{Src}) %>
  

@@ -1,10 +1,11 @@
 ﻿# input data
 List:
-- PARTNO_SID
-- ROUTE_SID
-- ROUTE_VER_SID
-- ROUTE_VER_OPER_SID
-- OPER_SID
+- CONFIG_FLAG
+- NAME
+- NO
+- OPER_PARTNO_SID
+- SPEC 
+- USE_RATE 
 --- |
 <%- $.outfile('~Code.txt') _%>
 <%- List.join(', ') %>

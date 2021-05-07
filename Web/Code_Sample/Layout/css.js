@@ -568,11 +568,11 @@ var __fn = ($,_,Vue)=>{
 			var _obj = {
 				_note
 				,_css:`
-				.el-button red.is-change{
+				.el-button.is-change{
 					position: relative;
 				}
 		  
-				.el-button red.is-change::before{
+				.el-button.is-change::before{
 					content: " ";
 					border: 5px solid red;/*设置红色*/
 					border-radius:5px;/*设置圆角*/

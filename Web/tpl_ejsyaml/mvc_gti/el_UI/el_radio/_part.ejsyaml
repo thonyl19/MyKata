@@ -20,4 +20,5 @@ Src: {
 _%>
 <%- $.outfile('~Code.txt') _%>  
 <%- include('el-radio-group',_src) %>
+<%- include('../../../piece/Vue_Data/i18n.ejs',{Src}) %>
 <%- JSON.stringify(_src,null,4)%>
