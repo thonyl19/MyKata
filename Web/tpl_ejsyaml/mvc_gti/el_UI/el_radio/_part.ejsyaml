@@ -9,19 +9,20 @@ Src: {
             F: Disable ,
             All: AllStatus ,
         ]
-    },
-    part: {"el_UI/el_radio":{}}
+    }
 } 
+inject: {
+    path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
+    file: 'SequenceNum.cshtml',
+}
 --- |
 <%  $.isBig5 = true;
-    //$.ext_ut.parseRow(Src);
-    //$.render('_part.ejs', '~part.txt', {Src});
-
     eval(include('_part.js'));
-    _Src = part.parse(Src,$._);
+    _Src = part.parse(Src);
     
-    z = part.parsePartCfg(Src,include);
+    Part = $.ext_ut.parsePartCfg($,_Src,include);
+    $.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.txt') _%>  
-<%- JSON.stringify(z,null,4)%>
-<%# include('el-radio-group',Src) %>
+<%- $.ext_ut.parsePartCode(Src,Part) %>
+    

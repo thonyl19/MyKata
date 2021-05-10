@@ -203,65 +203,87 @@ var ext_ut = {
 		ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
 		ext_ut.writeFile(_cfg,`${Cfg.ExpPath}~Cfg.json`);
 	},
-	parseInjectPoint(_match){
-		if (_match==null || _match.length == 0) return false;
-		_match
-		let [point] = _match;
-		let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
-		start 
-		let [tabs] = start.match(/(|\t)+/g); 
-		let [injectKey] = start.match(/(##|#_)/g); 
-		let arg = {
-			point,
-			tabs,
-			injectKey,
-			get isInjectAfter(){
-				return this.injectKey == "##";
+	parsePartCode(Src,part){
+		var arr = [];
+		arr.push(JSON.stringify(Src,null,4));
+		_.each(part,(v,k)=>{
+			arr.push(`\r\n[${k}]`);
+			var _arr =  v.map(el=>{return el});
+			arr = arr.concat(_arr);
+		})
+		return arr.join('\r\n');
+	},
+	parsePartCfg($,Src,include,cfg="./"){
+		var arr = [];
+		var isJson = _.isPlainObject(cfg);
+		var _path = $.resolvePath(`${cfg}/_part.cfg`);
+		var _cfg = isJson 
+			? cfg
+			: JSON.parse(include(_path,{Src}));
+		_.each(_cfg,(v,k)=>{
+			if ($._.isString(v)){
+				v = [v];
 			}
-		};
-		arg
-		return arg;
+			_cfg[k] = v.map(el=>{
+				var _ejs = $.resolvePath(`${cfg}/${el}`);
+				return include(_ejs,Src);
+			})
+		})
+		return _cfg;
 	},
-	inject_item(base,data,Inject){
-		if (Inject == false) return base;
-		if (_.isArray(data)){
-			data = data.join('\r\n');
+	
+	Inject(injectCfg,part){
+		var _fn = {
+			parseInjectPoint(_match){
+				if (_match==null || _match.length == 0) return false;
+				_match
+				let [point] = _match;
+				let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
+				start 
+				let [tabs] = start.match(/(|\t)+/g); 
+				let [injectKey] = start.match(/(##|#_)/g); 
+				let arg = {
+					point,
+					tabs,
+					injectKey,
+					get isInjectAfter(){
+						return this.injectKey == "##";
+					}
+				};
+				arg
+				return arg;
+			},
+			inject_item(base,data,Inject){
+				if (Inject == false) return base;
+				if (_.isArray(data)){
+					data = data.join('\r\n');
+				}
+				var _code = data.split('\r\n').join(`\r\n${Inject.tabs}`);
+				if (Inject.isInjectAfter){
+					_code = `${Inject.point}\r\n${Inject.tabs}${_code}`;
+				}else{
+					_code = `${Inject.tabs}${_code}\r\n${Inject.point}`;
+				}
+				base = base.replace(Inject.point,_code);
+				return base;
+			},
 		}
-		var _code = data.split('\r\n').join(`\r\n${Inject.tabs}`);
-		if (Inject.isInjectAfter){
-			_code = `${Inject.point}\r\n${Inject.tabs}${_code}`;
-		}else{
-			_code = `${Inject.tabs}${_code}\r\n${Inject.point}`;
-		}
-		base = base.replace(Inject.point,_code);
-		return base;
-	},
-	async Inject(injectCfg,part){
-		// var injectCfg = {
-		// 	path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
-		// 	file: 'SequenceNum.cshtml',
-		// }
-		// var part = {
-		// 	"Html_Code":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
-		// 	"Html_Code1":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
-		// }
 		var _target = `${injectCfg.path}${injectCfg.file}`;
 		var _ejs = `${_target}.ejs`;
 		let isReinject = fs.existsSync(_ejs);
 		var _src = isReinject ?_ejs : _target;
-		var _base = await fs.readFileSync(_src);
+		var _base = fs.readFileSync(_src);
 		if (!isReinject) ext_ut.writeFile(`${_ejs}`,_base);
 		_base = _base.toString();
-		let x = _base.match(/(|\t)(.)+##(.)+/g); 
-		var Code = "<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>";
 		_.each(part,(v,k)=>{
 			var _reg = new RegExp(`(|\t)(.)+(##|#_)${k}(.)+`,'gi');
 			var _match = _base.match(_reg);
 			_match
-			var _Inject = ext_ut.parseInjectPoint(_match);  
-			_base = ext_ut.inject_item(_base,v,_Inject);
+			var _Inject = _fn.parseInjectPoint(_match);  
+			_base = _fn.inject_item(_base,v,_Inject);
 		})
 		ext_ut.writeFile(`${_target}`,_base);
+		return _base;
 	}
 }
 

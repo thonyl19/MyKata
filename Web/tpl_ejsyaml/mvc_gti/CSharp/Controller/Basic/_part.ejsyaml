@@ -25,6 +25,13 @@ Src: {
         "UPDATE_DATE": "2020-10-30 14:13:41"
     },
 }
+PartA: {
+	"API":"Enable"
+}
+inject: {
+    path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
+    file: 'SequenceNumController.cs',
+}
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
@@ -35,6 +42,14 @@ Src: {
     if (Export.name !=""){
         $.render('Main.ejs', `${Export.path}${Export.name}` , {Src});
     }
+
+    Part = $.ext_ut.parsePartCfg($,Src,include,PartA);
+    $.ext_ut.Inject(inject,Part);
+
 _%>
 <%- $.outfile('~Code.cs') _%>
 <%- include('Main',{Src}) %>
+<%- $.outfile('~Code.txt') _%>
+<%- $.ext_ut.parsePartCode(Src,Part) %>
+
+
