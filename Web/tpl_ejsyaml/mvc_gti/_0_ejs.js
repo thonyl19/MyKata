@@ -1550,23 +1550,7 @@ const {ext_ut} = require('_test/ext_ut');
             }) 
             ext_ut.writeFile(`${_target}`,_base);
         },
-        parseInjectPoint(_match){
-            _match
-            let [point] = _match;
-            let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
-            start 
-            let [tabs] = start.match(/(|\t)+/g); 
-            let [injectKey] = start.match(/(##|#_)/g); 
-            let arg = {
-                point,
-                tabs,
-                injectKey,
-                get injectAfter(){
-                    return this.injectKey == "##";
-                }
-            };
-            arg
-        },
+
         async '*inject1'(){
             var inject = {
                 path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
@@ -1574,7 +1558,10 @@ const {ext_ut} = require('_test/ext_ut');
             }
             var _part = {
                 "Html_Code":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
+                "Html_Code1":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
             }
+            await ext_ut.Inject(inject,_part);
+            return ;
             var _target = `${inject.path}${inject.file}`;
             var _ejs = `${_target}.ejs`;
             let isReinject = fs.existsSync(_ejs);
@@ -1588,19 +1575,41 @@ const {ext_ut} = require('_test/ext_ut');
                 var _reg = new RegExp(`(|\t)(.)+(##|#_)${k}(.)+`,'gi');
                 var _match = _base.match(_reg);
                 _match
-                _test.parseInjectPoint(_match);  
+                var _Inject = _test.parseInjectPoint(_match);  
+                _base = _test.act_Inject(_base,v,_Inject);
             })
-            x.map(el=>{
-                el
-                var tabs = el.split('\t').length -1;
-                tabs
-                var arr = Code.split('\r\n');
-                arr.unshift(el);
-                var _tab = '\t'.repeat(tabs);
-                var _Code = arr.join(`\n${_tab}`);
-                //_base = _base.replace(el,_Code);
-            }) 
-            //ext_ut.writeFile(`${_target}`,_base);
+            ext_ut.writeFile(`${_target}`,_base);
+        },
+
+        
+        
+        async 't_parsePart'(){
+            var Src = {
+                I18nPrefix: "" ,
+                SID: 'ROUTE_NO',
+                row:{
+                    "ROUTE_SID": "GTI20101517555209104",
+                    "ROUTE_NO": "C030-19",
+                    "ROUTE": "单面阳极板（子流程）",
+                    "ROUTE_CATEGORY": "R",
+                    "DEFAULT_VERSION": 1,
+                    "VERSION_DESCRIPTION": null,
+                    "MAX_VERSION": 2,
+                    "CREATE_USER": "mes",
+                    "CREATE_DATE": "2020-10-15 17:56:21",
+                    "UPDATE_USER": "mes",
+                    "UPDATE_DATE": "2020-10-30 14:13:41"
+                },
+                part: {
+                    "el_UI/el_table/Basic":{
+                        "Html_Code":"Html_Code_1",
+                    }
+                }
+            }
+            ext_ut.parseRow(Src);
+
+            ext_ut.parsePart(Src);
+            Src
         }
     }
 

@@ -4,6 +4,7 @@ const ejs = require('ejs');
 const moment = require('moment');
 const fs = require('fs');
 var ext_ut = {
+	fs,
 	map_csharpType: {
 		"string":"string",
 		"int":"int",
@@ -97,34 +98,63 @@ var ext_ut = {
 		_.set(arg, setPath, fileds);
 		return arg;
 	},
-	async parsePart(Src){
-		console.log({Src});
-		let {point={},part=[]} = Src;
-		await _.each(part,async(el)=>{
-			var _part = ext_ut.ts_BasePath(`${el}/part.ejs`);
-			console.log({_part});
-			let chk_Path = fs.existsSync(_part);
-			if (chk_Path){
-				var _code  = await ejs.renderFile(_part, {Src});
-				console.log(typeof(_code));
-				_code
-				if (_code=="") return ;
-				_code = JSON.parse(_code);
-				_code
-				_.each(_code,async (v,k)=>{
-					v
-					var _map = point[k];
-					var arr = v.split('\r\n');
-					arr
-					point[k] = _map == null
-						?arr
-						: _.concat(point[k],arr)
-						;
+	async parsePart(include,Src){
+		var _fn = {
+			parsePart_item(path,part,items){
+				var arr = [];
+				var _path = ext_ut.ts_BasePath(`${path}/`);
+				if (typeof(items) === "string" ) items = [items]
+				arr = items.map(el=>{
+					var _s = `${_path}${el}.ejs`;
+					_s
+					return _s;
 				})
-			}
-		})
-		point
-		_.set(Src,'point',point);
+				return arr;
+			},
+			parsePart_cfg(partName){
+				var part = {};
+				var _path = ext_ut.ts_BasePath(`${partName}/_part.cfg`);
+				_path
+				let chk_Path = fs.existsSync(_path);
+				if(chk_Path){
+					var _cfg = fs.readFileSync(_path);
+					_cfg
+					var _json = JSON.parse(_cfg);
+					_.each(_json,(v,k)=>{
+						part[k] = _fn.parsePart_item(partName,k,v);
+					})
+					part
+					return part;
+				}
+				return null;
+			},
+			async parsePart_0(include,Src,part,part_code){
+				part
+				let {point={}} = Src;
+				part
+				for (var k in part_code){
+					k
+					var _code = part_code[k].map(async (el)=>{
+						//console.log(el)
+						return include(el, {Src});
+						//return await ejs.renderFile(el, {Src});
+					})
+					_code
+					var _part_asName = part[k];
+					var _point_key = _part_asName || k; 
+					var arr = point[_point_key] || [];
+					point[_point_key] = arr.concat(_code)
+				}
+				Src.point = point;
+			},
+		}
+		
+		let {part=[]} = Src;
+		for (var k in part){
+			var v = part[k];
+			var _part_code = _fn.parsePart_cfg(k,v);
+			await _fn.parsePart_0(include,Src,v,_part_code);
+		}
 		return Src;
 	},
 	parsePoint(Src){
@@ -144,13 +174,9 @@ var ext_ut = {
 		_.set(Src,'point',point);
 		return Src;
 	},
-	chkDirPath(DirPath,autoMK = true){
-		let chk_Path = fs.existsSync(DirPath);
-		if (!chk_Path && autoMK){ 
-			fs.mkdirSync(DirPath);
-		}
-		return chk_Path;		
-	},
+	
+	
+
 	async ssplit(Cfg){
 		var _tpl = (key)=>{ return `{{tpl}}`};
 		let chk_Path = fs.existsSync(Cfg.ExpPath);
@@ -177,6 +203,66 @@ var ext_ut = {
 		ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
 		ext_ut.writeFile(_cfg,`${Cfg.ExpPath}~Cfg.json`);
 	},
+	parseInjectPoint(_match){
+		if (_match==null || _match.length == 0) return false;
+		_match
+		let [point] = _match;
+		let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
+		start 
+		let [tabs] = start.match(/(|\t)+/g); 
+		let [injectKey] = start.match(/(##|#_)/g); 
+		let arg = {
+			point,
+			tabs,
+			injectKey,
+			get isInjectAfter(){
+				return this.injectKey == "##";
+			}
+		};
+		arg
+		return arg;
+	},
+	inject_item(base,data,Inject){
+		if (Inject == false) return base;
+		if (_.isArray(data)){
+			data = data.join('\r\n');
+		}
+		var _code = data.split('\r\n').join(`\r\n${Inject.tabs}`);
+		if (Inject.isInjectAfter){
+			_code = `${Inject.point}\r\n${Inject.tabs}${_code}`;
+		}else{
+			_code = `${Inject.tabs}${_code}\r\n${Inject.point}`;
+		}
+		base = base.replace(Inject.point,_code);
+		return base;
+	},
+	async Inject(injectCfg,part){
+		// var injectCfg = {
+		// 	path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
+		// 	file: 'SequenceNum.cshtml',
+		// }
+		// var part = {
+		// 	"Html_Code":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
+		// 	"Html_Code1":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
+		// }
+		var _target = `${injectCfg.path}${injectCfg.file}`;
+		var _ejs = `${_target}.ejs`;
+		let isReinject = fs.existsSync(_ejs);
+		var _src = isReinject ?_ejs : _target;
+		var _base = await fs.readFileSync(_src);
+		if (!isReinject) ext_ut.writeFile(`${_ejs}`,_base);
+		_base = _base.toString();
+		let x = _base.match(/(|\t)(.)+##(.)+/g); 
+		var Code = "<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>";
+		_.each(part,(v,k)=>{
+			var _reg = new RegExp(`(|\t)(.)+(##|#_)${k}(.)+`,'gi');
+			var _match = _base.match(_reg);
+			_match
+			var _Inject = ext_ut.parseInjectPoint(_match);  
+			_base = ext_ut.inject_item(_base,v,_Inject);
+		})
+		ext_ut.writeFile(`${_target}`,_base);
+	}
 }
 
 module.exports = {ext_ut}

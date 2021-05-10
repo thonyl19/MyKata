@@ -33,12 +33,16 @@ Src: {
     },  
     grid_Src: 'grid.data'
 } 
+part: !readjson _part.cfg
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
-    $.render('_part.ejs', '~part.txt', {Src});
+    Src.part = {x:part};
+    $.ext_ut.parsePart(Src);
+    //$.render('_part.ejs', '~part.txt', {Src});
 _%>
 <%- $.outfile('~Code.txt') _%>
+<%- JSON.stringify(Src,null,4)%>
 <%- include('../el_table.ejs',{Src}) %>
 <%- include('Vue_Data',{Src}) %>
 <%- include('../../../piece/Vue_Data/i18n',{Src}) %>

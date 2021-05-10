@@ -9,17 +9,19 @@ Src: {
             F: Disable ,
             All: AllStatus ,
         ]
-    }
+    },
+    part: {"el_UI/el_radio":{}}
 } 
 --- |
 <%  $.isBig5 = true;
     //$.ext_ut.parseRow(Src);
-    $.render('_part.ejs', '~part.txt', {Src});
+    //$.render('_part.ejs', '~part.txt', {Src});
 
     eval(include('_part.js'));
-    Src = part.parse(Src,$._);
-
+    _Src = part.parse(Src,$._);
+    
+    z = part.parsePartCfg(Src,include);
 _%>
 <%- $.outfile('~Code.txt') _%>  
-<%- JSON.stringify(Src,null,4)%>
-<%- include('el-radio-group',Src) %>
+<%- JSON.stringify(z,null,4)%>
+<%# include('el-radio-group',Src) %>
