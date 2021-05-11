@@ -1,13 +1,20 @@
-﻿<%#
-/*
-<el-table-column label="@RES.BLL.Face.lblSetSequenceName"
-	prop="ENCODE_FORMAT_NAME" sortable="custom"
-	:sort-orders="$UT.sort_order">
-	</el-table-column>
-*/
-%><%_ for(var item of Src.Fileds){ _%>
-<el-table-column <%- item.label %>
-	prop="<%- item.Name %>" sortable="custom"
-	:sort-orders="$UT.sort_order">
+﻿<%_
+	var _arg = {
+		i18nMode:$._.has(Src,'I18n.i18n'),
+		sort: `sortable="custom"
+	:sort-orders="$UT.sort_order"
+	`
+		,label(filed){
+			return this.i18nMode
+				?`:label="i18n.${filed.Name}"`
+				:`label="${Src.I18n.Prefix}${filed.Name}"`;
+		}
+	}
+	if ($._.has(Src,'el_table.sort')==false) _arg.sort = '';
+ 
+_%>
+<%_ for(var item of Src.Fileds){ _%>
+<el-table-column <%- _arg.label(item) %>
+	prop="<%- item.Name %>" <%-_arg.sort _%>>
 	</el-table-column>
 <%_}_%>

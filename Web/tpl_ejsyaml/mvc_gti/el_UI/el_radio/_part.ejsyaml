@@ -12,8 +12,8 @@ Src: {
     }
 } 
 inject: {
-    path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
-    file: 'SequenceNum.cshtml',
+    path: D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\ ,
+    file: SequenceNum.cshtml,
 }
 --- |
 <%  $.isBig5 = true;

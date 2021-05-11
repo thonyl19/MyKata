@@ -1,4 +1,4 @@
-const _ = require('lodash');
+﻿const _ = require('lodash');
 const path = require( "path");
 const ejs = require('ejs');
 const moment = require('moment');
@@ -14,9 +14,9 @@ var ext_ut = {
 		"boolean":"bool",
 	},
 	map_UI : {
-		int(filed){},
+		int(filed){return ''},
 		date(filed){return `<el-date-picker type="date" class="eui-fix" v-model="form.${filed.Name}">\r\n\t</el-date-picker>`},
-		float(filed){},
+		float(filed){return ''},
 		array(filed){return `<el-input type="textarea" v-model="form.${filed.Name}" rows="3">\r\n\t</el-input>`},
 		boolean(filed){return ``},
 	},
@@ -54,7 +54,7 @@ var ext_ut = {
 		filed.UI = UI;
 	},
 	parseRow(arg,setPath = 'Fileds'){
-		let {row,Prefix} = arg;
+		let {row,I18nPrefix} = arg;
 		if (row==null) return ;
 		var fileds = [];
 		for(var Name in row){
@@ -90,7 +90,7 @@ var ext_ut = {
 					JS,
 					csharp:ext_ut.map_csharpType[JS]
 				}
-				,label :ext_ut.parse_label(Name,Prefix)
+				,label :ext_ut.parse_label(Name,I18nPrefix)
 			};
 			ext_ut.parse_UI(_filed)
 			fileds.push(_filed);
@@ -213,19 +213,20 @@ var ext_ut = {
 		})
 		return arr.join('\r\n');
 	},
-	parsePartCfg($,Src,include,cfg="./"){
+	parsePartCfg($,Src,include,relPath="./"){
 		var arr = [];
-		var isJson = _.isPlainObject(cfg);
-		var _path = $.resolvePath(`${cfg}/_part.cfg`);
-		var _cfg = isJson 
-			? cfg
+		let {Part} = $.data;
+		var isPart = Part != null;
+		var _path = $.resolvePath(`${relPath}/_part.cfg`);
+		var _cfg = isPart 
+			? Part
 			: JSON.parse(include(_path,{Src}));
 		_.each(_cfg,(v,k)=>{
 			if ($._.isString(v)){
 				v = [v];
 			}
 			_cfg[k] = v.map(el=>{
-				var _ejs = $.resolvePath(`${cfg}/${el}`);
+				var _ejs = $.resolvePath(`${relPath}/${el}`);
 				return include(_ejs,Src);
 			})
 		})

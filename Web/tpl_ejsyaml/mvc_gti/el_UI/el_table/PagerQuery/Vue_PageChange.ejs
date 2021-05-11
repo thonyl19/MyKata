@@ -1,0 +1,39 @@
+﻿//#region [Vue_PageChange]
+e_SizeChange(size){
+	this.pagesize = size;
+	this.query(1);
+},
+// 換頁事件
+e_PageChange(currentPage) {
+	this.query(currentPage);
+},
+//查詢事件
+click_Query() {
+	debugger
+	var Conditions = {
+		condition: "AND",
+		rules: []
+	};
+	_.each(this.form, (value, field) => {
+		if (value != "") {
+			var _rule = { field, type: "string", operator: "contains", value };
+			switch (field) {
+				case "ENABLE_FLAG":
+					if (value != 'All') {
+						_rule.operator = "equal";
+						_rule.value = [value];
+						Conditions.rules.push(_rule);
+					}
+					break;
+				default:
+					Conditions.rules.push(_rule);
+					break;
+			}
+		}
+	});
+	this.grid.Conditions = Conditions;
+	this.query(1);
+},
+ 
+//#regionend [VueGridMethos]
+

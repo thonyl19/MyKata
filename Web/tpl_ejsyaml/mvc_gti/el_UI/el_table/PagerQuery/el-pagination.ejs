@@ -1,0 +1,8 @@
+﻿<el-pagination background
+	@@size-change="e_SizeChange"
+	@@current-change="e_PageChange"
+	:current-page="grid.Page.Index"
+	:page-sizes="[5,10,15]"
+	:page-size="grid.Page.Size"
+	layout="prev, pager, next"
+	:total="grid.row_count"></el-pagination>

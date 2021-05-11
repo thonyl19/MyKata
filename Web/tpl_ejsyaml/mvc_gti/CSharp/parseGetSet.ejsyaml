@@ -1,13 +1,15 @@
 ﻿# input data
-List:
-- PARTNO_SID
-- ROUTE_SID
-- ROUTE_VER_SID
-- ROUTE_VER_OPER_SID
-- OPER_SID
+List: [
+	PARTNO_SID
+	, ROUTE_SID
+	, ROUTE_VER_SID
+	, ROUTE_VER_OPER_SID
+	, OPER_SID
+]
 --- |
 <%- $.outfile('~Code.txt') _%>
 <%- List.join(', ') %>
+
 <%_ for (let name of List) { _%>
 	public string <%- name %> { get; set; }
 <%_ } _%>

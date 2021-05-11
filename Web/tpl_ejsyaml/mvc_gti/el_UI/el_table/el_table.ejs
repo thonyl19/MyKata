@@ -1,6 +1,11 @@
-﻿<el-table empty-text=" " style="width: 100%"
-		@@sort-change="sort_change"
-		:data="<%=Src.grid_Src%>"
-		:default-sort="{prop: 'CREATE_DATE', order: 'ascending'}">
-	<%- include('el_table_col.ejs', {Src}).split('\n').join('\n\t'); %>
+﻿<%_
+	var _sort = `@@sort-change="sort_change"
+		:default-sort="{prop: 'CREATE_DATE', order: 'ascending'}"
+	`
+	if ($._.has(Src,'el_table.sort')==false) _sort = '';
+_%>
+<el-table empty-text=" " style="width: 100%"
+		:data="<%=Src.el_table.grid_Src%>"
+		<%-_sort _%>>
+	<%- include('el_table_col', {Src}).split('\n').join('\n\t'); %>
 </el-table>
