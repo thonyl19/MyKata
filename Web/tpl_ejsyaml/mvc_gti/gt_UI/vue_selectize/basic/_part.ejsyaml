@@ -1,28 +1,11 @@
 ﻿# input data
-
 Src: {
-    I18nPrefix: '',
-    SID: 'ROUTE_NO',
-    row: {
-        "ROUTE_SID": "GTI20101517555209104",
-        "ROUTE_NO": "C030-19",
-        "ROUTE": "单面阳极板（子流程）",
-        "ROUTE_CATEGORY": "R",
-        "DEFAULT_VERSION": 1,
-        "VERSION_DESCRIPTION": null,
-        "MAX_VERSION": 2,
-        "CREATE_USER": "mes",
-        "CREATE_DATE": "2020-10-15 17:56:21",
-        "UPDATE_USER": "mes",
-        "UPDATE_DATE": "2020-10-30 14:13:41"
-    },
     selectize: {
         name: ddl_Route ,
         syncFiled: form.SID ,
         attr: {
             auto_drowdown: true,
             #render_sty: GTIMES ,
-            icon_search_click ,
             #selectize_ops ,
         },
         mode: {
@@ -44,6 +27,10 @@ Src: {
         isPost: 0  ,
     }
 } 
+inject: {
+    path: D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\ ,
+    file: SequenceNumController.cs ,
+}
 --- |
 <%  $.isBig5 = true;
     //$.ext_ut.parseRow(Src);
@@ -60,12 +47,9 @@ Src: {
  
     eval(include('_part.js'));
     Src = part.parse(Src,$._);
+       
+    Part = $.ext_ut.parsePartCfg($,Src,include);
+    //$.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- JSON.stringify(Src,null,4)%>
-<%- include('vue-selectize',Src) +"\n"%>
-<%- include('../Vue_Data',Src) +"\n"%> 
-<%# include('Vue_Computed',Src) +"\n"%> 
-<%# include('Vue_Watch',Src) +"\n"%> 
-<%- include('../Vue_Methods',Src) +"\n"%> 
-<%- include('../../CSharp/Controller/ActionResult',Src) +"\n"%> 
+<%- $.ext_ut.parsePartCode(Src,Part) %>

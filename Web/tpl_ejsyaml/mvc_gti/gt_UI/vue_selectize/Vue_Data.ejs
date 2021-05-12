@@ -9,10 +9,11 @@
                 break;
         }
     })
-%>
+    //0)basic 1)computed 2)syncFiled
+    if (Src.mode.v_model!=2) arr.push(`val: "",`);
+_%>
 <%=Src.name%>: {
     src: [],
-    <%_ Src.mode.v_model==2?"":`val: "",`_%>
     <%- arr.join('\n\t') %>
     old: "",
 },

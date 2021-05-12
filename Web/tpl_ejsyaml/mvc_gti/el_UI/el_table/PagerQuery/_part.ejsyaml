@@ -15,13 +15,6 @@ Src: {
         "UPDATE_USER": "mes",
         "UPDATE_DATE": "2020-10-30 14:13:41"
     },
-    toolbar: {
-        e_add:0,
-        e_del:0,
-        e_save:0,
-        //e_clear:0,
-        //Cfg:`fixed='top'`,
-    },  
     el_table: {
         grid_Src: grid.data ,
         # sort ,

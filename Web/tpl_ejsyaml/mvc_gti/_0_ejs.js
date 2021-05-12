@@ -1553,8 +1553,9 @@ const {ext_ut} = require('_test/ext_ut');
 
         async '*inject1'(){
             var inject = {
-                path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
-                file: 'SequenceNum.cshtml',
+                files:[
+                    'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml'
+                ],
             }
             var _part = {
                 "Html_Code":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
