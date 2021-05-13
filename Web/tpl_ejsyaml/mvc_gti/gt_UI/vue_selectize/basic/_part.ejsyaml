@@ -28,8 +28,10 @@ Src: {
     }
 } 
 inject: {
-    path: D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\ ,
-    file: SequenceNumController.cs ,
+    list: [
+        D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNumController.cs ,
+        D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
+    ],
 }
 --- |
 <%  $.isBig5 = true;
@@ -49,7 +51,8 @@ inject: {
     Src = part.parse(Src,$._);
        
     Part = $.ext_ut.parsePartCfg($,Src,include);
-    //$.ext_ut.Inject(inject,Part);
+    Point = $.ext_ut.parseInjectPoint(inject,Part);
+    $.ext_ut.Inject(Point);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.parsePartCode(Src,Part) %>
+<%- $.ext_ut.parsePartCode({Src,Point},Part) %>
