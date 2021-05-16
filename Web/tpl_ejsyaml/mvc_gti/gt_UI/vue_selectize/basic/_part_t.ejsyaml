@@ -32,8 +32,8 @@ inject: {
         D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNumController.cs ,
         D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
     ],
-    #1)復原,2)連續操作,3)移除ejs
-    mode: 2
+    #0)刪除,1)重覆,2)連續,9)復原
+    mode: 1
 }
 --- |
 <%  $.isBig5 = true;
@@ -50,18 +50,16 @@ inject: {
     }
  
     eval(include('_part.js'));
-    Src = part.parse(Src,$._);
+    $.data.Src = part.parse(Src,$._);
        
-    //Part = $.ext_ut.parsePartCfg($,Src,include);
-
-    Point = $.ext_ut.parseInjectPoint(inject,Part);
-    //$.ext_ut.Inject(Point);
 
     var t = part.Inject($,include);
     
-    //var _Part = part.Part($,include);
-    //var _t = _Part.get(Src);
-
+    //個別測試 Part
+    //var _Part = part.parsePart($,include);
+    //var _part = _Part.get($.data.Src);
+    //t = part.Plog(inject.list[0],_part);
+    //t = t.init(false);
 _%>
 <%- $.outfile('~Code.txt') _%>
 <%- JSON.stringify(t,null,4) %>

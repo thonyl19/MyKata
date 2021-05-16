@@ -5,6 +5,12 @@ const moment = require('moment');
 const fs = require('fs');
 var ext_ut = {
 	fs,
+	injectCfg:{
+		_預設:0,
+		_復原:1,
+		_連續:2,
+		_刪除EJS:3
+	},
 	map_csharpType: {
 		"string":"string",
 		"int":"int",
@@ -195,13 +201,32 @@ var ext_ut = {
 				return base;
 			},
 			inject_file(injectCfg){
-				var _target = injectCfg.file;
-				var _base = fs.readFileSync(_target);
-				_base = _base.toString();
+				let {mode= ext_ut.injectCfg._預設} = injectCfg;
+				var _ejs = `${injectCfg.file}.ejs`;
+				var isReinject = fs.existsSync(_ejs);
+				var _target = isReinject ? _ejs : injectCfg.file;
+				if (!isReinject){
+					fs.copyFileSync(injectCfg.file,_ejs);
+				}else{ 
+					switch(mode){
+						case ext_ut.injectCfg._刪除EJS:
+							return _fn.remove_ejs(_ejs);
+							break;
+						case ext_ut.injectCfg._連續:
+							//console.log({mode,file:injectCfg.file,_ejs});
+							fs.copyFileSync(injectCfg.file,_ejs);
+							break;
+					}
+				}
+				
+				var _base = fs.readFileSync(_target).toString();
 				for(var point of injectCfg.matchs){
 					_base = _fn.inject_point(_base,point);
 				}
-				ext_ut.writeFile(`${_target}`,_base);
+				ext_ut.writeFile(`${injectCfg.file}`,_base);
+			},
+			remove_ejs(file){
+				fs.unlinkSync(file);
 			}
 		}
 		for (var _item of Point){
@@ -236,17 +261,29 @@ var ext_ut = {
 		var arr = [];
 		var _reg = new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g');
 		for (var file of injectCfg.list){
+			let {mode = 0} = injectCfg;
 			var _ejs = `${file}.ejs`;
 			var isReinject = fs.existsSync(_ejs);
-			file = isReinject ?_ejs : file;
-			var _base = fs.readFileSync(file).toString();
-			if (!isReinject) ext_ut.writeFile(`${_ejs}`,_base);
-			var _matchs = _base.match(_reg)||[];
-			var _arg = {
-				file,
-				matchs:_matchs.map(_fn.parseInjectPoint)
+			var _file = isReinject ?_ejs : file;
+			var _base = fs.readFileSync(_file).toString();
+			switch(mode){
+				case ext_ut.injectCfg._復原:
+					if (isReinject){
+						fs.unlinkSync(file);
+						fs.renameSync(_ejs,file);
+					}
+					break;
+				default:
+					var _matchs = _base.match(_reg)||[];
+					var _arg = {
+						mode,
+						file,
+						matchs:_matchs.map(_fn.parseInjectPoint)
+					}
+					arr.push(_arg);
+					break;
 			}
-			arr.push(_arg);
+			
 		}
 		return arr;
 	},

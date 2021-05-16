@@ -64,10 +64,10 @@ inject: {
         //$.render('Main.ejs', `${Export.path}${Export.name}` , {Src});
     }
 
-    Part = $.ext_ut.parsePartCfg($,Src,include);
+    //Part = $.ext_ut.parsePartCfg($,Src,include);
     //$.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.cs') _%>
-<%- include('Main',{Src}) %>
+<%# include('Main',{Src}) %>
 <%- $.outfile('~Code.txt') _%>
 <%- $.ext_ut.parsePartCode(Src,Part) %>

@@ -5,6 +5,7 @@ const moment = require('moment');
 const fs = require('fs');
 var ext_ut = {
 	fs,
+	
 	map_csharpType: {
 		"string":"string",
 		"int":"int",
@@ -174,8 +175,182 @@ var ext_ut = {
 		_.set(Src,'point',point);
 		return Src;
 	},
+	Part($,include = ()=>{}, partCfg = './_part.cfg'){
+		//let {fs} = $.ext_ut;
+		if (_.isPlainObject(partCfg)==false){
+			var _json = fs.readFileSync($.resolvePath(`${partCfg}`));
+			partCfg =  JSON.parse(_json);
+		}
+		var _Part = {
+			partCfg,
+			get(Src){
+				var _r = {};
+				_.each(this.partCfg,(_EJSs,key)=>{
+					if (_.isString(_EJSs)){
+						_EJSs = [_EJSs];
+					}
+					_r[key] = _EJSs.map(el=>{
+						var _ejs = $.resolvePath(`${el}`);
+						return include(_ejs,Src);
+					})
+				})
+				return _r;
+			}
+		}
+		return _Part;
+	},
+	Plog(target){
+		var _arg = {
+			data:null,
+			target,
+			file :`${target}.plog`,
+			remove(){
+				return fs.unlinkSync(this.file);
+			},
+			reverse(){
+				var _code = this.first();
+				if (_code !=null){
+					ext_ut.writeFile(this.target,_code);
+				}
+			},
+			last(){
+				this.read();
+				return _.last(this.data);
+			},
+			first(){
+				this.read();
+				let [first] = this.data; 
+				return first;
+			}, 
+			read(isRenew=false){
+				if (isRenew || this.data == null){
+					this.data = JSON.parse(fs.readFileSync(this.file).toString());
+				}
+				return this.data;
+			},
+			write(data){
+				if (data!=null) this.data.push(data);
+				var _json = JSON.stringify(this.data);
+				ext_ut.writeFile(this.file,_json);
+			}
+		}
+		if (fs.existsSync(_arg.file)==false) return null;
+		return _arg;
+	},
+	Inject($,include){
+		let {Src,inject} = $.data;
+		let {mode = 0, Part=["./_part.cfg"]} = inject;
 
-	Inject(Point){
+		var _Reg = {
+			Point: new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g')		
+		}
+		var injectCfg = {
+			_移除plog:0,
+			_重覆操作:1,
+			_連續操作:2,
+			_復原:3
+		}
+		var _fn ={
+			chkFile(file,cb=null){
+				var isExists = fs.existsSync(file);
+				if (isExists && cb !=null){
+					cb(file);
+				}
+				return isExists;
+			},
+			_移除plog(){
+				inject.list.forEach(file => {
+					var _plog = ext_ut.Plog(file);
+					if (_plog!=null)_plog.remove()
+				});
+			},
+			_復原(){
+				inject.list.forEach(file => {
+					var _plog = ext_ut.Plog(file);
+					if (_plog!=null)_plog.reverse()
+				});
+			},
+			parsePart(){
+				if (_.isPlainObject(Part)){
+					Part = [Part];
+				}else{
+					Part = Part.map(el=>{
+						var _json = include(el,{Src});
+						return JSON.parse(_json);
+					})
+				}
+				var _Part = {};
+				for(var _partCfg of Part){
+					_.each(_partCfg,(_EJSs,key)=>{
+						if (_.isString(_EJSs)){
+							_EJSs = [_EJSs];
+						}
+						_Part[key] = _EJSs.map(el=>{
+							var _ejs = $.resolvePath(`${el}`);
+							return include(_ejs,Src);
+						})
+					})
+				}
+				return _Part;
+			},
+			 
+			parsePoint(point){
+				let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
+				var match_key =  point.match(/\[(.)+\]/g)||['-?-'];
+				var key = match_key[0].replace("[","").replace("]","");
+				let [tabs] = start.match(/(|\t)+/g); 
+				let [injectKey] = start.match(/(##|#_)/g); 
+				 
+				let arg = {
+					key,
+					point,
+					tabs,
+					injectKey,
+					get isInjectAfter(){
+						return this.injectKey == "##";
+					},
+					get_plog(){
+						return 
+					},
+					Part:[]
+				};
+				arg
+				return arg;
+			},
+			parseInject(file){
+				var _ejs = `${file}.ejs`;
+				var isReinject = fs.existsSync(_ejs);
+				var _file = isReinject ?_ejs : file;
+				var _base = fs.readFileSync(_file).toString();
+				var points = _base.match(_Reg.Point)||[];
+				var _arg = {
+					mode,
+					file,
+					points:points.map(_fn.parsePoint),
+					get_plog(){
+						return ext_ut.Plog(this.file);
+					}
+				}
+				_arg
+				return _arg;
+			}
+		}
+		switch(mode){
+			case injectCfg._移除plog:
+				_fn._移除plog();
+				break;
+			case injectCfg._復原:
+				_fn._復原();
+				break;
+		}
+		var Point = inject.list.map(_fn.parseInject) ;
+		Part =　_fn.parsePart();
+		Part
+		//var z = Point[0].points[0].get_plog();
+		
+		console.log({ Point});
+	},
+	Inject_(Point){
 		// var ext_ut = $.ext_ut;
 		// let {fs} = $.ext_ut;
 		var _fn = {
@@ -195,13 +370,32 @@ var ext_ut = {
 				return base;
 			},
 			inject_file(injectCfg){
-				var _target = injectCfg.file;
-				var _base = fs.readFileSync(_target);
-				_base = _base.toString();
+				let {mode= ext_ut.injectCfg._預設} = injectCfg;
+				var _ejs = `${injectCfg.file}.ejs`;
+				var isReinject = fs.existsSync(_ejs);
+				var _target = isReinject ? _ejs : injectCfg.file;
+				if (!isReinject){
+					fs.copyFileSync(injectCfg.file,_ejs);
+				}else{ 
+					switch(mode){
+						case ext_ut.injectCfg._刪除EJS:
+							return _fn.remove_ejs(_ejs);
+							break;
+						case ext_ut.injectCfg._連續:
+							//console.log({mode,file:injectCfg.file,_ejs});
+							fs.copyFileSync(injectCfg.file,_ejs);
+							break;
+					}
+				}
+				
+				var _base = fs.readFileSync(_target).toString();
 				for(var point of injectCfg.matchs){
 					_base = _fn.inject_point(_base,point);
 				}
-				ext_ut.writeFile(`${_target}`,_base);
+				ext_ut.writeFile(`${injectCfg.file}`,_base);
+			},
+			remove_ejs(file){
+				fs.unlinkSync(file);
 			}
 		}
 		for (var _item of Point){
@@ -236,17 +430,29 @@ var ext_ut = {
 		var arr = [];
 		var _reg = new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g');
 		for (var file of injectCfg.list){
+			let {mode = 0} = injectCfg;
 			var _ejs = `${file}.ejs`;
 			var isReinject = fs.existsSync(_ejs);
-			file = isReinject ?_ejs : file;
-			var _base = fs.readFileSync(file).toString();
-			if (!isReinject) ext_ut.writeFile(`${_ejs}`,_base);
-			var _matchs = _base.match(_reg)||[];
-			var _arg = {
-				file,
-				matchs:_matchs.map(_fn.parseInjectPoint)
+			var _file = isReinject ?_ejs : file;
+			var _base = fs.readFileSync(_file).toString();
+			switch(mode){
+				case ext_ut.injectCfg._復原:
+					if (isReinject){
+						fs.unlinkSync(file);
+						fs.renameSync(_ejs,file);
+					}
+					break;
+				default:
+					var _matchs = _base.match(_reg)||[];
+					var _arg = {
+						mode,
+						file,
+						matchs:_matchs.map(_fn.parseInjectPoint)
+					}
+					arr.push(_arg);
+					break;
 			}
-			arr.push(_arg);
+			
 		}
 		return arr;
 	},
@@ -310,5 +516,65 @@ var ext_ut = {
 	},
 	 
 }
+var _test ={
+	$:{
+		resolvePath(file){ return file}
+	},
+	'*Inject'(){
+		var Src = {
+            "name": "ddl_Route",
+            "syncFiled": "form.SID",
+            "attr": {
+                "auto_drowdown": true
+            },
+            "mode": {
+                "v_model": 2,
+                "Computed": 0,
+                "Watch": 1
+            },
+            "triggerEvent": {
+                "name": "query_PartNo1",
+                "url": "Url.Action(\"SearchEDC\")",
+                "FnArgs": "keyword"
+            },
+            "dynSet": {
+                "v_model": "form.SID"
+            },
+            "API": {
+                "isPost": 0,
+                "name": "query_PartNo1",
+                "arg": "string keyword"
+            }
+        }
+		var inject = {
+			"list": [
+				"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNumController.cs",
+				"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml"
+			],
+			"mode": 0,
+			Part:{
+				RuleFor:'../mvc_gti/CSharp/v8n/RuleFor'
+			}
+		}
+		var $ = {
+			data:{Src,inject},
+			resolvePath(){}
+		}
+		
+		ext_ut.Inject($,()=>{});
+	},
+	'Part'(){
+		var _partCfg 
+			//= '../mvc_gti/gt_UI/ENABLE_FLAG';
+			= 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\vue_selectize\\basic\\_part.cfg';
+		var _r = ext_ut.Part(_test.$,()=>{},_partCfg);
+		_r
+	}
+} 
 
+_.each(_test,(e,k)=>{
+	if (k.substr(0,1)=="*"){
+		e();
+	}
+})
 module.exports = {ext_ut}
