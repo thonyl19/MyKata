@@ -102,7 +102,7 @@ var part = {
 							base = this.last();
 						}else{
 							base = fs.readFileSync(this.target).toString();
-							if (mode!=null) this.write(base);
+							if (mode==injectCfg._重覆操作) this.write(base);
 						}
 						break;
 				}
@@ -167,50 +167,7 @@ var part = {
 					Plog(file).reverse();
 				});
 			},
-			parsePart(){
-				if (_.isPlainObject(partCfg)){
-					partCfg = [partCfg];
-				}else{
-					partCfg = partCfg.map(el=>{
-						var _json = include(el,{Src});
-						return JSON.parse(_json);
-					})
-				}
-				var _Part = {};
-				for(var _partCfg of partCfg){
-					_.each(_partCfg,(_EJSs,key)=>{
-						if (_.isString(_EJSs)){
-							_EJSs = [_EJSs];
-						}
-						_Part[key] = _EJSs.map(el=>{
-							var _ejs = $.resolvePath(`${el}`);
-							return include(_ejs,Src);
-						})
-					})
-				}
-				return _Part;
-			},
-			 
-			parsePoint(point){
-				let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
-				var match_key =  point.match(/\[(.)+\]/g)||['-?-'];
-				var key = match_key[0].replace("[","").replace("]","");
-				let [tabs] = start.match(/(|\t)+/g); 
-				let [injectKey] = start.match(/(##|#_)/g); 
-				 
-				let arg = {
-					key,
-					point,
-					tabs,
-					injectKey,
-					get isInjectAfter(){
-						return this.injectKey == "##";
-					},
-					Part:[]
-				};
-				arg
-				return arg;
-			},
+ 
 			parsePlog(Part){
 				var _arg = {
 					mode,
@@ -218,15 +175,7 @@ var part = {
 				}
 				return _arg;
 			},
-			parseInject(file){
-				var _arg = {
-					mode,
-					plog: Plog(file)
-				}
-				_arg
-				return _arg;
-			}
-		}
+ 		}
 		switch(mode){
 			case injectCfg._移除plog:
 				_fn._移除plog();
