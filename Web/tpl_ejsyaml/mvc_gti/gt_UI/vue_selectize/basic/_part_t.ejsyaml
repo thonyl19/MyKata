@@ -32,7 +32,7 @@ inject: {
         D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNumController.cs ,
         # D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
     ],
-    #0)刪除,1)重覆,2)連續,9)復原
+    #0)刪除 1)重覆 2)連續 9)復原
     mode: 1
 }
 --- |

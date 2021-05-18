@@ -60,68 +60,7 @@ var ext_ut = {
 		}
 		filed.UI = UI;
 	},
-	parseRow(arg,setPath = 'Fileds'){
-		let {row,I18nPrefix} = arg;
-		if (row==null) return ;
-		var fileds = [];
-		for(var Name in row){
-			var val = row[Name];
-			var JS = typeof(val);
-			switch(JS){
-				case "object":
-					if (val === null){
-						JS = 'string';
-					} else  if (Array.isArray(val)){
-						JS = 'array';
-					} else if (_.isPlainObject(val)){
-						JS = 'json';
-					}
-					break;
-				case "string":
-					if (moment(val).isValid()){
-						JS = "date";
-					}
-					break;
-				case "number":
-					JS =_.isInteger(val)
-						?"int"
-						:"float" 
-					break;
-				default:
-					break;
-			}
-			var _filed = {
-				Name
-				,val
-				,"map_type":{
-					JS,
-					csharp:ext_ut.map_csharpType[JS]
-				}
-				,label :ext_ut.parse_label(Name,I18nPrefix)
-			};
-			ext_ut.parse_UI(_filed)
-			fileds.push(_filed);
-		}
-		_.set(arg, setPath, fileds);
-		return arg;
-	},
-	parsePoint(Src){
-		console.log({Src});
-		let {point={},part=[]} = Src;
-		part.map(el=>{
-			_.each(el,(v,k)=>{
-				var _map = point[k];
-				var arr = v.split('\r\n');
-				point[k] = _map == null
-					?arr
-					: _.concat(point[k],arr)
-					;
-			})
-		})
-		point
-		_.set(Src,'point',point);
-		return Src;
-	},
+ 
  
 	parsePart($,include=()=>{}, partCfg = './_part.cfg'){
 		//let {fs} = $.ext_ut;
@@ -181,7 +120,6 @@ var ext_ut = {
 			target,
 			file :`${target}.log`,
 			init(mode){
-				//data = this.read();
 				var base;
 				switch(mode){
 					case injectCfg._連續操作:
@@ -249,7 +187,7 @@ var ext_ut = {
 		}
 		
 		var _fn ={
- 			_移除plog(){
+			_移除plog(){
 				inject.list.forEach(file => {
 					Plog(file).remove();
 				});
@@ -259,7 +197,7 @@ var ext_ut = {
 					Plog(file).reverse();
 				});
 			},
- 
+
 			parsePlog(Part){
 				var _arg = {
 					mode,
@@ -267,7 +205,7 @@ var ext_ut = {
 				}
 				return _arg;
 			},
- 		}
+		}
 		switch(mode){
 			case injectCfg._移除plog:
 				_fn._移除plog();
@@ -307,102 +245,22 @@ var ext_ut = {
 				break;
 
 		}
- 	},
-	parseInjectPoint(injectCfg,Part){
-		// var ext_ut = $.ext_ut;
-		// let {fs} = $.ext_ut;
-		var _fn = {
-			parseInjectPoint(point){
-				let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
-				var match_key =  point.match(/\[(.)+\]/g)||['-?-'];
-				var key = match_key[0].replace("[","").replace("]","");
-				start 
-				let [tabs] = start.match(/(|\t)+/g); 
-				let [injectKey] = start.match(/(##|#_)/g); 
-				let arg = {
-					key,
-					point,
-					tabs,
-					injectKey,
-					get isInjectAfter(){
-						return this.injectKey == "##";
-					},
-					Part:Part[key]
-				};
-				arg
-				return arg;
-			},
-		}
-		var arr = [];
-		var _reg = new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g');
-		for (var file of injectCfg.list){
-			let {mode = 0} = injectCfg;
-			var _ejs = `${file}.ejs`;
-			var isReinject = fs.existsSync(_ejs);
-			var _file = isReinject ?_ejs : file;
-			var _base = fs.readFileSync(_file).toString();
-			switch(mode){
-				case ext_ut.injectCfg._復原:
-					if (isReinject){
-						fs.unlinkSync(file);
-						fs.renameSync(_ejs,file);
-					}
-					break;
-				default:
-					var _matchs = _base.match(_reg)||[];
-					var _arg = {
-						mode,
-						file,
-						matchs:_matchs.map(_fn.parseInjectPoint)
-					}
-					arr.push(_arg);
-					break;
-			}
-			
-		}
-		return arr;
 	},
-	
-	
-
-	async ssplit(Cfg){
-		var _tpl = (key)=>{ return `{{tpl}}`};
-		let chk_Path = fs.existsSync(Cfg.ExpPath);
-			if (!chk_Path){ 
-				fs.mkdirSync(Cfg.ExpPath);
-			}
-		var _base = await fs.readFileSync(Cfg.Src);
-		_base = _base.toString();
-
-		var _list = _base.match(/##(\s\S|[^##])+@#/g);
-		var _cfg = {}
-		_.each(_list,(el,idx)=>{
-			let [key] = el.match(/##.+/);
-			key = key.replace("##","");
-			_base = _base.replace(el,_tpl(key));
-			var _fileName = `${Cfg.ExpPath}${key}.ejs`;
-			var _arr = el.split('\n');
-			_arr.shift();
-			_arr.pop();
-			el = _arr.join('\n');
-			ext_ut.writeFile(el,`${_fileName}`);
-			_cfg[key]=el;
-		})
-		ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
-		ext_ut.writeFile(_cfg,`${Cfg.ExpPath}~Cfg.json`);
-	},
-	parsePartCode(Src,part){
+	InjectLog(Log,mode = 1 ){
 		var arr = [];
-		arr.push(JSON.stringify(Src,null,4));
-		_.each(part,(v,k)=>{
-			arr.push(`\r\n[${k}]`);
-			var _arr =  v.map(el=>{return el});
-			arr = arr.concat(_arr);
+		if (mode == 0 ) return JSON.stringify(Log,null,4);
+		let {Inject} = Log;
+		_.each(Inject.plog,(plog)=>{
+			delete plog.act.base;
+			_.each(plog.act.point,(point)=>{
+				arr.push(`\r\n[${point.key}]`);
+				arr.push(point.part.join('\r\n'));
+			})
 		})
+		if (mode!= 2) arr.unshift(JSON.stringify(Log,null,4));
 		return arr.join('\r\n');
-	},
- 
-	 
+	}	
+
 }
 var _test ={
 	$:{

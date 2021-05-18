@@ -187,7 +187,7 @@ var ext_ut = {
 		}
 		
 		var _fn ={
- 			_移除plog(){
+			_移除plog(){
 				inject.list.forEach(file => {
 					Plog(file).remove();
 				});
@@ -197,7 +197,7 @@ var ext_ut = {
 					Plog(file).reverse();
 				});
 			},
- 
+
 			parsePlog(Part){
 				var _arg = {
 					mode,
@@ -205,7 +205,7 @@ var ext_ut = {
 				}
 				return _arg;
 			},
- 		}
+		}
 		switch(mode){
 			case injectCfg._移除plog:
 				_fn._移除plog();
@@ -245,7 +245,22 @@ var ext_ut = {
 				break;
 
 		}
- 	},
+	},
+	InjectLog(Log,mode = 1 ){
+		var arr = [];
+		if (mode == 0 ) return JSON.stringify(Log,null,4);
+		let {Inject} = Log;
+		_.each(Inject.plog,(plog)=>{
+			delete plog.act.base;
+			_.each(plog.act.point,(point)=>{
+				arr.push(`\r\n[${point.key}]`);
+				arr.push(point.part.join('\r\n'));
+			})
+		})
+		if (mode!= 2) arr.unshift(JSON.stringify(Log,null,4));
+		return arr.join('\r\n');
+	}	
+
 }
 var _test ={
 	$:{

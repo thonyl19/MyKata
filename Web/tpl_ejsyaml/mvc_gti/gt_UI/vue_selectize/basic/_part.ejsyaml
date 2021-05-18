@@ -32,7 +32,7 @@ inject: {
         D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNumController.cs ,
         D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
     ],
-    #1)復原,2)連續操作,3)移除ejs
+    #0)刪除 1)重覆 2)連續 9)復原
     mode: 2
 }
 --- |
@@ -50,19 +50,10 @@ inject: {
     }
  
     eval(include('_part.js'));
-    Src = part.parse(Src,$._);
+    $.data.Src = part.parse(Src,$._);
        
-    //Part = $.ext_ut.parsePartCfg($,Src,include);
-
-    Point = $.ext_ut.parseInjectPoint(inject,Part);
-    //$.ext_ut.Inject(Point);
-
-    var t = part.Inject($,include);
-    
-    //var _Part = part.Part($,include);
-    //var _t = _Part.get(Src);
+    var r = $.ext_ut.Inject($,include)
 
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- JSON.stringify(t,null,4) %>
-<%# $.ext_ut.parsePartCode({_t,_Part,Src,Point},Part) %>
+<%- $.ext_ut.InjectLog(r,2) %>
