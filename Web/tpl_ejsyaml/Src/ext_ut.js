@@ -246,36 +246,6 @@ var ext_ut = {
 
 		}
  	},
- 
-	
-	
-
-	async ssplit(Cfg){
-		var _tpl = (key)=>{ return `{{tpl}}`};
-		let chk_Path = fs.existsSync(Cfg.ExpPath);
-			if (!chk_Path){ 
-				fs.mkdirSync(Cfg.ExpPath);
-			}
-		var _base = await fs.readFileSync(Cfg.Src);
-		_base = _base.toString();
-
-		var _list = _base.match(/##(\s\S|[^##])+@#/g);
-		var _cfg = {}
-		_.each(_list,(el,idx)=>{
-			let [key] = el.match(/##.+/);
-			key = key.replace("##","");
-			_base = _base.replace(el,_tpl(key));
-			var _fileName = `${Cfg.ExpPath}${key}.ejs`;
-			var _arr = el.split('\n');
-			_arr.shift();
-			_arr.pop();
-			el = _arr.join('\n');
-			ext_ut.writeFile(el,`${_fileName}`);
-			_cfg[key]=el;
-		})
-		ext_ut.writeFile(_base,`${Cfg.ExpPath}Main.ejs`);
-		ext_ut.writeFile(_cfg,`${Cfg.ExpPath}~Cfg.json`);
-	},
 }
 var _test ={
 	$:{

@@ -30,7 +30,7 @@ Src: {
 inject: {
     list: [
         D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNumController.cs ,
-        D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
+        # D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
     ],
     #0)刪除,1)重覆,2)連續,9)復原
     mode: 1
@@ -53,13 +53,13 @@ inject: {
     $.data.Src = part.parse(Src,$._);
        
 
-    var t = part.Inject($,include);
+    var t = $.ext_ut.Inject($,include);
     
     //個別測試 Part
-    //var _Part = part.parsePart($,include);
+    //var _Part = $.ext_ut.parsePart($);
     //var _part = _Part.get($.data.Src);
-    //t = part.Plog(inject.list[0],_part);
-    //t = t.init(false);
+    //t = $.ext_ut.Plog(inject.list[0],_part);
+    //t = t.init();
 _%>
 <%- $.outfile('~Code.txt') _%>
 <%- JSON.stringify(t,null,4) %>
