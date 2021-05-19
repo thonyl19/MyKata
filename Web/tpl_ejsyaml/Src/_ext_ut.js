@@ -7,7 +7,8 @@ var injectCfg = {
 	_移除plog:0,
 	_重覆操作:1,
 	_連續操作:2,
-	_復原:9
+	_復原:9,
+	_復原且刪除:91
 }
 var ext_ut = {
 	fs,
@@ -60,7 +61,51 @@ var ext_ut = {
 		}
 		filed.UI = UI;
 	},
- 
+	parseRow(arg,setPath = 'Fileds'){
+		let {row,I18nPrefix} = arg;
+		if (row==null) return ;
+		var fileds = [];
+		for(var Name in row){
+			var val = row[Name];
+			var JS = typeof(val);
+			switch(JS){
+				case "object":
+					if (val === null){
+						JS = 'string';
+					} else  if (Array.isArray(val)){
+						JS = 'array';
+					} else if (_.isPlainObject(val)){
+						JS = 'json';
+					}
+					break;
+				case "string":
+					if (moment(val).isValid()){
+						JS = "date";
+					}
+					break;
+				case "number":
+					JS =_.isInteger(val)
+						?"int"
+						:"float" 
+					break;
+				default:
+					break;
+			}
+			var _filed = {
+				Name
+				,val
+				,"map_type":{
+					JS,
+					csharp:ext_ut.map_csharpType[JS]
+				}
+				,label :ext_ut.parse_label(Name,I18nPrefix)
+			};
+			ext_ut.parse_UI(_filed)
+			fileds.push(_filed);
+		}
+		_.set(arg, setPath, fileds);
+		return arg;
+	},
  
 	parsePart($,include=()=>{}, partCfg = './_part.cfg'){
 		//let {fs} = $.ext_ut;
@@ -94,7 +139,7 @@ var ext_ut = {
 				let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
 				var match_key =  point.match(/\[(.)+\]/g)||['-?-'];
 				var key = match_key[0].replace("[","").replace("]","");
-				let [tabs] = start.match(/(|\t)+/g); 
+				let [tabs] = start.match(/(|\t|\s)+/g); 
 				let [injectKey] = start.match(/(##|#_)/g); 
 				 
 				let arg = {
@@ -146,10 +191,13 @@ var ext_ut = {
 			remove(){
 				if (this.exists) fs.unlinkSync(this.file);
 			},
-			reverse(){
+			reverse(mode){
 				var [_code] = this.read();
 				if (_code !=null){
 					ext_ut.writeFile(this.target,_code);
+					if (mode == injectCfg._復原且刪除){
+						this.remove();
+					}
 				}
 			},
 			last(){
@@ -192,9 +240,9 @@ var ext_ut = {
 					Plog(file).remove();
 				});
 			},
-			_復原(){
+			_復原(mode){
 				inject.list.forEach(file => {
-					Plog(file).reverse();
+					Plog(file).reverse(mode);
 				});
 			},
 
@@ -211,7 +259,8 @@ var ext_ut = {
 				_fn._移除plog();
 				break;
 			case injectCfg._復原:
-				_fn._復原();
+			case injectCfg._復原且刪除:
+				_fn._復原(mode);
 				break;
 			case injectCfg._重覆操作:
 			case injectCfg._連續操作:
@@ -248,13 +297,16 @@ var ext_ut = {
 	},
 	InjectLog(Log,mode = 1 ){
 		var arr = [];
+		if (Log == null) return "";
 		if (mode == 0 ) return JSON.stringify(Log,null,4);
 		let {Inject} = Log;
 		_.each(Inject.plog,(plog)=>{
 			delete plog.act.base;
 			_.each(plog.act.point,(point)=>{
 				arr.push(`\r\n[${point.key}]`);
-				arr.push(point.part.join('\r\n'));
+				if (point.part!=null){
+					arr.push(point.part.join('\r\n'));
+				}
 			})
 		})
 		if (mode!= 2) arr.unshift(JSON.stringify(Log,null,4));

@@ -126,6 +126,24 @@ var fn = {
     'Regex 使用變數'(){
         new RegExp(`\d{${YOUR_VALUE_GOES_HERE}}`, 'igm');
     },
+    '*case'(){
+        var reg = new RegExp('(|^\t|\s)+','g');
+        var s = `ddl_Route: {
+            src: [],
+            
+            old: "",
+        },
+				//#_[Vue_Data]
+                            //#_[Vue_Data]`;
+        var point = s.match(/(|\t)(.)+(##|#_)/g);
+        _.each(point,(v,k)=>{
+            v
+            var [x] = v.match(/(|\t|\s)+/g);
+			console.log(`${x}A`);
+        })
+    
+
+    }
 }
 
 _.each(fn, (e, k) => {

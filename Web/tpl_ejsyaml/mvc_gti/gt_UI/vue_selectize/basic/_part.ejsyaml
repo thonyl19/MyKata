@@ -29,11 +29,11 @@ Src: {
 } 
 inject: {
     list: [
-        D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNumController.cs ,
-        D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
+        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
+        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
     ],
     #0)刪除 1)重覆 2)連續 9)復原
-    mode: 2
+    mode: 91
 }
 --- |
 <%  $.isBig5 = true;
@@ -52,8 +52,8 @@ inject: {
     eval(include('_part.js'));
     $.data.Src = part.parse(Src,$._);
        
-    var r = $.ext_ut.Inject($,include)
+    var r = $.ext_ut.Inject($,include);
 
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.InjectLog(r,2) %>
+<%- $.ext_ut.InjectLog(r) %>
