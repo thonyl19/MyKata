@@ -1,0 +1,20 @@
+bind_options(options, isAutoDrowDown = this.auto_drowdown) {
+    var _self = this;
+    var _fn = () => {
+        if (_self._lock == false) {
+            var val = _self.selected_val;
+            _self.sel.clearOptions();
+            _self.sel.addOption(options);
+            _self.sel.refreshOptions(isAutoDrowDown);
+            _self.sel.setValue(val);
+        }
+        _self._lock = false;
+    }
+    if (isAutoDrowDown == false) {
+        this._lock = true;
+        this.$emit('update:options', options);
+        Vue.nextTick(_fn);
+    } else {
+        _fn();
+    }
+},

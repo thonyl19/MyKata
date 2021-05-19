@@ -263,7 +263,15 @@ var fn = {
 			}
 		}
 		console.log(x.A.A1);
-		console.log(x.A?.['A2']||'X');
+		//console.log(x.A.['A2']||'X');
+		var x = true ^ false;
+		var a = [
+			1 ^ 1
+			,1 ^ 0
+			,0 ^ 1
+			,0 ^ 0
+		]
+		a
 	}
 };
 

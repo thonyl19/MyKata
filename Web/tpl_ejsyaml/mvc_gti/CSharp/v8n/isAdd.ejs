@@ -1,4 +1,5 @@
-﻿var SID = <%= Src.SID_Filed%>;
+﻿dynamic ReturnData = new ExpandoObject();
+var SID = mainObj.<%= Src.SID_Filed%>;
 var isAdd = string.IsNullOrEmpty(SID);
 if (!isAdd) {
 	//TOTO:
