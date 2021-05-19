@@ -110,7 +110,12 @@ var ext_ut = {
 	parsePart($,include=()=>{}, partCfg = './_part.cfg'){
 		//let {fs} = $.ext_ut;
 		if (_.isPlainObject(partCfg)==false){
-			var _json = fs.readFileSync($.resolvePath(`${partCfg}`));
+			partCfg = path.isAbsolute
+				?partCfg
+				:$.resolvePath(partCfg)
+				;
+				partCfg	
+			var _json = fs.readFileSync(partCfg);
 			partCfg =  JSON.parse(_json);
 		}
 		var _Part = {
@@ -123,6 +128,7 @@ var ext_ut = {
 					}
 					_r[key] = _EJSs.map(el=>{
 						var _ejs = $.resolvePath(`${el}`);
+						_ejs
 						return include(_ejs,Src);
 					})
 				})
@@ -267,7 +273,7 @@ var ext_ut = {
 				var Part = parsePart($,include,partCfg);
 				var _r = {
 					Src,
-					Inject: _fn.parsePlog(Part.get(Src)),
+					Inject: _fn.parsePlog(Part.get({Src})),
 					Part,
 				}
 				for(var plog of _r.Inject.plog){
@@ -318,7 +324,7 @@ var _test ={
 	$:{
 		resolvePath(file){ return file}
 	},
-	'*Inject'(){
+	'Inject'(){
 		var Src = {
             "name": "ddl_Route",
             "syncFiled": "form.SID",
@@ -344,16 +350,7 @@ var _test ={
                 "arg": "string keyword"
             }
         }
-		var inject = {
-			"list": [
-				"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNumController.cs",
-				"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml"
-			],
-			"mode": 0,
-			Part:{
-				RuleFor:'../mvc_gti/CSharp/v8n/RuleFor'
-			}
-		}
+
 		var $ = {
 			data:{Src,inject},
 			resolvePath(){}
@@ -361,18 +358,86 @@ var _test ={
 		
 		ext_ut.Inject($,()=>{});
 	},
-	'Part'(){
-		var _partCfg 
+	'Plog'(){
+		var inject = {
+			"list": [
+				"H:\\SSMES_Dev\\Genesis_MVC\\Areas\\Example\\Views\\Act\\page~.cshtml",
+				"H:\\SSMES_Dev\\Genesis_MVC\\Areas\\Example\\Controllers\\ActController.cs"
+			],
+			"mode": 1
+		}
+		var Part = {
+			"Html_Code": [
+				"<vue-selectize v-model=\"form.SID\" \r\n    ref=\"ddl_Route\"\r\n    :options=\"ddl_Route.src\"\r\n    :auto_drowdown=\"true\"\r\n    />"
+			],
+			"Vue_Data": [
+				"ddl_Route: {\r\n    src: [],\r\n    \r\n    old: \"\",\r\n},"
+			],
+			"Vue_Methods": [
+				"query_PartNo1(keyword, fn_cb = null) {\r\n    var _self = this;\r\n    var url = `@Url.Action(\"SearchEDC\")`;\r\n    var param = {keyword};\r\n    var _ajax = {\r\n        url,\r\n        param,\r\n        success(data) {\r\n            if (data == null) return;\r\n            let { Data = [] } = data;\r\n            if (Data == null || Data.length == 0) {\r\n                _self.$Alert.msg_NoData();\r\n            } else {\r\n                _self.ddl_Route.src = Data;\r\n                if (fn_cb != null) {\r\n                    fn_cb(Data);\r\n                }\r\n            }\r\n        }\r\n    };\r\n    $.submitForm(_ajax);\r\n},　"
+			],
+			"API": [
+				"[HttpPost]\r\n[HandlerAjaxOnly]\r\n[ValidateAntiForgeryToken]\r\npublic ActionResult query_PartNo1(string keyword)\r\n{\r\n    IResult result;\r\n    try\r\n    {\r\n        result //= serv.query_PartNo1(entity);\r\n                = new Result(true) { Data = entity };\r\n        //_serv.UOW.Save();\r\n    }\r\n    catch (Exception ex)\r\n    {\r\n        result = new Result(ex.Message);\r\n    }\r\n    return Content(result.ToJson(true));\r\n}"
+			]
+		}
+		var _arg = {
+			mode:inject.mode,
+			plog: inject.list.map(file=>{return ext_ut.Plog(file,Part)}) 
+		}
+		_arg
+	},
+	'*Part'(){
+		var Src = {
+            "name": "ddl_Route",
+            "syncFiled": "form.SID",
+            "attr": {
+                "auto_drowdown": true
+            },
+            "mode": {
+                "v_model": 2,
+                "Computed": 0,
+                "Watch": 1
+            },
+            "triggerEvent": {
+                "name": "query_PartNo1",
+                "url": "Url.Action(\"SearchEDC\")",
+                "FnArgs": "keyword"
+            },
+            "dynSet": {
+                "v_model": "form.SID"
+            },
+            "API": {
+                "isPost": 0,
+                "name": "query_PartNo1",
+                "arg": "string keyword"
+            }
+        }
+		var _partCfg = path.resolve('.','tpl_ejsyaml/mvc_gti/gt_UI/vue_selectize/basic/_part.cfg');
 			//= '../mvc_gti/gt_UI/ENABLE_FLAG';
-			= 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\vue_selectize\\basic\\_part.cfg';
-		var _r = ext_ut.Part(_test.$,()=>{},_partCfg);
-		_r
+			//= 'P:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\vue_selectize\\basic\\_part.cfg';
+		var include = ejs.renderFile;
+		var $ = {
+			resolvePath(_path) {
+				_path
+				_path = path.isAbsolute(_path)
+					? _path
+					: path.resolve('.', `tpl_ejsyaml/mvc_gti/gt_UI/vue_selectize/basic/${_path}`);
+				_path
+				return _path;
+			}
+		}
+		_partCfg	
+		var _r = ext_ut.parsePart($,include,_partCfg);
+
+		_r  = _r.get({Src});
+		
+		// var _part = _Part.get($.data.Src);
 	}
 } 
 
-// _.each(_test,(e,k)=>{
-// 	if (k.substr(0,1)=="*"){
-// 		e();
-// 	}
-// })
+_.each(_test,(e,k)=>{
+	if (k.substr(0,1)=="*"){
+		e();
+	}
+})
 module.exports = {ext_ut}

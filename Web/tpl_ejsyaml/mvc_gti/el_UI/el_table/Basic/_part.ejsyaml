@@ -1,6 +1,9 @@
 ﻿# input data
 Src: {
-    I18nPrefix: '@Face.',
+    I18n: {
+        i18n ,
+        Prefix: '@Face.',
+    },
     row: {
         "CONFIG_FLAG": "P",
         "OPER_PARTNO_SID": "00106D3C-36CD-42B6-AD16-A104A12FA30D",
@@ -15,18 +18,21 @@ Src: {
         
     }
 } 
+inject: {
+    list: [
+        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
+        # H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
+    ],
+    #0)刪除 1)重覆 2)連續 9)復原
+    mode: 1
+}
 
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
-    //Src.part = {x:part};
-    //$.ext_ut.parsePart(Src);
-    //$.render('_part.ejs', '~part.txt', {Src});
-
-    Part = $.ext_ut.parsePartCfg($,Src,include);
-    //$.ext_ut.Inject(inject,Part);
+    var r = $.ext_ut.Inject($,include);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.parsePartCode(Src,Part) %>
+<%- $.ext_ut.InjectLog(r)  %>
  
  

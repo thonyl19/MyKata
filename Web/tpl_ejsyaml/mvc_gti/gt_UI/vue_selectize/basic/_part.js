@@ -24,8 +24,33 @@ var part = {
 		API.arg = `string ${selectize.triggerEvent.FnArgs}`;
 		$._.set(selectize,"dynSet",dynSet);
 		$._.set(selectize,"API",API);
-		Src = {Src:selectize};
+		$._.set(Src,"selectize",selectize);
 		return Src;
 	},
-	
+	parsePart($,include=()=>{}, partCfg = './_part.cfg'){
+		let {fs} = $.ext_ut;
+		if (_.isPlainObject(partCfg)==false){
+			partCfg = $.resolvePath(partCfg);
+			var _json = fs.readFileSync(partCfg);
+			partCfg =  JSON.parse(_json);
+		}
+		var _Part = {
+			partCfg,
+			get(Src){
+				var _r = {};
+				_.each(this.partCfg,(_EJSs,key)=>{
+					if (_.isString(_EJSs)){
+						_EJSs = [_EJSs];
+					}
+					_r[key] = _EJSs.map(el=>{
+						var _ejs = $.resolvePath(`${el}`);
+						_ejs
+						return include(_ejs,Src);
+					})
+				})
+				return _r;
+			}
+		}
+		return _Part;
+	},
 }

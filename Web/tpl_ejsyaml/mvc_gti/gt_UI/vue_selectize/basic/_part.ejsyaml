@@ -30,10 +30,10 @@ Src: {
 inject: {
     list: [
         H:\SSMES_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
-        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
+        # H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
     ],
     #0)刪除 1)重覆 2)連續 9)復原
-    mode: 91
+    mode: 1
 }
 --- |
 <%  $.isBig5 = true;
@@ -50,10 +50,13 @@ inject: {
     }
  
     eval(include('_part.js'));
-    $.data.Src = part.parse(Src,$._);
+    Src = part.parse(Src,$._);
        
-    var r = $.ext_ut.Inject($,include);
-
+    //var r = $.ext_ut.Inject($,include);
+    var Part 
+        = part.parsePart($,include);
+        //= $.ext_ut.parsePart($,include);
+    //var _cfg = Part.get(Src);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.InjectLog(r) %>
+<%- $.ext_ut.InjectLog(Src,0) %>
