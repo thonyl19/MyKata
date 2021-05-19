@@ -1,5 +1,4 @@
 ﻿# input data
-
 Src: {
     I18nPrefix: '',
     SID: 'ROUTE_NO',
@@ -48,13 +47,9 @@ Src: {
  
     eval(include('_part.js'));
     Src = part.parse(Src,$._);
+
+    Part = $.ext_ut.parsePartCfg($,Src,include);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- include('vue-selectize-dynquery',Src) +"\n"%>
-<%- include('../Vue_Data',Src) +"\n"%> 
-<%- include('Vue_Computed',Src) +"\n"%> 
-<%- include('Vue_Watch',Src) +"\n"%> 
-<%- include('../Vue_Methods',Src) +"\n"%> 
-<%- include('../../../CSharp/Controller/ActionResult',Src) +"\n"%> 
-<%- JSON.stringify(Src,null,4)%>
-
+<%- $.ext_ut.parsePartCode(Src,Part) %>
+<%# include('../../CSharp/Controller/ActionResult',Src) +"\n"%> 

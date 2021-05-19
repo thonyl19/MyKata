@@ -1,0 +1,50 @@
+﻿# input data
+Src: {
+    I18nPrefix: '@Face.',
+    SID: 'ROUTE_NO',
+    row: {
+        "ROUTE_VER_OPER_SID": "GTI21042310453920098",
+        "ROUTE_VER_SID": "GTI21042310432920080",
+        "ROUTE_SID": "GTI20101609015509699",
+        "ROUTE_NO": "C040-30",
+        "ROUTE": "OVP-通用后段",
+        "VERSION": 2,
+        "OPER_CATEGORY": "O",
+        "OPER_SEQ": "001",
+        "OPER_SID": "GTI21042310364820077",
+        "OPERATION_NO": "SPC_Oper1",
+        "OPERATION": "SPC_Oper1",
+        "IS_START": "T",
+        "IS_END": "F",
+        "CREATE_USER": "ting",
+        "CREATE_DATE": "2021-04-23 10:45:39",
+        "UPDATE_USER": "ting",
+        "UPDATE_DATE": "2021-04-23 10:45:39",
+        "OPERATION_TYPE": "PTTC.TW",
+        "OPERATION_TYPE_NAME": "聚鼎預設",
+        "ROUTE_CATEGORY": "O"
+    },
+    toolbar: {
+        e_add:0,
+        e_del:0,
+        e_save:0,
+        //e_clear:0,
+        //Cfg:`fixed='top'`,
+    },  
+    grid_Src: 'grid.data'
+} 
+part: !readjson _part.cfg
+--- |
+<%  $.isBig5 = true;
+    $.ext_ut.parseRow(Src);
+    Src.part = {x:part};
+    $.ext_ut.parsePart(Src);
+    //$.render('_part.ejs', '~part.txt', {Src});
+_%>
+<%- $.outfile('~Code.txt') _%>
+<%- JSON.stringify(Src,null,4)%>
+<%- include('../el_table.ejs',{Src}) %>
+<%- include('Vue_Data',{Src}) %>
+<%- include('../../../piece/Vue_Data/i18n',{Src}) %>
+<%- include('Vue_Methods',{Src}) %>
+ 

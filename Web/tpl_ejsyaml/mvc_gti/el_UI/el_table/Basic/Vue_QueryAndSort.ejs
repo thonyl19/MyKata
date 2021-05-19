@@ -1,4 +1,4 @@
-﻿//#region [VueGridMethos]
+﻿//#region [Vue_QueryAndSort]
 //排序事件
 sort_change(column) {
 	this.grid.Sort = {
@@ -9,7 +9,7 @@ sort_change(column) {
 	this.query(1);
 },
 // 查詢處理程序
-query(pageIdx) {
+queryGrid(pageIdx) {
 	var _self = this;
 	_self.grid.Page.Index = pageIdx;
 	var param = _self.grid.query_rule;
@@ -18,12 +18,12 @@ query(pageIdx) {
 		url: '@Url.Action("ListData")',
 		type: 'post',
 		param,
-		success: this.query_success
+		success: this.queryGrid_success
 	};
 	$.submitForm(_ajax);
 },
 // 查詢成功處理程序
-query_success(res) {
+queryGrid_success(res) {
 	debugger
 	let { Data, Code = null, Message, Success = false } = res;
 	if (Success) {

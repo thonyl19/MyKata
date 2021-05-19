@@ -1521,10 +1521,13 @@ const {ext_ut} = require('_test/ext_ut');
             })
 
         },
-        async '*inject'(){
+        async 'inject'(){
             var inject = {
                 path: 'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\',
                 file: 'SequenceNum.cshtml',
+            }
+            var _part = {
+                "Html_Code":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
             }
             var _target = `${inject.path}${inject.file}`;
             var _ejs = `${_target}.ejs`;
@@ -1546,6 +1549,68 @@ const {ext_ut} = require('_test/ext_ut');
                 _base = _base.replace(el,_Code);
             }) 
             ext_ut.writeFile(`${_target}`,_base);
+        },
+
+        async '*inject1'(){
+            var inject = {
+                files:[
+                    'D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml'
+                ],
+            }
+            var _part = {
+                "Html_Code":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
+                "Html_Code1":"<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>",
+            }
+            await ext_ut.Inject(inject,_part);
+            return ;
+            var _target = `${inject.path}${inject.file}`;
+            var _ejs = `${_target}.ejs`;
+            let isReinject = fs.existsSync(_ejs);
+            var _src = isReinject ?_ejs : _target;
+            var _base = await fs.readFileSync(_src);
+            if (!isReinject) ext_ut.writeFile(`${_ejs}`,_base);
+            _base = _base.toString();
+            let x = _base.match(/(|\t)(.)+##(.)+/g); 
+            var Code = "<el-radio-group v-model=\"form.ENABLE_FLAG\">\r\n\t<el-radio class=\"x\" label=\"Enable\">{{i18n.Enable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"Disable\">{{i18n.Disable}}</el-radio>\r\n\t<el-radio class=\"x\" label=\"AllStatus\">{{i18n.AllStatus}}</el-radio>\r\n</el-radio-group>";
+            _.each(_part,(v,k)=>{
+                var _reg = new RegExp(`(|\t)(.)+(##|#_)${k}(.)+`,'gi');
+                var _match = _base.match(_reg);
+                _match
+                var _Inject = _test.parseInjectPoint(_match);  
+                _base = _test.act_Inject(_base,v,_Inject);
+            })
+            ext_ut.writeFile(`${_target}`,_base);
+        },
+
+        
+        
+        async 't_parsePart'(){
+            var Src = {
+                I18nPrefix: "" ,
+                SID: 'ROUTE_NO',
+                row:{
+                    "ROUTE_SID": "GTI20101517555209104",
+                    "ROUTE_NO": "C030-19",
+                    "ROUTE": "单面阳极板（子流程）",
+                    "ROUTE_CATEGORY": "R",
+                    "DEFAULT_VERSION": 1,
+                    "VERSION_DESCRIPTION": null,
+                    "MAX_VERSION": 2,
+                    "CREATE_USER": "mes",
+                    "CREATE_DATE": "2020-10-15 17:56:21",
+                    "UPDATE_USER": "mes",
+                    "UPDATE_DATE": "2020-10-30 14:13:41"
+                },
+                part: {
+                    "el_UI/el_table/Basic":{
+                        "Html_Code":"Html_Code_1",
+                    }
+                }
+            }
+            ext_ut.parseRow(Src);
+
+            ext_ut.parsePart(Src);
+            Src
         }
     }
 

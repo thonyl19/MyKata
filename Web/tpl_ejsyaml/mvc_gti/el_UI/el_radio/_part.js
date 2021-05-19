@@ -20,5 +20,5 @@
 		$._.set(el_radio_group,"list",_list);
 		//$._.set(Src,'el_radio_group',el_radio_group);
 		return {Src:el_radio_group};
-	}
+	},
 }

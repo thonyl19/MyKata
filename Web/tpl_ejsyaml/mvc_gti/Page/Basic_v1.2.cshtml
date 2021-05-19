@@ -1,13 +1,3 @@
-<%
-    let {Src} = $.data;
-    let {Html_ToolBar=[]
-        ,Html_Code=[]
-        ,Vue_Data=[]
-        ,Vue_Computed=[]
-        ,Vue_Methods=[]} 
-        = Src.point;
-%>
-<%# JSON.stringify(Src,null,2) %>
 @{
     ViewBag.Title = @Genesis.Common.PageBaseInfo.getCurrentResource("baseTpl").RESOURCE_NAME;
     bool isSingleModel = (bool)ViewData["SingleModel"];

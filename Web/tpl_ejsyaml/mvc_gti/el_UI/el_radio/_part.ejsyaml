@@ -11,12 +11,17 @@ Src: {
         ]
     }
 } 
+inject: {
+    path: D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\ ,
+    file: SequenceNum.cshtml,
+}
 --- |
 <%  $.isBig5 = true;
-    //$.ext_ut.parseRow(Src);
-    $.render('_part.ejs', '~part.txt', {Src});
-
-    //_src 來自 _part.js 程序
+    eval(include('_part.js'));
+    _Src = part.parse(Src);
+    
+    Part = $.ext_ut.parsePartCfg($,_Src,include);
+    $.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.txt') _%>  
 <%- include('el-radio-group',_src) %>

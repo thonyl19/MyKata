@@ -1,0 +1,20 @@
+﻿Src: {
+    I18nPrefix: i18n.,
+    el_radio_group: {
+        item_attr: class="x" ,
+        v_model: form.ENABLE_FLAG ,
+        list :[
+            T: Enable ,
+            F: Disable ,
+            All: AllStatus ,
+        ]
+    },
+} 
+--- |
+<%- $.outfile('~tmp.txt') _%>
+<%  
+    $.isBig5 = true;
+_%>
+<%= $.resolvePath('../mvc_gti/el_UI/el_radio/_part.ejs')%>
+<%- include('../mvc_gti/el_UI/el_radio/_part.ejs', {Src}); %>
+

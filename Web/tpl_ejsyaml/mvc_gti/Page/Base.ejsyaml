@@ -27,10 +27,10 @@ Src: {
         # Cfg: `fixed='top'`,
     },  
     grid_Src: grid.data,
-    part:[ 
-        #gt_UI/gt_toolbar/_part,
-        el_UI/el_table/Basic/_part
-    ],
+    part: { 
+        # "gt_UI/gt_toolbar": {},
+        "el_UI/el_table/Basic": {}
+    },
     Inject: {
         Target ,
         # BackUp 有開啟,就自動支援 ReTry 模式
@@ -40,12 +40,14 @@ Src: {
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
+    $.ext_ut.parsePart(include,Src);
 
-    eval(include('_part.js'));
-    Src = part.parsePoint(include,$,Src);
+    //eval(include('_part.js'));
+    //Src = part.parsePoint(include,$,Src);
 
-    $.render('Basic_v1.1.cshtml', '~Basic.cshtml', {Src});
-    $.render('Basic_v1.1.cshtml', `${Export.path}{Export.name}`, {Src});
+    //$.render('Basic_v1.1.cshtml', '~Basic.cshtml');
+    //$.render('Basic_v1.1.cshtml', '~Basic.cshtml', {Src});
+    //$.render('Basic_v1.1.cshtml', `${Export.path}${Export.name}`, {Src});
     //$.skip();
 _%>
 <%- $.outfile('~Code.txt') _%>

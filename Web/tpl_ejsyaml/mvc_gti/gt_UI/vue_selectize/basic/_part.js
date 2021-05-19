@@ -1,4 +1,5 @@
-﻿var part = {
+﻿
+var part = {
 	parse(Src,_){
 		let {selectize,API} = Src;
 		let dynSet = {};
@@ -25,5 +26,6 @@
 		$._.set(selectize,"API",API);
 		Src = {Src:selectize};
 		return Src;
-	}
+	},
+	
 }

@@ -8,13 +8,17 @@ Src: {
         Cfg: "fixed='top'",
     },  
 } 
+inject: {
+    path: D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\ ,
+    file: SequenceNumController.cs ,
+}
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
-    $.render('_part.ejs', '~part.txt', {Src});
+    
+    Part = $.ext_ut.parsePartCfg($,Src,include);
+    //$.ext_ut.Inject(inject,Part);
+
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- include('Html_Code',{Src}) %>
-<%- include('Vue_Computed',{Src}) %>
-<%- include('Vue_Watch',{Src}) %>
-<%- include('Vue_Methods',{Src}) %>
+<%- $.ext_ut.parsePartCode(Src,Part) %>

@@ -1,6 +1,6 @@
 ﻿# input data
 Src: {
-    I18nPrefix: '',
+    I18nPrefix: '@Face.',
     SID: 'ROUTE_NO',
     row: {
         "ROUTE_SID": "GTI20101517555209104",
@@ -15,22 +15,28 @@ Src: {
         "UPDATE_USER": "mes",
         "UPDATE_DATE": "2020-10-30 14:13:41"
     },
-    toolbar: {
-        e_add:0,
-        e_del:0,
-        e_save:0,
-        //e_clear:0,
-        //Cfg:`fixed='top'`,
-    },  
-    grid_Src: 'grid.data'
+    el_table: {
+        grid_Src: grid.data ,
+        # sort ,
+        # i18nMode,
+    },
+    I18n: {
+        i18n ,
+        Prefix: '@Face.',
+    }
 } 
+inject: {
+    path: D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\ ,
+    file: SequenceNumController.cs ,
+}
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
-    $.render('_part.ejs', '~part.txt', {Src});
+    //$.render('_part.ejs', '~part.txt', {Src});
+
+    Part = $.ext_ut.parsePartCfg($,Src,include);
+    //$.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- include('el_table',{Src}) %>
-<%- include('Vue_Data') %>
-<%- include('Vue_Methods',{Src}) %>
+<%- $.ext_ut.parsePartCode(Src,Part) %>
  
