@@ -52,8 +52,9 @@ inject: {
     eval(include('_part.js'));
     $.data.Src = part.parse(Src,$._);
        
+    eval(include('../../../../_Inject.js'));
 
-    var t = $.ext_ut.Inject($,include);
+    //var t = $.ext_ut.Inject($,include);
     
     //個別測試 Part
     //var _Part = $.ext_ut.parsePart($);
@@ -62,4 +63,5 @@ inject: {
     //t = t.init();
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.InjectLog(t,null,4) %>
+<%- _Inject.ViewLog(_Inject.path,0) %>
+<%# $.ext_ut.InjectLog(t,null,4) %>

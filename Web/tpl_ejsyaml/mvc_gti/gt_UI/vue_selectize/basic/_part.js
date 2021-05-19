@@ -44,7 +44,6 @@ var part = {
 					}
 					_r[key] = _EJSs.map(el=>{
 						var _ejs = $.resolvePath(`${el}`);
-						_ejs
 						return include(_ejs,Src);
 					})
 				})

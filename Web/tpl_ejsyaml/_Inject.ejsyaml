@@ -1,0 +1,38 @@
+﻿# input data
+Src: {
+    I18nPrefix: i18n.,
+    SID: 'ROUTE_NO',
+    Form: {
+        QueryUrl: test
+    },
+    row: {
+        "CONFIG_FLAG": "GTI20101517555209104",
+        "PARTNO": "C030-19",
+        "USE_RATE": "单面阳极板（子流程）",
+    },
+} 
+inject: {
+    list: [
+        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
+        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
+    ],
+    #0)刪除 1)重覆 2)連續 9)復原
+    mode: 0
+}
+--- |
+<%  $.isBig5 = true;
+    $.data.Src = $.ext_ut.parseRow(Src);
+
+    eval(include('_Inject.js'));
+    
+    //基本 Part測試
+    //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\_Inject.ejsyaml
+    //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\mvc_gti\gt_UI\vue_selectize\basic\_part.cfg
+    var _partCfg = "./mvc_gti/gt_UI/vue_selectize/basic/_part.cfg"
+    var Part = _Inject.parsePart(include , _partCfg);
+    //var _cfg = Part.get(Src,true);
+
+_%>
+<%- $.outfile('~Inject.txt') _%>
+<%# _Inject.ViewLog(_Inject.path,0) %>
+<%- _Inject.ViewLog(Part,0) %>

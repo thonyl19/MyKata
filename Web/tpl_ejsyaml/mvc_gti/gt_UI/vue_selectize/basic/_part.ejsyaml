@@ -59,4 +59,4 @@ inject: {
     //var _cfg = Part.get(Src);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.InjectLog(Src,0) %>
+<%- $.ext_ut.InjectLog($.data,0) %>

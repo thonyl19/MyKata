@@ -12,7 +12,7 @@ var injectCfg = {
 }
 var ext_ut = {
 	fs,
-	
+	Path:path,
 	map_csharpType: {
 		"string":"string",
 		"int":"int",
@@ -108,13 +108,9 @@ var ext_ut = {
 	},
  
 	parsePart($,include=()=>{}, partCfg = './_part.cfg'){
-		//let {fs} = $.ext_ut;
+		let {fs} = $.ext_ut;
 		if (_.isPlainObject(partCfg)==false){
-			partCfg = path.isAbsolute
-				?partCfg
-				:$.resolvePath(partCfg)
-				;
-				partCfg	
+			partCfg = $.resolvePath(partCfg);
 			var _json = fs.readFileSync(partCfg);
 			partCfg =  JSON.parse(_json);
 		}
@@ -128,7 +124,6 @@ var ext_ut = {
 					}
 					_r[key] = _EJSs.map(el=>{
 						var _ejs = $.resolvePath(`${el}`);
-						_ejs
 						return include(_ejs,Src);
 					})
 				})
@@ -301,24 +296,6 @@ var ext_ut = {
 
 		}
 	},
-	InjectLog(Log,mode = 1 ){
-		var arr = [];
-		if (Log == null) return "";
-		if (mode == 0 ) return JSON.stringify(Log,null,4);
-		let {Inject} = Log;
-		_.each(Inject.plog,(plog)=>{
-			delete plog.act.base;
-			_.each(plog.act.point,(point)=>{
-				arr.push(`\r\n[${point.key}]`);
-				if (point.part!=null){
-					arr.push(point.part.join('\r\n'));
-				}
-			})
-		})
-		if (mode!= 2) arr.unshift(JSON.stringify(Log,null,4));
-		return arr.join('\r\n');
-	}	
-
 }
 var _test ={
 	$:{
@@ -434,10 +411,9 @@ var _test ={
 		// var _part = _Part.get($.data.Src);
 	}
 } 
-
-_.each(_test,(e,k)=>{
-	if (k.substr(0,1)=="*"){
-		e();
-	}
-})
+// _.each(_test,(e,k)=>{
+// 	if (k.substr(0,1)=="*"){
+// 		e();
+// 	}
+// })
 module.exports = {ext_ut}
