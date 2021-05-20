@@ -1,0 +1,26 @@
+﻿# input data
+ 
+injectPart: {
+    targetPath: D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\mvc_gti\_InjectTest\ ,
+    cfg: {
+        Html_Code: D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\mvc_gti\_InjectTest\_part.ejs
+    },
+    #0)刪除 1)重覆 2)連續 9)復原
+    mode: 0
+}
+--- |
+<%  $.isBig5 = true;
+    eval(include('_Inject.js'));
+
+    //測試 _InjectPart.ejs
+    //this.render('_InjectPart.ejs', '~tmp.txt');
+    //this.render('_InjectPartEjsyaml.ejs', '~tmp.txt');
+	//this.skip();
+
+    x = $._Inject.InjectPartEJS();
+    x1 = x.exec();
+    //{x,x1}
+_%>
+<%- $.outfile('~Inject.txt') _%>
+<%- $._Inject.ViewLog({x,x1} ,0) %>
+
