@@ -1,0 +1,81 @@
+﻿# input data
+Src: {
+    "啟用狀態": {
+        "$": {
+            "_prevClass": "label-horizontal col-lg-4 col-sm-3"
+        },
+        "label": {
+            "$": {
+                "0": {
+                    "_prevClass": "label-horizontal col-lg-4 col-sm-3"
+                },
+                "length": 1
+            },
+            "html": "<label class=\"label-horizontal col-lg-4 col-sm-3\"><!----> \n                                啟用狀態\n                        </label>"
+        },
+        "filed": {
+            "$": {
+                "0": {
+                    "_prevClass": "col-lg-8 col-sm-9 col-xs-12"
+                },
+                "length": 1,
+                "prevObject": {
+                    "0": {
+                        "_prevClass": "label-horizontal col-lg-4 col-sm-3"
+                    },
+                    "length": 1
+                }
+            },
+            "html": "<div role=\"radiogroup\" class=\"el-radio-group\"><label role=\"radio\" aria-checked=\"true\" tabindex=\"0\" class=\"el-radio is-checked\"><span class=\"el-radio__input is-checked\"><span class=\"el-radio__inner\"></span><input type=\"radio\" aria-hidden=\"true\" tabindex=\"-1\" class=\"el-radio__original\" value=\"T\"></span><span class=\"el-radio__label\">啟用<!----></span></label> <label role=\"radio\" tabindex=\"-1\" class=\"el-radio\"><span class=\"el-radio__input\"><span class=\"el-radio__inner\"></span><input type=\"radio\" aria-hidden=\"true\" tabindex=\"-1\" class=\"el-radio__original\" value=\"F\"></span><span class=\"el-radio__label\">停用<!----></span></label> <label role=\"radio\" tabindex=\"-1\" class=\"el-radio\"><span class=\"el-radio__input\"><span class=\"el-radio__inner\"></span><input type=\"radio\" aria-hidden=\"true\" tabindex=\"-1\" class=\"el-radio__original\" value=\"\"></span><span class=\"el-radio__label\">全部<!----></span></label></div>"
+        }
+    }
+}
+
+Export: {
+	Title: SPEC/規格測試,
+	RootPath: P:\Cypress\Cucumber_rpt\cypress\integration\GTI_SSMES\ ,
+	RelPath: SPEC\ ,
+	FileName: _Cypress.feature ,
+    Url: example/act/test?name=_Cypress
+}
+
+--- |
+<%_ 
+	$.isBig5 = true;
+	var SavePath = `${Export.RootPath}${Export.RelPath}`
+	var SavePath1 = `${Export.RootPath}${Export.RelPath}Main\\`
+	if ($.ext_ut.fs.existsSync(SavePath) == false){
+ 		$.ext_ut.fs.mkdirSync(SavePath);
+	}
+	//TODO
+	if ($.ext_ut.fs.existsSync(SavePath1) == false){
+ 		$.ext_ut.fs.mkdirSync(SavePath1);
+	}
+
+	SavePath = `${SavePath}${Export.FileName}`;
+
+	//TODO
+	//SavePath1 = `${SavePath1}Main.js`;
+	//this.render('Test.ejs',SavePath1);
+    
+    Src.Fileds = [
+    		'|工單編號   |WO ||',
+			'|狀態       |STATUS ||'
+    ];	
+
+
+    SavePath = "~tmp.txt"
+_%>
+<% $.outfile(SavePath) _%>
+Feature: <%=Export.Title%>
+ 	Scenario: 基本測試
+	    Given AutoLogin then goto "<%=Export.Url%>"
+    
+        When exec ToolBar.Query
+        Then Grid should have data - "grid_data"
+    
+        Then Test Query Filed Use Row1 by
+			|name      |mapKey|actMode|
+            <%=Src.Fileds.join('\r\n\t\t\t')%>
+
+ 

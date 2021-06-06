@@ -1,0 +1,4 @@
+mounted() {
+    @Html.Raw(HttpContext.Current.IsDebuggingEnabled?"if (window.Cypress)  window.Vue = this;":"");
+    @Html.Raw(HttpContext.Current.IsDebuggingEnabled?"window.__vm = this;":"");
+},

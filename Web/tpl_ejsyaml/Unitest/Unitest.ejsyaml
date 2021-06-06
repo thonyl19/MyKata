@@ -1,0 +1,39 @@
+﻿# input data
+Export: {
+	Title: ADM/載具維護,
+	RootPath: P:\Cypress\Cucumber_rpt\cypress\integration\GTI_SSMES\ ,
+	RelPath: ADM\Carrier\ ,
+	FileName: Main.feature
+}
+--- |
+<%_ 
+	$.isBig5 = true;
+	var SavePath = `${Export.RootPath}${Export.RelPath}`
+	var SavePath1 = `${Export.RootPath}${Export.RelPath}Main\\`
+	if ($.ext_ut.fs.existsSync(SavePath) == false){
+ 		$.ext_ut.fs.mkdirSync(SavePath);
+	}
+	//TODO
+	if ($.ext_ut.fs.existsSync(SavePath1) == false){
+ 		$.ext_ut.fs.mkdirSync(SavePath1);
+	}
+
+	SavePath = `${SavePath}${Export.FileName}`;
+
+	//TODO
+	SavePath1 = `${SavePath1}Main.js`;
+	this.render('Test.ejs',SavePath1);
+
+_%>
+<% $.outfile(SavePath) _%>
+Feature: <%=Export.Title%>
+ 	Scenario: 基本測試
+	#Given AutoLogin then goto ""
+    #Then Trim 測試 ".gt-form"
+    #Then Test Exec Clear 
+
+	# When exec Query 
+	# Then Grid should have data
+	# 
+	# When Query By Row1 Filed "開始時間"
+	# Then Grid should have data
