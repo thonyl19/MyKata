@@ -28,11 +28,15 @@ inject: {
     //基本 Part測試
     //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\_Inject.ejsyaml
     //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\mvc_gti\gt_UI\vue_selectize\basic\_part.cfg
-    var _partCfg = "./mvc_gti/gt_UI/vue_selectize/basic/_part.cfg"
-    var Part = _Inject.parsePart(include , _partCfg);
-    //var _cfg = Part.get(Src,true);
+    var _partCfg 
+        //= "./mvc_gti/gt_UI/vue_selectize/basic/_part.cfg"
+        = JSON.parse(include("_part"));
+        //= JSON.parse(include("./mvc_gti/_InjectTest/_part"));
+        //= include("./../mvc_gti/_InjectTest/_part");
+    //var Part = $._Inject.parsePart(_partCfg);
+    //var _cfg = Part.get(Src);
 
 _%>
 <%- $.outfile('~Inject.txt') _%>
+<%- $._Inject.ViewLog(_partCfg ,0) %>
 <%# _Inject.ViewLog(_Inject.path,0) %>
-<%- _Inject.ViewLog(Part,0) %>

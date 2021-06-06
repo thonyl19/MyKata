@@ -1,0 +1,14 @@
+# input data
+cfg: {
+    Html_Code: \mvc_gti\gt_UI\vue_selectize\basic\vue-selectize.ejs
+}
+--- |
+<%_
+    // var _cfg = {
+    //     "Html_Code":"vue-selectize.ejs",
+    // }
+    var _cfg = {
+        //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\mvc_gti\gt_UI\vue_selectize\basic\vue-selectize.ejs
+        "Html_Code":`${$.resolvePath('./mvc_gti/gt_UI/vue_selectize/basic/vue-selectize.ejs').replace(/\\/g,'/')}`,
+    };
+_%><%-JSON.stringify(cfg)_%>
