@@ -32,11 +32,11 @@ namespace Genesis.Areas.<%= Src.Areas%>.Controllers
 		//<%= Src.Areas%>Services _serv = new <%= Src.Areas%>Services()
 		
 		#region == Page ==
-		public ActionResult <%= Src.FunctionName%>Master()
+		public ActionResult <%= Src.FunctionName%>()
 		{
 			return View();
 		}
-		public ActionResult <%= Src.FunctionName%>Data(string SID, bool SingleMode = true)
+		public ActionResult <%= Src.FunctionName%>_Item(string SID, bool SingleMode = true)
 		{
 			/*
 			dynamic data = new ExpandoObject();
@@ -164,7 +164,7 @@ namespace Genesis.Areas.<%= Src.Areas%>.Controllers
 		[HttpPost]
 		public ActionResult Delete(string SID)
 		{
-			IResult result = new Result(true);
+			IResult result;
             try
             {
 				/*

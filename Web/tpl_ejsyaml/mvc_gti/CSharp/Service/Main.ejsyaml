@@ -1,0 +1,34 @@
+﻿# input data
+Export: {
+    path: H:\GTiMES5.1_Dev\Library\BLL\MTR\ ,
+    #name: MTR_Service.cs 
+}
+Src: {
+    Areas: MTR,
+}
+ 
+ 
+--- |
+<%  $.isBig5 = true;
+    var ExportFile = '~Code.cs';
+    if (Export.name !=""){
+        ExportFile = `${Export.path}${Export.name}`;
+    } 
+_%>
+<%- $.outfile(ExportFile) _%>
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Linq;
+using System.Text;
+
+using Genesis.Gtimes.Common;
+
+namespace Genesis.Library.BLL.<%=Src.Areas%>
+{
+    public partial class PartUtility: ServicesBase
+    {
+         
+    }
+}

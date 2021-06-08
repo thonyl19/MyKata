@@ -205,6 +205,77 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
             };
             return _obj;
         },
+        'v-trim'() {
+            var _note = `
+                <pre>
+    這個是在公司碰到的案例 , 主要是為了處理  gt-form-col 中 ,因為子控件無法接收上層  v-model.trim 的設置 ,
+        所以 只能使用 directive 的技法來解決 這個問題
+                </pre>
+                `;
+            // Vue.directive('trim', {
+            //     componentUpdated(el, binding, vnode){
+            //         console.log({el, binding, vnode});
+            //     }
+            // })
+            Vue.directive('trim1', {
+                twoWay: true,
+                bind(el, binding) {
+                    var _vue = el['__vue__'];
+                    let { _input } = _vue.$refs;
+                    if (_input == null) return;
+                    var _fn = {
+                        e_blur(e) {
+                            //console.log({ n, vnode });
+                            e.srcElement.value = e.srcElement.value.trim();
+                        }
+                    }
+                    // 這裡必須得用這樣方式才能讓程序往下 run 
+                    _input.addEventListener('blur', _fn.e_blur);
+                     
+                }
+            });
+
+
+            var _obj = {
+                _css:``,
+                _vue: {
+                    template: `
+                        <div>
+                        ${_note}
+                            <input type='text' v-model="message" v-trim />
+                            <div id="hook-arguments-example" v-demo:foo.a.b.zz="message"  v-model="message"></div>
+                        </div>
+                    `,
+                    data(){
+                        return {
+                            message: 'hello!'
+                        }
+                    },
+                    directives:{
+                        'trim':{
+                            bind(el,binding){
+                                var _vue = el['__vue__'];
+                                var _fn = {
+                                    e_blur(e){
+                                        console.log({n,vnode});
+                                        e.srcElement.value = e.srcElement.value.trim();
+                                    }
+                                }
+                                //console.log('test!');
+                                if (_vue==null){
+                                    el.addEventListener('blur', _fn.e_blur);
+                                    //el.addEventListener('focus', number.e_focus);
+                                }else{
+                                    _vue.$on('blur', _fn.e_blur);
+                                    //_vue.$on('focus', number.e_focus);
+                                }
+                            }
+                        } 
+                    }
+                }
+            };
+            return _obj;
+        },
         'directive-case'() {
             var _note = `
             <pre>
@@ -2104,7 +2175,7 @@ var __fn = ($,_,Vue,Vuex,VueRouter,Rx
     } 
     
     var Case = {
-                '*vue_x'(){
+                'vue_x'(){
                     var _note = ``
                     var _obj = {
                         _note

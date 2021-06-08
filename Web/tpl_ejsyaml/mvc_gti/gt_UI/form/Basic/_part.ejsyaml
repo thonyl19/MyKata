@@ -13,20 +13,21 @@ Src: {
 } 
 inject: {
     list: [
-        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
-        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
+        H:\GTiMES5.1_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
+        H:\GTiMES5.1_Dev\Genesis_MVC\Areas\Example\Views\Act\ActController.cs,
     ],
     #0)刪除 1)重覆 2)連續 9)復原
-    mode: 0
+    mode: 1
 }
 --- |
 <%  $.isBig5 = true;
     $.data.Src = $.ext_ut.parseRow(Src);
-    //$.render('_part.ejs', '~part.txt', {Src});
+    $.render('_part.ejs', '~part.txt', {Src});
     
     var r = $.ext_ut.Inject($,include);
-    //Part = $.ext_ut.parsePartCfg($,Src,include);
-    //$.ext_ut.Inject(inject,Part);
+    Part = $.ext_ut.parsePartCfg($,Src,include);
+    $.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.txt') _%>
 <%- $.ext_ut.InjectLog($.data.Src,0) %>
+

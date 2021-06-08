@@ -7,13 +7,14 @@ Menu: {
 	"9": 'cls',
 }
 Kata_Web: {
-	Title: 'Kata_Web',
+	Title: 'Cypress.Cucumber',
     PushTo: '',
     //SavePath: 'D:\A\Code\github\MyKata\MyKata_Web\',
-	SavePath: 'P:\MyKata\MyKata_Web\'
+	SavePath: 'P:\Cypress\Cucumber\'
 }
 --- |
 <%_ 
+	$.isBig5 = true;
 	var cfg = {arg:Kata_Web,Menu};
 	this.render('git_AutoSave.ejs', `${cfg.arg.SavePath}git_AutoSave.bat`, cfg , true);
     //this.render('../toJson.ejs', '~tmp.json', {arg:this.data.SSMES});

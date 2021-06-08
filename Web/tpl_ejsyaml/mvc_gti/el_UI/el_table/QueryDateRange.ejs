@@ -1,0 +1,27 @@
+click_Query() {
+    var Conditions = {
+        condition: "AND",
+        rules: []
+    };
+
+    _.each(this.form, (value, field) => {
+        if (value != "") {
+            var _rule = { field: 'CREATE_DATE', type: 'date', operator: '', value };
+            if (field === 'START_DATE' && this.form.START_DATE != null) {
+                _rule.operator = 'greater_or_equal';
+                _rule.value = moment(this.form.START_DATE).format('YYYY/MM/DD') + " 00:00:00";
+                Conditions.rules.push(_rule);
+            } else if (field === 'END_DATE' && this.form.END_DATE != null) {
+                _rule.operator = 'less_or_equal';
+                _rule.value = moment(this.form.END_DATE).format('YYYY/MM/DD') + " 23:59:59";
+                Conditions.rules.push(_rule);
+            } else {
+                _rule = { field: field, type: "string", operator: "contains", value };
+                if (this.form[field]!= null) {
+                    _rule.value = value;
+                    Conditions.rules.push(_rule);
+                }
+            }
+        }
+    });
+}

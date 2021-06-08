@@ -1,0 +1,309 @@
+@{
+	ViewBag.Title = Genesis.Common.PageBaseInfo.getCurrentResource().RESOURCE_NAME;
+	ViewBag.FunctionName = @Face.FunMapWOMap;
+}
+<h3>
+	@ViewBag.Title
+</h3>
+<div id="app" v-cloak>
+	<gt-toolbar :e_query="click_Query" :e_add="add" :e_clear="Clear">
+	</gt-toolbar>
+	<div class="panel">
+		<div Area-Main class="panel b ">
+			<gt-searchcd active_names="1">
+				<div class="form-horizontal gt-form">
+					<div class="form-group col-lg-6 col-xs-12" col_styl="">
+						<label class="control-label col-lg-4 col-sm-3">
+							<i aria-hidden="true" class="fa fa-exclamation-circle hide"></i>
+							@Face.OPERATION_NO
+						</label>
+						<div class="col-lg-8 col-sm-9 col-xs-12">
+							<input type="text" placeholder="Please Input" class="form-control" v-model.trim="form.OPERATION_NO">
+						</div>
+					</div>
+					<div class="form-group col-lg-6 col-xs-12" col_styl="">
+						<label class="control-label col-lg-4 col-sm-3">
+							<i aria-hidden="true" class="fa fa-exclamation-circle hide"></i>
+							@Face.OPERATION
+						</label>
+						<div class="col-lg-8 col-sm-9 col-xs-12">
+							<input type="text" placeholder="Please Input" class="form-control" v-model.trim="form.OPERATION">
+						</div>
+
+					</div>
+					<div class="form-group col-lg-6 col-xs-12" col_styl="">
+						<label class="control-label col-lg-4 col-sm-3">
+							<i aria-hidden="true" class="fa fa-exclamation-circle hide"></i>
+							@Face.EnableFlag
+						</label>
+						<div class="col-lg-8 col-sm-9 col-xs-12">
+							<el-radio-group v-model.trim="form.ENABLE_FLAG">
+								<el-radio label="T">@Face.Enable</el-radio>
+								<el-radio label="F">@Face.Disable</el-radio>
+								<el-radio label="">@Face.rdoAll</el-radio>
+							</el-radio-group>
+						</div>
+					</div>
+				</div>
+			</gt-searchcd>
+			<el-table empty-text=" "
+					  style="width: 100%"
+					  @@sort-change="sort_change"
+					  :data="grid.data"
+					  :default-sort="{prop: 'CREATE_DATE', order: 'ascending'}">
+
+
+				<el-table-column label="操作" min-width="50">
+					<template slot-scope="scope">
+						<el-tooltip class="item" effect="dark" content="@Face.QUERY" placement="right">
+							<el-button size="mini" type="success" icon="el-icon-search" circle
+									   title="@Face.QUERY" @@click="rowQueryClick(scope.$index, scope.row)"
+									   gt-test="row_query"
+									   >
+
+							</el-button>
+						</el-tooltip>
+					</template>
+				</el-table-column>
+
+
+				<el-table-column prop="OPERATION_NO" min-width="160"
+								 label="@Face.OPERATION_NO" sortable></el-table-column>
+				<el-table-column prop="OPERATION" min-width="160"
+								 label="@Face.OPERATION" sortable></el-table-column>
+				<el-table-column prop="OPERATION_TYPE" min-width="160"
+								 label="@Face.OPERATION_TYPE" sortable></el-table-column>
+				<el-table-column prop="OPERATION_TYPE_NAME" min-width="160"
+								 label="@Face.OPERATION_TYPE_NAME" sortable></el-table-column>
+				<el-table-column prop="OPERATION_TYPE_CATEGORY" min-width="160"
+								 label="@Face.OPERATION_TYPE_CATEGORY" sortable></el-table-column>
+				<el-table-column prop="DESCRIPTION" min-width="160"
+								 label="@Face.Description"></el-table-column>
+                <el-table-column prop="ENABLE_FLAG" min-width="160"
+                                 label="@Face.EnableStatus" sortable>
+                    <template slot-scope="scope">
+                        {{ENABLE_FLAG(scope.row.ENABLE_FLAG)}}
+                    </template>
+
+                </el-table-column>
+			</el-table>
+			<el-pagination background
+						   @@size-change="e_SizeChange"
+						   @@current-change="e_CurrentChange"
+						   :current-page="grid.Page.Index"
+						   :page-sizes="[5,10,15]"
+						   :page-size="grid.Page.Size"
+						   layout="prev, pager, next"
+						   :total="grid.row_count"></el-pagination>
+		</div>
+	</div>
+</div>
+@Html.AntiForgeryToken()
+@eBundle.QRender_CSS()
+@eBundle.QRender_JS()
+<script>
+    $(() => {
+        new Vue({
+            el: '#app',
+            data() {
+                var _self = this;
+                return {
+                    //#region
+                    activeNames : "1",
+                    //	#endregion
+                    //#region Toolbar
+
+                    //#endregion
+                    //#region Grid Data
+                    grid: {
+                        data: [],
+                        pageSize: 10,
+                        pageIdx: 1,
+                        row_count: 0,
+                        Sort: {
+                            Name: "CREATE_DATE",
+                            isAsc: true
+                        },
+                        Conditions: {},
+                        Page: {
+                            Index: 1,
+                            Size: 10,
+                        },
+                        get query_rule() {
+                            {
+                                let { Conditions, Sort, Page } = this;
+                                return {
+                                    Conditions, Sort, Page
+                                }
+                            }
+                        }
+                    },
+                    //#endregion
+                    form: {
+                        ENABLE_FLAG: '',
+                        OPERATION_NO: '',
+                        OPERATION:'',
+                    },
+                    //TODO-i18n
+                    i18n: {
+                        清除條件: '@Face.Clear',
+                        品號:'@Face.PartNo',
+                        品名: '@Face.PartName',
+                                                啟用: '@Face.rdoEnable',
+                    停用: '@Face.rdoDisable',
+
+                    },
+                    ddlCategory: [],
+                    selVal:''
+
+                }
+            },
+            mounted() {
+                var _self = this;
+                if (window.Cypress) {
+                    window.Vue = this;
+                }
+            },
+            methods: {
+
+                sort_change(column) {
+                    this.grid.Sort = {
+                        Name : column.prop,
+                        isAsc:column.order == "ascending"
+                    }
+                    if (this.grid.data.length == 0) return;
+                    this.query(1);
+                },
+                e_SizeChange: function (size) {
+                    this.pagesize = size;
+                    this.query(1);
+                },
+                //[啟用狀態]轉換
+                ENABLE_FLAG(ENABLE_FLAG_VALUE) {
+                    switch (ENABLE_FLAG_VALUE) {
+                        case "T":
+                            return this.i18n.啟用;
+                            break;
+                        case "F":
+                            return this.i18n.停用;
+                            break;
+                    }
+                    return 'N/A';
+                },
+                // 換頁事件
+                e_CurrentChange: function (currentPage) {
+                    this.query(currentPage);
+                },
+                //父視窗reload 功能
+                reload() {
+                    this.query(this.grid.Page.Index);
+                },
+                click_Query() {
+                    //this.grid.Conditions = this.$refs.wo_cd.get_Conditions();
+
+                    //此段程序就是 wo_cd.get_Conditions 內做的事,沒有既有控制件可用的話,就請用以下的 code 改寫
+                    var Conditions = {
+                        condition: "AND",
+                        rules: [
+                        ]
+                    };
+                    //equal
+
+                    _.each(this.form, (value, field) => {
+                        if (value != "") {
+                            var _rule = { field, type: "string", operator: "in", value };
+                            if (_.isString(value)) {
+                                _rule.operator = "Contains";
+                                _rule.value = [value];
+                            }
+                            Conditions.rules.push(_rule);
+                        }
+                    });
+                    this.grid.Conditions = Conditions;
+
+                    this.query(1);
+                },
+                query(pageIdx) {
+                    var _self = this;
+                    _self.grid.Page.Index = pageIdx;
+                    var param = _self.grid.query_rule;
+                    var _ajax = {
+                        url: '@Url.Action("ListData")',
+                        type: 'post',
+                        param,
+                        success: this.query_success
+                    };
+                    $.submitForm(_ajax);
+                },
+                query_success(res) {
+                    let { Data, Code = null, Message, Success = false } = res;
+                    if (Success) {
+                        let { PageInfo, gridData } = Data || {};
+                        this.grid.data = gridData;
+                        this.grid.row_count = PageInfo.RowCount;
+                    } else {
+
+                        var msg = Message != null
+                            ? Message
+                            : '@BLL.InterFace.ErrCode.GenericErrorMessage'
+                            ;
+                        this.$Alert.Err(msg);
+                    }
+                },
+                Clear() {
+                    //清除form對象
+                    Object.keys(this.form).forEach(key => (this.form[key] = ''));
+                },
+                Clear_t() {
+                    return _.some(this.form, (v, k) => {
+                        if (v != "") return false;
+                    })
+                },
+                add() {
+                        var arg = {
+                            title: '@Face.OPERATION',
+                            content: `@Url.Action("OperationData")`
+                    }
+                    this.$UT.layer(arg, this);
+                },
+                parse_filters() {
+                    var _r = null;
+                    var rules = [];
+                    _.each(this.form, (data, field) => {
+                        if (data != null && data != '') {
+                            var _tmp = _.isString(data)
+                                ? [data]
+                                : data;
+                            _.each(_tmp, (el) => {
+                                rules.push({
+                                    field,
+                                    op: "cn",
+                                    data:el
+                                });
+                            })
+
+                        }
+                    })
+                    if (rules.length != 0) {
+                        var filters = {
+                            "groupOp": "AND",
+                            rules
+                        };
+                        _r = JSON.stringify(filters);
+                    }
+                    return _r;
+                },
+                rowQueryClick(index, row) {
+                        var arg = {
+                            title: '@Face.OPERATION',
+                            content: `@Url.Action("OperationData")?keyVal=${row.OPER_SID}`
+                    }
+                    this._layer = this.$UT.layer(arg, this);
+                    console.log(this._layer);
+                },
+                QueryRow_t() {
+                }
+            }
+        })
+    });
+</script>

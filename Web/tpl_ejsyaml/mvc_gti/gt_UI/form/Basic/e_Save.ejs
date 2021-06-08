@@ -1,0 +1,17 @@
+e_save() {
+    if ($("#FormData").parsley().validate()) {
+        var _self = this;
+        let param = Object.assign({}, _self.form);
+        param.START_DATE = moment(param.START_DATE).format('YYYY/MM/DD 00:00:00');
+        param.END_DATE = moment(param.END_DATE).format('YYYY/MM/DD 23:59:59');
+        var url = _self.isAddmode ? _self.dyn_url.add : _self.dyn_url.save;
+        var _ajax = {
+            url,
+            param,
+            type: 'post',
+            automessage: false,
+            success: _self.Ajax_success
+        };
+        $.submitForm(_ajax);
+    }
+},

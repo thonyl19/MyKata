@@ -1,0 +1,49 @@
+__gt_test(key, val) {
+    var _self = this;
+    let [row0] = this.grid.data;
+    switch (key) {
+        case "訊息":
+            if (row0 == null) return "當前 grid 沒有資料!";
+            this.form.MESSAGE = val || row0.MESSAGE.substr(0,3);
+            this.click_Query();
+            break;
+        case "部門代碼":
+            if (row0 == null) return "當前 grid 沒有資料!";
+            this.form.DEPT_SID = val || row0.DEPT_SID;
+            this.click_Query();
+            break;
+        case "開始時間":
+            if (row0 == null) return "當前 grid 沒有資料!";
+            this.form.START_DATE = val || row0.START_DATE;
+            this.click_Query();
+            break;
+        case "結束時間":
+            if (row0 == null) return "當前 grid 沒有資料!";
+            this.form.END_DATE = val || row0.END_DATE;
+            this.click_Query();
+            break;
+        case "Clear":
+            debugger
+            this.e_clear();
+            var r = _.some(this.form, (v, k) => {
+                switch (k) {
+                    case "ENABLE_FLAG":
+                        return false;
+                        break;
+                    default:
+                        return v == "";
+                        break;
+                }
+            });
+            if (!r) r = this.form;
+            return r;
+        case "Trim":
+            if (Array.isArray(val)) {
+                var r = _.some(val, el => {
+                    return _self.form[el] == "%%";
+                })
+                return r;
+            }
+            break;
+    }
+},
