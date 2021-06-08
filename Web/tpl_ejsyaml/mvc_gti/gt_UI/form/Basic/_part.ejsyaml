@@ -24,10 +24,11 @@ inject: {
     $.data.Src = $.ext_ut.parseRow(Src);
     $.render('_part.ejs', '~part.txt', {Src});
     
-    var r = $.ext_ut.Inject($,include);
-    Part = $.ext_ut.parsePartCfg($,Src,include);
-    $.ext_ut.Inject(inject,Part);
+    //var r = $.ext_ut.Inject($,include);
+    //Part = $.ext_ut.parsePartCfg($,Src,include);
+    //$.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.InjectLog($.data.Src,0) %>
+<%# $.ext_ut.InjectLog($.data.Src,0) %>
+<%- $.ext_ut.ViewCode(Part) %>
 

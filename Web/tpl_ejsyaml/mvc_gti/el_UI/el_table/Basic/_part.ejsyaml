@@ -30,7 +30,7 @@ inject: {
 --- |
 <%  $.isBig5 = true;
     $.ext_ut.parseRow(Src);
-    var r = $.ext_ut.Inject($,include);
+    //var r = $.ext_ut.Inject($,include);
 _%>
 <%- $.outfile('~Code.txt') _%>
 <%- $.ext_ut.InjectLog(r)  %>

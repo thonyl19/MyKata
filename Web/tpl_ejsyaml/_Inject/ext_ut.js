@@ -1,7 +1,6 @@
-﻿/*
-改移放到 ~\MyKata\MyKata_Web\Web\tpl_ejsyaml\_Inject
-*/
 
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require('lodash');
 const path = require( "path");
 const ejs = require('ejs');
@@ -300,125 +299,36 @@ var ext_ut = {
 
 		}
 	},
-	
-}
-var _test ={
-	$:{
-		resolvePath(file){ return file}
-	},
-	'Inject'(){
-		var Src = {
-            "name": "ddl_Route",
-            "syncFiled": "form.SID",
-            "attr": {
-                "auto_drowdown": true
-            },
-            "mode": {
-                "v_model": 2,
-                "Computed": 0,
-                "Watch": 1
-            },
-            "triggerEvent": {
-                "name": "query_PartNo1",
-                "url": "Url.Action(\"SearchEDC\")",
-                "FnArgs": "keyword"
-            },
-            "dynSet": {
-                "v_model": "form.SID"
-            },
-            "API": {
-                "isPost": 0,
-                "name": "query_PartNo1",
-                "arg": "string keyword"
-            }
-        }
-
-		var $ = {
-			data:{Src,inject},
-			resolvePath(){}
-		}
-		
-		ext_ut.Inject($,()=>{});
-	},
-	'Plog'(){
-		var inject = {
-			"list": [
-				"H:\\SSMES_Dev\\Genesis_MVC\\Areas\\Example\\Views\\Act\\page~.cshtml",
-				"H:\\SSMES_Dev\\Genesis_MVC\\Areas\\Example\\Controllers\\ActController.cs"
-			],
-			"mode": 1
-		}
-		var Part = {
-			"Html_Code": [
-				"<vue-selectize v-model=\"form.SID\" \r\n    ref=\"ddl_Route\"\r\n    :options=\"ddl_Route.src\"\r\n    :auto_drowdown=\"true\"\r\n    />"
-			],
-			"Vue_Data": [
-				"ddl_Route: {\r\n    src: [],\r\n    \r\n    old: \"\",\r\n},"
-			],
-			"Vue_Methods": [
-				"query_PartNo1(keyword, fn_cb = null) {\r\n    var _self = this;\r\n    var url = `@Url.Action(\"SearchEDC\")`;\r\n    var param = {keyword};\r\n    var _ajax = {\r\n        url,\r\n        param,\r\n        success(data) {\r\n            if (data == null) return;\r\n            let { Data = [] } = data;\r\n            if (Data == null || Data.length == 0) {\r\n                _self.$Alert.msg_NoData();\r\n            } else {\r\n                _self.ddl_Route.src = Data;\r\n                if (fn_cb != null) {\r\n                    fn_cb(Data);\r\n                }\r\n            }\r\n        }\r\n    };\r\n    $.submitForm(_ajax);\r\n},　"
-			],
-			"API": [
-				"[HttpPost]\r\n[HandlerAjaxOnly]\r\n[ValidateAntiForgeryToken]\r\npublic ActionResult query_PartNo1(string keyword)\r\n{\r\n    IResult result;\r\n    try\r\n    {\r\n        result //= serv.query_PartNo1(entity);\r\n                = new Result(true) { Data = entity };\r\n        //_serv.UOW.Save();\r\n    }\r\n    catch (Exception ex)\r\n    {\r\n        result = new Result(ex.Message);\r\n    }\r\n    return Content(result.ToJson(true));\r\n}"
-			]
-		}
-		var _arg = {
-			mode:inject.mode,
-			plog: inject.list.map(file=>{return ext_ut.Plog(file,Part)}) 
-		}
-		_arg
-	},
-	'*Part'(){
-		var Src = {
-            "name": "ddl_Route",
-            "syncFiled": "form.SID",
-            "attr": {
-                "auto_drowdown": true
-            },
-            "mode": {
-                "v_model": 2,
-                "Computed": 0,
-                "Watch": 1
-            },
-            "triggerEvent": {
-                "name": "query_PartNo1",
-                "url": "Url.Action(\"SearchEDC\")",
-                "FnArgs": "keyword"
-            },
-            "dynSet": {
-                "v_model": "form.SID"
-            },
-            "API": {
-                "isPost": 0,
-                "name": "query_PartNo1",
-                "arg": "string keyword"
-            }
-        }
-		var _partCfg = path.resolve('.','tpl_ejsyaml/mvc_gti/gt_UI/vue_selectize/basic/_part.cfg');
-			//= '../mvc_gti/gt_UI/ENABLE_FLAG';
-			//= 'P:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\vue_selectize\\basic\\_part.cfg';
-		var include = ejs.renderFile;
-		var $ = {
-			resolvePath(_path) {
-				_path
-				_path = path.isAbsolute(_path)
-					? _path
-					: path.resolve('.', `tpl_ejsyaml/mvc_gti/gt_UI/vue_selectize/basic/${_path}`);
-				_path
-				return _path;
+	ViewCode(obj){
+		var arr = [];
+		_.each(obj,(v,k)=>{
+			arr.push(`\r\n[${k}]`);
+			if (Array.isArray(v)){
+				v = v.join('\r\n');
 			}
-		}
-		_partCfg	
-		var _r = ext_ut.parsePart($,include,_partCfg);
-
-		_r  = _r.get({Src});
-		
-		// var _part = _Part.get($.data.Src);
-	}
-} 
-// _.each(_test,(e,k)=>{
-// 	if (k.substr(0,1)=="*"){
-// 		e();
-// 	}
-// })
+			arr.push(v);
+		})
+		return arr.join('\r\n') ;
+	},
+	parsePartCfg($,Src,include,relPath="./"){
+		var arr = [];
+		let {Part} = $.data;
+		var isPart = Part != null;
+		var _path = $.resolvePath(`${relPath}/_part.cfg`);
+		var _cfg = isPart 
+			? Part
+			: JSON.parse(include(_path,{Src}));
+		_.each(_cfg,(v,k)=>{
+			if ($._.isString(v)){
+				v = [v];
+			}
+			_cfg[k] = v.map(el=>{
+				var _ejs = $.resolvePath(`${relPath}/${el}`);
+				return include(_ejs,Src);
+			})
+		})
+		return _cfg;
+	},
+}
 module.exports = {ext_ut}
+

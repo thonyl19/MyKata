@@ -1,7 +1,8 @@
-﻿/*
-改移放到 ~\MyKata\MyKata_Web\Web\tpl_ejsyaml\_Inject
-*/
+﻿
 
+//##ext_ut----------------------------------------
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require('lodash');
 const path = require( "path");
 const ejs = require('ejs');
@@ -300,7 +301,51 @@ var ext_ut = {
 
 		}
 	},
-	
+	ViewCode(obj){
+		var arr = [];
+		_.each(obj,(v,k)=>{
+			arr.push(`\r\n[${k}]`);
+			if (Array.isArray(v)){
+				v = v.join('\r\n');
+			}
+			arr.push(v);
+		})
+		return arr.join('\r\n') ;
+	},
+	parsePartCfg($,Src,include,relPath="./"){
+		var arr = [];
+		let {Part} = $.data;
+		var isPart = Part != null;
+		var _path = $.resolvePath(`${relPath}/_part.cfg`);
+		var _cfg = isPart 
+			? Part
+			: JSON.parse(include(_path,{Src}));
+		_.each(_cfg,(v,k)=>{
+			if ($._.isString(v)){
+				v = [v];
+			}
+			_cfg[k] = v.map(el=>{
+				var _ejs = $.resolvePath(`${relPath}/${el}`);
+				return include(_ejs,Src);
+			})
+		})
+		return _cfg;
+	},
+}
+module.exports = {ext_ut}
+
+//##ext_ut----------------------------------------
+var $ = {
+	data:{},
+	ext_ut:{_,fs,path},
+	resolvePath(x){
+		return path.resolve(`./tpl_ejsyaml/_Inject/${x}`);
+	},
+	render(file,tar,data){
+		var _code = ejs.renderFile(file,{},null,(err, str)=>{
+			fs.writeFileSync(tar,str);
+		});
+	}
 }
 var _test ={
 	$:{
@@ -368,7 +413,7 @@ var _test ={
 		}
 		_arg
 	},
-	'*Part'(){
+	'Part'(){
 		var Src = {
             "name": "ddl_Route",
             "syncFiled": "form.SID",
@@ -398,27 +443,60 @@ var _test ={
 			//= '../mvc_gti/gt_UI/ENABLE_FLAG';
 			//= 'P:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\vue_selectize\\basic\\_part.cfg';
 		var include = ejs.renderFile;
-		var $ = {
-			resolvePath(_path) {
-				_path
-				_path = path.isAbsolute(_path)
-					? _path
-					: path.resolve('.', `tpl_ejsyaml/mvc_gti/gt_UI/vue_selectize/basic/${_path}`);
-				_path
-				return _path;
-			}
-		}
+		// var $ = {
+		// 	resolvePath(_path) {
+		// 		_path
+		// 		_path = path.isAbsolute(_path)
+		// 			? _path
+		// 			: path.resolve('.', `tpl_ejsyaml/mvc_gti/gt_UI/vue_selectize/basic/${_path}`);
+		// 		_path
+		// 		return _path;
+		// 	}
+		// }
 		_partCfg	
 		var _r = ext_ut.parsePart($,include,_partCfg);
 
 		_r  = _r.get({Src});
 		
 		// var _part = _Part.get($.data.Src);
-	}
+	},
+	'export'(){
+		var _file = $.resolvePath("ext_ut_t.js");
+		var _tar 
+			//=  $.resolvePath("ext_ut.js");
+			=`C:/Users/thony/.vscode/extensions/dirty49374.ejs-gen-0.0.23/out/ejsgen/ext_ut.js`;
+		var _key = /^\/\/##ext_ut----------------------------------------$/gm ; 
+		var _code = fs.readFileSync(_file).toString();
+		var arr = _code.split(_key);
+		console.log(arr.length)
+		arr.shift()
+		arr.pop();
+		_code = arr.join(_key);
+		fs.writeFileSync(_tar,_code);
+		fs.writeFileSync($.resolvePath("ext_ut.js"),_code);
+	},
+	'*ViewCode'(){
+		var _code = `{
+			"ROUTE_SID": "GTI20101517555209104",
+			"ROUTE_NO": "C030-19",
+			"ROUTE_CATEGORY": "R",
+			"DEFAULT_VERSION": 1,
+			"VERSION_DESCRIPTION": null,
+			"MAX_VERSION": 2,
+			"CREATE_USER": "mes",
+			"CREATE_DATE": "2020-10-15 17:56:21",
+			"UPDATE_USER": "mes",
+			"UPDATE_DATE": "2020-10-30 14:13:41"
+		  }
+		  
+		`
+		_code = JSON.parse(_code);
+		var x = ext_ut.ViewCode(_code); 
+		x
+	},
 } 
-// _.each(_test,(e,k)=>{
-// 	if (k.substr(0,1)=="*"){
-// 		e();
-// 	}
-// })
-module.exports = {ext_ut}
+_.each(_test,(e,k)=>{
+	if (k.substr(0,1)=="*"){
+		e();
+	}
+}) 

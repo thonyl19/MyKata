@@ -12,15 +12,16 @@ injectPart: {
 <%  $.isBig5 = true;
     eval(include('_Inject.js'));
 
-    //測試 _InjectPart.ejs
+    //測試 _InjectPart.ejs 輸出效果
     //this.render('_InjectPart.ejs', '~tmp.txt');
+    //測試 _InjectPartEjsyaml.ejs  輸出效果
     //this.render('_InjectPartEjsyaml.ejs', '~tmp.txt');
 	//this.skip();
 
     x = $._Inject.InjectPartEJS();
-    x1 = x.exec();
+    //x1 = x.exec();
     //{x,x1}
 _%>
-<%- $.outfile('~Inject.txt') _%>
-<%- $._Inject.ViewLog({injectPart,x1} ,0) %>
+<%- $.outfile('~tmp.txt') _%>
+<%- $._Inject.ViewLog({injectPart} ,0) %>
 
