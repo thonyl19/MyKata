@@ -382,15 +382,7 @@ var _Inject = {
 			return this;
 		},
 	},
-	//將傳入的值,直接轉換 格式化後的 JSON Code ,以便檢視
-	ViewJsonCode(data){
-		return JSON.stringify(data,null,4);
-	},
-	/*
-	mode:
-		0) 將傳入的值,直接轉換 格式化後的 JSON Code ,以便檢視
-		1)
-	*/
+ 
 	ViewLog(Log,mode = 1 ){
 		var arr = [];
 		if (Log == null) return "";
@@ -440,8 +432,7 @@ var _Inject = {
 $._Inject = _Inject;
 //##_Inject----------------------------------------
 var _test = {
-
-	async '*t_InjectPartEJS'(){
+	async 't_InjectPartEJS'(){
 		$.data.injectPart = {
 			"targetPath": "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\_InjectTest\\",
 			"cfg": {
@@ -455,11 +446,7 @@ var _test = {
 		//var z = _Inject.InjectPartEJS().exec(injectCfg._重覆操作);
 			//= _Inject.InjectPartEJS().exec();
 		//z.CreadNew();
-		
-		//VSCode Jump
-		var _plog 
-			//= _Inject.InjectPartEJS();
-			= _Inject.Plog();
+		var _plog = _Inject.InjectPartEJS();
 		_plog = _Inject.InjectPartEJS();
 		//測試
 		_plog.test();

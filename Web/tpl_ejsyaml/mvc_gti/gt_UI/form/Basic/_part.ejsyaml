@@ -30,5 +30,8 @@ inject: {
 _%>
 <%- $.outfile('~Code.txt') _%>
 <%# $.ext_ut.InjectLog($.data.Src,0) %>
-<%- $.ext_ut.ViewCode(Part) %>
-
+<%# $.ext_ut.ViewCode(Part) %>
+<%- include('../gt_form',{Src}) %>
+<%- include('../form',{Src}) %>
+<%- include('../../../piece/Vue_Data/i18n.ejs',{Src}) %>
+<%- include('Vue_Methods',{Src}) %>
