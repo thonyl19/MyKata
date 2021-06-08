@@ -1,9 +1,9 @@
-# input data
+ï»¿# input data
 Menu: {
-	"1": 'Ã±¤J Dev',
-	"2": '§ó·s³Ì·sªºµ{¦¡(fetch , pull , merge)',
-	"3": '°õ¦æ«Ø¸m°Ê§@',
-	"4": 'Ã±¤J Origin',
+	"1": 'ç°½å…¥ Dev',
+	"2": 'æ›´æ–°æœ€æ–°çš„ç¨‹å¼(fetch , pull , merge)',
+	"3": 'åŸ·è¡Œå»ºç½®å‹•ä½œ',
+	"4": 'ç°½å…¥ Origin',
 	"8": 'GitHistory',
 	"9": 'cls',
 	"11": 'Dev Sync Main',
@@ -30,14 +30,28 @@ SSMES: {
     },
     Branch:{
         Dev: 'Anthony_2021012_SSMES',
-        Main: '´¼¼zª©'
+        Main: 'æ™ºæ…§ç‰ˆ'
+    },
+    SlnFile: 'MES5_Build.sln',
+}
+
+GTiMES51: {
+    Ver: 1.3,
+    Title: 'GTiMES5.1',
+    Dir:{
+        Dev: 'H:\GTiMES5.1_Dev',
+        Main: 'H:\GTiMES5.1_Main'
+    },
+    Branch:{
+        Dev: 'P2_Devel_Anthony',
+        Main: 'P2_Devel'
     },
     SlnFile: 'MES5_Build.sln',
 }
 
 --- |
 <%_ 
-    var cfg = {arg:MES5,Menu};
+    var cfg = {arg:GTiMES51,Menu};
  	this.render('auto.bat.ejs', `${cfg.arg.Dir.Main}/auto.bat` , cfg ,true);
     //this.render('../toJson.ejs', '~tmp.json', {arg:this.data.SSMES});
 	this.skip();

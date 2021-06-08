@@ -3230,7 +3230,15 @@ var __fn = (
 			   `;
 			var _obj = {
 				_note,
-				_css:``,
+				_css:`
+				.list-group li{
+					float:left;
+					display:inline-block;
+					margin-right:7px;
+					background-color: #fff;
+					color: #333;
+				}
+				`,
 				_vue: {
 					template: `
 					<el-form ref="form" :model="form" label-width="80px">
@@ -3252,8 +3260,10 @@ var __fn = (
 									:value="item.TaskSID">
 								</el-option>
 							</el-select>
-							<ul>
-								<li v-for="(item) in hotKey" @click="remoteMethod(item,true)">{{item}}</li>
+							<ul class="list-group">
+								<li v-for="(item) in hotKey" @click="remoteMethod(item,true)">
+									<h2 class="label label-primary">{{item}}</h2>
+								</li>
 							</ul>
 						</el-form-item>
 						<el-form-item label="時數">
@@ -3285,7 +3295,7 @@ var __fn = (
 
 							],
 							list_src:[],
-							hotKey:['聚鼎','SSMES','科毅'],
+							hotKey:['聚鼎','SSMES','科毅','GTiMESv5.0'],
 						}
 					} ,
 					props:{
