@@ -22,5 +22,5 @@ injectPart: {
     //{x,x1}
 _%>
 <%- $.outfile('~Inject.txt') _%>
-<%- $._Inject.ViewLog({x,x1} ,0) %>
+<%- $._Inject.ViewLog({injectPart,x1} ,0) %>
 

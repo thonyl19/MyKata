@@ -24,7 +24,7 @@ inject: {
     $.data.Src = $.ext_ut.parseRow(Src);
 
     eval(include('_Inject.js'));
-    
+
     //基本 Part測試
     //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\_Inject.ejsyaml
     //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\mvc_gti\gt_UI\vue_selectize\basic\_part.cfg

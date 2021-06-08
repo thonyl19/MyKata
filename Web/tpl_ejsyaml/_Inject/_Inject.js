@@ -1,11 +1,12 @@
-﻿var injectCfg = {
+
+var injectCfg = {
 	_移除plog:0,
 	_重覆操作:1,
 	_連續操作:2,
 	_復原:9,
 	_復原且刪除:91
 }
-$._Inject = {
+var _Inject = {
 	parsePart(partCfg = './_part.cfg'){
 		let {fs} = $.ext_ut;
 		if (_.isPlainObject(partCfg)==false){
@@ -123,7 +124,16 @@ $._Inject = {
 		
 		if (mode!= 2) arr.unshift(JSON.stringify(Log,null,4));
 		return arr.join('\r\n');
-	}	
-
+	},	
+	genCode(){
+		var _file = $.resolvePath("_Inject_t.js");
+		var _tar =  $.resolvePath("_Inject_x.js");
+		var _key = '//##_Inject----------------------------------------';
+		var _code = fs.readFileSync(_file).toString();
+		var arr = _code.split(_key);
+		arr.shift()
+		arr.pop();
+		fs.writeFileSync(_tar,arr.join(_key));
+	},
 }
- 
+$._Inject = _Inject;

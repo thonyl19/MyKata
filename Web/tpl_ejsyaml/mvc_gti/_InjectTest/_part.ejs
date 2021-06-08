@@ -1,9 +1,12 @@
 <%_
-    // var _cfg = {
-    //     "Html_Code":"vue-selectize.ejs",
-    // }
+
+    var _cfg = 		
+        //#_Cfg
+        {
+            "Html_Code": "./../_part.ejs"
+        }
+        //@#
     var _cfg = {
-        //D:\A\Code\github\MyKata\MyKata_Web\Web\tpl_ejsyaml\mvc_gti\gt_UI\vue_selectize\basic\vue-selectize.ejs
-        "Html_Code":`${$.resolvePath('./mvc_gti/gt_UI/vue_selectize/basic/vue-selectize.ejs').replace(/\\/g,'/')}`,
+        "Html_Code":`${$.resolvePath('./vue-selectize.ejs')}`,
     };
 _%><%-JSON.stringify(_cfg)_%>
