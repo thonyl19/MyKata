@@ -3231,13 +3231,7 @@ var __fn = (
 			var _obj = {
 				_note,
 				_css:`
-				.list-group li{
-					float:left;
-					display:inline-block;
-					margin-right:7px;
-					background-color: #fff;
-					color: #333;
-				}
+
 				`,
 				_vue: {
 					template: `
@@ -3260,7 +3254,7 @@ var __fn = (
 									:value="item.TaskSID">
 								</el-option>
 							</el-select>
-							<ul class="list-group">
+							<ul class="job-rec list-group">
 								<li v-for="(item) in hotKey" @click="remoteMethod(item,true)">
 									<h2 class="label label-primary">{{item}}</h2>
 								</li>
@@ -3545,6 +3539,13 @@ var __fn = (
 				.el-dialog__body ,
 				.el-dialog__header {
 					padding: 10px;
+				}
+				.job-rec.list-group li{
+					float:left;
+					display:inline-block;
+					margin-right:7px;
+					background-color: #fff;
+					color: #333;
 				}
 				`,
 				_vue: {

@@ -1,0 +1,56 @@
+﻿# input data
+Export: {
+    path: H:\GTiMES5.1_Dev\Genesis_MVC\Areas\MTR\Controllers\ ,
+    # name: MLotCreateListController.cs ,
+    # creat
+}
+Src: {
+    Areas: MTR,
+    FunctionName: "MLotCreate",
+    RESOURCE_NAME: 物料批號建立,
+    TableName: PF_PARTNO,
+    I18nPrefix: 'RES.BLL.Face.',
+    CheckDataRule: "//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${TableName};",
+    SID_Filed: 'ROUTE_NO',
+    row: {
+        "PARTNO": "GTI20101517555209104",
+        "PART_NAME": "C030-19",
+    },
+}
+Part: {
+    "API":[
+        Enable ,
+        # ../ActionResult 
+    ]
+}
+inject: {
+    path: D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\ ,
+    file: SequenceNumController.cs ,
+}
+--- |
+<%  $.isBig5 = true;
+    $.ext_ut.parseRow(Src);
+    $.render('_part.ejs', '~part.txt', {Src});
+    Src.point = JSON.parse(include('_part.ejs',{Src}));
+
+    
+    if (Export.name !=""){
+        $.render('Main.ejs', `${Export.path}${Export.name}` , {Src});
+    }
+    /*
+    if (Export.creat !=null){
+        $.render('', `${Export.path}${Export.name}` , {Src});
+    }
+
+    Part = $.ext_ut.parsePartCfg($,Src,include);
+    $.ext_ut.Inject(inject,Part);
+    */
+_%>
+<%- $.outfile('~Code.cs') _%>
+<%- JSON.stringify(Export)%>
+<%- include('Main',{Src}) %>
+<%- $.outfile('~Code.txt') _%>
+<%# $.ext_ut.parsePartCode(Src,Part) %>
+
+
+
