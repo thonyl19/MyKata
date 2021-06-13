@@ -4,6 +4,7 @@ const ejs = require('ejs');
 const moment = require('moment');
 const fs = require('fs');
 const { exec } = require('child_process');
+
 var $ = {
 	data:{},
 	ext_ut:{_,fs,path},
@@ -25,6 +26,7 @@ var injectCfg = {
 	_復原且刪除:91
 }
 var _Inject = {
+ 
 	parseRelatePath(basePath,src){
 		// var basePath = "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\";
 		// var src = "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\_InjectTest\\_part.ejs.log";
@@ -431,7 +433,23 @@ var _Inject = {
 }
 $._Inject = _Inject;
 //##_Inject----------------------------------------
-var _test = {
+var _test_Inject = {
+	target :"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml",
+	
+}
+
+var _test_Point = {
+	'*解析 point位置'(){
+		var x = fs.readFileSync(_test_Inject.target);
+		x
+		
+
+	},
+	// test('adds 1 + 2 to equal 3', () => {
+	//   })
+}
+
+var _test_InjectPart = {
 	async 't_InjectPartEJS'(){
 		$.data.injectPart = {
 			"targetPath": "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\_InjectTest\\",
@@ -484,8 +502,12 @@ var _test = {
  	},
 }
 
-_.each(_test,(e,k)=>{
-	if (k.substr(0,1)=="*"){
-		e();
-	}
-})
+for (var el of [_test_Inject,_test_Point]){
+	//el
+	_.each(el,(e,k)=>{
+		if (k.substr(0,1)=="*"){
+			e();
+		}
+	})
+}
+module.exports={_Inject}

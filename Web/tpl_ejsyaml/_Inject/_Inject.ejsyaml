@@ -13,11 +13,12 @@ Src: {
 } 
 inject: {
     list: [
-        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
-        H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
+        D:\A\Code\github\MyKata\MyKata_Web\Web\MVC\gti\SequenceNum.cshtml
+        # H:\SSMES_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
+        # H:\SSMES_Dev\Genesis_MVC\Areas\Example\Controllers\ActController.cs,
     ],
     #0)刪除 1)重覆 2)連續 9)復原
-    mode: 0
+    mode: 1
 }
 --- |
 <%  $.isBig5 = true;
@@ -38,5 +39,5 @@ inject: {
 
 _%>
 <%- $.outfile('~Inject.txt') _%>
-<%- $._Inject.ViewLog(_partCfg ,0) %>
+<%- $._Inject.ViewLog(inject ,0) %>
 <%# _Inject.ViewLog(_Inject.path,0) %>
