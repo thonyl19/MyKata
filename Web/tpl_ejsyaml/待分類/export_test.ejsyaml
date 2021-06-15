@@ -1,15 +1,20 @@
-﻿target: D:\A\Code\nodejs\TestCT\node_modules\_test\testHelper.js
-list: {
-    # "testHelper.js": D:\A\Code\github\MyKata\MyKata_Web\Web\~Test\ ,
-    "testHelper.js": D:\A\Code\github\MyKata\MyKata_Web\Web\node_modules\_test\
+﻿testHelper: {
+    src: D:\A\Code\nodejs\TestCT\node_modules\_test\testHelper.js ,
+    dest: [
+        # "testHelper.js": D:\A\Code\github\MyKata\MyKata_Web\Web\~Test\ ,
+        D:\A\Code\github\MyKata\MyKata_Web\Web\node_modules\_test\testHelper.js
+    ]
 }
 
 --- |
 <%_
-    for(var key in list){
-        var fileName = key; 
-        var dest = list[key];
-        this.render(target, `${dest}${fileName}`);
+    var _list = [
+        testHelper
+    ];
+    for(var item of _list){
+        for (var _dest of item.dest){
+            this.render(item.src, _dest);
+        }
     }
     this.skip();
 _%>
