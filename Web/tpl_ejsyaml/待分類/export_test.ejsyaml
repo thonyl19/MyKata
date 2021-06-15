@@ -1,0 +1,15 @@
+﻿target: D:\A\Code\nodejs\TestCT\node_modules\_test\testHelper.js
+list: {
+    # "testHelper.js": D:\A\Code\github\MyKata\MyKata_Web\Web\~Test\ ,
+    "testHelper.js": D:\A\Code\github\MyKata\MyKata_Web\Web\node_modules\_test\
+}
+
+--- |
+<%_
+    for(var key in list){
+        var fileName = key; 
+        var dest = list[key];
+        this.render(target, `${dest}${fileName}`);
+    }
+    this.skip();
+_%>

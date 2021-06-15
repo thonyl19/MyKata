@@ -2,7 +2,9 @@
   "scripts": {
     "Koa_app": "nodemon PowerTool/Koa_app.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "power-assert": "^1.6.1"
+  },
   "dependencies": {
     "@hscmap/vue-window": "^2.4.2",
     "@koa/cors": "^3.1.0",

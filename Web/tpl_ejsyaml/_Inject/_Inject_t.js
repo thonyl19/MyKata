@@ -4,9 +4,11 @@ const ejs = require('ejs');
 const moment = require('moment');
 const fs = require('fs');
 const { exec } = require('child_process');
+const { testHelper,testFN} = require('_test/testHelper');
+import { strict as assert } from 'assert'; 
 
 var $ = {
-	data:{},
+	data:{}, 
 	ext_ut:{_,fs,path},
 	resolvePath(x){
 		return path.resolve(`./tpl_ejsyaml/_Inject/${x}`);
@@ -25,8 +27,147 @@ var injectCfg = {
 	_復原:9,
 	_復原且刪除:91
 }
+var _Point = {
+	v20210615(point){
+		var match_key =  point.match(/\[(.)+\]/g)||['-?-'];
+		var key = match_key[0].replace("[","").replace("]","");
+
+		let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
+		let [tabs] = start.match(/(|\t)+/g); 
+		let [injectKey] = start.match(/(##|#_)/g); 
+		let arg = {
+			key,
+			point,
+			tabs,
+			injectKey,
+			get isInjectAfter(){
+				return this.injectKey == "##";
+			},
+		};
+		arg
+		return arg;
+	}
+}
 var _Inject = {
+	_fn:{
+		getPoint(data){
+			var Point =  new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g');
+			return  data.match(Point);
+		},
+	},
+	Inject($,include){
+		//$.ext_ut.include = include;
+		//let {fs} = $.ext_ut;
+		let {Src,inject} = $.data;
+		let {mode = 0, partCfg=["./_part.cfg"]} = inject;
+		let {parsePart,Plog} = this;
+
+		var _Reg = {
+			Point: new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g')		
+		}
+		
+		var _fn ={
+ 			_移除plog(){
+				inject.list.forEach(file => {
+					Plog(file).remove();
+				});
+			},
+			_復原(){
+				inject.list.forEach(file => {
+					Plog(file).reverse();
+				});
+			},
  
+			parsePlog(Part){
+				var _arg = {
+					mode,
+					plog: inject.list.map(file=>{return Plog(file,Part)}) 
+				}
+				return _arg;
+			},
+ 		}
+		switch(mode){
+			case injectCfg._移除plog:
+				_fn._移除plog();
+				break;
+			case injectCfg._復原:
+				_fn._復原();
+				break;
+			case injectCfg._重覆操作:
+			case injectCfg._連續操作:
+				var Part = parsePart($,include,partCfg);
+				var _r = {
+					Src,
+					Inject: _fn.parsePlog(Part.get(Src)),
+					Part,
+				}
+				for(var plog of _r.Inject.plog){
+					var _plog 
+						= plog.act
+						= plog.init(mode);
+					_plog.point.forEach(Cfg=>{
+						var data = Cfg.part;
+						if (data == null || data.length == 0 ) return null;
+						if (_.isArray(data)){
+							data = data.join('\r\n');
+						}
+						var _code = data.split('\r\n').join(`\r\n${Cfg.tabs}`);
+						if (Cfg.isInjectAfter){
+							_code = `${Cfg.point}\r\n${Cfg.tabs}${_code}`;
+						}else{
+							_code = `${Cfg.tabs}${_code}\r\n${Cfg.point}`;
+						}
+						_plog.base = _plog.base.replace(Cfg.point,_code);
+					})
+					$.ext_ut.writeFile(plog.target,_plog.base);
+				}
+				return _r;
+				break;
+
+		}
+ 	},
+	parseInjectPoint(injectCfg,Part){
+		// var ext_ut = $.ext_ut;
+		// let {fs} = $.ext_ut;
+		var _fn = {
+			parseInjectPoint(point){
+				let [start] =  point.match(/(|\t)(.)+(##|#_)/g);
+				var match_key =  point.match(/\[(.)+\]/g)||['-?-'];
+				var key = match_key[0].replace("[","").replace("]","");
+				start 
+				let [tabs] = start.match(/(|\t)+/g); 
+				let [injectKey] = start.match(/(##|#_)/g); 
+				let arg = {
+					key,
+					point,
+					tabs,
+					injectKey,
+					get isInjectAfter(){
+						return this.injectKey == "##";
+					},
+					Part:Part[key]
+				};
+				arg
+				return arg;
+			},
+		}
+		var arr = [];
+		var _reg = new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g');
+		for (var file of injectCfg.list){
+			var _ejs = `${file}.ejs`;
+			var isReinject = fs.existsSync(_ejs);
+			file = isReinject ?_ejs : file;
+			var _base = fs.readFileSync(file).toString();
+			if (!isReinject) ext_ut.writeFile(`${_ejs}`,_base);
+			var _matchs = _base.match(_reg)||[];
+			var _arg = {
+				file,
+				matchs:_matchs.map(_fn.parseInjectPoint)
+			}
+			arr.push(_arg);
+		}
+		return arr;
+	},
 	parseRelatePath(basePath,src){
 		// var basePath = "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\";
 		// var src = "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\_InjectTest\\_part.ejs.log";
@@ -437,17 +578,51 @@ var _test_Inject = {
 	target :"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml",
 	
 }
-
-var _test_Point = {
-	'*解析 point位置'(){
-		var x = fs.readFileSync(_test_Inject.target);
-		x
-		
-
+var _Inject_v20210613 = {
+	A01(){
+		/* 
+		測試,解析 Code 中,所設定 Point 標記, 目標是要能全部被解析到 
+		*/
+		var t = `
+		<@##[HtmlCode]#@/>
+		<@#_[HtmlCode]#@/>
+		//##[HtmlCode]#
+		//#[_HtmlCode]#
+		/*##[HtmlCode]#   */
+		/*#[_HtmlCode]#*/
+		`;
+		var x  = _Inject._fn.getPoint(t);
+        this.be(x).eq("應該要比對出6 個項目");
+    },
+	A02(){
+		/* 
+		測試將 Point 標記 轉換為 Point 物件, Point 物件主要的目標 ,
+			是為便於後續植入 Code 時,便於精準操作的需求 ,
+			重點是要能取得 key , tabs , isInjectAfter
+		*/
+		var _src = _Inject_v20210613.A01.src();
+		var _r = _src.map(el=>{
+			return _Point.v20210615(el);
+		})
+		_r
+		this.be(_r).eq();
 	},
-	// test('adds 1 + 2 to equal 3', () => {
-	//   })
+	A02(){
+		/* 
+		測試將 Point 標記 轉換為 Point 物件, Point 物件主要的目標 ,
+			是為便於後續植入 Code 時,便於精準操作的需求 ,
+			重點是要能取得 key , tabs , isInjectAfter
+		*/
+		var _src = _Inject_v20210613.A01.src();
+		var _r = _src.map(el=>{
+			return _Point.v20210615(el);
+		})
+		_r
+		this.be(_r).eq();
+	},
 }
+
+ 
 
 var _test_InjectPart = {
 	async 't_InjectPartEJS'(){
@@ -501,13 +676,9 @@ var _test_InjectPart = {
 		_json
  	},
 }
-
-for (var el of [_test_Inject,_test_Point]){
-	//el
-	_.each(el,(e,k)=>{
-		if (k.substr(0,1)=="*"){
-			e();
-		}
-	})
-}
-module.exports={_Inject}
+ 
+  
+//module.exports={_Inject} 
+testFN.v20210615.Qoka("./tpl_ejsyaml/_inject/~v20210613/",[_Inject_v20210613]
+   ,/A03/gi
+);
