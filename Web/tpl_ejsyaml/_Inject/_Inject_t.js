@@ -48,6 +48,11 @@ var _Point = {
 		return arg;
 	}
 }
+var _Plog = {
+	v20210615:{
+
+	}
+}
 var _Inject = {
 	_fn:{
 		getPoint(data){
@@ -620,6 +625,12 @@ var _Inject_v20210613 = {
 		_r
 		this.be(_r).eq();
 	},
+}
+
+var _Plog_v20210615 = {
+	A01(){
+		
+	}
 }
 
  
