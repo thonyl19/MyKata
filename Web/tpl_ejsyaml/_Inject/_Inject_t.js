@@ -49,8 +49,41 @@ var _Point = {
 	}
 }
 var _Plog = {
-	v20210615:{
-
+	v20210615(target){
+		 var _r = {
+			target,
+			log :`${target}.log`,
+			__log:null,
+			checkExists(type=0){
+				var _tar = type == 0 
+					? this.target
+					: this.log
+					;
+				return fs.existsSync(this._tar);
+			},
+			Read_Target(){
+				if (this.checkExists()){
+					return fs.readFileSync(this.target);
+				}
+				return null;
+			},
+			read(){
+				if (this.__log!=null) return this.__log;
+				if (this.checkExists(1)){
+					this.__log = JSON.parse(fs.readFileSync(this.log));
+					return this.__log;
+				}
+				return [];
+			},
+			write(recData){
+				var _log = this.read();
+				_log.push(recData);
+				var _json = JSON.stringify(_log);
+				fs.writeFileSync(this.log,_json);
+				return this;
+			}
+		 }
+		 return _r;
 	}
 }
 var _Inject = {
@@ -611,25 +644,25 @@ var _Inject_v20210613 = {
 		})
 		_r
 		this.be(_r).eq();
-	},
-	A02(){
-		/* 
-		測試將 Point 標記 轉換為 Point 物件, Point 物件主要的目標 ,
-			是為便於後續植入 Code 時,便於精準操作的需求 ,
-			重點是要能取得 key , tabs , isInjectAfter
-		*/
-		var _src = _Inject_v20210613.A01.src();
-		var _r = _src.map(el=>{
-			return _Point.v20210615(el);
-		})
-		_r
-		this.be(_r).eq();
-	},
+	}, 
 }
 
+/*
+SPEC
+https://onedrive.live.com/view.aspx?resid=492F148C66C33613%2137895&id=documents&wd=target%28Template.one%7C60F3B385-9686-4F34-9919-0A9E7C90FD4D%2FPlog%7C306AE550-173F-497B-910F-15CCB913C436%2F%29
+onenote:https://d.docs.live.net/492f148c66c33613/OneNote/程式語言/Template.one#Plog&section-id={60F3B385-9686-4F34-9919-0A9E7C90FD4D}&page-id={306AE550-173F-497B-910F-15CCB913C436}&end
+*/
 var _Plog_v20210615 = {
-	A01(){
-		
+	A011(){
+		/*Plog 初始化 */
+		var _r = _Plog.v20210615(_test_Inject.target);
+		this._be(_r).T();
+	},
+	A012(){
+		/*Plog 初始化 */
+		var _r = _Plog.v20210615(_test_Inject.target);
+		_r.write("test"); 
+		this._be(_r).T(); 
 	}
 }
 
@@ -688,8 +721,11 @@ var _test_InjectPart = {
  	},
 }
  
-  
+   
 //module.exports={_Inject} 
-testFN.v20210615.Qoka("./tpl_ejsyaml/_inject/~v20210613/",[_Inject_v20210613]
-   ,/A03/gi
+// testFN.v20210615.Qoka("./tpl_ejsyaml/_inject/~v20210613/",[_Inject_v20210613]
+//    ,/A03/gi
+// );
+testFN.v20210615.Qoka("./tpl_ejsyaml/_Plog/~v20210615/",[_Plog_v20210615]
+   //,/A03/gi
 );
