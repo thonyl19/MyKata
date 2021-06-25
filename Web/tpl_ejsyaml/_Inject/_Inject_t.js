@@ -9,7 +9,7 @@ import { strict as assert } from 'assert';
 
 var $ = {
 	data:{}, 
-	ext_ut:{_,fs,path},
+	ext_ut:{_,fs,path}, 
 	resolvePath(x){
 		return path.resolve(`./tpl_ejsyaml/_Inject/${x}`);
 	},
@@ -50,7 +50,7 @@ var _Point = {
 }
 var _Plog = {
 	v20210615(target){
-		 var _r = {
+		var _r = {
 			target,
 			log :`${target}.log`,
 			__log:null,
@@ -59,7 +59,7 @@ var _Plog = {
 					? this.target
 					: this.log
 					;
-				return fs.existsSync(this._tar);
+				return fs.existsSync(_tar);
 			},
 			Read_Target(){
 				if (this.checkExists()){
@@ -75,15 +75,36 @@ var _Plog = {
 				}
 				return [];
 			},
-			write(recData){
+			write(logData,newData = null){
 				var _log = this.read();
-				_log.push(recData);
+				_log.push(logData);
 				var _json = JSON.stringify(_log);
 				fs.writeFileSync(this.log,_json);
+				if (newData != null){
+					fs.writeFileSync(this.target,newData);
+				}
 				return this;
-			}
-		 }
-		 return _r;
+			},
+			remove(){
+				if (this.checkExists(1)) fs.unlinkSync(this.log);
+			},
+			reverse(mode){
+				var [_code] = this.read();
+				if (_code !=null){
+					fs.writeFileSync(this.target,_code);
+					if (mode == injectCfg._復原且刪除){
+						this.remove();
+					}
+				}
+			},
+			last(){
+				if (this.checkExists(1)){
+					return _.last(this.read());
+				}
+				return null;
+			},
+		}
+		return _r;
 	}
 }
 var _Inject = {
@@ -92,6 +113,14 @@ var _Inject = {
 			var Point =  new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g');
 			return  data.match(Point);
 		},
+	},
+	v20210625(cfg,$,include){
+		let {list=[],mode} = cfg;
+		
+		var _arg = {
+
+		}
+		return _arg;
 	},
 	Inject($,include){
 		//$.ext_ut.include = include;
@@ -613,8 +642,13 @@ var _Inject = {
 $._Inject = _Inject;
 //##_Inject----------------------------------------
 var _test_Inject = {
-	target :"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml",
-	
+	//target :"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml",
+	target :"P:\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml",
+	get testFile(){
+		var _ls = path.resolve("tpl_ejsyaml/_Inject/_Inject_t.txt");
+		_ls
+		return _ls;
+	}
 }
 var _Inject_v20210613 = {
 	A01(){
@@ -645,6 +679,17 @@ var _Inject_v20210613 = {
 		_r
 		this.be(_r).eq();
 	}, 
+	A03(){
+		var _cfg = {
+			"list": [
+				"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml"
+			],
+			"mode": 1
+		}
+		var _r = _Inject.v20210625(_cfg);
+		this._be(_r).eq();
+
+	}
 }
 
 /*
@@ -659,9 +704,18 @@ var _Plog_v20210615 = {
 		this._be(_r).T();
 	},
 	A012(){
-		/*Plog 初始化 */
+		var _t = [];
 		var _r = _Plog.v20210615(_test_Inject.target);
+		_t.push("檢核刪除")
 		_r.write("test"); 
+		this._be(_r).T(); 
+	},
+	A021(){
+		var _t = [];
+		var _r = _Plog.v20210615(_test_Inject.testFile);
+		_r.__log = null;
+		var x = _r.last();
+		x;
 		this._be(_r).T(); 
 	}
 }
@@ -711,7 +765,7 @@ var _test_InjectPart = {
 		{
 			"Html_Code":"vue-selectize.ejs"
 		}
-		//@#
+		//@# 
 		$._Inject.parsePartCfg(_cfg);
 		`;
 		var _r = _Inject.InjectPartEJS().exec();
@@ -722,10 +776,10 @@ var _test_InjectPart = {
 }
  
    
-//module.exports={_Inject} 
-// testFN.v20210615.Qoka("./tpl_ejsyaml/_inject/~v20210613/",[_Inject_v20210613]
-//    ,/A03/gi
-// );
-testFN.v20210615.Qoka("./tpl_ejsyaml/_Plog/~v20210615/",[_Plog_v20210615]
+module.exports={_Inject} 
+testFN.v20210615.Qoka("./tpl_ejsyaml/_inject/~v20210613/",[_Inject_v20210613]
    //,/A03/gi
 );
+// testFN.v20210615.Qoka("./tpl_ejsyaml/_Plog/~v20210615/",[_Plog_v20210615]
+//    //,/A03/gi
+// );

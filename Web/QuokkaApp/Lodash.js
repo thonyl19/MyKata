@@ -4,6 +4,8 @@ https://lodash.net/docs/4.16.1.html
 */
 
 import * as _ from 'lodash';
+var equal = require('fast-deep-equal');
+
 var list_number = [
     '100.11',
     '100',
@@ -81,8 +83,42 @@ var Function = {
     },
     
 }
+var test = {
+    'A'(){
+        var objects = [{ 'n': 1 }, { 'n': 4 }];
+ 
+        var z = _.maxBy(objects, function(o) { return o.n; });
+        z
+        // => { 'n': 2 }
+        
+        // The `_.property` iteratee shorthand.
+        var r1 = _.maxBy(objects, 'n')||{n:1};
+        r1
 
-_.each([Function,fn],fn=>{
+        var r2 = r1.n++;
+        r2
+    },
+    "_"(){
+        var z = {
+            "測試未輸入[新增批號數量],應該回應 錯誤訊息": {
+              "act": [
+                "[新增批號數量] 必需為正整數"
+              ],
+              "exp": [
+                "[新增批號數量] 必需為正整數"
+              ]
+            }
+          }
+        let {act,exp} = z['測試未輸入[新增批號數量],應該回應 錯誤訊息'];
+        act
+        var z1 = _.eq(act,exp);
+        z1
+        var z2 = equal(act,exp);
+        z2
+    }
+}
+
+_.each([Function,fn,test],fn=>{
     _.each(fn,(e,k)=>{
         if (k.substr(0,1)=="_"){
             e();

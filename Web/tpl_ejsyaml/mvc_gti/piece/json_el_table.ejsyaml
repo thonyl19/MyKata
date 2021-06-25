@@ -2,18 +2,11 @@
 # 如果是 i18n. 則會自動加上 :
 label_前綴: '@Face.'
 row: {
-    "ROUTE_SID": "GTI20101517555209104",
-    "ROUTE_NO": "C030-19",
-    "ROUTE": "单面阳极板（子流程）",
-    "ROUTE_CATEGORY": "R",
-    "DEFAULT_VERSION": 1,
-    "VERSION_DESCRIPTION": null,
-    "MAX_VERSION": 2,
-    "CREATE_USER": "mes",
-    "CREATE_DATE": "2020-10-15 17:56:21",
-    "UPDATE_USER": "mes",
-    "UPDATE_DATE": "2020-10-30 14:13:41",
-    "ROUTE_VER_SID": "GTI20101517562109108"
+    "PARTNO_SID": "GTI21010719255949893",
+    "PARTNO": "P16328340SB",
+    "PARTNO_VER_SID": "GTI21010719255949894",
+    "PARTNO_VERSION": 1,
+    "QUANTITY": 90
 }
 --- |
 <%_ 

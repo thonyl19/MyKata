@@ -7,9 +7,11 @@ https://regexr.com/
 import * as _ from 'lodash';
 var fs=require("fs");
 var encoding = require("encoding");
-var jschardet = require("jschardet");
-const chardet = require('chardet');
+//var jschardet = require("jschardet");
+//const chardet = require('chardet');
 var iconv = require('iconv-lite');
+const path = require('path');
+
 (()=>{
     var _filePath = path.join(__dirname,'./_demo.xlsx');
     
@@ -77,6 +79,16 @@ var iconv = require('iconv-lite');
 
 
     var fn = {
+        '*'(){
+            var r 
+                //= "G:\\node-demos\\7-node-module\\demo\\config.json";
+                = "P:/Cypress/Cucumber_rpt/cypress/integration/GTI_SSMES_t/MTR/MLotCreate/MLotCreateData_Func/MLotCreateData_Func.js";
+            var r1 = [
+                path.dirname(r),
+                path.extname(r)
+            ]
+            r1
+        },
         async 'readFile'(){
             var s = await fs.readFileSync(`./package.json`);
             s

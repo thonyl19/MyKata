@@ -1,0 +1,16 @@
+public List<SelectModel> ddl_PartNoVers(string Search = null, MDL.SearchKey SearchType = MDL.SearchKey.SID)
+{
+    var query = (from t in svc_PF_PARTNO_VER.GetAllListIQueryable()
+            where (SearchType == MDL.SearchKey.SID && t.PARTNO_SID == Search)
+                || (SearchType == MDL.SearchKey.Name && t.PART_NAME == Search)
+                || (SearchType == MDL.SearchKey.No && t.PARTNO == Search)
+            select new SelectModel
+            {
+                SID = t.PARTNO_VER_SID,
+                No = t.PARTNO_VER_SID,
+                Display = "" + t.VERSION,
+                Value = t.PARTNO_VER_SID,
+            }
+        ).ToList();
+    return query;
+}

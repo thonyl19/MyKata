@@ -1,4 +1,10 @@
 ﻿//#region [Vue_QueryAndSort]
+//父視窗reload 功能
+reload() {
+	if (this.grid.data.length != 0) {
+		this.queryGrid(this.grid.Page.Index);
+	}
+},
 //排序事件
 sort_change(column) {
 	this.grid.Sort = {

@@ -1,0 +1,23 @@
+﻿# input data
+Src: {
+    I18n: {
+        Prefix: '@Face.',
+    },
+    row: {
+        "PARTNO_SID": "GTI21010719255949893",
+        "PARTNO": "P16328340SB",
+        "PARTNO_VER_SID": "GTI21010719255949894",
+        "PARTNO_VERSION": 1,
+        "QUANTITY": 90
+    },
+    grid_Src: 'grid.data'
+} 
+--- |
+<%  $.isBig5 = true;
+    $.ext_ut.parseRow(Src);
+_%>
+<%- $.outfile('~Code.txt') _%>
+<%- JSON.stringify(Src,null,4)%>
+<%- include('el_table_col',{Src}) %>
+
+ 

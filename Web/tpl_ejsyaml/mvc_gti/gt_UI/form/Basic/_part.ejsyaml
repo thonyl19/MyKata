@@ -1,15 +1,21 @@
 ﻿# input data
 Src: {
-    I18nPrefix: i18n.,
+    I18nPrefix: "@Face.",
     SID: 'ROUTE_NO',
     Form: {
         QueryUrl: test
     },
-    row: {
-        "CONFIG_FLAG": "GTI20101517555209104",
-        "PARTNO": "C030-19",
-        "USE_RATE": "单面阳极板（子流程）",
-    },
+    row:{
+        PARTNO: "11130020A                               "
+        ,PARTNO_TYPE_NAME: "OCP-SMD"
+        ,PARTNO_TYPE_NO: "4010"
+        ,PARTNO_TYPE_SID: "5034A680-9894-40F5-B604-EFFBB52BBE08"
+        ,PART_NAME: "包裝,SMD1812P014TF"
+        ,PRODUCT: "系統預設產品資料"
+        ,PRODUCT_NO: "Product"
+        ,PRODUCT_SID: "GTI13041716461881915"
+    } 
+    ,
 } 
 inject: {
     list: [

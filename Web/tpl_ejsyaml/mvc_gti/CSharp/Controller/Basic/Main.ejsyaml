@@ -1,13 +1,13 @@
 ﻿# input data
 Export: {
     path: H:\GTiMES5.1_Dev\Genesis_MVC\Areas\MTR\Controllers\ ,
-    # name: MLotCreateListController.cs ,
+    # name: MLotStartController.cs ,
     # creat
 }
 Src: {
     Areas: MTR,
-    FunctionName: "MLotCreate",
-    RESOURCE_NAME: 物料批號建立,
+    FunctionName: MLotStart,
+    RESOURCE_NAME: 物料批號下線,
     TableName: PF_PARTNO,
     I18nPrefix: 'RES.BLL.Face.',
     CheckDataRule: "//serv.svcRoute.CheckDataRule = serv.CheckDataRule_${TableName};",

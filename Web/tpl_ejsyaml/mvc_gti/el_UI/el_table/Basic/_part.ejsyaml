@@ -5,12 +5,11 @@ Src: {
         Prefix: '@Face.',
     },
     row: {
-        "CONFIG_FLAG": "P",
-        "OPER_PARTNO_SID": "00106D3C-36CD-42B6-AD16-A104A12FA30D",
-        "USE_RATE": 1.0,
-        "NO": "K1210400281                             ",
-        "NAME": "SMDJ45A",
-        "SPEC": "TVS_P Logo, SMC, 500EA/7\""
+        "PARTNO_SID": "GTI21010719255949893",
+        "PARTNO": "P16328340SB",
+        "PARTNO_VER_SID": "GTI21010719255949894",
+        "PARTNO_VERSION": 1,
+        "QUANTITY": 90
     },
     el_table: {
         grid_Src: grid.data ,
@@ -33,6 +32,6 @@ inject: {
     //var r = $.ext_ut.Inject($,include);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- $.ext_ut.InjectLog(r)  %>
+<%# $.ext_ut.InjectLog(r)  %>
  
  

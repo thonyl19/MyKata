@@ -1,8 +1,11 @@
 ﻿testHelper: {
-    src: D:\A\Code\nodejs\TestCT\node_modules\_test\testHelper.js ,
+    src: P:\MyKata\TestCT\testHelper.js ,
+    # D:\A\Code\nodejs\TestCT\node_modules\_test\testHelper.js ,
     dest: [
         # "testHelper.js": D:\A\Code\github\MyKata\MyKata_Web\Web\~Test\ ,
-        D:\A\Code\github\MyKata\MyKata_Web\Web\node_modules\_test\testHelper.js
+        # D:\A\Code\github\MyKata\MyKata_Web\Web\node_modules\_test\testHelper.js
+        P:\MyKata\MyKata_Web\Web\node_modules\_test\testHelper.js ,
+        P:\Cypress\Cucumber_rpt\node_modules\_test\testHelper.js
     ]
 }
 

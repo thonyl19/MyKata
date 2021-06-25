@@ -2,8 +2,8 @@
 	var _arg = {
 		i18nMode:$._.has(Src,'I18n.i18n'),
 		sort: `sortable="custom"
-	:sort-orders="$UT.sort_order"
-	`
+				:sort-orders="$UT.sort_order"
+				`
 		,label(filed){
 			return this.i18nMode
 				?`:label="i18n.${filed.Name}"`

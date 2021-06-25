@@ -111,7 +111,7 @@ var ext_ut = {
 	},
  
 	parsePart($,include=()=>{}, partCfg = './_part.cfg'){
-		let {fs} = $.ext_ut;
+		let {fs} = ext_ut;
 		if (_.isPlainObject(partCfg)==false){
 			partCfg = $.resolvePath(partCfg);
 			var _json = fs.readFileSync(partCfg);
