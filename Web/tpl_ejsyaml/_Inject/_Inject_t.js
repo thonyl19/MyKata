@@ -59,7 +59,7 @@ var _Plog = {
 					? this.target
 					: this.log
 					;
-				return fs.existsSync(this._tar);
+				return fs.existsSync(_tar);
 			},
 			Read_Target(){
 				if (this.checkExists()){
@@ -77,10 +77,14 @@ var _Plog = {
 			},
 			write(recData){
 				var _log = this.read();
-				_log.push(recData);
+				_log
+				_log.push(recData); 
 				var _json = JSON.stringify(_log);
 				fs.writeFileSync(this.log,_json);
 				return this;
+			},
+			del(){
+				if (this.checkExists(1)) fs.unlinkSync(this.log);
 			}
 		 }
 		 return _r;
@@ -660,9 +664,13 @@ var _Plog_v20210615 = {
 	},
 	A012(){
 		/*Plog 初始化 */
+		var _t = [];
 		var _r = _Plog.v20210615(_test_Inject.target);
-		_r.write("test"); 
-		this._be(_r).T(); 
+		_r.del();
+		_t.push("測試刪除,檢核應該為 false - 檔案不存在", _r.checkExists(1))
+		_r.write("test");  
+		_t.push("測試新寫一筆記錄, 應為 true  - 檔案己存在", _r.checkExists(1))
+		this.be(_t).T(); 
 	}
 }
 
