@@ -77,7 +77,8 @@ var _Plog = {
 			},
 			write(logData,newData = null){
 				var _log = this.read();
-				_log.push(logData);
+				_log
+				_log.push(recData); 
 				var _json = JSON.stringify(_log);
 				fs.writeFileSync(this.log,_json);
 				if (newData != null){
@@ -90,6 +91,12 @@ var _Plog = {
 			},
 			reverse(mode){
 				var [_code] = this.read();
+			},
+			del(){
+				if (this.checkExists(1)) fs.unlinkSync(this.log);
+			}
+		 }
+		 return _r;
 				if (_code !=null){
 					fs.writeFileSync(this.target,_code);
 					if (mode == injectCfg._復原且刪除){
@@ -705,10 +712,13 @@ var _Plog_v20210615 = {
 	},
 	A012(){
 		var _t = [];
+		var _t = [];
 		var _r = _Plog.v20210615(_test_Inject.target);
-		_t.push("檢核刪除")
-		_r.write("test"); 
-		this._be(_r).T(); 
+		_r.del();
+		_t.push("測試刪除,檢核應該為 false - 檔案不存在", _r.checkExists(1))
+		_r.write("test");  
+		_t.push("測試新寫一筆記錄, 應為 true  - 檔案己存在", _r.checkExists(1))
+		this.be(_t).T(); 
 	},
 	A021(){
 		var _t = [];
