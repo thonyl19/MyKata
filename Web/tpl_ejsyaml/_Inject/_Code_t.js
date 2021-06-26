@@ -1,4 +1,11 @@
+﻿const _ = require('lodash');
+const path = require( "path");
+const ejs = require('ejs');
+const moment = require('moment');
+const fs = require('fs');
+const { testHelper,testFN} = require('_test/testHelper');
 
+//##_Inject----------------------------------------
 var _enum = {
 	map_csharpType: {
 		"string":"string",
@@ -218,3 +225,73 @@ var _Code_fn = {
 		}
 	}
 }
+//##_Inject----------------------------------------
+ 
+var _Code_v20210615 = {
+	A01(){
+		/*Line to Code */
+
+	}
+}
+
+var _Code_fn_v20210615 = {
+	B00(){
+		_Code_fn.genCode_Inject();
+	
+	},
+	B01(){
+		/*JsonCode
+		*/
+		var _list = {
+			"null":null,
+			"空字串":"",
+			"Json":`{"A":"a"}`
+		}
+		var _t = {};
+		for (var key in _list){
+			var t = _Code_fn.JsonCode.v20210625(_list[key]);
+			_t[key] = {
+				t,"toJsonStr":t.toJsonStr(true)
+			}
+		}
+		this.be(_t).T();
+	},
+	B02(){
+		/*parseRow 
+		*/
+		var _t ={
+			row: {
+				"string":"string",
+				"int":1,
+				"float":1.5,
+				"array":[],
+				"date":"2020-10-15 17:56:21",
+				"boolean":true,
+			}
+		}
+		var _r = _Code_fn.parseRow.v20210626(_t);
+		this._be(_r).T();		
+
+	},
+	B021(){
+		/*parseRow 
+		*/
+		var _t ={
+			row: {
+				"string":"string",
+				"int":1,
+				"float":1.5,
+				"array":[],
+				"date":"2020-10-15 17:56:21",
+				"boolean":true,
+			}
+		}
+		var _r = _Code_fn.parseRow.v20210625(_t);
+		this._be(_r).T();		
+
+	}
+}
+
+testFN.v20210615.Qoka("./tpl_ejsyaml/_Inject/_Code/~v20210625/",[_Code_v20210615,_Code_fn_v20210615]
+   //,/A03/gi
+);

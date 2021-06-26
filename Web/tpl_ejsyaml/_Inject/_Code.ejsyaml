@@ -1,0 +1,17 @@
+﻿# input data
+Src: {
+    row: {
+        "CONFIG_FLAG": "GTI20101517555209104",
+        "PARTNO": "C030-19",
+        "USE_RATE": "单面阳极板（子流程）",
+    },
+} 
+ 
+--- |
+<%  $.isBig5 = true;
+    eval(include('_Code.js'));
+    var _r = _Code_fn.parseRow.v20210626(Src.row);
+_%>
+<%- $.outfile('~Code.txt') _%>
+<%- JSON.stringify(_r) %>
+<%# _Inject.ViewLog(_Inject.path,0) %>
