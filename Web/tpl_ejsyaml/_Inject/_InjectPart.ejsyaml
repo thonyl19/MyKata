@@ -13,11 +13,14 @@ injectPart: {
     eval(include('_Inject.js'));
 
     //測試 _InjectPart.ejs 輸出效果
-    //this.render('_InjectPart.ejs', '~tmp.txt');
+    //this.render('_InjectPart.ejs', '~tmp1.txt');
+    
     //測試 _InjectPartEjsyaml.ejs  輸出效果
-    //this.render('_InjectPartEjsyaml.ejs', '~tmp.txt');
-	//this.skip();
-
+    //this.render('_InjectPartEjsyaml.ejs', '~tmp1.txt');
+    
+    //this.render('_part.ejs', '~tmp1.txt');
+	
+    //this.skip();
     x = $._Inject.InjectPartEJS();
     //x1 = x.exec();
     //{x,x1}

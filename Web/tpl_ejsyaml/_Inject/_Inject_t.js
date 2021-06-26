@@ -78,7 +78,7 @@ var _Plog = {
 			write(logData,newData = null){
 				var _log = this.read();
 				_log
-				_log.push(recData); 
+				_log.push(logData); 
 				var _json = JSON.stringify(_log);
 				fs.writeFileSync(this.log,_json);
 				if (newData != null){
@@ -86,23 +86,12 @@ var _Plog = {
 				}
 				return this;
 			},
-			remove(){
-				if (this.checkExists(1)) fs.unlinkSync(this.log);
-			},
+ 
 			reverse(mode){
 				var [_code] = this.read();
 			},
 			del(){
 				if (this.checkExists(1)) fs.unlinkSync(this.log);
-			}
-		 }
-		 return _r;
-				if (_code !=null){
-					fs.writeFileSync(this.target,_code);
-					if (mode == injectCfg._復原且刪除){
-						this.remove();
-					}
-				}
 			},
 			last(){
 				if (this.checkExists(1)){
@@ -119,6 +108,16 @@ var _Inject = {
 		getPoint(data){
 			var Point =  new RegExp(`(|\t)(.)+(##|#_)(.)+`,'g');
 			return  data.match(Point);
+		},
+		genCode_Inject(){
+			var _file = $.resolvePath("_Inject_t.js");
+			var _tar =  $.resolvePath("_Inject.js");
+			var _key = '//##_Inject----------------------------------------';
+			var _code = fs.readFileSync(_file).toString();
+			var arr = _code.split(_key);
+			arr.shift()
+			arr.pop();
+			fs.writeFileSync(_tar,arr.join(_key));
 		},
 	},
 	v20210625(cfg,$,include){
@@ -625,16 +624,7 @@ var _Inject = {
 		}
 		return cfg;
 	},	
-	genCode_Inject(){
-		var _file = $.resolvePath("_Inject_t.js");
-		var _tar =  $.resolvePath("_Inject.js");
-		var _key = '//##_Inject----------------------------------------';
-		var _code = fs.readFileSync(_file).toString();
-		var arr = _code.split(_key);
-		arr.shift()
-		arr.pop();
-		fs.writeFileSync(_tar,arr.join(_key));
-	},
+	
 	genCode_Part(){
 		var _file = $.resolvePath("_Inject_t.js");
 		var _tar =  $.resolvePath("_Inject.js");
@@ -646,7 +636,14 @@ var _Inject = {
 		fs.writeFileSync(_tar,arr.join(_key));
 	},
 }
+
+var Part = {
+	v20210625(){
+		return "test";
+	}
+}
 $._Inject = _Inject;
+$.Part = Part.v20210625;
 //##_Inject----------------------------------------
 var _test_Inject = {
 	//target :"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml",
@@ -658,6 +655,9 @@ var _test_Inject = {
 	}
 }
 var _Inject_v20210613 = {
+	A00(){
+		_Inject._fn.genCode_Inject();
+	},
 	A01(){
 		/* 
 		測試,解析 Code 中,所設定 Point 標記, 目標是要能全部被解析到 
@@ -692,9 +692,17 @@ var _Inject_v20210613 = {
 				"D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\MVC\\gti\\SequenceNum.cshtml"
 			],
 			"mode": 1
-		}
+		};
 		var _r = _Inject.v20210625(_cfg);
-		this._be(_r).eq();
+		/*
+		
+		
+		*/
+		//_r.exec(part);
+		//this._be(_r).eq();
+
+	},
+	A04(){
 
 	}
 }
@@ -760,9 +768,7 @@ var _test_InjectPart = {
 		//_inject
 		 
 	},
-	't_export_Inject'(){ 
-		_Inject.genCode_Inject();
-	},
+ 
 	'轉換相對路徑'(){
 		var basePath = "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\";
 		var src = "D:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\_InjectTest\\_part.ejs.log";
@@ -790,6 +796,6 @@ module.exports={_Inject}
 testFN.v20210615.Qoka("./tpl_ejsyaml/_inject/~v20210613/",[_Inject_v20210613]
    //,/A03/gi
 );
-// testFN.v20210615.Qoka("./tpl_ejsyaml/_Plog/~v20210615/",[_Plog_v20210615]
-//    //,/A03/gi
-// );
+testFN.v20210615.Qoka("./tpl_ejsyaml/_Plog/~v20210615/",[_Plog_v20210615]
+   //,/A03/gi
+);
