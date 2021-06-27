@@ -1,4 +1,6 @@
-
+let {fs,_,moment,ejs,} = $.ext_ut;//##_Inject----------------------------------------
+let {include,Path} = $.ext_ut;
+ 
 var _enum = {
 	map_csharpType: {
 		"string":"string",
@@ -17,21 +19,83 @@ var _enum = {
 		boolean(filed){return ``},
 	},
 }
+var _Part = {
+	gnePartCfg:{
+		tpl_resolvePath:"`@{@.resolvePath('${val}')}`",
+		tpl_include:"`@{@.resolvePath('${val}')}`",
+		v20210627(json,cb=null){
+			let {render} = $;
+			//搭配 isTest ,解決 include 在測試和正式 情境中, 非同步的處理問題
+			let {isTest=false} = $;
+			var _tplA = _.template('"${key}":[${list}],');
+			var _tplB = _.template(_Part.gnePartCfg.tpl_resolvePath);
+			var Src = [];
+			_.each(json,(val,key)=>{ 
+				var list = [];
+				if (Array.isArray(val)){
+					list = val.map(el=>{
+						return _tplB({val:el}).replace(/@/gi,'$')
+					})
+				}else{
+					list.push(_tplB({val}).replace(/@/gi,'$'));
+				}
+				var x = _tplA({key,list:list.join(',')})
+				Src.push(x);
+			})
+			var _file = $.resolvePath('./_InjectPart.ejs');
+			if (isTest){
+				return include(_file, {Src},cb);
+			}
+			var r = $.render(_file,'_part.cfg', {Src});
+			return r;
+		}
+	},
+	v20210627(partCfg,Src,isTest=false){
+		var _Test = [JSON.stringify(Src,null,4)];
+		if (_.isPlainObject(partCfg)==false){
+			var _part =  include(partCfg);
+			_Test.push(`[PartCfg]\r\n${_part}`);
+			partCfg = JSON.parse(_part);
+		}
+		var _r = {}
+		_.each(partCfg,(v,k)=>{
+			_Test.push(`[${k}]`);
+			var r  = v.map(el=>{
+				return include(el,Src);
+			})
+			_r[k] = r;
+			_Test.push(r.join('\r\n'));
+		}) 
+		if (isTest) return _Test;
+		return _r;
+	}
+
+}
 var _Code = {
 	v20210625(){
 
 	}
 }
 var _Code_fn = {
+
+	view(code){
+		if (_.isPlainObject(code)){
+			return JSON.stringify(code,null,4);
+		}else if (Array.isArray(code)){
+			return code.join('\r\n');
+		}
+		return code;
+	},
 	genCode_Inject(){
-		var _file = path.resolve("tpl_ejsyaml/_Inject/_Code_t.js");
+		var _file = $.resolvePath("_Code_t.js");
 		_file
-		var _tar =  path.resolve("tpl_ejsyaml/_Inject/_Code.js");
+		var _tar =  $.resolvePath("_Code.js");
 		var _key = '//##_Inject----------------------------------------';
 		var _code = fs.readFileSync(_file).toString();
 		var arr = _code.split(_key);
 		arr.shift()
-		arr.pop();
+		arr.pop(); 
+		arr.unshift(`let {fs,_,moment,ejs,} = $.ext_ut;`);
 		fs.writeFileSync(_tar,arr.join(_key));
 	},
 	map_type:{

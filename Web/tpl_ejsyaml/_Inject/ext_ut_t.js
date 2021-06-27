@@ -17,6 +17,9 @@ var injectCfg = {
 }
 var ext_ut = {
 	fs,
+	moment,
+	ejs,
+	_,
 	Path:path,
 	map_csharpType: {
 		"string":"string",
@@ -460,7 +463,7 @@ var _test ={
 		
 		// var _part = _Part.get($.data.Src);
 	},
-	'export'(){
+	'*export'(){
 		var _file = $.resolvePath("ext_ut_t.js");
 		var _tar 
 			//=  $.resolvePath("ext_ut.js");

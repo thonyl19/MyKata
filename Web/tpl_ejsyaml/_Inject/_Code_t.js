@@ -4,8 +4,32 @@ const ejs = require('ejs');
 const moment = require('moment');
 const fs = require('fs');
 const { testHelper,testFN} = require('_test/testHelper');
-
+var $ = {
+	isTest:true,
+	ext_ut:{
+		//include1:resolveInclude,
+		include(ejs_file,data={}){
+			var _ejs = fs.readFileSync(ejs_file).toString();
+			return ejs.render(_ejs,data);
+		},
+		include1(ejs_file,data={},cb=()=>{}){
+			ejs.renderFile(ejs_file,data).then(r=>{
+				cb(r);
+			});
+		},
+		Path:path.resolve
+	}
+	,resolvePath(file){
+		return path.resolve(`./tpl_ejsyaml/_Inject/${file}`);
+	}
+	,render(){
+        // const input = this.resolvePath(inputPath);
+        // const output = this.resolvePath(outputPath);
+	}
+}
 //##_Inject----------------------------------------
+let {include,Path} = $.ext_ut;
+ 
 var _enum = {
 	map_csharpType: {
 		"string":"string",
@@ -24,21 +48,83 @@ var _enum = {
 		boolean(filed){return ``},
 	},
 }
+var _Part = {
+	gnePartCfg:{
+		tpl_resolvePath:"`@{@.resolvePath('${val}')}`",
+		tpl_include:"`@{@.resolvePath('${val}')}`",
+		v20210627(json,cb=null){
+			let {render} = $;
+			//搭配 isTest ,解決 include 在測試和正式 情境中, 非同步的處理問題
+			let {isTest=false} = $;
+			var _tplA = _.template('"${key}":[${list}],');
+			var _tplB = _.template(_Part.gnePartCfg.tpl_resolvePath);
+			var Src = [];
+			_.each(json,(val,key)=>{ 
+				var list = [];
+				if (Array.isArray(val)){
+					list = val.map(el=>{
+						return _tplB({val:el}).replace(/@/gi,'$')
+					})
+				}else{
+					list.push(_tplB({val}).replace(/@/gi,'$'));
+				}
+				var x = _tplA({key,list:list.join(',')})
+				Src.push(x);
+			})
+			var _file = $.resolvePath('./_InjectPart.ejs');
+			if (isTest){
+				return include(_file, {Src},cb);
+			}
+			var r = $.render(_file,'_part.cfg', {Src});
+			return r;
+		}
+	},
+	v20210627(partCfg,Src,isTest=false){
+		var _Test = [JSON.stringify(Src,null,4)];
+		if (_.isPlainObject(partCfg)==false){
+			var _part =  include(partCfg);
+			_Test.push(`[PartCfg]\r\n${_part}`);
+			partCfg = JSON.parse(_part);
+		}
+		var _r = {}
+		_.each(partCfg,(v,k)=>{
+			_Test.push(`[${k}]`);
+			var r  = v.map(el=>{
+				return include(el,Src);
+			})
+			_r[k] = r;
+			_Test.push(r.join('\r\n'));
+		}) 
+		if (isTest) return _Test;
+		return _r;
+	}
+
+}
 var _Code = {
 	v20210625(){
 
 	}
 }
 var _Code_fn = {
+
+	view(code){
+		if (_.isPlainObject(code)){
+			return JSON.stringify(code,null,4);
+		}else if (Array.isArray(code)){
+			return code.join('\r\n');
+		}
+		return code;
+	},
 	genCode_Inject(){
-		var _file = path.resolve("tpl_ejsyaml/_Inject/_Code_t.js");
+		var _file = $.resolvePath("_Code_t.js");
 		_file
-		var _tar =  path.resolve("tpl_ejsyaml/_Inject/_Code.js");
+		var _tar =  $.resolvePath("_Code.js");
 		var _key = '//##_Inject----------------------------------------';
 		var _code = fs.readFileSync(_file).toString();
 		var arr = _code.split(_key);
 		arr.shift()
-		arr.pop();
+		arr.pop(); 
+		arr.unshift(`let {fs,_,moment,ejs,} = $.ext_ut;`);
 		fs.writeFileSync(_tar,arr.join(_key));
 	},
 	map_type:{
@@ -235,9 +321,8 @@ var _Code_v20210615 = {
 }
 
 var _Code_fn_v20210615 = {
-	B00(){
+	B00(){ 
 		_Code_fn.genCode_Inject();
-	
 	},
 	B01(){
 		/*JsonCode
@@ -256,7 +341,7 @@ var _Code_fn_v20210615 = {
 		}
 		this.be(_t).T();
 	},
-	B02(){
+	B020(){
 		/*parseRow 
 		*/
 		var _t ={
@@ -289,7 +374,96 @@ var _Code_fn_v20210615 = {
 		var _r = _Code_fn.parseRow.v20210625(_t);
 		this._be(_r).T();		
 
-	}
+	},
+	B03:[function(){
+		/*
+		gnePartEJS 將 _Part.ejsyaml 中的 part 設定,轉出成 _part.js
+		*/
+		var r = {
+			"Html_Code": "../gt_form",
+			"Vue_Data": [
+				"../form",
+				"../../../piece/Vue_Data/i18n"
+			],
+			"Vue_Methods": "Vue_Methods"
+		}
+		_Part.gnePartCfg.v20210627(r,(_r)=>{
+			this._be(_r).T(); 
+		});
+		
+	},"",testHelper.FileType.txt],
+	B041:[function(){
+		var Src ={
+			"row": {
+				"ROUTE_NO": "C030-19",
+				"ROUTE": "?面?极板（子流程）",
+				"ROUTE_CATEGORY": "R",
+				"DESCRIPTION": "",
+				"ENABLE_FLAG": true
+			},
+			"Fileds": [
+				{
+					"Name": "ROUTE_NO",
+					"val": "C030-19",
+					"map_type": {
+						"JS": "string",
+						"csharp": "string"
+					},
+					"label": ":label=\"i18n.ROUTE_NO\""
+				},
+				{
+					"Name": "ROUTE",
+					"val": "?面?极板（子流程）",
+					"map_type": {
+						"JS": "string",
+						"csharp": "string"
+					},
+					"label": ":label=\"i18n.ROUTE\""
+				},
+				{
+					"Name": "ROUTE_CATEGORY",
+					"val": "R",
+					"map_type": {
+						"JS": "string",
+						"csharp": "string"
+					},
+					"label": ":label=\"i18n.ROUTE_CATEGORY\""
+				},
+				{
+					"Name": "DESCRIPTION",
+					"val": "",
+					"map_type": {
+						"JS": "string",
+						"csharp": "string"
+					},
+					"label": ":label=\"i18n.DESCRIPTION\""
+				},
+				{
+					"Name": "ENABLE_FLAG",
+					"val": true,
+					"map_type": {
+						"JS": "boolean",
+						"csharp": "bool"
+					},
+					"label": ":label=\"i18n.ENABLE_FLAG\""
+				}
+			],
+			"ext_mode": {
+				"ENABLE_FLAG": true
+			}
+		} 
+		
+		//_Code_fn_v20210615.B01.src();
+		var Cfg = {
+			"Html_Code": [
+				"d:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\form\\gt_form_col.ejs"
+			]
+		}
+		var _r = _Part.v20210627(Cfg,{Src},true).join('\r\n');
+		this._be(_r).T();
+	},"",testHelper.FileType.txt],
+ 
+
 }
 
 testFN.v20210615.Qoka("./tpl_ejsyaml/_Inject/_Code/~v20210625/",[_Code_v20210615,_Code_fn_v20210615]

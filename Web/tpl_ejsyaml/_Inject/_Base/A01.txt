@@ -1,0 +1,11 @@
+<!-- #region [gt_form_col] -->
+<gt-form-col :label="i18n.CONFIG_FLAG"
+	v-model="form.CONFIG_FLAG">
+	<input type=text "form.CONFIG_FLAG"/></gt-form-col>
+<gt-form-col :label="i18n.PARTNO"
+	v-model="form.PARTNO">
+	<input type=text "form.PARTNO"/></gt-form-col>
+<gt-form-col :label="i18n.USE_RATE"
+	v-model="form.USE_RATE">
+	<input type=text "form.USE_RATE"/></gt-form-col>
+<!-- #endregion [gt_form_col] -->

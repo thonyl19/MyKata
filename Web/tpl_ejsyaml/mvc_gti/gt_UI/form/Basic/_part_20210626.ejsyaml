@@ -16,6 +16,12 @@ Src: {
         ,PRODUCT_SID: "GTI13041716461881915"
     } 
     ,
+}
+part: {
+    Html_Code: ../gt_form ,
+	Vue_Data: [../form
+		,../../../piece/Vue_Data/i18n ],
+    Vue_Methods: Vue_Methods
 } 
 inject: {
     list: [
@@ -27,17 +33,8 @@ inject: {
 }
 --- |
 <%  $.isBig5 = true;
-    $.data.Src = $.ext_ut.parseRow(Src);
-    $.render('_part.ejs', '~part.txt', {Src});
+    eval(include('../../../../_Inject/_Code.js'));
     
-    //var r = $.ext_ut.Inject($,include);
-    Part = $.ext_ut.parsePartCfg($,Src,include);
-    //$.ext_ut.Inject(inject,Part);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%# $.ext_ut.InjectLog($.data.Src,0) %>
-<%- $.ext_ut.ViewCode(Part) %>
-<%# include('../gt_form',{Src}) %>
-<%# include('../form',{Src}) %>
-<%# include('../../../piece/Vue_Data/i18n.ejs',{Src}) %>
-<%# include('Vue_Methods',{Src}) %>
+<%- _Code_fn.view(part) _%>

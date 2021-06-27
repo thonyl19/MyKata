@@ -14,16 +14,12 @@ part: {
 <%  $.isBig5 = true;
     $.ext_ut.include = include;
     eval(include('_Code.js'));
-    //_Code_fn.gnePartCfg.v20210627(part);
-    this.render('_part.cfg','~tmp.txt');
-    //this.skip();
-    var _r = _Code_fn.parseRow.v20210625(Src);
-    var _part = _Part.v20210627('_part.cfg',{Src:_r},true);
- 
 
+    var _r = _Code_fn.parseRow.v20210625(Src);
+    //必要基本測試
+    this.render('../mvc_gti/gt_UI/form/gt_form_col.ejs','_Base/A01.txt',{Src:_r});
+    
 _%>
-<%- $.outfile('~Code.txt') _%>
-<%- _Code_fn.view(_part)  _%>
-<%# _Inject.ViewLog(_Inject.path,0) %>
+ 
 
 
