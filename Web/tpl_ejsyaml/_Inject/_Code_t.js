@@ -6,6 +6,7 @@ const fs = require('fs');
 const { testHelper,testFN} = require('_test/testHelper');
 var $ = {
 	isTest:true,
+	input:"p:\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\form\\Basic",
 	ext_ut:{
 		//include1:resolveInclude,
 		include(ejs_file,data={}){
@@ -40,24 +41,31 @@ var _enum = {
 		"boolean":"bool",
 	},
 	map_UI : {
-		string(filed){return `<input type=text "form.${filed.Name}"/>`},
+		string(filed){return ``},
 		int(filed){return ''},
 		date(filed){return `<el-date-picker type="date" class="eui-fix" v-model="form.${filed.Name}">\r\n\t</el-date-picker>`},
 		float(filed){return ''},
 		array(filed){return `<el-input type="textarea" v-model="form.${filed.Name}" rows="3">\r\n\t</el-input>`},
 		boolean(filed){return ``},
 	},
+	map_GTForm_Col(){
+		return  _.extend({}, _enum.map_UI, {
+			string(filed){return `<input type=text "form.${filed.Name}" />`},
+		})
+	}
 }
-var _Part = {
+
+var _Part_ver = {
 	gnePartCfg:{
 		tpl_resolvePath:"`@{@.resolvePath('${val}')}`",
 		tpl_include:"`@{@.resolvePath('${val}')}`",
-		v20210627(json,cb=null){
+		relateTplPath:"`@{_Code.V202106.relateTplPath('${val}')}`",
+		v20210627(json,RootPath=""){
 			let {render} = $;
 			//搭配 isTest ,解決 include 在測試和正式 情境中, 非同步的處理問題
 			let {isTest=false} = $;
 			var _tplA = _.template('"${key}":[${list}],');
-			var _tplB = _.template(_Part.gnePartCfg.tpl_resolvePath);
+			var _tplB = _.template(_Part_ver.gnePartCfg.relateTplPath );
 			var Src = [];
 			_.each(json,(val,key)=>{ 
 				var list = [];
@@ -71,50 +79,46 @@ var _Part = {
 				var x = _tplA({key,list:list.join(',')})
 				Src.push(x);
 			})
-			var _file = $.resolvePath('./_InjectPart.ejs');
+			var _file = _Code_ver.relateTplPath('./_Inject/_InjectPart.ejs');
 			if (isTest){
-				return include(_file, {Src},cb);
+				return include(_file, {Src});
 			}
 			var r = $.render(_file,'_part.cfg', {Src});
 			return r;
 		}
 	},
-	v20210627(partCfg,Src,isTest=false){
-		var _Test = [JSON.stringify(Src,null,4)];
-		if (_.isPlainObject(partCfg)==false){
-			var _part =  include(partCfg);
-			_Test.push(`[PartCfg]\r\n${_part}`);
-			partCfg = JSON.parse(_part);
+	parseCode:{
+		v20210627(partCfg,Src,isTest=false){
+			var _TestLog = [JSON.stringify(Src,null,4)];
+			if (_.isPlainObject(partCfg)==false){
+				var _part =  include(partCfg);
+				_TestLog.push(`[PartCfg]\r\n${_part}`);
+				partCfg = JSON.parse(_part);
+			}
+			var _result = {} 
+			_.each(partCfg,(val,key)=>{
+				_TestLog.push(`[${key}]`);
+				var arr_Code  = val.map(el=>{
+					return include(el,Src);
+				})
+				_result[key] = arr_Code;
+				_TestLog.push(arr_Code.join('\r\n'));
+			}) 
+			if (isTest) return _TestLog;
+			return _result;
 		}
-		var _r = {}
-		_.each(partCfg,(v,k)=>{
-			_Test.push(`[${k}]`);
-			var r  = v.map(el=>{
-				return include(el,Src);
-			})
-			_r[k] = r;
-			_Test.push(r.join('\r\n'));
-		}) 
-		if (isTest) return _Test;
-		return _r;
 	}
 
 }
-var _Code = {
-	v20210625(){
-
-	}
-}
-var _Code_fn = {
-
-	view(code){
-		if (_.isPlainObject(code)){
-			return JSON.stringify(code,null,4);
-		}else if (Array.isArray(code)){
-			return code.join('\r\n');
-		}
-		return code;
+var _Part = {
+	V202106:{
+		gnePartCfg:_Part_ver.gnePartCfg.v20210627,
+		parseCode:_Part_ver.parseCode.v20210627
 	},
+}
+
+
+var _Code_ver = {
 	genCode_Inject(){
 		var _file = $.resolvePath("_Code_t.js");
 		_file
@@ -126,6 +130,14 @@ var _Code_fn = {
 		arr.pop(); 
 		arr.unshift(`let {fs,_,moment,ejs,} = $.ext_ut;`);
 		fs.writeFileSync(_tar,arr.join(_key));
+	},
+	relateTplPath(file,KeyPath=''){
+		let {input} = $;
+		input
+		var reg = new RegExp(``,'gi');
+		var [Root=""] = input.match(/(.)+tpl_ejsyaml(\\|\/)/gi)||[]
+		Root
+		return `${Root}${file}`;
 	},
 	map_type:{
 		v20210626(_filed){
@@ -161,20 +173,21 @@ var _Code_fn = {
 		}
 	},
 	HTML:{
-		v20210626(Name,I18nPrefix,_filed){
+		v20210626(Name,Src,_filed){
+			let {I18nPrefix,map_UI=_enum.map_UI} = Src;
 			var _self = this;
 			return {
-				label :_Code_fn.parse_label.v20210625(Name,I18nPrefix),
+				label :_Code_ver.parse_label.v20210625(Name,I18nPrefix),
 				get Input(){
-					return _Code_fn.parse_UI.v20210626(_filed);
+					return _Code_ver.parse_UI.v20210626(_filed,map_UI);
 				}
 			}
 		}
 	},
 	parse_UI:{
-		v20210626(_filed){
+		v20210626(_filed,map_UI){
 			var UI = "";
-			let _fn = _enum.map_UI[_filed.Code.map_type.JS];
+			let _fn = map_UI[_filed.Code.map_type.JS];
 			if (_fn!=null){
 				UI = `${_fn(_filed)}`;
 			}
@@ -197,7 +210,7 @@ var _Code_fn = {
 	},
 	parseRow:{
 		v20210626(arg,setPath = 'Fileds'){
-			let {row,I18nPrefix} = arg;
+			let {row} = arg;
 			if (row==null) return ;
 			var fields = [];
 			for(var Name in row){
@@ -209,10 +222,10 @@ var _Code_fn = {
 						var _self = this;
 						return {
 							get HTML(){
-								return  _Code_fn.HTML.v20210626(Name,I18nPrefix,_self)
+								return  _Code_ver.HTML.v20210626(Name,arg,_self)
 							},
 							get map_type(){
-								return _Code_fn.map_type.v20210626(_self);
+								return _Code_ver.map_type.v20210626(_self);
 							}
 						}
 					}
@@ -263,9 +276,9 @@ var _Code_fn = {
 						JS,
 						csharp:_enum.map_csharpType[JS]
 					}
-					,label :_Code_fn.parse_label.v20210625(Name,I18nPrefix)
+					,label :_Code_ver.parse_label.v20210625(Name,I18nPrefix)
 				};
-				_Code_fn.parse_UI.v20210625(_filed)
+				_Code_ver.parse_UI.v20210625(_filed)
 				fields.push(_filed);
 			}
 			_.set(arg, setPath, fields);
@@ -311,6 +324,14 @@ var _Code_fn = {
 		}
 	}
 }
+
+var _Code = {
+	V202106:{
+		relateTplPath:_Code_ver.relateTplPath,
+		parseRow:_Code_ver.parseRow.v20210626
+	}
+}
+
 //##_Inject----------------------------------------
  
 var _Code_v20210615 = {
@@ -321,9 +342,6 @@ var _Code_v20210615 = {
 }
 
 var _Code_fn_v20210615 = {
-	B00(){ 
-		_Code_fn.genCode_Inject();
-	},
 	B01(){
 		/*JsonCode
 		*/
@@ -334,7 +352,7 @@ var _Code_fn_v20210615 = {
 		}
 		var _t = {};
 		for (var key in _list){
-			var t = _Code_fn.JsonCode.v20210625(_list[key]);
+			var t = _Code_ver.JsonCode.v20210625(_list[key]);
 			_t[key] = {
 				t,"toJsonStr":t.toJsonStr(true)
 			}
@@ -354,7 +372,7 @@ var _Code_fn_v20210615 = {
 				"boolean":true,
 			}
 		}
-		var _r = _Code_fn.parseRow.v20210626(_t);
+		var _r = _Code_ver.parseRow.v20210626(_t);
 		this._be(_r).T();		
 
 	},
@@ -371,11 +389,17 @@ var _Code_fn_v20210615 = {
 				"boolean":true,
 			}
 		}
-		var _r = _Code_fn.parseRow.v20210625(_t);
+		var _r = _Code_ver.parseRow.v20210625(_t);
 		this._be(_r).T();		
 
 	},
-	B03:[function(){
+
+ 
+
+}
+
+var _Part_V202106 = {
+	A01:[function(){
 		/*
 		gnePartEJS 將 _Part.ejsyaml 中的 part 設定,轉出成 _part.js
 		*/
@@ -387,12 +411,14 @@ var _Code_fn_v20210615 = {
 			],
 			"Vue_Methods": "Vue_Methods"
 		}
-		_Part.gnePartCfg.v20210627(r,(_r)=>{
-			this._be(_r).T(); 
-		});
+		var _r = _Part.V202106.gnePartCfg(r,"");
+		this._be(_r).T(); 
 		
 	},"",testHelper.FileType.txt],
-	B041:[function(){
+	A02(){
+		/*
+		測試 parseRow
+		*/
 		var Src ={
 			"row": {
 				"ROUTE_NO": "C030-19",
@@ -401,71 +427,40 @@ var _Code_fn_v20210615 = {
 				"DESCRIPTION": "",
 				"ENABLE_FLAG": true
 			},
-			"Fileds": [
-				{
-					"Name": "ROUTE_NO",
-					"val": "C030-19",
-					"map_type": {
-						"JS": "string",
-						"csharp": "string"
-					},
-					"label": ":label=\"i18n.ROUTE_NO\""
-				},
-				{
-					"Name": "ROUTE",
-					"val": "?面?极板（子流程）",
-					"map_type": {
-						"JS": "string",
-						"csharp": "string"
-					},
-					"label": ":label=\"i18n.ROUTE\""
-				},
-				{
-					"Name": "ROUTE_CATEGORY",
-					"val": "R",
-					"map_type": {
-						"JS": "string",
-						"csharp": "string"
-					},
-					"label": ":label=\"i18n.ROUTE_CATEGORY\""
-				},
-				{
-					"Name": "DESCRIPTION",
-					"val": "",
-					"map_type": {
-						"JS": "string",
-						"csharp": "string"
-					},
-					"label": ":label=\"i18n.DESCRIPTION\""
-				},
-				{
-					"Name": "ENABLE_FLAG",
-					"val": true,
-					"map_type": {
-						"JS": "boolean",
-						"csharp": "bool"
-					},
-					"label": ":label=\"i18n.ENABLE_FLAG\""
-				}
-			],
-			"ext_mode": {
-				"ENABLE_FLAG": true
-			}
 		} 
-		
-		//_Code_fn_v20210615.B01.src();
+		_Code.V202106.parseRow(Src);
+		this.be(Src).T();
+	},
+
+	A031:[function(){
+		var Src = _Part_V202106.A02.src();
 		var Cfg = {
 			"Html_Code": [
-				"d:\\A\\Code\\github\\MyKata\\MyKata_Web\\Web\\tpl_ejsyaml\\mvc_gti\\gt_UI\\form\\gt_form_col.ejs"
+				$.resolvePath('../mvc_gti/gt_UI/form/gt_form_col.ejs')
 			]
 		}
-		var _r = _Part.v20210627(Cfg,{Src},true).join('\r\n');
+		var _r = _Part.V202106.parseCode(Cfg,{Src},true).join('\r\n');
 		this._be(_r).T();
-	},"",testHelper.FileType.txt],
- 
 
+		var _r1 = _Part.V202106.parseCode(Cfg,{Src});
+		_Part_V202106._A032.be(_r1).T();
+
+		//測試使用自定義的 map_UI	
+		Src = _Code.V202106.parseRow(Src);
+		Src.map_UI = _enum.map_GTForm_Col();
+		var _使用自定義 = _Part.V202106.parseCode(Cfg,{Src},true).join('\r\n');
+		_Part_V202106._A033.be(_使用自定義).T();
+
+	},"",testHelper.FileType.txt],
+	_A032:[testHelper.FileType.json,"PartCode"],
+	_A033:[testHelper.FileType.txt,"map_GTForm_Col"],
 }
 
 testFN.v20210615.Qoka("./tpl_ejsyaml/_Inject/_Code/~v20210625/",[_Code_v20210615,_Code_fn_v20210615]
    //,/A03/gi
 );
+testFN.v20210615.Qoka("./tpl_ejsyaml/_Inject/_Part/~v202106/",[_Part_V202106]
+   //,/A03/gi
+);
+_Code_ver.genCode_Inject();
+ 

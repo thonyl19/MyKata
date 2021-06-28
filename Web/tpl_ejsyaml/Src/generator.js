@@ -46,6 +46,19 @@ class Generator {
         ];
         this.isBig5 = options.isBig5;
         this.writeFile=ext_ut.writeFile;
+        this.view=function(code){
+            if (Array.isArray(code)){
+                return code.join('\r\n');
+            }else if(typeof(code) === "string"){
+                return code;
+            }
+            return JSON.stringify(code,null,4);
+        };
+        this.relateRoot=function(file){
+            let {input} = this;
+            var [Root=""] = input.match(/(.)+tpl_ejsyaml(\\|\/)/gi)||[]
+            return `${Root}${file}`;
+        };
         this.$init();
     }
     // block APIs

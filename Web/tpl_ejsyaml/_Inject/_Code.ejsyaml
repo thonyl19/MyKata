@@ -2,7 +2,7 @@
 Src: {
     row: {
         "CONFIG_FLAG": "GTI20101517555209104",
-        "PARTNO": "C030-19",
+        "PARTNO": true,
         "USE_RATE": "单面阳极板（子流程）",
     },
 } 
@@ -17,13 +17,11 @@ part: {
     //_Code_fn.gnePartCfg.v20210627(part);
     this.render('_part.cfg','~tmp.txt');
     //this.skip();
-    var _r = _Code_fn.parseRow.v20210625(Src);
-    var _part = _Part.v20210627('_part.cfg',{Src:_r},true);
- 
-
+    var _r = _Code.V202106.parseRow(Src);
+    var _part = _Part.V202106.parseCode('_part.cfg',{Src:_r},true);
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%- _Code_fn.view(_part)  _%>
+<%- $.view(_part)  _%>
 <%# _Inject.ViewLog(_Inject.path,0) %>
 
 

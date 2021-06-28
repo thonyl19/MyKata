@@ -1,3 +1,7 @@
+﻿/*
+改移放到 ~\MyKata\MyKata_Web\Web\tpl_ejsyaml\_Inject
+*/
+
 const _ = require('lodash');
 const path = require( "path");
 const ejs = require('ejs');
@@ -296,6 +300,7 @@ var ext_ut = {
 
 		}
 	},
+	
 }
 var _test ={
 	$:{

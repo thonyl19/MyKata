@@ -1,7 +1,13 @@
 <!-- #region [gt_form_col] -->
-<%_ for(var item of Src.Fileds){ _%>
-<gt-form-col <%- item.label %>
+<%_ for(var item of Src.Fileds){ 
+	let {HTML} = item.Code;
+_%>
+<gt-form-col <%- HTML.label %>
 	v-model="form.<%=item.Name%>">
-	<%-item.UI _%></gt-form-col>
+	<%-HTML.Input _%></gt-form-col>
 <%_} _%>
 <!-- #endregion [gt_form_col] -->
+<%#
+20210628)
+	配合 _Code.V202106.parseRow 改制
+%>

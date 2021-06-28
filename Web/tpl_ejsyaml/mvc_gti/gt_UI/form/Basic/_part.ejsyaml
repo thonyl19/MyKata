@@ -15,29 +15,19 @@ Src: {
         ,PRODUCT_NO: "Product"
         ,PRODUCT_SID: "GTI13041716461881915"
     } 
-    ,
 } 
-inject: {
-    list: [
-        H:\GTiMES5.1_Dev\Genesis_MVC\Areas\Example\Views\Act\page~.cshtml ,
-        H:\GTiMES5.1_Dev\Genesis_MVC\Areas\Example\Views\Act\ActController.cs,
-    ],
-    #0)刪除 1)重覆 2)連續 9)復原
-    mode: 1
-}
+part: {
+	"Html_Code": mvc_gti/gt_UI/form/gt_form ,
+} 
+
 --- |
 <%  $.isBig5 = true;
-    $.data.Src = $.ext_ut.parseRow(Src);
-    $.render('_part.ejs', '~part.txt', {Src});
-    
-    //var r = $.ext_ut.Inject($,include);
-    Part = $.ext_ut.parsePartCfg($,Src,include);
-    //$.ext_ut.Inject(inject,Part);
+    $.ext_ut.include = include;
+    eval(include($.relateRoot('_Inject/_Code.js')));
+
+    _Part.V202106.gnePartCfg(part);
+ 
 _%>
 <%- $.outfile('~Code.txt') _%>
-<%# $.ext_ut.InjectLog($.data.Src,0) %>
-<%- $.ext_ut.ViewCode(Part) %>
-<%# include('../gt_form',{Src}) %>
-<%# include('../form',{Src}) %>
-<%# include('../../../piece/Vue_Data/i18n.ejs',{Src}) %>
-<%# include('Vue_Methods',{Src}) %>
+<%- $.view(Src) %>
+ 
