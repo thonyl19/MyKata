@@ -89,6 +89,16 @@ namespace CSharp.Case
             
         }
 
+        /// <summary>
+        /// [Ref]https://stackoverflow.com/questions/8588384/how-to-define-an-enum-with-string-value
+        /// 目前 String Enum 最理想的用
+        /// </summary>
+        [TestMethod]
+        public void t_Colours(){
+            var A1 = Colours.Blue;
+        }
+        
+
         public void x(object t1){
             var enumTypes = t1.GetType();//.GetNestedTypes(BindingFlags.Public);
             //var pubEnums = enumTypes.Where(t => t.IsEnum);
