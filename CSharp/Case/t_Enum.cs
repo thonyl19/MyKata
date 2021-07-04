@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using CSharp.Linq;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CSharp.Case
 {
@@ -22,7 +26,23 @@ namespace CSharp.Case
         }
 
         enum Colors { Red, Green, Blue, Yellow };
-    enum Styles { Plaid = 0, Striped = 23, Tartan = 65, Corduroy = 78 };
+        enum Styles { Plaid = 0, Striped = 23, Tartan = 65, Corduroy = 78 };
+
+        public enum EUnitOfMeasure
+        {
+            [EnumMember(Value = "KM")]
+            Kilometer,
+            [EnumMember(Value = "MI")]
+            Miles
+        }
+
+        
+        public struct MyEnumClass
+        {
+            public const string 
+                MyValue1 = "My value 1",
+                MyValue2 = "My value 2";
+        }
 
         [TestMethod]
         public void t_L01()
@@ -39,6 +59,26 @@ namespace CSharp.Case
 
         }
         
+        /// <summary>
+        /// [Ref]https://stackoverflow.com/questions/8588384/how-to-define-an-enum-with-string-value
+        /// </summary>
+        [TestMethod]
+        public void t_MyEnumClass(){
+            string A1 = MyEnumClass.MyValue1;
+
+        }
+
+        /// <summary>
+        /// [Ref]https://stackoverflow.com/questions/8588384/how-to-define-an-enum-with-string-value
+        /// 這個方
+        /// </summary>
+        [TestMethod]
+        public void t_EUnitOfMeasure(){
+            var A1 = EUnitOfMeasure.Kilometer;
+            var A2 = JsonConvert.SerializeObject(EUnitOfMeasure.Kilometer, new StringEnumConverter());
+            
+        }
+
         public void x(object t1){
             var enumTypes = t1.GetType();//.GetNestedTypes(BindingFlags.Public);
             //var pubEnums = enumTypes.Where(t => t.IsEnum);
@@ -50,4 +90,5 @@ namespace CSharp.Case
             Console.Write(arr);
         }
     }
+
 }
