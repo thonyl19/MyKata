@@ -44,6 +44,16 @@ namespace CSharp.Case
                 MyValue2 = "My value 2";
         }
 
+        /// <summary>
+        /// Nameof 式的應用法
+        /// </summary>
+        public static class Colours
+        {
+            public static string Red => nameof(Red);
+            public static string Green => nameof(Green);
+            public static string Blue => nameof(Blue);
+        }
+
         [TestMethod]
         public void t_L01()
         {
@@ -70,7 +80,7 @@ namespace CSharp.Case
 
         /// <summary>
         /// [Ref]https://stackoverflow.com/questions/8588384/how-to-define-an-enum-with-string-value
-        /// 這個方
+        /// 這個方法 不符合需求 ,但 因為是是可以在 序列化時派上用場 ,故特此誌之
         /// </summary>
         [TestMethod]
         public void t_EUnitOfMeasure(){
