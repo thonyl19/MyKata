@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Title>code_gt_test</Title>
+      <Author>
+      </Author>
+      <Description>
+      </Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>
+      </Shortcut>
+    </Header>
+    <Snippet>
+      <Code Language="javascript" Delimiter="$"><![CDATA[@Html.Raw(HttpContext.Current.IsDebuggingEnabled ? "window.__vm = this;" : "");
+__gt_test(key, val) {
+	var _self = this;
+	let[row0] = this.grid.data;
+	switch (key)
+	{
+		case "grid.data":
+			return this.grid.data
+							break;
+		case "格式編碼編號":
+			if (row0 == null) return "當前 grid 沒有資料!";
+			this.form.ENCODE_FORMAT_NO = val || row0.ENCODE_FORMAT_NO;
+			this.click_Query();
+			break;
+		case "格式編碼名稱":
+			if (row0 == null) return "當前 grid 沒有資料!";
+			this.form.ENCODE_FORMAT_NAME = val || row0.ENCODE_FORMAT_NAME;
+			this.click_Query();
+			break;
+		case "Clear":
+			debugger
+							this.e_clear();
+			var r = _.some(this.form, (v, k) => {
+				switch (k)
+				{
+					case "ENABLE_FLAG":
+						return false;
+						break;
+					default:
+						return v == "";
+						break;
+				}
+			});
+			if (!r) r = this.form;
+			return r;
+		case "Trim":
+
+			if (Array.isArray(val))
+			{
+				var r = _.some(val, el => {
+					return _self.form[el] == "%%";
+				})
+								return r;
+			}
+			break;
+	}
+},]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
